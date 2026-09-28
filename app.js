@@ -43,6 +43,16 @@ const CAT = {
 };
 const PATS = ["pat-dots","pat-lines","pat-check","pat-grid"];
 
+// Forms are delivered by FormSubmit (formsubmit.co) to this inbox. No account needed.
+const FORM_INBOX = "hello@inventndiscover.com";
+const FORM_URL = "https://formsubmit.co/ajax/" + FORM_INBOX;
+async function sendForm(data){
+  const r = await fetch(FORM_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({_template:"table",_captcha:"false",...data})});
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok || String(j.success)!=="true") throw new Error(j.message||("HTTP "+r.status));
+  return j;
+}
+
 // Example demos: Invent has no real submissions yet.
 const DEMOS = [
  {id:"tapri",name:"Tapri",line:"Voice-first ordering for neighbourhood tea stalls",cat:"Civic",status:"Prototype",makers:["Two design students"],inst:"Example",tools:["Speech-to-text","React Native"],desc:"Customers speak an order in Hindi, Marathi or English; the stall owner sees a running tab without typing."},
@@ -296,7 +306,7 @@ function viewHome(){
   </div></section>
 
   <section class="block" style="padding-top:28px"><div class="wrap split">
-    <a class="door inv has-img" href="#invent" data-go="invent"><img class="door-img" src="${img("skyline")}" alt="" loading="lazy" style="object-position:70% 50%"><div><h3>Invent</h3><p>Product demos by students, makers and young startups. Try what they built and meet the people behind it.</p></div><span class="go">Add the first demo →</span></a>
+    <a class="door inv has-img" href="#invent" data-go="invent"><img class="door-img" src="${img("skyline")}" alt="" loading="lazy" style="object-position:70% 50%"><div><h3>Invent</h3><p>Product demos by students, makers and young startups. Opening with its first real demos: the examples show the format, and yours could be first.</p></div><span class="go">Add the first demo →</span></a>
     <a class="door dis has-img" href="#discover" data-go="discover"><img class="door-img" src="${img("train")}" alt="" loading="lazy"><div><h3>Discover</h3><p>Events and people around the city, sorted by what you care about and when you're free.</p></div><span class="go">${upcoming.length} upcoming events →</span></a>
   </div></section>
 
@@ -411,8 +421,8 @@ function viewSubmit(){
     <div class="wrap" style="padding-top:28px"><div class="done">
       <span class="status-pill">Pending review</span>
       <h2 style="font-size:24px;margin:14px 0 6px">“${esc(s.title)}” is with a curator</h2>
-      <p style="color:var(--ink2);margin:0 0 16px">Reference <span style="font-family:var(--mono)">${s.ref}</span>. It appears on the site after a curator checks the details and the link.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-again>Submit another</button><a class="btn ghost" href="#curator" data-go="curator">See it in the curator desk</a></div>
+      <p style="color:var(--ink2);margin:0 0 16px">Reference <span style="font-family:var(--mono)">${s.ref}</span>. A curator checks the details and the link, usually within two days, and replies to the email you gave if anything is missing.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-again>Submit another</button><a class="btn ghost" href="#discover" data-go="discover">Back to events</a></div>
     </div></div>`;
   }
   const k=state.submitKind, cats=["AI","Design","UX","XR","Startup","Tech","Art","Culture","Climate","Education"];
@@ -445,10 +455,11 @@ function viewSubmit(){
   <div class="page-head"><div class="wrap head-row"><div><div class="kicker"><span class="pill">Submit</span></div><h1 class="mega">Submit</h1><p>Share an event, a demo or a community. A curator reviews everything before it goes live, usually within two days.</p></div></div></div>
   <div class="wrap" style="padding-top:28px">
     <div class="seg" role="group" aria-label="What are you submitting" style="margin-bottom:24px">${[["event","Event"],["demo","Demo"],["community","Community"]].map(([v,l])=>`<button data-kind="${v}" aria-pressed="${k===v}">${l}</button>`).join("")}</div>
-    <form class="form" data-submit novalidate>${body}
+    <form class="form" data-submit novalidate>${body}${field("email","Your email","email",{req:1,ph:"you@example.com",hint:"Only used to reply about this submission."})}
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
       <div class="field full" style="flex-direction:row;gap:10px;align-items:center"><button class="btn taxi" type="submit">Send for review</button><span class="hint" id="formErr" role="alert"></span></div>
     </form>
-    <p class="hint" style="font-size:12.5px;color:var(--ink3);margin-top:16px">In this preview, submissions stay in your browser tab and reset when you reload.</p>
+    <p class="hint" style="font-size:12.5px;color:var(--ink3);margin-top:16px">Submissions go to ${FORM_INBOX}. Nothing is published until a curator has checked it.</p>
   </div>`;
 }
 
@@ -757,7 +768,12 @@ document.addEventListener("change",ev=>{
 document.addEventListener("submit",ev=>{
   const form=ev.target;ev.preventDefault();
   if(form.dataset.sentence!==undefined){const v=form.querySelector("input").value.trim();closeSearch();if(form.classList.contains("hsearch")){hideH();hq.blur()}if(v)runSentence(v);return}
-  if(form.dataset.digest!==undefined){const i=form.querySelector("input");if(!i.checkValidity()){toast("Enter a valid email address");return}form.innerHTML=`<p style="margin:0;font-weight:600">Noted. The newsletter starts once email sending is set up; you'll be on the first send.</p>`;return}
+  if(form.dataset.digest!==undefined){const i=form.querySelector("input");if(!i.checkValidity()){toast("Enter a valid email address");return}
+    const b=form.querySelector("button");b.disabled=true;b.textContent="Adding…";
+    sendForm({_subject:"Newsletter sign-up",email:i.value.trim(),list:"Weekly digest"})
+      .then(()=>{form.innerHTML=`<p style="margin:0;font-weight:600">You're on the list. The first edition will land in your inbox.</p>`})
+      .catch(()=>{b.disabled=false;b.textContent="Subscribe";toast("Couldn't sign you up just now. Please try again, or email "+FORM_INBOX)});
+    return}
   if(form.dataset.submit!==undefined){
     const missing=[...form.querySelectorAll("[required]")].filter(x=>!x.value.trim()||!x.checkValidity());
     form.querySelectorAll(".err").forEach(e=>e.remove());
@@ -767,12 +783,13 @@ document.addEventListener("submit",ev=>{
       missing[0].focus();return;
     }
     const fd=new FormData(form), title=fd.get("title");
+    if(fd.get("_honey"))return;
     const ref="ID-"+String(hash(title+Date.now())%100000).padStart(5,"0");
-    if(state.submitKind==="event"){
-      QUEUE.unshift({qid:"s"+ref,title,cat:fd.get("cat"),area:fd.get("area"),src:"Organizer submission",url:fd.get("reg"),day:fd.get("date"),time:fd.get("start"),access:"open",conf:null,
-        full:{desc:fd.get("desc"),venue:fd.get("venue"),fmt:fd.get("fmt"),price:Number(fd.get("price")||0),org:fd.get("org"),aud:fd.getAll("aud")}});
-    }
-    state.submitted={title,ref};render();window.scrollTo({top:0});
+    const kind=state.submitKind, data={_subject:`New ${kind} submission: ${title} (${ref})`,type:kind,reference:ref};
+    for(const [k,v] of fd.entries()){if(k==="_honey")continue;data[k]=data[k]?data[k]+", "+v:v}
+    const btn=form.querySelector('button[type="submit"]');btn.disabled=true;btn.textContent="Sending…";$("#formErr").textContent="";
+    sendForm(data).then(()=>{state.submitted={title,ref};render();window.scrollTo({top:0})})
+      .catch(()=>{btn.disabled=false;btn.textContent="Send for review";$("#formErr").innerHTML=`Couldn't send just now. Please try again, or email <a href="mailto:${FORM_INBOX}">${FORM_INBOX}</a>.`});
   }
 });
 

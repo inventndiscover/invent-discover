@@ -8,7 +8,7 @@ The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives
 |---|---|---|
 | `index.html` | The page skeleton and all the styling (CSS) | Rarely: only for design changes |
 | `app.js` | The behaviour: filters, search, cards, the "Next up" panel | Rarely: only for new features |
-| `events.json` | The data: events, curator queue, run log, communities | **Every day**, from the scheduled refresh |
+| `events.json` | The data: events, curator queue, run log, communities | **Every day**, synced from Google Drive |
 | `images/` | The four Mumbai photos, each in four time-of-day versions | Almost never |
 
 When someone opens the page:
@@ -48,6 +48,26 @@ So updating the site means **replacing `events.json`**. The design and code are 
 - `price`: `0` means free, a number means rupees, and `null` means paid but the amount is unknown.
 - `access`: `"open"` shows a **Register** button. `"approval"` shows **Apply**.
 - Optional fields: `endDate` (for multi-day events), `timeNote` (when the time is unknown) and `also` (a second source listing the same event).
+
+## How the events update themselves
+
+```
+Claude (daily, 07:47 IST)                     GitHub (every 3 hours)
+  researches events                             opens the Drive folder
+  → saves events-YYYYMMDD-HHMM.json    ──▶      takes the newest events file
+    in Google Drive                              checks it (dates, links, fields)
+    "Invent & Discover - site data"              → saves it as events.json
+                                                 → publishes the site
+```
+
+- The workflow lives in `.github/workflows/deploy.yml`. Open the **Actions** tab to see each run; a green tick means it worked.
+- To publish right away instead of waiting up to 3 hours: **Actions → Sync events and publish site → Run workflow**.
+- If a new file looks wrong (missing fields, bad dates, broken JSON, or older than the live data), the workflow skips it and the site keeps the last good data. The reason shows as a yellow warning in that run.
+- The Drive folder must stay shared as **Anyone with the link: Viewer**, or GitHub can't read it.
+
+## Forms
+
+The Submit forms and the newsletter box send to **hello@inventndiscover.com** through [FormSubmit](https://formsubmit.co), a free service with no account. The very first submission triggers an activation email to hello@: click **Activate Form** once, and every submission after that arrives as a normal email.
 
 ## Fixing something by hand
 
