@@ -1,0 +1,882 @@
+{
+ "REFRESHED": "2026-09-28T08:23:13+05:30",
+ "EVENTS_RAW": [
+  {
+   "id": "hacknova",
+   "title": "HackNova",
+   "cat": "Tech",
+   "tags": [
+    "Hackathon",
+    "24 hours"
+   ],
+   "area": "Goregaon",
+   "venue": "VIP Grounds, NESCO",
+   "start": "2026-09-30",
+   "endDate": "2026-10-01",
+   "end": null,
+   "timeNote": "24-hour sprint · check timings on the listing",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Fee per team",
+   "aud": [
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/hacknova/3900030522895912",
+   "org": "YouEvolve",
+   "access": "open",
+   "desc": "A 24-hour build sprint for undergraduate and postgraduate students in teams of two to five, across several technology tracks, with a ₹10 lakh prize pool."
+  },
+  {
+   "id": "weathers-of-our-work",
+   "title": "The Weathers of Our Work",
+   "cat": "Art",
+   "tags": [
+    "Exhibition",
+    "Climate"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue on the event page",
+   "start": "2026-09-30",
+   "end": null,
+   "timeNote": "Time on the event page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free",
+   "aud": [
+    "Open to All"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/OneFutureCollective_WeathersOfOurWork_30Sep26",
+   "org": "One Future Collective",
+   "access": "open",
+   "desc": "An interactive exhibition built from a 30-day diary kept by women and gender-marginalised urban professionals facing climate impacts at work, with room installations and games."
+  },
+  {
+   "id": "build-and-fly",
+   "title": "Build & Fly: hands-on drone workshop",
+   "cat": "Tech",
+   "tags": [
+    "Drones",
+    "Workshop"
+   ],
+   "area": "Thane",
+   "venue": "Drona Aviation, Punjani Industrial Estate, Thane West",
+   "start": "2026-10-03T10:00",
+   "end": "15:00",
+   "fmt": "Offline",
+   "price": 2500,
+   "priceNote": "₹2,500 · materials included",
+   "aud": [
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/thane/build-and-fly-hands-on-drone-workshop-tickets/80002143626775",
+   "org": "Drona Aviation",
+   "access": "open",
+   "desc": "Build a small drone, learn how it flies, then take part in a flying challenge. For beginners aged 10 and up."
+  },
+  {
+   "id": "climate-panchayat",
+   "title": "Climate Panchayat: solutions for marginalised Mumbaikars",
+   "cat": "Climate",
+   "tags": [
+    "Dialogue",
+    "Climate Week India"
+   ],
+   "area": "Goregaon West",
+   "venue": "Rasā – The Stage, Studio A, Sangam Society",
+   "start": "2026-10-03",
+   "end": null,
+   "timeNote": "Time on the event page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · event full, waitlist open",
+   "aud": [
+    "Open to All"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/SaveMumbaiMangroves_ClimatePanchayat_3Oct26",
+   "org": "Save Mumbai Mangroves",
+   "access": "open",
+   "desc": "A working dialogue where people from vulnerable Mumbai communities describe the climate problems they face, and the audience works with them on practical responses. Part of Climate Week India."
+  },
+  {
+   "id": "lunch-and-learn-meta",
+   "title": "Lunch & Learn: AI for the festive rush",
+   "cat": "AI",
+   "tags": [
+    "WhatsApp",
+    "Voice agents",
+    "D2C"
+   ],
+   "area": "BKC",
+   "venue": "Meta office, ONE BKC, Bandra East",
+   "start": "2026-10-07T10:00",
+   "end": "14:30",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · approval required",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/rbh7n2um",
+   "org": "BotSpace",
+   "access": "approval",
+   "desc": "A session at Meta's Mumbai office for D2C and e-commerce teams on using AI to handle festive-season support load, WhatsApp marketing and voice agents."
+  },
+  {
+   "id": "mumbai-meets-ai-06",
+   "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
+   "cat": "AI",
+   "tags": [
+    "Talk",
+    "Fireside chat"
+   ],
+   "area": "Bhandup West",
+   "venue": "Exact venue emailed to selected attendees",
+   "start": "2026-10-10T11:00",
+   "end": "14:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · approval required",
+   "aud": [
+    "Developer",
+    "Founder"
+   ],
+   "src": "Luma",
+   "also": "Meetup",
+   "url": "https://luma.com/t7ifye5x",
+   "org": "Mumbai Meets AI",
+   "access": "approval",
+   "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup."
+  },
+  {
+   "id": "devday-exchange-mumbai",
+   "title": "DevDay Exchange Community: Mumbai",
+   "cat": "AI",
+   "tags": [
+    "OpenAI",
+    "Codex",
+    "Developers"
+   ],
+   "area": "BKC",
+   "venue": "Shared after approval",
+   "start": "2026-10-10T10:30",
+   "end": null,
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · approval required",
+   "aud": [
+    "Developer"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/1fpwe04g",
+   "org": "DevDay Exchange community",
+   "access": "approval",
+   "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits."
+  },
+  {
+   "id": "evm-capital-hackathon",
+   "title": "EVM Capital Hackathon: Mumbai edition",
+   "cat": "Startup",
+   "tags": [
+    "Hackathon",
+    "EVM",
+    "24 hours"
+   ],
+   "area": "Andheri East",
+   "venue": "Venture Catalysts++, Times Square, Marol",
+   "start": "2026-10-10",
+   "endDate": "2026-10-11",
+   "end": null,
+   "timeNote": "Saturday morning start, Sunday afternoon demos",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · approval required",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/0z07eni5",
+   "org": "EVM Capital",
+   "access": "approval",
+   "desc": "A 24-hour hackathon for 50 to 60 builders that judges teams on real user traction rather than slides. The winning team gets an investor screening with Venture Catalysts, plus a ₹1 lakh prize pool."
+  },
+  {
+   "id": "shayari-showdown",
+   "title": "The Great Shayari Showdown: human poets vs AI",
+   "cat": "Culture",
+   "tags": [
+    "Poetry",
+    "AI"
+   ],
+   "area": "Jogeshwari West",
+   "venue": "Vaibhav Palace, New Link Road",
+   "start": "2026-10-11T10:00",
+   "end": "12:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free",
+   "aud": [
+    "Open to All"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/the-great-shayari-showdown-human-poets-vs-ai-genz-tickets/80003235633928",
+   "org": "Coffee Tables",
+   "access": "open",
+   "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner."
+  },
+  {
+   "id": "titan-consumer-mixer",
+   "title": "Titan Capital × V3 Ventures Consumer Mixer",
+   "cat": "Startup",
+   "tags": [
+    "Consumer",
+    "Investors",
+    "Networking"
+   ],
+   "area": "Lower Parel",
+   "venue": "Shared on confirmation",
+   "start": "2026-10-16T19:30",
+   "end": "23:30",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · approval required",
+   "aud": [
+    "Founder"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/ubulpdq7",
+   "org": "Titan Capital",
+   "access": "approval",
+   "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures. Places are limited."
+  },
+  {
+   "id": "code-to-capital",
+   "title": "Code to Capital Summit",
+   "cat": "Startup",
+   "tags": [
+    "LegalTech",
+    "IP"
+   ],
+   "area": "Vile Parle East",
+   "venue": "70-C Nehru Road, near Mumbai airport T1",
+   "start": "2026-10-23T08:00",
+   "end": "19:00",
+   "fmt": "Offline",
+   "price": 4999,
+   "priceNote": "₹4,999 to ₹6,999",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/code-to-capital-summit-tickets/80003201845282",
+   "org": "LegalTechMeet",
+   "access": "open",
+   "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers."
+  },
+  {
+   "id": "enterprise-ai-summit",
+   "title": "Enterprise AI Summit Mumbai 2026",
+   "cat": "AI",
+   "tags": [
+    "Enterprise",
+    "Agents",
+    "DPI"
+   ],
+   "area": "BKC",
+   "venue": "Jio World Convention Centre",
+   "start": "2026-10-26",
+   "endDate": "2026-10-28",
+   "end": null,
+   "timeNote": "Times on the event page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown on Luma",
+   "aud": [
+    "Professional",
+    "Founder"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/y2o1cuts",
+   "org": "stage-x",
+   "access": "open",
+   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists."
+  },
+  {
+   "id": "healthtech-founders-mixer",
+   "title": "Startup Founders' Mixer: Health Tech",
+   "cat": "Startup",
+   "tags": [
+    "Health tech",
+    "D2C",
+    "Networking"
+   ],
+   "area": "Mumbai",
+   "venue": "Shared with approved attendees",
+   "start": "2026-10-29T17:00",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 700,
+   "priceNote": "₹700 · screened, about 30 seats",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/startup-founders-mixer-health-tech-mumbai/100002001776961779",
+   "org": "Bhavik Jain",
+   "access": "approval",
+   "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce."
+  },
+  {
+   "id": "devcon-8",
+   "title": "Devcon 8 India",
+   "cat": "Tech",
+   "tags": [
+    "Ethereum",
+    "Conference",
+    "4 days"
+   ],
+   "area": "BKC",
+   "venue": "Jio World Centre, Bandra East",
+   "start": "2026-11-03T09:30",
+   "endDate": "2026-11-06",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Indian students $25 by application · India residents $149 · general $499",
+   "aud": [
+    "Developer",
+    "Student",
+    "Founder"
+   ],
+   "src": "Devcon",
+   "url": "https://tickets.devcon.org/",
+   "org": "Ethereum Foundation",
+   "access": "open",
+   "desc": "The Ethereum Foundation's global developer conference, held in Mumbai this year across four days. It is open to engineers, designers, researchers, educators and artists, not only developers."
+  },
+  {
+   "id": "media-accelerator-cohort",
+   "title": "Media Accelerator & Startup Cohort",
+   "cat": "Startup",
+   "tags": [
+    "Web3",
+    "Investors",
+    "Devcon week"
+   ],
+   "area": "BKC",
+   "venue": "Jio World Centre, G Block",
+   "start": "2026-11-03",
+   "endDate": "2026-11-06",
+   "end": null,
+   "timeNote": "Times on the event page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · approval required",
+   "aud": [
+    "Founder"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/mh0xmqg0",
+   "org": "Meta Blockchain",
+   "access": "approval",
+   "desc": "A Devcon-week side event that connects blockchain and AI startups with investors and media, with mentoring and a pool of funding and grants for selected teams."
+  },
+  {
+   "id": "aicd-mumbai",
+   "title": "AICD Mumbai",
+   "cat": "AI",
+   "tags": [
+    "Microsoft",
+    "Azure",
+    "Power Platform"
+   ],
+   "area": "Santacruz East",
+   "venue": "Microsoft India office, Central Salsette Tramway Road",
+   "start": "2026-11-07T08:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free",
+   "aud": [
+    "Professional",
+    "Founder"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+   "org": "MCEXPERT",
+   "access": "open",
+   "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
+  }
+ ],
+ "QUEUE_RAW": [
+  {
+   "qid": "q-build-room",
+   "title": "Build Room: design engineering & branding workshop",
+   "cat": "Design",
+   "area": "Andheri",
+   "src": "Luma",
+   "url": "https://luma.com/q1ygdwsc",
+   "access": "open",
+   "why": "Event page would not open this run; an aggregator lists it for 3 Oct at Pearl Academy.",
+   "conf": {
+    "date": 50,
+    "place": 70,
+    "category": 95
+   },
+   "hint": "2026-10-03"
+  },
+  {
+   "qid": "q-philosophy",
+   "title": "Philosophy meetup: mapping the ethics of generative AI",
+   "cat": "Culture",
+   "area": "Andheri West",
+   "src": "Luma",
+   "url": "https://luma.com/j4zoc2fx",
+   "access": "open",
+   "why": "No date on the page; an aggregator lists 4 Oct.",
+   "conf": {
+    "date": 50,
+    "place": 97,
+    "category": 81
+   },
+   "hint": "2026-10-04"
+  },
+  {
+   "qid": "q-hacknation",
+   "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
+   "cat": "AI",
+   "area": "Powai",
+   "src": "Luma",
+   "url": "https://luma.com/vpgf3s3t",
+   "access": "approval",
+   "why": "Page shows 3–4 Oct but the year did not read clearly. Hosted with the IIT Bombay Analytics Club.",
+   "conf": {
+    "date": 60,
+    "place": 90,
+    "category": 97
+   }
+  },
+  {
+   "qid": "q-echai",
+   "title": "Mumbai Startup Meetup (eChai Ventures)",
+   "cat": "Startup",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/0sdtr96e",
+   "access": "open",
+   "why": "Event page would not open; an aggregator lists 3 Oct.",
+   "conf": {
+    "date": 50,
+    "place": 30,
+    "category": 90
+   },
+   "hint": "2026-10-03"
+  },
+  {
+   "qid": "q-proxima",
+   "title": "At the Frontier of Fundraising (Proxima Mumbai)",
+   "cat": "Startup",
+   "area": "Chakala",
+   "src": "Luma",
+   "url": "https://luma.com/pbwscyth",
+   "access": "open",
+   "why": "Event page would not open; an aggregator lists 3 Oct.",
+   "conf": {
+    "date": 50,
+    "place": 70,
+    "category": 90
+   },
+   "hint": "2026-10-03"
+  },
+  {
+   "qid": "q-elephanta",
+   "title": "Elephanta Island mangrove clean-up",
+   "cat": "Climate",
+   "area": "Elephanta",
+   "src": "Luma",
+   "url": "https://luma.com/SameMumbaiMangroves_ElephantaMangrove_3Oct26",
+   "access": "open",
+   "why": "Event page would not open; date appears in the link (3 Oct).",
+   "conf": {
+    "date": 60,
+    "place": 90,
+    "category": 95
+   },
+   "hint": "2026-10-03"
+  },
+  {
+   "qid": "q-civic-sim",
+   "title": "Civic Simulation (Save Mumbai Mangroves)",
+   "cat": "Climate",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/SaveMumbaiMangroves_CivicSimulation_3Oct26",
+   "access": "open",
+   "why": "Event page would not open; the link says 3 Oct but an aggregator lists 2 Oct.",
+   "conf": {
+    "date": 40,
+    "place": 60,
+    "category": 85
+   },
+   "hint": "2026-10-03"
+  },
+  {
+   "qid": "q-datatalks",
+   "title": "Making Agentic AI Real: Data & AI on Snowflake",
+   "cat": "AI",
+   "area": "Powai",
+   "src": "Luma",
+   "url": "https://luma.com/datatalks-mumbai-2026",
+   "access": "open",
+   "why": "No date on the page; described as a Saturday morning session.",
+   "conf": {
+    "date": 0,
+    "place": 98,
+    "category": 93
+   }
+  },
+  {
+   "qid": "q-clinical-ai",
+   "title": "Clinical AI Summit 2026",
+   "cat": "AI",
+   "area": "Parel",
+   "src": "Luma",
+   "url": "https://luma.com/3fs83hz8",
+   "access": "open",
+   "why": "No date on the page. ₹4,500 ticket at ITC Grand Central.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 90
+   }
+  },
+  {
+   "qid": "q-gpu-presummit",
+   "title": "Unicorn × AI × GPU Net Pre-Summit Mumbai",
+   "cat": "AI",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/d1f99fgo",
+   "access": "approval",
+   "why": "No date on the page. For compute and data-centre leaders.",
+   "conf": {
+    "date": 0,
+    "place": 90,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-aief",
+   "title": "AI Economic Forum (AIEF) Mumbai 2026",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/a0e6b8at",
+   "access": "approval",
+   "why": "No date or venue on the page. Devcon-week side event.",
+   "conf": {
+    "date": 0,
+    "place": 30,
+    "category": 88
+   }
+  },
+  {
+   "qid": "q-orkeneo",
+   "title": "Orkeneo Mumbai Meetup",
+   "cat": "Startup",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/zg6s29vd",
+   "access": "approval",
+   "why": "No date on the page. For restaurant and food-tech founders interested in AI.",
+   "conf": {
+    "date": 0,
+    "place": 60,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-startup-mixer",
+   "title": "The Startup Mixer: capital, connections & growth",
+   "cat": "Startup",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/2b4osmy7",
+   "access": "approval",
+   "why": "No date on the page.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 88
+   }
+  },
+  {
+   "qid": "q-onchain-legal",
+   "title": "Onchain Legal Summit (Devcon India 2026)",
+   "cat": "Startup",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/cw0h549b",
+   "access": "open",
+   "why": "No date on the page. Likely during Devcon week.",
+   "conf": {
+    "date": 0,
+    "place": 70,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-solana",
+   "title": "Solana Summit India",
+   "cat": "Tech",
+   "area": "Vile Parle East",
+   "src": "Luma",
+   "url": "https://luma.com/solana-summit-india",
+   "access": "approval",
+   "why": "No date on the page; one day, 10:00 to 17:00.",
+   "conf": {
+    "date": 0,
+    "place": 60,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-cypherpunk",
+   "title": "Ethereum Cypherpunk Congress #3",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/spsnos9t",
+   "access": "open",
+   "why": "No date on the page. Privacy and digital-rights festival.",
+   "conf": {
+    "date": 0,
+    "place": 30,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-near",
+   "title": "NEAR Builders Cafe: Roast My Repo",
+   "cat": "Tech",
+   "area": "Lokmanya Tilak Nagar",
+   "src": "Luma",
+   "url": "https://luma.com/near-ss07",
+   "access": "approval",
+   "why": "No date on the page. 15 to 20 builders.",
+   "conf": {
+    "date": 0,
+    "place": 50,
+    "category": 90
+   }
+  },
+  {
+   "qid": "q-elastic",
+   "title": "Elastic AI Connect: Mumbai",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/ssouxw3c",
+   "access": "approval",
+   "why": "No date on the page last run; page would not open this run.",
+   "conf": {
+    "date": 0,
+    "place": 40,
+    "category": 96
+   }
+  },
+  {
+   "qid": "q-claude",
+   "title": "Mumbai | Claude Conversation",
+   "cat": "AI",
+   "area": "Vidyanagar",
+   "src": "Luma",
+   "url": "https://luma.com/claude-ley0",
+   "access": "approval",
+   "why": "No date on the page last run; page would not open this run.",
+   "conf": {
+    "date": 0,
+    "place": 60,
+    "category": 94
+   }
+  },
+  {
+   "qid": "q-klaudepod",
+   "title": "KlaudePod 10: Coffee, AI & Unfinished Ideas",
+   "cat": "AI",
+   "area": "Andheri West",
+   "src": "Luma",
+   "url": "https://luma.com/5lxd2x7o",
+   "access": "approval",
+   "why": "No date on the page last run; page would not open this run.",
+   "conf": {
+    "date": 0,
+    "place": 97,
+    "category": 90
+   }
+  }
+ ],
+ "RUNS": [
+  {
+   "src": "Luma: Mumbai, AI and Tech pages",
+   "what": "City and category listings, then each event page",
+   "found": 34,
+   "pub": 9,
+   "review": 15,
+   "dup": 0,
+   "skip": 10,
+   "note": "Arts page and several event pages would not open; Weathers of Our Work kept from last run"
+  },
+  {
+   "src": "Hidden Events: Mumbai (Luma mirror)",
+   "what": "Aggregator listing, used for dates only",
+   "found": 18,
+   "pub": 0,
+   "review": 5,
+   "dup": 6,
+   "skip": 7,
+   "note": "Event pages would not open, so dates stay in review"
+  },
+  {
+   "src": "AllEvents: technology, startup, AI",
+   "what": "Listings, then each event page",
+   "found": 26,
+   "pub": 6,
+   "review": 0,
+   "dup": 2,
+   "skip": 18,
+   "note": "Trade expos, concerts, pay-to-pitch and children's events skipped"
+  },
+  {
+   "src": "Meetup: Mumbai Meets AI, UI/UX search",
+   "what": "Group pages and topic search",
+   "found": 1,
+   "pub": 0,
+   "review": 0,
+   "dup": 1,
+   "skip": 0,
+   "note": "Duplicate merged with Luma; UX search showed only online events"
+  },
+  {
+   "src": "Web search: Devcon, hackathons, design",
+   "what": "Searches, then official pages",
+   "found": 4,
+   "pub": 1,
+   "review": 0,
+   "dup": 0,
+   "skip": 3,
+   "note": "Design Mumbai is cancelled; campus CTFs skipped"
+  }
+ ],
+ "COMMUNITIES": [
+  {
+   "id": "mumbai-meets-ai",
+   "name": "Mumbai Meets AI",
+   "org": "Mumbai Meets AI",
+   "focus": "Meetups for AI builders, engineers and founders: a keynote, a fireside chat and networking.",
+   "cats": [
+    "AI"
+   ],
+   "area": "Around Mumbai",
+   "url": "https://www.meetup.com/mumbai-meets-ai/"
+  },
+  {
+   "id": "fof-mumbai",
+   "name": "Friends of Figma Mumbai",
+   "org": "Friends of Figma Mumbai",
+   "focus": "Figma's local design community: Config watch parties, accessibility talks and a design leadership circle.",
+   "cats": [
+    "Design"
+   ],
+   "area": "Mumbai",
+   "url": "https://fofmumbai.com/"
+  },
+  {
+   "id": "haxnation",
+   "name": "Haxnation Mumbai",
+   "org": "Haxnation Mumbai",
+   "focus": "Monthly meet-ups for security professionals and learners on application security and defence.",
+   "cats": [
+    "Tech"
+   ],
+   "area": "Andheri West",
+   "url": "https://luma.com/5cxqmf5p"
+  },
+  {
+   "id": "indian-ai-community",
+   "name": "Indian AI Community",
+   "org": "Indian AI Community",
+   "focus": "Small working sessions where people building AI products demo and solve problems together.",
+   "cats": [
+    "AI"
+   ],
+   "area": "Lower Parel",
+   "url": "https://luma.com/404gkueh"
+  },
+  {
+   "id": "js-community",
+   "name": "JS Mumbai",
+   "org": "JS Community & Paytm Community",
+   "focus": "JavaScript meetups for working developers, hosted with company communities.",
+   "cats": [
+    "Tech"
+   ],
+   "area": "Andheri East",
+   "url": "https://luma.com/jolbsr2c"
+  },
+  {
+   "id": "save-mumbai-mangroves",
+   "name": "Save Mumbai Mangroves",
+   "org": "Save Mumbai Mangroves",
+   "focus": "Clean-ups and community dialogues on the city's coast and climate resilience.",
+   "cats": [
+    "Climate"
+   ],
+   "area": "Juhu, Goregaon",
+   "url": "https://luma.com/SaveMumbaiMangroves_ClimatePanchayat_3Oct26"
+  },
+  {
+   "id": "one-future",
+   "name": "One Future Collective",
+   "org": "One Future Collective",
+   "focus": "Participatory projects on gender, work and climate, including exhibitions.",
+   "cats": [
+    "Art",
+    "Climate"
+   ],
+   "area": "Mumbai",
+   "url": "https://luma.com/OneFutureCollective_WeathersOfOurWork_30Sep26"
+  },
+  {
+   "id": "change-is-us",
+   "name": "Change Is Us",
+   "org": "Change Is Us",
+   "focus": "Youth-led coastal clean-ups across Mumbai since 2019.",
+   "cats": [
+    "Climate"
+   ],
+   "area": "Girgaon Chowpatty and beaches",
+   "url": "https://luma.com/rnwa9xbx"
+  },
+  {
+   "id": "devday-exchange",
+   "name": "DevDay Exchange Community",
+   "org": "DevDay Exchange community",
+   "focus": "Local developer gatherings, run with Codex community events, to share projects built on OpenAI's latest releases.",
+   "cats": [
+    "AI"
+   ],
+   "area": "BKC",
+   "url": "https://luma.com/1fpwe04g"
+  }
+ ]
+}
