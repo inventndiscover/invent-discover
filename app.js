@@ -281,6 +281,46 @@ function sealinkSVG(){
   return `<svg class="sealink" viewBox="0 0 ${W} 200" role="img" aria-label="Line drawing of the Bandra–Worli Sea Link">${p}</svg>`;
 }
 
+/* ---------- From X: AI & Tech ----------
+   signals.json is refreshed every few hours. Each post is summarised in our own words
+   and links to the original on X; the detail panel shows X's official embed. */
+const SIG = (window.__SIGNALS&&Array.isArray(window.__SIGNALS.SIGNALS)) ? window.__SIGNALS : {REFRESHED:null,SIGNALS:[]};
+const SIGNALS = SIG.SIGNALS.filter(p=>p&&p.url&&/^https:\/\/(x|twitter)\.com\//.test(p.url)).sort((a,b)=>Date.parse(b.posted)-Date.parse(a.posted));
+const XCOL={AI:"#FFB23F",Models:"#9B7BFF","Open models":"#3DDC97",Research:"#4DA3FF",Tech:"#6FA8FF",India:"#FF7B5C",Policy:"#E3B77A",XR:"#9B7BFF",Design:"#FF6B5B"};
+const agoShort = iso=>{const m=Math.max(1,Math.round((Date.now()-Date.parse(iso))/6e4));return m<60?`${m}m`:m<1440?`${Math.round(m/60)}h`:`${Math.round(m/1440)}d`};
+const xLogo='<svg class="xlogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg>';
+function xCard(p){
+  const init=(p.name||p.handle).replace(/[^A-Za-z0-9 ]/g,"").split(" ").filter(Boolean).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  const k=(p.kind||"").toLowerCase();
+  return `<button class="xpost" data-open-x="${esc(p.id)}" aria-label="Post by ${esc(p.name)}: ${esc(p.summary)}">
+    <span class="xhead"><span class="xav" style="--c:${XCOL[p.topic]||"#6FA8FF"}">${esc(init)}</span><span class="xwho"><b>${esc(p.name)}</b><span>@${esc(p.handle)} · ${agoShort(p.posted)}</span></span>${xLogo}</span>
+    <p class="xtext">${esc(p.summary)}</p>
+    <span class="xfoot"><span style="display:flex;gap:6px;align-items:center"><span class="xkind ${k}">${esc(p.kind||"Post")}</span><span>${esc(p.topic||"")}</span></span><span>View post ›</span></span>
+  </button>`;
+}
+const xFresh = ()=>SIG.REFRESHED?`<div class="fresh"><span class="live">Updated ${agoShort(SIG.REFRESHED)} ago</span><span>Summaries in our words, linked to the original posts</span><span>Refreshed every 3 hours</span></div>`:"";
+function xSection(limit){
+  if(!SIGNALS.length)return "";
+  return `<section class="block"><div class="wrap">
+    <div class="sec-head"><div><h2 class="sec-title">From X: AI &amp; Tech</h2><p class="sec-sub">What labs, builders and reporters are posting about right now.</p><div style="margin-top:10px">${xFresh()}</div></div>${limit?`<a class="more" href="#insights" data-go="insights">All posts</a>`:""}</div>
+    <div class="xgrid">${SIGNALS.slice(0,limit||SIGNALS.length).map(xCard).join("")}</div>
+  </div></section>`;
+}
+function xSheet(id){
+  const p=SIGNALS.find(x=>x.id===id);if(!p)return;
+  const tweetUrl=p.url.replace("://x.com/","://twitter.com/");
+  openSheet(`<div class="sheet-body" style="padding-top:60px">
+    <div class="xhead">${xCard(p).match(/<span class="xav"[\s\S]*?<\/span><\/span>/)[0]}</div>
+    <h2 style="font-size:22px;line-height:1.35;letter-spacing:-.02em">${esc(p.summary)}</h2>
+    <div class="note">Our summary. The original post is below${p.kind==="Leak"?"; this is an unconfirmed report":""}.</div>
+    <div class="xembed" id="xembed"><blockquote class="twitter-tweet" data-theme="dark" data-dnt="true"><a href="${esc(tweetUrl)}">Loading the post from X…</a></blockquote></div>
+    <a class="btn taxi" href="${esc(p.url)}" target="_blank" rel="noopener">Open on X ↗</a>
+  </div>`,`Post by ${p.name}`);
+  // X's official embed script turns the blockquote into the real post
+  if(window.twttr&&twttr.widgets){twttr.widgets.load(document.getElementById("xembed"))}
+  else if(!document.getElementById("twjs")){const s=document.createElement("script");s.id="twjs";s.async=true;s.src="https://platform.twitter.com/widgets.js";document.body.appendChild(s)}
+}
+
 function viewHome(){
   const upcoming=LIVE().sort((a,b)=>a.at-b.at);
   const [ws,we]=weekendRange();
@@ -314,6 +354,8 @@ function viewHome(){
     <div class="sec-head"><div><h2 class="sec-title">This weekend</h2><p class="sec-sub">${fmtDay(dayDiff(ws,TODAY)<0?TODAY:ws)} to ${fmtDay(we)}</p></div><a class="more" href="#discover" data-when="weekend">All weekend events</a></div>
     ${weekend.length?`<div class="grid">${weekend.slice(0,4).map(eventCard).join("")}</div>`:`<div class="empty">Nothing listed for this weekend yet. <a href="#discover" data-go="discover">See what's coming up</a>.</div>`}
   </div></section>
+
+  ${xSection(3)}
 
   <section class="block"><div class="wrap">
     <div class="sec-head"><div><h2 class="sec-title">For students</h2><p class="sec-sub">Hackathons, workshops and meetups open to students.</p></div><a class="more" href="#discover" data-aud="Student">All student events</a></div>
@@ -397,8 +439,9 @@ function viewInsights(){
   <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 30%"><div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Insights</span></div><h1 class="mega">Insights</h1><p>Essays, visit notes and event recaps from the Invent &amp; Discover blog.</p></div>
   </div></div>
+  ${xSection(0)}
   <div class="wrap">
-    <section class="block" style="padding-top:28px">
+    <section class="block">
       <div class="sec-head"><div><h2 class="sec-title">Bay Area immersion, 2025</h2><p class="sec-sub">Notes from university visits on AI, XR and design education.</p></div></div>
       <div class="rowlist">${ARTICLES.map(articleRow).join("")}</div>
     </section>
@@ -724,6 +767,7 @@ document.addEventListener("click",ev=>{
   if(t.id==="boardToggle"){toggleBoard();return}
   if(d.tod){todMode=d.tod;applyPhase(d.tod==="auto"?phaseNow():d.tod,true);toast(d.tod==="auto"?`Following Mumbai time: ${TOD_LABEL[PHASE]}`:`Previewing ${TOD_LABEL[d.tod].toLowerCase()}`);return}
   if(t.closest(".hres")){hideH();hq.blur()}
+  if(d.openX){ev.preventDefault();closeSearch();xSheet(d.openX);return}
   if(d.openEvent){ev.preventDefault();closeSearch();eventSheet(d.openEvent);return}
   if(d.openDemo){ev.preventDefault();closeSearch();demoSheet(d.openDemo);return}
   if(d.ext){const a=document.createElement("a");a.href=d.ext;a.target="_blank";a.rel="noopener";a.click();return}

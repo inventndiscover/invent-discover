@@ -7,7 +7,8 @@
 #      in that folder, takes the newest events file, checks that it is valid,
 #      and saves it as events.json in this repository.
 #   3. It then publishes the whole site to GitHub Pages.
-# If anything about the new file looks wrong, the site keeps the last good data.
+#   4. The same happens for posts from X: newest signals-YYYYMMDD-HHMM.json → signals.json.
+# If anything about a new file looks wrong, the site keeps the last good data.
 
 name: Sync events and publish site
 
@@ -15,7 +16,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "20 */3 * * *"   # every 3 hours, at 20 minutes past (UTC)
+    - cron: "20 */3 * * *"   # every 3 hours, at 20 minutes past (UTC) = 8:50, 11:50, 14:50... IST
   workflow_dispatch: {}       # adds a "Run workflow" button in the Actions tab
 
 permissions:
@@ -93,15 +94,67 @@ jobs:
           print(f"events.json updated: {len(events)} events, {len(data['QUEUE_RAW'])} in the queue, refreshed {data['REFRESHED']}")
           PY
 
-      - name: Save the updated events.json
+      - name: Fetch the newest X posts file from Google Drive
+        env:
+          DRIVE_FOLDER_ID: 1spZS4ZosxW_LKyR3U5Ht4rsiBgGjx1bL
         run: |
-          if git diff --quiet -- events.json; then
-            echo "No change to events.json"
+          python3 - <<'PY'
+          # Same idea as events: take the newest signals-YYYYMMDD-HHMM.json, check it, save it as signals.json.
+          import json, os, re, sys, urllib.request
+
+          folder = os.environ["DRIVE_FOLDER_ID"]
+          ua = {"User-Agent": "Mozilla/5.0 (events-sync)"}
+          def get(url):
+              req = urllib.request.Request(url, headers=ua)
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return r.read().decode("utf-8", "replace")
+
+          try:
+              html = get(f"https://drive.google.com/embeddedfolderview?id={folder}")
+          except Exception as e:
+              print(f"::warning::Could not open the Drive folder ({e}). Keeping current signals.json."); sys.exit(0)
+          files = re.findall(r'id="entry-([A-Za-z0-9_-]{20,})".*?flip-entry-title">([^<]+)<', html, re.S)
+          files = [(fid, n.strip()) for fid, n in files if re.fullmatch(r"signals-\d{8}-\d{4}\.json", n.strip())]
+          if not files:
+              print("No signals files in Drive yet."); sys.exit(0)
+          fid, name = sorted(files, key=lambda f: f[1])[-1]
+          print(f"Newest X posts file in Drive: {name}")
+          try:
+              data = json.loads(get(f"https://drive.google.com/uc?export=download&id={fid}"))
+          except Exception as e:
+              print(f"::warning::Could not read {name} as JSON ({e}). Keeping current signals.json."); sys.exit(0)
+
+          posts = data.get("SIGNALS")
+          problems = []
+          if not data.get("REFRESHED"): problems.append("missing REFRESHED")
+          if not isinstance(posts, list) or not posts: problems.append("no posts")
+          for p in posts or []:
+              if not all(p.get(k) for k in ("id", "handle", "name", "url", "posted", "summary")):
+                  problems.append(f"post missing a field: {p.get('id')}")
+              elif not re.fullmatch(r"https://(x|twitter)\.com/[A-Za-z0-9_]+/status/\d+", p["url"]):
+                  problems.append(f"bad link: {p['id']}")
+          if problems:
+              print("::warning::X posts file rejected: " + "; ".join(problems[:5])); sys.exit(0)
+          try:
+              current = json.load(open("signals.json"))
+          except Exception:
+              current = {}
+          if data["REFRESHED"] <= current.get("REFRESHED", ""):
+              print("Drive file is not newer than the live X posts. Nothing to do."); sys.exit(0)
+          with open("signals.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, ensure_ascii=False, indent=1); f.write("\n")
+          print(f"signals.json updated: {len(posts)} posts, refreshed {data['REFRESHED']}")
+          PY
+
+      - name: Save the updated data files
+        run: |
+          if git diff --quiet -- events.json signals.json; then
+            echo "No change to events.json or signals.json"
           else
             git config user.name "events-sync"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add events.json
-            git commit -m "Update events from daily refresh"
+            git add events.json signals.json
+            git commit -m "Update events and X posts from the scheduled refresh"
             git push
           fi
 

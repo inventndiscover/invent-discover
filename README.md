@@ -9,6 +9,7 @@ The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives
 | `index.html` | The page skeleton and all the styling (CSS) | Rarely: only for design changes |
 | `app.js` | The behaviour: filters, search, cards, the "Next up" panel | Rarely: only for new features |
 | `events.json` | The data: events, curator queue, run log, communities | **Every day**, synced from Google Drive |
+| `signals.json` | Posts from X about AI and tech, summarised in our own words with links to the originals | **Every 3 hours**, synced from Google Drive |
 | `images/` | The four Mumbai photos, each in four time-of-day versions | Almost never |
 
 When someone opens the page:
@@ -64,6 +65,29 @@ Claude (daily, 07:47 IST)                     GitHub (every 3 hours)
 - To publish right away instead of waiting up to 3 hours: **Actions → Sync events and publish site → Run workflow**.
 - If a new file looks wrong (missing fields, bad dates, broken JSON, or older than the live data), the workflow skips it and the site keeps the last good data. The reason shows as a yellow warning in that run.
 - The Drive folder must stay shared as **Anyone with the link: Viewer**, or GitHub can't read it.
+
+## Posts from X ("From X: AI & Tech")
+
+A scheduled Claude task runs every 3 hours. It finds notable recent posts on X from AI labs, builders and tech reporters, writes a one-line summary of each in its own words, and saves `signals-YYYYMMDD-HHMM.json` to the same Drive folder. The workflow picks the newest one up and saves it as `signals.json`.
+
+One post looks like this:
+
+```json
+{
+ "id": "2102435703535939725",
+ "handle": "AnthropicAI",
+ "name": "Anthropic",
+ "url": "https://x.com/AnthropicAI/status/2102435703535939725",
+ "posted": "2026-09-22T22:01:00+05:30",
+ "topic": "Models",
+ "kind": "Official",
+ "summary": "Claude Opus 5.5 is now available."
+}
+```
+
+- `kind` is `Official` (the company or person itself), `Report` (news or commentary) or `Leak` (unconfirmed).
+- Clicking a card opens a panel with X's own embed of the original post.
+- If `signals.json` is missing or broken, the page simply hides that section; events are unaffected.
 
 ## Forms
 
