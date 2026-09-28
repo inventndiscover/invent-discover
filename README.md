@@ -9,7 +9,7 @@ The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives
 | `index.html` | The page skeleton and all the styling (CSS) | Rarely: only for design changes |
 | `app.js` | The behaviour: filters, search, cards, the "Next up" panel | Rarely: only for new features |
 | `events.json` | The data: events, curator queue, run log, communities | **Every day**, synced from Google Drive |
-| `signals.json` | Posts from X about AI and tech, summarised in our own words with links to the originals | **Every 3 hours**, synced from Google Drive |
+| `signals.json` | Posts from X about AI and tech, summarised in our own words with links to the originals | **Every day**, synced from Google Drive |
 | `images/` | The four Mumbai photos, each in four time-of-day versions | Almost never |
 
 When someone opens the page:
@@ -68,7 +68,7 @@ Claude (daily, 07:47 IST)                     GitHub (every 3 hours)
 
 ## Posts from X ("From X: AI & Tech")
 
-A scheduled Claude task runs every 3 hours. It finds notable recent posts on X from AI labs, builders and tech reporters, writes a one-line summary of each in its own words, and saves `signals-YYYYMMDD-HHMM.json` to the same Drive folder. The workflow picks the newest one up and saves it as `signals.json`.
+A scheduled Claude task runs every morning at 7:17 IST. It finds notable recent posts on X from AI labs, builders and tech reporters, writes a one-line summary of each in its own words, and saves `signals-YYYYMMDD-HHMM.json` to the same Drive folder. The workflow picks the newest one up and saves it as `signals.json`.
 
 One post looks like this:
 

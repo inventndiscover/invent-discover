@@ -282,7 +282,7 @@ function sealinkSVG(){
 }
 
 /* ---------- From X: AI & Tech ----------
-   signals.json is refreshed every few hours. Each post is summarised in our own words
+   signals.json is refreshed once a day. Each post is summarised in our own words
    and links to the original on X; the detail panel shows X's official embed. */
 const SIG = (window.__SIGNALS&&Array.isArray(window.__SIGNALS.SIGNALS)) ? window.__SIGNALS : {REFRESHED:null,SIGNALS:[]};
 const SIGNALS = SIG.SIGNALS.filter(p=>p&&p.url&&/^https:\/\/(x|twitter)\.com\//.test(p.url)).sort((a,b)=>Date.parse(b.posted)-Date.parse(a.posted));
@@ -298,7 +298,7 @@ function xCard(p){
     <span class="xfoot"><span style="display:flex;gap:6px;align-items:center"><span class="xkind ${k}">${esc(p.kind||"Post")}</span><span>${esc(p.topic||"")}</span></span><span>View post ›</span></span>
   </button>`;
 }
-const xFresh = ()=>SIG.REFRESHED?`<div class="fresh"><span class="live">Updated ${agoShort(SIG.REFRESHED)} ago</span><span>Summaries in our words, linked to the original posts</span><span>Refreshed every 3 hours</span></div>`:"";
+const xFresh = ()=>SIG.REFRESHED?`<div class="fresh"><span class="live">Updated ${agoShort(SIG.REFRESHED)} ago</span><span>Summaries in our words, linked to the original posts</span><span>Refreshed daily</span></div>`:"";
 function xSection(limit){
   if(!SIGNALS.length)return "";
   return `<section class="block"><div class="wrap">
