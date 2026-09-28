@@ -743,7 +743,10 @@ function closeSearch(){$("#searchOv")?.remove()}
 /* =========================================================
    6. ROUTER + INTERACTIONS
    ========================================================= */
-const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,insights:viewInsights,communities:viewCommunities,submit:viewSubmit,curator:viewCurator};
+const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,insights:viewInsights,communities:viewCommunities,submit:viewSubmit};
+/* The curator desk is not linked anywhere. It opens only at this unlisted address. */
+const DESK="desk-hnljwj364a";
+VIEWS[DESK]=viewCurator;
 const blankF=()=>({when:"all",area:"all",cat:"all",fmt:"all",cost:"all",aud:"all",q:""});
 function render(){
   $("#main").innerHTML=VIEWS[state.view]();
