@@ -376,8 +376,8 @@ function viewHome(){
 
   <section class="block"><div class="wrap">
     <details class="fold" id="foldInsights" ${insightsOpen?"open":""}>
-      <summary class="fold-head"><span><h2 class="sec-title">Latest insights</h2><span class="sec-sub">From the Invent &amp; Discover archive · ${ARTICLES.length} articles</span></span><span class="fold-btn"><span class="fold-when-closed">Show</span><span class="fold-when-open">Hide</span><svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></summary>
-      <div class="fold-body"><div class="rowlist">${ARTICLES.slice(0,3).map(articleRow).join("")}</div>
+      <summary class="fold-head" aria-label="Latest insights: show or hide"><h2 class="sec-title">Latest insights</h2><span class="fold-btn" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></summary>
+      <div class="fold-body"><p class="sec-sub" style="margin:0 0 18px">From the Invent &amp; Discover archive.</p><div class="rowlist">${ARTICLES.slice(0,3).map(articleRow).join("")}</div>
         <p style="margin:18px 0 0"><a class="more" href="#insights" data-go="insights">All insights</a></p></div>
     </details>
   </div></section>
