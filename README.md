@@ -1,6 +1,6 @@
 # Invent + Discover: Mumbai
 
-The events page for [inventndiscover.com](https://inventndiscover.com), served by GitHub Pages at **events.inventndiscover.com**.
+The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives at [blog.inventndiscover.com](https://blog.inventndiscover.com) on WordPress.com.
 
 ## How the pieces fit
 

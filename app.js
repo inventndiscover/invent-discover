@@ -58,15 +58,15 @@ const DEMOS = [
 
 // Real posts from inventndiscover.com
 const ARTICLES = [
- {title:"2025: A Year of Learning, Decoding Knowledge, and Gratitude",date:"2025-12-26",tag:"Reflection",url:"https://inventndiscover.com/2025/12/26/2025-a-year-of-learning-decoding-knowledge-and-gratitude/"},
- {title:"Stanford University: Where Ideas Are Constantly in Motion",date:"2025-12-18",tag:"Education",url:"https://inventndiscover.com/2025/12/18/stanford-university-where-ideas-are-constantly-in-motion/"},
- {title:"The Silicon Valley Soul: Reflecting on AI, Ethics, and Education at Santa Clara University",date:"2025-12-14",tag:"AI",url:"https://inventndiscover.com/2025/12/14/the-silicon-valley-soul-two-months-reflecting-on-ai-ethics-and-education-at-santa-clara-university/"},
- {title:"San José State University: Business Innovation, AI, and XR in Action",date:"2025-12-10",tag:"XR",url:"https://inventndiscover.com/2025/12/10/san-jose-state-university-business-innovation-ai-and-xr-in-action/"},
- {title:"Showcasing AR Innovation to N. Chandrasekaran and Ronnie Screwvala",date:"2025-12-04",tag:"XR",url:"https://inventndiscover.com/2025/12/04/showcasing-ar-innovation-to-n-chandrasekaran-and-ronnie-screwvala/"},
- {title:"A Glimpse into Innovation at Northeastern University's Oakland Campus",date:"2025-12-02",tag:"Education",url:"https://inventndiscover.com/2025/12/02/a-glimpse-into-innovation-at-northeastern-universitys-oakland-campus/"},
- {title:"Designing Tomorrow: The Research-First Imperative from UC Berkeley's XR Lab",date:"2025-11-27",tag:"XR",url:"https://inventndiscover.com/2025/11/27/designing-tomorrow-the-research-first-imperative-from-uc-berkeleys-xr-lab/"},
- {title:"Learning by Design: Key Insights from Golden Gate University, San Francisco",date:"2025-11-25",tag:"Design",url:"https://inventndiscover.com/2025/11/25/learning-by-design-key-insights-from-golden-gate-university-san-francisco/"},
- {title:"Fueling Innovation: Key Learnings from the University of San Francisco (USF) Immersion",date:"2025-11-18",tag:"Education",url:"https://inventndiscover.com/2025/11/18/fueling-innovation-key-learnings-from-the-university-of-san-francisco-usf-immersion/"}
+ {title:"2025: A Year of Learning, Decoding Knowledge, and Gratitude",date:"2025-12-26",tag:"Reflection",url:"https://blog.inventndiscover.com/2025/12/26/2025-a-year-of-learning-decoding-knowledge-and-gratitude/"},
+ {title:"Stanford University: Where Ideas Are Constantly in Motion",date:"2025-12-18",tag:"Education",url:"https://blog.inventndiscover.com/2025/12/18/stanford-university-where-ideas-are-constantly-in-motion/"},
+ {title:"The Silicon Valley Soul: Reflecting on AI, Ethics, and Education at Santa Clara University",date:"2025-12-14",tag:"AI",url:"https://blog.inventndiscover.com/2025/12/14/the-silicon-valley-soul-two-months-reflecting-on-ai-ethics-and-education-at-santa-clara-university/"},
+ {title:"San José State University: Business Innovation, AI, and XR in Action",date:"2025-12-10",tag:"XR",url:"https://blog.inventndiscover.com/2025/12/10/san-jose-state-university-business-innovation-ai-and-xr-in-action/"},
+ {title:"Showcasing AR Innovation to N. Chandrasekaran and Ronnie Screwvala",date:"2025-12-04",tag:"XR",url:"https://blog.inventndiscover.com/2025/12/04/showcasing-ar-innovation-to-n-chandrasekaran-and-ronnie-screwvala/"},
+ {title:"A Glimpse into Innovation at Northeastern University's Oakland Campus",date:"2025-12-02",tag:"Education",url:"https://blog.inventndiscover.com/2025/12/02/a-glimpse-into-innovation-at-northeastern-universitys-oakland-campus/"},
+ {title:"Designing Tomorrow: The Research-First Imperative from UC Berkeley's XR Lab",date:"2025-11-27",tag:"XR",url:"https://blog.inventndiscover.com/2025/11/27/designing-tomorrow-the-research-first-imperative-from-uc-berkeleys-xr-lab/"},
+ {title:"Learning by Design: Key Insights from Golden Gate University, San Francisco",date:"2025-11-25",tag:"Design",url:"https://blog.inventndiscover.com/2025/11/25/learning-by-design-key-insights-from-golden-gate-university-san-francisco/"},
+ {title:"Fueling Innovation: Key Learnings from the University of San Francisco (USF) Immersion",date:"2025-11-18",tag:"Education",url:"https://blog.inventndiscover.com/2025/11/18/fueling-innovation-key-learnings-from-the-university-of-san-francisco-usf-immersion/"}
 ];
 const ART_CAT = {Reflection:"#E3B77A",Education:"#E3B77A",AI:"#FFB23F",XR:"#9B7BFF",Design:"#FF6B5B"};
 
