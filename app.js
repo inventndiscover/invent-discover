@@ -321,6 +321,8 @@ function xSheet(id){
   else if(!document.getElementById("twjs")){const s=document.createElement("script");s.id="twjs";s.async=true;s.src="https://platform.twitter.com/widgets.js";document.body.appendChild(s)}
 }
 
+let insightsOpen=false;
+document.addEventListener("toggle",e=>{if(e.target.id==="foldInsights")insightsOpen=e.target.open},true);
 function viewHome(){
   const upcoming=LIVE().sort((a,b)=>a.at-b.at);
   const [ws,we]=weekendRange();
@@ -373,8 +375,11 @@ function viewHome(){
   </div></section>
 
   <section class="block"><div class="wrap">
-    <div class="sec-head"><div><h2 class="sec-title">Latest insights</h2><p class="sec-sub">From the Invent &amp; Discover archive.</p></div><a class="more" href="#insights" data-go="insights">All insights</a></div>
-    <div class="rowlist">${ARTICLES.slice(0,3).map(articleRow).join("")}</div>
+    <details class="fold" id="foldInsights" ${insightsOpen?"open":""}>
+      <summary class="fold-head"><span><h2 class="sec-title">Latest insights</h2><span class="sec-sub">From the Invent &amp; Discover archive · ${ARTICLES.length} articles</span></span><span class="fold-btn"><span class="fold-when-closed">Show</span><span class="fold-when-open">Hide</span><svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></summary>
+      <div class="fold-body"><div class="rowlist">${ARTICLES.slice(0,3).map(articleRow).join("")}</div>
+        <p style="margin:18px 0 0"><a class="more" href="#insights" data-go="insights">All insights</a></p></div>
+    </details>
   </div></section>
 
   <section class="block"><div class="wrap">${digestHTML()}</div></section>`;
