@@ -512,6 +512,10 @@ function viewCurator(){
   <div class="page-head"><div class="wrap head-row"><div><div class="kicker"><span class="pill">Team only</span><span class="label">Sign-in required in the full build</span></div><h1 class="mega">Curator desk</h1><p>Everything the discovery run finds lands here. Events only reach Discover once their date, place and link are confirmed.</p><div style="margin-top:14px">${freshLine()}</div></div></div></div>
   <div class="wrap">
     <section class="block" style="padding-top:28px">
+      <div class="sec-head"><div><h2 class="sec-title">Preview time of day</h2><p class="sec-sub">The site changes its colours and photos with Mumbai time. Pick a mood to check how it looks, then use the menu to visit any page. Visitors always see Auto.</p></div></div>
+      <div class="tod-note" role="group" aria-label="Time of day">${[["auto","Auto (Mumbai time)"],["dawn","Dawn"],["day","Day"],["golden","Golden hour"],["night","Night"]].map(([k,l])=>`<button data-tod="${k}" aria-pressed="${todMode===k}">${l}</button>`).join("")}</div>
+    </section>
+    <section class="block" style="padding-top:28px">
       <div class="stats">
         <div><span class="label">Listings checked</span><b class="num">${found}</b></div>
         <div><span class="label">Published</span><b class="num">${pub}</b></div>
