@@ -484,6 +484,15 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
 .fold[open] .fold-btn svg{transform:rotate(180deg)}
 .fold-body{padding-top:22px;animation:foldIn .35s ease-out}
 @keyframes foldIn{from{opacity:0;transform:translateY(-6px)}}
+
+/* ---------- card separation: lift cards off the dark background ---------- */
+:root{--card-bg:linear-gradient(180deg,#171A22 0%,#10131A 100%);--card-edge:rgba(255,255,255,.14);
+  --card-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 18px 40px -18px rgba(0,0,0,.95),0 2px 6px rgba(0,0,0,.55)}
+.card,.comm,.xpost,.review,.stats div{background:var(--card-bg);border-color:var(--card-edge);box-shadow:var(--card-shadow)}
+.door{border-color:var(--card-edge);box-shadow:var(--card-shadow)}
+.card:hover,.comm:hover,.xpost:hover,.door:hover{border-color:rgba(var(--acc-rgb),.55);
+  box-shadow:0 1px 0 rgba(255,255,255,.09) inset,0 30px 60px -24px rgba(0,0,0,.95),0 0 0 1px rgba(var(--acc-rgb),.18),0 12px 40px -16px rgba(var(--acc-rgb),.35)}
+.mx{border-bottom-color:var(--card-edge)}
 </style>
 
 
