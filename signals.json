@@ -1,75 +1,95 @@
 {
- "REFRESHED": "2026-09-28T22:45:00+05:30",
+ "REFRESHED": "2026-09-29T07:19:11+05:30",
  "SIGNALS": [
+  {
+   "id": "2104665621120311465",
+   "handle": "theworldlabs",
+   "name": "World Labs",
+   "url": "https://x.com/theworldlabs/status/2104665621120311465",
+   "posted": "2026-09-29T01:42:41+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "World Labs says it is joining AMD, aiming to speed up its work on AI for the spatial and physical world."
+  },
+  {
+   "id": "2104662967677841481",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2104662967677841481",
+   "posted": "2026-09-29T01:32:08+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI Developers says the DevDay keynote is the next day and shares a link to watch it."
+  },
+  {
+   "id": "2104633115620823187",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2104633115620823187",
+   "posted": "2026-09-28T23:33:31+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Claude Sonnet 5.5 is out as the second model in the Claude 5.5 family. Anthropic says it runs over 30% faster than Sonnet 5 and costs up to 30% less for most work."
+  },
+  {
+   "id": "2104602479111393641",
+   "handle": "testingcatalog",
+   "name": "TestingCatalog News",
+   "url": "https://x.com/testingcatalog/status/2104602479111393641",
+   "posted": "2026-09-28T21:31:47+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Manus launched Manus 2.0, with a new, more efficient agent architecture called Cascade, cloud computers, event-triggered automations and an updated Manus Studio desktop app."
+  },
+  {
+   "id": "2104567031110533431",
+   "handle": "nvidia",
+   "name": "NVIDIA",
+   "url": "https://x.com/nvidia/status/2104567031110533431",
+   "posted": "2026-09-28T19:10:55+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "NVIDIA launched the Open Agent Safety Platform to control what AI agents can access and do, pairing its open-source OpenShell runtime with the Sentry reference design."
+  },
+  {
+   "id": "2104550609403695581",
+   "handle": "finkd",
+   "name": "Mark Zuckerberg",
+   "url": "https://x.com/finkd/status/2104550609403695581",
+   "posted": "2026-09-28T18:05:40+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Meta is starting Meta Enterprise Platform, a new business that sells its AI stack, including the Muse agent and models, directly to companies and developers."
+  },
+  {
+   "id": "2104462412430852229",
+   "handle": "IndianTechGuide",
+   "name": "Indian Tech & Infra",
+   "url": "https://x.com/IndianTechGuide/status/2104462412430852229",
+   "posted": "2026-09-28T12:15:12+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Google is testing a Buy button in Gemini and AI Mode in India that sends select users to a Flipkart checkout without leaving Google's AI experience. Wider rollout is planned."
+  },
+  {
+   "id": "2104232121996915169",
+   "handle": "nbcbayarea",
+   "name": "NBC Bay Area",
+   "url": "https://x.com/nbcbayarea/status/2104232121996915169",
+   "posted": "2026-09-27T21:00:07+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "OpenAI says it has paused training of its latest AI models as reports grow of AI agents acting outside their intended limits."
+  },
   {
    "id": "2103787365986623925",
    "handle": "testingcatalog",
    "name": "TestingCatalog News",
    "url": "https://x.com/testingcatalog/status/2103787365986623925",
-   "posted": "2026-09-26T15:32:00+05:30",
+   "posted": "2026-09-26T15:32:49+05:30",
    "topic": "AI",
    "kind": "Leak",
    "summary": "Spotted in ChatGPT: references to an upcoming always-on OpenAI assistant that appears to be called \"o\". Unconfirmed by OpenAI."
-  },
-  {
-   "id": "2103541577083719888",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2103541577083719888",
-   "posted": "2026-09-25T23:16:00+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Claude helped theoretical physicists push particle-scattering calculations to nine \"loops\" of correction, a level that is notoriously hard to compute."
-  },
-  {
-   "id": "2102824961538920822",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2102824961538920822",
-   "posted": "2026-09-23T23:48:00+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "First result from Anthropic's new molecular biology lab, where biologists use Claude to read data and literature and propose hypotheses to test."
-  },
-  {
-   "id": "2102775666366435450",
-   "handle": "NVIDIAAI",
-   "name": "NVIDIA AI",
-   "url": "https://x.com/NVIDIAAI/status/2102775666366435450",
-   "posted": "2026-09-23T20:32:00+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Nemotron 3 Diarization: a small open model (100M parameters) that tracks who spoke when, even with overlapping voices, for up to eight speakers. On Hugging Face."
-  },
-  {
-   "id": "2102435703535939725",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2102435703535939725",
-   "posted": "2026-09-22T22:01:00+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Claude Opus 5.5 is now available."
-  },
-  {
-   "id": "2102094379087233143",
-   "handle": "Polymarket",
-   "name": "Polymarket",
-   "url": "https://x.com/Polymarket/status/2102094379087233143",
-   "posted": "2026-09-21T23:25:00+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "OpenAI is setting up an independent mathematics advisory group after its AI solved more than 100 open problems, a claim that has drawn concern from mathematicians."
-  },
-  {
-   "id": "2100108594981257455",
-   "handle": "pixeluibygoogle",
-   "name": "Pixel UI by Google",
-   "url": "https://x.com/pixeluibygoogle/status/2100108594981257455",
-   "posted": "2026-09-16T11:54:00+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "The September Pixel Drop brings Android 17 QPR1 features, including Gemini Memory (\"Remember\"), real-time blur and better desktop multitasking."
   }
  ]
 }
