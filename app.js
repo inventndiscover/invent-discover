@@ -766,10 +766,12 @@ function render(){
   tick();
   startNecklace();
 }
+// Count each section as its own page in GoatCounter (the private desk is never counted)
+function countView(v){try{if(window.goatcounter&&window.goatcounter.count&&v!==DESK)window.goatcounter.count({path:"/#"+v,title:v})}catch(e){}}
 function go(v){
   state.view=VIEWS[v]?v:"home";
   if(location.hash!=="#"+state.view)history.replaceState(null,"","#"+state.view);
-  render();window.scrollTo({top:0});
+  render();countView(state.view);window.scrollTo({top:0});
 }
 function tick(){const c=$("#clock");if(c)c.textContent=new Intl.DateTimeFormat("en-IN",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Kolkata"}).format(new Date())+" IST"}
 setInterval(tick,1000);
