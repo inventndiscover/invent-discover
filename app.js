@@ -577,7 +577,9 @@ function openSheet(html,label){
 function closeSheet(){const s=$("#scrim");if(s){s.remove();document.body.style.overflow=""}}
 function eventSheet(id){
   const e=EVENTS.find(x=>x.id===id);if(!e)return;
-  const text=encodeURIComponent(`${e.title} · ${fmtDay(e.day)}${e.time?", "+t12(e.time):""} · ${e.area}\n${e.url||""}`);
+  // Each published event has its own page with a proper link preview; share that page.
+  const page=/^[a-z0-9-]+$/.test(e.id)&&EVENTS_RAW.some(x=>x.id===e.id)?`https://inventndiscover.com/events/${e.id}/`:(e.url||"");
+  const text=encodeURIComponent(`${e.title} · ${fmtDay(e.day)}${e.time?", "+t12(e.time):""} · ${e.area}\n${page}`);
   const dateLine=e.lastDay!==e.day?`${fmtDay(e.day)} to ${fmtDay(e.lastDay)}`:fmtDay(e.day);
   openSheet(`${cover(e.cat,CAT[e.cat].c,e.id,{tag:e.cat})}
   <div class="sheet-body">
@@ -593,7 +595,7 @@ function eventSheet(id){
     ${e.url?`<a class="btn taxi" href="${esc(e.url)}" target="_blank" rel="noopener">${e.access==="approval"?"Apply":"Register"} on ${esc(e.src)} ↗</a>`:`<button class="btn taxi" disabled>No registration link yet</button>`}
     <div class="note">Source: ${esc(e.src)}${e.also?` (also listed on ${esc(e.also)})`:""} · ${esc(e.verified)} · updated ${fmtRefreshed()}. Details can change, so confirm on the organiser's page before you go.</div>
     <div><div class="label" style="margin-bottom:8px">Share</div>
-      <div class="share"><a class="btn ghost small" href="https://wa.me/?text=${text}" target="_blank" rel="noopener">WhatsApp</a>${e.url?`<a class="btn ghost small" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(e.url)}" target="_blank" rel="noopener">LinkedIn</a><button class="btn ghost small" data-copy="${esc(e.url)}">Copy link</button>`:""}${saveBtn(e.id)}</div>
+      <div class="share"><a class="btn ghost small" href="https://wa.me/?text=${text}" target="_blank" rel="noopener">WhatsApp</a>${e.url?`<a class="btn ghost small" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page)}" target="_blank" rel="noopener">LinkedIn</a><button class="btn ghost small" data-copy="${esc(page)}">Copy link</button>`:""}${saveBtn(e.id)}</div>
       ${e.url?`<p class="url" style="margin:10px 0 0">${esc(e.url)}</p>`:""}</div>
   </div>`,e.title);
 }

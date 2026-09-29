@@ -158,6 +158,11 @@ jobs:
             git push
           fi
 
+      - name: Build event pages, share images and sitemap
+        run: |
+          pip install --quiet pillow
+          python3 tools/build_pages.py
+
       - name: Prepare GitHub Pages
         uses: actions/configure-pages@v5
 

@@ -10,7 +10,9 @@ The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives
 | `app.js` | The behaviour: filters, search, cards, the "Next up" panel | Rarely: only for new features |
 | `events.json` | The data: events, curator queue, run log, communities | **Every day**, synced from Google Drive |
 | `signals.json` | Posts from X about AI and tech, summarised in our own words with links to the originals | **Every day**, synced from Google Drive |
-| `images/` | The four Mumbai photos, each in four time-of-day versions | Almost never |
+| `images/` | The four Mumbai photos, each in four time-of-day versions, plus `share.jpg` (the link preview picture) | Almost never |
+| `tools/build_pages.py` | Builds one page and one share picture per event, plus `sitemap.xml` and `robots.txt`. The workflow runs it before every publish, so these files are never edited by hand (they are not in the repository) | Rarely |
+| `site.json` | Settings: the analytics ID. Nothing is tracked until an ID is filled in | Once |
 
 When someone opens the page:
 
@@ -88,6 +90,12 @@ One post looks like this:
 - `kind` is `Official` (the company or person itself), `Report` (news or commentary) or `Leak` (unconfirmed).
 - Clicking a card opens a panel with X's own embed of the original post.
 - If `signals.json` is missing or broken, the page simply hides that section; events are unaffected.
+
+## Being found: event pages, link previews, Google
+
+- Every upcoming event gets its own address, e.g. `inventndiscover.com/events/mumbai-meets-ai-06/`, with its own share picture and structured event data that Google reads.
+- Sharing an event from the site (WhatsApp, LinkedIn, Copy link) now shares that page, so the preview shows the event's title, date and picture.
+- `sitemap.xml` lists every page for Google. Submit `https://inventndiscover.com/sitemap.xml` once in Google Search Console (the site keeps the Search Console verification tag it had on WordPress).
 
 ## Forms
 
