@@ -288,7 +288,7 @@ def site_foot():
     links = "".join(f'<a href="/mumbai/{slug}/">{esc(label)}</a>' for slug, _, label, _, _ in TOPICS)
     return f"""<footer class="sitefoot"><div class="wrap">
 <p>{links}<a href="/events/">All upcoming</a><a href="/weekly/">Weekly roundups</a></p>
-<p><a href="/">Invent + Discover</a><a href="https://blog.inventndiscover.com/">Blog</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a></p>
+<p><a href="/">Invent + Discover</a><a href="/about/">About</a><a href="https://blog.inventndiscover.com/">Blog</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a></p>
 </div></footer>"""
 
 
@@ -358,7 +358,7 @@ def home_static(upcoming, signals, weekend_n):
 <p><a href="/events/">All {len(upcoming)} upcoming events</a> · {weekend_n} this weekend: <a href="/mumbai/tech-events-this-weekend/">see the weekend list</a></p>
 <h2>Browse by topic</h2><ul>{topics}<li><a href="/weekly/">Weekly roundups</a></li></ul>
 {f'<h2>AI and tech news this week</h2><ul>{xs}</ul>' if xs else ''}
-<p>Contact: <a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a> · <a href="https://blog.inventndiscover.com/">Blog</a></p>
+<p><a href="/about/">About Invent + Discover</a> · Contact: <a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a> · <a href="https://blog.inventndiscover.com/">Blog</a></p>
 </div>"""
 
 
@@ -372,6 +372,7 @@ def llms_txt(upcoming, today):
     lines += [f"- [Weekly roundups]({SITE}/weekly/): one page per week, including past weeks", "", "## Next events"]
     lines += [f"- [{e['title']}]({SITE}/events/{e['id']}/): {when_words(e)}, {e.get('area')}. {price_words(e)}." for e in upcoming[:20]]
     lines += ["", "## Other", f"- [Home]({SITE}/): events, demos, insights and communities in one page",
+              f"- [About]({SITE}/about/): who collates Invent + Discover and how events are chosen and checked",
               "- [Blog](https://blog.inventndiscover.com/): longer writing on design, XR and technology"]
     return "\n".join(lines) + "\n"
 
@@ -445,7 +446,7 @@ def main():
 
     # llms.txt, sitemap, robots
     open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf-8").write(llms_txt(upcoming, today))
-    urls = [(f"{SITE}/", today), (f"{SITE}/events/", today)] + [(u, today) for u in pages] + [(f"{SITE}/weekly/", today)]
+    urls = [(f"{SITE}/", today), (f"{SITE}/about/", today), (f"{SITE}/events/", today)] + [(u, today) for u in pages] + [(f"{SITE}/weekly/", today)]
     urls += [(f"{SITE}/weekly/{m}/", today if m >= monday(today) else (datetime.strptime(m, "%Y-%m-%d") + timedelta(days=7)).strftime("%Y-%m-%d")) for m in sorted(weeks)]
     urls += [(f"{SITE}/events/{e['id']}/", today if status(e) == "upcoming" else min(today, (datetime.strptime(last_day(e), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d"))) for e in everything]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
