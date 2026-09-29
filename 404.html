@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-IN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Page not found · Invent + Discover</title>
+<meta name="robots" content="noindex">
+<script>
+/* The blog moved from inventndiscover.com to blog.inventndiscover.com.
+   Old WordPress addresses (dated posts, pages, categories, tags, uploads)
+   are sent to the same address on the blog, so old links and Google results keep working. */
+(function () {
+  var p = location.pathname, q = location.search, h = location.hash;
+  var old = /^\/(\d{4}\/\d{2}\/|page\/\d+|category\/|tag\/|author\/|wp-content\/|wp-admin|feed\/?$|comments\/|\?p=)/;
+  if (old.test(p.replace(/^\/+/, "/")) || /(^|&)p=\d+/.test(q.slice(1))) {
+    location.replace("https://blog.inventndiscover.com" + p + q + h);
+  }
+})();
+</script>
+<style>
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#05060A;color:#F4F5F7;font:16px/1.6 -apple-system,"Segoe UI",system-ui,sans-serif;padding:24px}
+main{max-width:520px}h1{font-size:40px;letter-spacing:-.03em;margin:0 0 8px}a{color:#A58BFF}
+</style>
+</head><body><main>
+<h1>Page not found</h1>
+<p>This address doesn't exist on Invent + Discover. Try the <a href="/">home page</a>, <a href="/events/">upcoming Mumbai events</a> or the <a href="https://blog.inventndiscover.com/">blog</a>.</p>
+</main></body></html>
