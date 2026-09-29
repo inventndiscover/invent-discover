@@ -11,7 +11,7 @@ The home page of **inventndiscover.com**, served by GitHub Pages. The blog lives
 | `events.json` | The data: events, curator queue, run log, communities | **Every day**, synced from Google Drive |
 | `signals.json` | Posts from X about AI and tech, summarised in our own words with links to the originals | **Every day**, synced from Google Drive |
 | `images/` | The four Mumbai photos, each in four time-of-day versions, plus `share.jpg` (the link preview picture) | Almost never |
-| `tools/build_pages.py` | Builds one page and one share picture per event, plus `sitemap.xml` and `robots.txt`. The workflow runs it before every publish, so these files are never edited by hand (they are not in the repository) | Rarely |
+| `tools/build_pages.py` | Builds one page and one share picture per event (past ones too), the topic pages under `/mumbai/`, weekly roundups under `/weekly/`, `llms.txt`, `sitemap.xml` and `robots.txt`, and writes a plain copy of the home page for crawlers. The workflow runs it before every publish, so these files are never edited by hand (they are not in the repository) | Rarely |
 | `site.json` | Settings: the analytics ID. Nothing is tracked until an ID is filled in | Once |
 
 When someone opens the page:
@@ -96,6 +96,12 @@ One post looks like this:
 - Every upcoming event gets its own address, e.g. `inventndiscover.com/events/mumbai-meets-ai-06/`, with its own share picture and structured event data that Google reads.
 - Sharing an event from the site (WhatsApp, LinkedIn, Copy link) now shares that page, so the preview shows the event's title, date and picture.
 - `sitemap.xml` lists every page for Google. Submit `https://inventndiscover.com/sitemap.xml` once in Google Search Console (the site keeps the Search Console verification tag it had on WordPress).
+
+### Pages that bring visitors in from search
+- **Past events keep their page.** `archive.json` (updated automatically, committed by the workflow) remembers every event ever listed. After the day passes, the page stays up with a "This event has ended" note, so links shared on WhatsApp and Google results never break.
+- **Topic pages**, rebuilt on every publish: `/mumbai/ai-events/`, `/mumbai/free-tech-events/`, `/mumbai/tech-events-this-weekend/`, `/mumbai/hackathons/`, `/mumbai/events-for-students/`, `/mumbai/startup-events/`. The list is `TOPICS` in `tools/build_pages.py`; add a line there for a new topic.
+- **Weekly roundups** at `/weekly/<monday>/`, one per week, plus `/weekly/`.
+- **For AI assistants and crawlers that don't run JavaScript:** a readable copy of the home page sits between `<!--STATIC-->` markers in `index.html` (hidden for normal visitors), `llms.txt` summarises the site, and the home page carries WebSite and Organization data for Google.
 
 ## Forms
 

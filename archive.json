@@ -1,0 +1,571 @@
+{
+ "aicd-mumbai": {
+  "id": "aicd-mumbai",
+  "title": "AICD Mumbai",
+  "cat": "AI",
+  "tags": [
+   "Microsoft",
+   "Azure",
+   "Power Platform"
+  ],
+  "area": "Santacruz East",
+  "venue": "Microsoft India office, Central Salsette Tramway Road",
+  "start": "2026-11-07T08:00",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free",
+  "aud": [
+   "Professional",
+   "Founder"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+  "org": "MCEXPERT",
+  "access": "open",
+  "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops.",
+  "firstSeen": "2026-09-28"
+ },
+ "build-and-fly": {
+  "id": "build-and-fly",
+  "title": "Build & Fly: hands-on drone workshop",
+  "cat": "Tech",
+  "tags": [
+   "Drones",
+   "Workshop"
+  ],
+  "area": "Thane",
+  "venue": "Drona Aviation, Punjani Industrial Estate, Thane West",
+  "start": "2026-10-03T10:00",
+  "end": "15:00",
+  "fmt": "Offline",
+  "price": 2500,
+  "priceNote": "₹2,500 · materials included",
+  "aud": [
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/thane/build-and-fly-hands-on-drone-workshop-tickets/80002143626775",
+  "org": "Drona Aviation",
+  "access": "open",
+  "desc": "Build a small drone, learn how it flies, then take part in a flying challenge. For beginners aged 10 and up.",
+  "firstSeen": "2026-09-28"
+ },
+ "climate-panchayat": {
+  "id": "climate-panchayat",
+  "title": "Climate Panchayat: solutions for marginalised Mumbaikars",
+  "cat": "Climate",
+  "tags": [
+   "Dialogue",
+   "Climate Week India"
+  ],
+  "area": "Goregaon West",
+  "venue": "Rasā – The Stage, Studio A, Sangam Society",
+  "start": "2026-10-03",
+  "end": null,
+  "timeNote": "Time on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · event full, waitlist open",
+  "aud": [
+   "Open to All"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/SaveMumbaiMangroves_ClimatePanchayat_3Oct26",
+  "org": "Save Mumbai Mangroves",
+  "access": "open",
+  "desc": "A working dialogue where people from vulnerable Mumbai communities describe the climate problems they face, and the audience works with them on practical responses. Part of Climate Week India.",
+  "firstSeen": "2026-09-28"
+ },
+ "code-to-capital": {
+  "id": "code-to-capital",
+  "title": "Code to Capital Summit",
+  "cat": "Startup",
+  "tags": [
+   "LegalTech",
+   "IP"
+  ],
+  "area": "Vile Parle East",
+  "venue": "70-C Nehru Road, near Mumbai airport T1",
+  "start": "2026-10-23T08:00",
+  "end": "19:00",
+  "fmt": "Offline",
+  "price": 4999,
+  "priceNote": "₹4,999 to ₹6,999",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/code-to-capital-summit-tickets/80003201845282",
+  "org": "LegalTechMeet",
+  "access": "open",
+  "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers.",
+  "firstSeen": "2026-09-28"
+ },
+ "devcon-8": {
+  "id": "devcon-8",
+  "title": "Devcon 8 India",
+  "cat": "Tech",
+  "tags": [
+   "Ethereum",
+   "Conference",
+   "4 days"
+  ],
+  "area": "BKC",
+  "venue": "Jio World Centre, Bandra East",
+  "start": "2026-11-03T09:30",
+  "endDate": "2026-11-06",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Indian students $25 by application · India residents $149 · general $499",
+  "aud": [
+   "Developer",
+   "Student",
+   "Founder"
+  ],
+  "src": "Devcon",
+  "url": "https://tickets.devcon.org/",
+  "org": "Ethereum Foundation",
+  "access": "open",
+  "desc": "The Ethereum Foundation's global developer conference, held in Mumbai this year across four days. It is open to engineers, designers, researchers, educators and artists, not only developers.",
+  "firstSeen": "2026-09-28"
+ },
+ "devday-exchange-mumbai": {
+  "id": "devday-exchange-mumbai",
+  "title": "DevDay Exchange Community: Mumbai",
+  "cat": "AI",
+  "tags": [
+   "OpenAI",
+   "Codex",
+   "Developers"
+  ],
+  "area": "BKC",
+  "venue": "Shared after approval",
+  "start": "2026-10-10T10:30",
+  "end": null,
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · approval required",
+  "aud": [
+   "Developer"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/1fpwe04g",
+  "org": "DevDay Exchange community",
+  "access": "approval",
+  "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits.",
+  "firstSeen": "2026-09-28"
+ },
+ "echai-startup-meetup-oct": {
+  "id": "echai-startup-meetup-oct",
+  "title": "Mumbai Startup Meetup (eChai)",
+  "cat": "Startup",
+  "tags": [
+   "Panel",
+   "Networking"
+  ],
+  "area": "Andheri East",
+  "venue": "DevX Dynasty, Dynasty Business Park, Andheri-Kurla Road",
+  "start": "2026-10-03T11:00",
+  "end": "13:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free",
+  "aud": [
+   "Founder",
+   "Student",
+   "Open to All"
+  ],
+  "src": "eChai",
+  "also": "Luma",
+  "url": "https://echai.ventures/events/mumbai-startup-meetup-oct-03-2026",
+  "org": "eChai Ventures",
+  "access": "open",
+  "desc": "A panel of founders and operators on early wins, go-to-market, hiring and fundraising, followed by informal networking. Open to anyone curious about startups.",
+  "firstSeen": "2026-09-29"
+ },
+ "elasticon-mumbai": {
+  "id": "elasticon-mumbai",
+  "title": "Elastic{ON} Mumbai",
+  "cat": "AI",
+  "tags": [
+   "Search",
+   "Observability",
+   "Agentic AI"
+  ],
+  "area": "Andheri East",
+  "venue": "JW Marriott Mumbai Sahar",
+  "start": "2026-09-30",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · registration required, limited space",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "Elastic",
+  "url": "https://www.elastic.co/events/elasticon/mumbai",
+  "org": "Elastic",
+  "access": "open",
+  "desc": "Elastic's one-day community conference for developers, SREs and security analysts, with technical tracks, hands-on breakouts and demos on search, observability and agentic AI.",
+  "firstSeen": "2026-09-29"
+ },
+ "enterprise-ai-summit": {
+  "id": "enterprise-ai-summit",
+  "title": "Enterprise AI Summit Mumbai 2026",
+  "cat": "AI",
+  "tags": [
+   "Enterprise",
+   "Agents",
+   "DPI"
+  ],
+  "area": "BKC",
+  "venue": "Jio World Convention Centre",
+  "start": "2026-10-26",
+  "endDate": "2026-10-28",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown on Luma",
+  "aud": [
+   "Professional",
+   "Founder"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/y2o1cuts",
+  "org": "stage-x",
+  "access": "open",
+  "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
+  "firstSeen": "2026-09-28"
+ },
+ "evm-capital-hackathon": {
+  "id": "evm-capital-hackathon",
+  "title": "EVM Capital Hackathon: Mumbai edition",
+  "cat": "Startup",
+  "tags": [
+   "Hackathon",
+   "EVM",
+   "24 hours"
+  ],
+  "area": "Andheri East",
+  "venue": "Venture Catalysts++, Times Square, Marol",
+  "start": "2026-10-10",
+  "endDate": "2026-10-11",
+  "end": null,
+  "timeNote": "Saturday morning start, Sunday afternoon demos",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · approval required",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/0z07eni5",
+  "org": "EVM Capital",
+  "access": "approval",
+  "desc": "A 24-hour hackathon for 50 to 60 builders that judges teams on real user traction rather than slides. The winning team gets an investor screening with Venture Catalysts, plus a ₹1 lakh prize pool.",
+  "firstSeen": "2026-09-28"
+ },
+ "frontier-d2c-ai-summit": {
+  "id": "frontier-d2c-ai-summit",
+  "title": "Frontier D2C AI Summit, 2nd edition",
+  "cat": "AI",
+  "tags": [
+   "D2C",
+   "Bootcamps",
+   "Panels"
+  ],
+  "area": "Andheri East",
+  "venue": "Novotel Mumbai International Airport",
+  "start": "2026-10-10T09:00",
+  "end": "21:00",
+  "fmt": "Offline",
+  "price": 2999,
+  "priceNote": "From ₹2,999 (early bird) to ₹19,999",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "eChai",
+  "url": "https://echai.ventures/events/frontier-d2c-ai-summit-2nd-edition-oct-10-2026",
+  "org": "D2C Insider",
+  "access": "open",
+  "desc": "A full-day summit for consumer-brand founders and operators that mixes hands-on AI bootcamps with panels and keynotes. Registration is on D2C Insider's site.",
+  "firstSeen": "2026-09-29"
+ },
+ "hack-nation-bombay-hub": {
+  "id": "hack-nation-bombay-hub",
+  "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
+  "cat": "AI",
+  "tags": [
+   "Hackathon",
+   "24 hours",
+   "IIT Bombay"
+  ],
+  "area": "Powai",
+  "venue": "IIT Bombay (address shared after approval)",
+  "start": "2026-10-03T20:30",
+  "endDate": "2026-10-04",
+  "end": "18:30",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · application only, waitlist",
+  "aud": [
+   "Student",
+   "Developer"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/vpgf3s3t",
+  "org": "Analytics Club, IIT Bombay",
+  "access": "approval",
+  "desc": "The Mumbai hub of a global 24-hour AI hackathon, where teams build and pitch prototypes with mentor support and compete for a large international prize pool. Hosted by the IIT Bombay Analytics Club; places are by application.",
+  "firstSeen": "2026-09-29"
+ },
+ "hacknova": {
+  "id": "hacknova",
+  "title": "HackNova",
+  "cat": "Tech",
+  "tags": [
+   "Hackathon",
+   "24 hours"
+  ],
+  "area": "Goregaon",
+  "venue": "VIP Grounds, NESCO",
+  "start": "2026-09-30",
+  "endDate": "2026-10-01",
+  "end": null,
+  "timeNote": "24-hour sprint · check timings on the listing",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Fee per team",
+  "aud": [
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/hacknova/3900030522895912",
+  "org": "YouEvolve",
+  "access": "open",
+  "desc": "A 24-hour build sprint for undergraduate and postgraduate students in teams of two to five, across several technology tracks, with a ₹10 lakh prize pool.",
+  "firstSeen": "2026-09-28"
+ },
+ "healthtech-founders-mixer": {
+  "id": "healthtech-founders-mixer",
+  "title": "Startup Founders' Mixer: Health Tech",
+  "cat": "Startup",
+  "tags": [
+   "Health tech",
+   "D2C",
+   "Networking"
+  ],
+  "area": "Mumbai",
+  "venue": "Shared with approved attendees",
+  "start": "2026-10-29T17:00",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 700,
+  "priceNote": "₹700 · screened, about 30 seats",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/startup-founders-mixer-health-tech-mumbai/100002001776961779",
+  "org": "Bhavik Jain",
+  "access": "approval",
+  "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce.",
+  "firstSeen": "2026-09-28"
+ },
+ "ibm-think-mumbai": {
+  "id": "ibm-think-mumbai",
+  "title": "IBM Think Mumbai 2026",
+  "cat": "AI",
+  "tags": [
+   "Enterprise",
+   "Hybrid cloud",
+   "Conference"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue on the event page",
+  "start": "2026-10-13",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Registration on IBM's site",
+  "aud": [
+   "Professional"
+  ],
+  "src": "IBM",
+  "url": "https://www.ibm.com/events/think/mumbai",
+  "org": "IBM",
+  "access": "open",
+  "desc": "IBM's large one-day conference for business and technology leaders on scaling AI in enterprises, hybrid cloud and data sovereignty.",
+  "firstSeen": "2026-09-29"
+ },
+ "lunch-and-learn-meta": {
+  "id": "lunch-and-learn-meta",
+  "title": "Lunch & Learn: AI for the festive rush",
+  "cat": "AI",
+  "tags": [
+   "WhatsApp",
+   "Voice agents",
+   "D2C"
+  ],
+  "area": "BKC",
+  "venue": "Meta office, ONE BKC, Bandra East",
+  "start": "2026-10-07T10:00",
+  "end": "14:30",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · approval required",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/rbh7n2um",
+  "org": "BotSpace",
+  "access": "approval",
+  "desc": "A session at Meta's Mumbai office for D2C and e-commerce teams on using AI to handle festive-season support load, WhatsApp marketing and voice agents.",
+  "firstSeen": "2026-09-28"
+ },
+ "media-accelerator-cohort": {
+  "id": "media-accelerator-cohort",
+  "title": "Media Accelerator & Startup Cohort",
+  "cat": "Startup",
+  "tags": [
+   "Web3",
+   "Investors",
+   "Devcon week"
+  ],
+  "area": "BKC",
+  "venue": "Jio World Centre, G Block",
+  "start": "2026-11-03",
+  "endDate": "2026-11-06",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · approval required",
+  "aud": [
+   "Founder"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/mh0xmqg0",
+  "org": "Meta Blockchain",
+  "access": "approval",
+  "desc": "A Devcon-week side event that connects blockchain and AI startups with investors and media, with mentoring and a pool of funding and grants for selected teams.",
+  "firstSeen": "2026-09-28"
+ },
+ "mumbai-meets-ai-06": {
+  "id": "mumbai-meets-ai-06",
+  "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
+  "cat": "AI",
+  "tags": [
+   "Talk",
+   "Fireside chat"
+  ],
+  "area": "Bhandup West",
+  "venue": "Exact venue emailed to selected attendees",
+  "start": "2026-10-10T11:00",
+  "end": "14:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · approval required",
+  "aud": [
+   "Developer",
+   "Founder"
+  ],
+  "src": "Luma",
+  "also": "Meetup",
+  "url": "https://luma.com/t7ifye5x",
+  "org": "Mumbai Meets AI",
+  "access": "approval",
+  "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup.",
+  "firstSeen": "2026-09-28"
+ },
+ "shayari-showdown": {
+  "id": "shayari-showdown",
+  "title": "The Great Shayari Showdown: human poets vs AI",
+  "cat": "Culture",
+  "tags": [
+   "Poetry",
+   "AI"
+  ],
+  "area": "Jogeshwari West",
+  "venue": "Vaibhav Palace, New Link Road",
+  "start": "2026-10-11T10:00",
+  "end": "12:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free",
+  "aud": [
+   "Open to All"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/the-great-shayari-showdown-human-poets-vs-ai-genz-tickets/80003235633928",
+  "org": "Coffee Tables",
+  "access": "open",
+  "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner.",
+  "firstSeen": "2026-09-28"
+ },
+ "titan-consumer-mixer": {
+  "id": "titan-consumer-mixer",
+  "title": "Titan Capital × V3 Ventures Consumer Mixer",
+  "cat": "Startup",
+  "tags": [
+   "Consumer",
+   "Investors",
+   "Networking"
+  ],
+  "area": "Lower Parel",
+  "venue": "Shared on confirmation",
+  "start": "2026-10-16T19:30",
+  "end": "23:30",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · approval required",
+  "aud": [
+   "Founder"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/ubulpdq7",
+  "org": "Titan Capital",
+  "access": "approval",
+  "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval.",
+  "firstSeen": "2026-09-28"
+ },
+ "weathers-of-our-work": {
+  "id": "weathers-of-our-work",
+  "title": "The Weathers of Our Work",
+  "cat": "Art",
+  "tags": [
+   "Exhibition",
+   "Climate"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue on the event page",
+  "start": "2026-09-30",
+  "end": null,
+  "timeNote": "Time on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free",
+  "aud": [
+   "Open to All"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/OneFutureCollective_WeathersOfOurWork_30Sep26",
+  "org": "One Future Collective",
+  "access": "open",
+  "desc": "An interactive exhibition built from a 30-day diary kept by women and gender-marginalised urban professionals facing climate impacts at work, with room installations and games.",
+  "firstSeen": "2026-09-28"
+ }
+}

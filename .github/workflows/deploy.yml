@@ -146,22 +146,23 @@ jobs:
           print(f"signals.json updated: {len(posts)} posts, refreshed {data['REFRESHED']}")
           PY
 
-      - name: Save the updated data files
-        run: |
-          if git diff --quiet -- events.json signals.json; then
-            echo "No change to events.json or signals.json"
-          else
-            git config user.name "events-sync"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add events.json signals.json
-            git commit -m "Update events and X posts from the scheduled refresh"
-            git push
-          fi
-
-      - name: Build event pages, share images and sitemap
+      - name: Build event, topic and weekly pages, share images, llms.txt and sitemap
         run: |
           pip install --quiet pillow
           python3 tools/build_pages.py
+
+      - name: Save the updated data files
+        run: |
+          # archive.json is the record of every event ever listed (kept so past event pages stay online)
+          if git diff --quiet -- events.json signals.json archive.json; then
+            echo "No change to events.json, signals.json or archive.json"
+          else
+            git config user.name "events-sync"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add events.json signals.json archive.json
+            git commit -m "Update events and X posts from the scheduled refresh"
+            git push
+          fi
 
       - name: Prepare GitHub Pages
         uses: actions/configure-pages@v5
