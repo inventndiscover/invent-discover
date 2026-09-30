@@ -322,6 +322,8 @@ function xSheet(id){
 }
 
 let insightsOpen=false;
+let bayOpen=false; // Bay Area posts start folded; remembered while you move around the site
+document.addEventListener("toggle",e=>{if(e.target.id==="foldBayArea")bayOpen=e.target.open},true);
 document.addEventListener("toggle",e=>{if(e.target.id==="foldInsights")insightsOpen=e.target.open},true);
 function viewHome(){
   const upcoming=LIVE().sort((a,b)=>a.at-b.at);
@@ -528,8 +530,10 @@ function viewInsights(){
   ${xSection(0)}
   <div class="wrap">
     <section class="block">
-      <div class="sec-head"><div><h2 class="sec-title">Bay Area immersion, 2025</h2><p class="sec-sub">Notes from university visits on AI, XR and design education.</p></div></div>
-      <div class="rowlist">${ARTICLES.map(articleRow).join("")}</div>
+      <details class="fold" id="foldBayArea" ${bayOpen?"open":""}>
+        <summary class="fold-head" aria-label="Bay Area immersion, 2025: show or hide the ${ARTICLES.length} posts"><div><h2 class="sec-title">Bay Area immersion, 2025</h2><p class="sec-sub" style="margin:10px 0 0">Notes from university visits on AI, XR and design education · ${ARTICLES.length} posts</p></div><span class="fold-btn" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></summary>
+        <div class="fold-body"><div class="rowlist">${ARTICLES.map(articleRow).join("")}</div></div>
+      </details>
     </section>
   </div>`;
 }
