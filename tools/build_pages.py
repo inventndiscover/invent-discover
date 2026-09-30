@@ -183,15 +183,20 @@ def event_schema(e, url, status="upcoming"):
         "location": {"@type": "VirtualLocation", "url": e["url"]} if online else
                     {"@type": "Place", "name": e.get("venue") or e.get("area"),
                      "address": {"@type": "PostalAddress", "addressLocality": e.get("area") or "Mumbai", "addressRegion": "Maharashtra", "addressCountry": "IN"}},
-        "organizer": {"@type": "Organization", "name": e.get("org", "")},
+        # the organiser's own listing (Luma, Meetup, AllEvents) is the best public link we have for them
+        "organizer": {"@type": "Organization", "name": e.get("org", ""), "url": e["url"]},
         "image": [f"{url}share.jpg"],
     }
     if e.get("endDate"):
         data["endDate"] = e["endDate"]
     elif e.get("end") and len(e["start"]) > 10:
         data["endDate"] = f"{e['start'][:10]}T{e['end']}:00+05:30"
+    else:
+        data["endDate"] = e["start"][:10]  # no end time given: a one-day event, so it ends the same day
     if e.get("price") is not None and status == "upcoming":
         data["offers"] = {"@type": "Offer", "price": e["price"], "priceCurrency": "INR", "url": e["url"], "availability": "https://schema.org/InStock"}
+        if e.get("firstSeen"):  # on sale at least since the day we first listed it
+            data["offers"]["validFrom"] = e["firstSeen"] + "T00:00:00+05:30"
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
