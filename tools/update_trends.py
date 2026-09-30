@@ -42,7 +42,7 @@ THEMES = [
     {"id": "reasoning",  "label": "Reasoning",               "hint": "Step-by-step thinking and problem solving", "q": "(abs:reasoning)"},
     {"id": "multimodal", "label": "Multimodal",              "hint": "Text, images, audio and video together", "q": "(abs:multimodal OR abs:\"vision-language\")"},
     {"id": "robotics",   "label": "Robots & physical world", "hint": "AI that moves and senses in the real world", "q": "(abs:robot OR abs:robots OR abs:robotic OR abs:embodied)"},
-    {"id": "safety",     "label": "Safety & alignment",      "hint": "Making AI reliable and on our side",    "q": "(abs:safety OR abs:alignment)"},
+    {"id": "safety",     "label": "Safety & alignment",      "hint": "Making AI reliable and on our side",    "q": "(abs:safety OR abs:\"AI alignment\" OR abs:\"value alignment\" OR abs:jailbreak OR abs:\"red teaming\")"},
 ]
 
 API = "https://export.arxiv.org/api/query?search_query={q}&start=0&max_results=1"
