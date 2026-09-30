@@ -50,7 +50,8 @@ UA = {"User-Agent": "inventndiscover.com weekly trends (https://inventndiscover.
 
 def count(query):
     """Ask arXiv how many papers match. Tries three times before giving up."""
-    url = API.format(q=urllib.parse.quote(query, safe=":"))
+    # arXiv's own examples write spaces as "+", keep [ ] as they are and encode ( ) and quotes.
+    url = API.format(q=urllib.parse.quote_plus(query, safe=":[]"))
     last = None
     for attempt in range(3):
         time.sleep(PAUSE * (attempt + 1))
@@ -64,7 +65,7 @@ def count(query):
             last = "no count in the reply"
         except Exception as e:  # network trouble: wait and try again
             last = e
-    raise RuntimeError(f"arXiv did not answer ({last})")
+    raise RuntimeError(f"arXiv did not answer ({last}) for {url}")
 
 
 def weeks_to_fetch(today):
