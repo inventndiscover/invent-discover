@@ -1,5 +1,5 @@
 {
- "UPDATED": null,
+ "UPDATED": "2026-09-30",
  "SOURCE": {
   "name": "arXiv",
   "url": "https://arxiv.org/"
@@ -32,5 +32,150 @@
    "hint": "Making AI reliable and on our side"
   }
  ],
- "WEEKS": []
+ "WEEKS": [
+  {
+   "start": "2026-07-06",
+   "end": "2026-07-12",
+   "total": 2317,
+   "themes": {
+    "agents": 404,
+    "reasoning": 364,
+    "multimodal": 293,
+    "robotics": 231,
+    "safety": 448
+   }
+  },
+  {
+   "start": "2026-07-13",
+   "end": "2026-07-19",
+   "total": 2240,
+   "themes": {
+    "agents": 421,
+    "reasoning": 350,
+    "multimodal": 321,
+    "robotics": 253,
+    "safety": 444
+   }
+  },
+  {
+   "start": "2026-07-20",
+   "end": "2026-07-26",
+   "total": 2269,
+   "themes": {
+    "agents": 351,
+    "reasoning": 346,
+    "multimodal": 260,
+    "robotics": 171,
+    "safety": 445
+   }
+  },
+  {
+   "start": "2026-07-27",
+   "end": "2026-08-02",
+   "total": 2720,
+   "themes": {
+    "agents": 515,
+    "reasoning": 395,
+    "multimodal": 377,
+    "robotics": 226,
+    "safety": 553
+   }
+  },
+  {
+   "start": "2026-08-03",
+   "end": "2026-08-09",
+   "total": 2977,
+   "themes": {
+    "agents": 571,
+    "reasoning": 460,
+    "multimodal": 425,
+    "robotics": 245,
+    "safety": 628
+   }
+  },
+  {
+   "start": "2026-08-10",
+   "end": "2026-08-16",
+   "total": 2658,
+   "themes": {
+    "agents": 463,
+    "reasoning": 434,
+    "multimodal": 332,
+    "robotics": 207,
+    "safety": 538
+   }
+  },
+  {
+   "start": "2026-08-17",
+   "end": "2026-08-23",
+   "total": 2364,
+   "themes": {
+    "agents": 433,
+    "reasoning": 338,
+    "multimodal": 307,
+    "robotics": 204,
+    "safety": 488
+   }
+  },
+  {
+   "start": "2026-08-24",
+   "end": "2026-08-30",
+   "total": 2798,
+   "themes": {
+    "agents": 491,
+    "reasoning": 441,
+    "multimodal": 365,
+    "robotics": 208,
+    "safety": 533
+   }
+  },
+  {
+   "start": "2026-08-31",
+   "end": "2026-09-06",
+   "total": 2952,
+   "themes": {
+    "agents": 538,
+    "reasoning": 464,
+    "multimodal": 351,
+    "robotics": 219,
+    "safety": 592
+   }
+  },
+  {
+   "start": "2026-09-07",
+   "end": "2026-09-13",
+   "total": 2593,
+   "themes": {
+    "agents": 439,
+    "reasoning": 360,
+    "multimodal": 282,
+    "robotics": 257,
+    "safety": 452
+   }
+  },
+  {
+   "start": "2026-09-14",
+   "end": "2026-09-20",
+   "total": 2924,
+   "themes": {
+    "agents": 505,
+    "reasoning": 371,
+    "multimodal": 392,
+    "robotics": 459,
+    "safety": 554
+   }
+  },
+  {
+   "start": "2026-09-21",
+   "end": "2026-09-27",
+   "total": 3701,
+   "themes": {
+    "agents": 671,
+    "reasoning": 516,
+    "multimodal": 444,
+    "robotics": 475,
+    "safety": 629
+   }
+  }
+ ]
 }
