@@ -24,6 +24,7 @@ import re
 import sys
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,7 +45,7 @@ THEMES = [
     {"id": "safety",     "label": "Safety & alignment",      "hint": "Making AI reliable and on our side",    "q": "(abs:safety OR abs:alignment)"},
 ]
 
-API = "https://export.arxiv.org/api/query?search_query={q}&max_results=0"
+API = "https://export.arxiv.org/api/query?search_query={q}&start=0&max_results=1"
 UA = {"User-Agent": "inventndiscover.com weekly trends (https://inventndiscover.com)"}
 
 
@@ -66,6 +67,29 @@ def count(query):
         except Exception as e:  # network trouble: wait and try again
             last = e
     raise RuntimeError(f"arXiv did not answer ({last}) for {url}")
+
+
+def diagnose():
+    """Prints how arXiv answers a few simple searches, to help fix a failed run."""
+    probes = [
+        "https://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results=1",
+        "https://export.arxiv.org/api/query?search_query=cat:cs.AI&max_results=0",
+        "https://export.arxiv.org/api/query?search_query=cat:cs.AI+AND+submittedDate:[202609010000+TO+202609072359]&start=0&max_results=1",
+        "https://export.arxiv.org/api/query?search_query=%28cat:cs.AI+OR+cat:cs.LG%29+AND+submittedDate:[202609010000+TO+202609072359]&start=0&max_results=1",
+        "https://export.arxiv.org/api/query?search_query=cat:cs.AI+AND+abs:agent&start=0&max_results=1",
+    ]
+    for url in probes:
+        time.sleep(PAUSE)
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=60) as r:
+                body = r.read().decode("utf-8", "replace")
+            m = re.search(r"<opensearch:totalResults[^>]*>(\d+)<", body)
+            print(f"probe OK   {m.group(1) if m else 'no count'}  {url}")
+        except urllib.error.HTTPError as e:
+            print(f"probe HTTP {e.code}  {url}  {e.read()[:200]!r}")
+        except Exception as e:
+            print(f"probe FAIL {e}  {url}")
 
 
 def weeks_to_fetch(today):
@@ -109,6 +133,7 @@ def main():
             print(f"Week of {start}: {total} AI papers · " + ", ".join(f"{k} {v}" for k, v in themes.items()))
     except Exception as e:
         print(f"::warning::Could not refresh AI trends ({e}). Keeping the current trends.json.")
+        diagnose()
         return
 
     data = {
