@@ -441,53 +441,71 @@ function viewInvent(){
 
 
 /* ---------- AI trends (Insights page) ----------
-   trends.json holds researched numbers with their source (Stanford AI Index).
-   It changes about once a year. If it fails to load, the section is skipped. */
+   trends.json is refreshed once a week by the GitHub workflow (tools/update_trends.py),
+   using arXiv's free search. No Claude credits are used. If it fails to load, the
+   section is skipped. */
 const TR = window.__TRENDS;
-function trendNum(v,c){return (c.prefix||"")+(Number.isInteger(v)?v:v.toFixed(1))+(c.suffix||"");}
-function trendBars(c){
-  const max=Math.max(...c.rows.map(r=>r.v));
-  return `<div class="tb">${c.rows.map((r,i)=>{
-    const w=Math.max(r.v/max*100,1.2), val=(r.approx?"≈ ":"")+trendNum(r.v,c);
-    return `<div class="tb-row${r.hl?" hl":""}" tabindex="0" data-tip="${esc(r.k)}: ${esc(val)}">
-      <span class="tb-k">${esc(r.k)}</span>
-      <span class="tb-track"><span class="tb-fill" style="--w:${w}%;--d:${i*90}ms"></span></span>
-      <span class="tb-v num">${esc(val)}</span></div>`}).join("")}</div>`;
+const fmtN = n => n.toLocaleString("en-IN");
+const wkLabel = iso => { const d=new Date(iso+"T00:00:00"); return d.getDate()+" "+MON[d.getMonth()]; };
+function trSpark(vals,weeks,t){
+  const W=160,H=40,p=4, lo=Math.min(...vals), hi=Math.max(...vals), mid=(lo+hi)/2, rng=Math.max(hi-lo,2);
+  const x=i=>p+i*(W-2*p)/(vals.length-1), y=v=>H/2-(v-mid)/rng*(H-2*p);
+  const d=vals.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+  const n=vals.length-1;
+  return `<svg class="tr-spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true">
+    <path d="${d} L${x(n).toFixed(1)} ${H} L${x(0).toFixed(1)} ${H} Z" class="tr-spark-area"/><path d="${d}" class="tr-spark-line"/>
+    ${vals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${i===n?3:0}" class="tr-spark-end"/>`).join("")}
+  </svg>`;
 }
-function trendChange(c){
-  return `<div class="tc"><div class="tc-legend"><span><i class="tc-a"></i>${esc(c.from)}</span><span><i class="tc-b"></i>${esc(c.to)}</span></div>
-  ${c.rows.map(r=>`<div class="tc-row" tabindex="0" data-tip="${esc(r.k)}: ${r.a}${c.suffix} in ${esc(c.from)}, ${r.b}${c.suffix} in ${esc(c.to)}">
-    <span class="tb-k">${esc(r.k)}</span>
-    <span class="tc-track"><span class="tc-span" style="left:${r.a}%;width:${r.b-r.a}%"></span><span class="tc-dot a" style="left:${r.a}%"></span><span class="tc-dot b" style="left:${r.b}%"></span></span>
-    <span class="tb-v num">${r.a} → ${r.b}${esc(c.suffix)}</span></div>`).join("")}
-  <div class="tc-axis num"><span>0%</span><span>50%</span><span>100%</span></div></div>`;
-}
-function trendGrowth(c){
-  const W=320,H=150,px=28,pt=22,pb=24, max=40, n=c.rows.length;
-  const x=i=>px+i*(W-2*px)/(n-1), y=v=>pt+(H-pt-pb)*(1-v/max);
-  const pts=c.rows.map((r,i)=>[x(i),y(r.v)]);
-  const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
-  const area=line+` L${x(n-1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
-  const grid=[0,10,20,30,40].map(g=>`<line x1="${px}" x2="${W-px}" y1="${y(g)}" y2="${y(g)}" class="tg-grid"/><text x="${px-6}" y="${y(g)+3}" class="tg-ax" text-anchor="end">${g}×</text>`).join("");
-  return `<svg class="tg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}: ${c.rows.map(r=>r.k+" "+r.v+"×").join(", ")}">
-    <defs><linearGradient id="tgFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--amber);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--amber);stop-opacity:0"/></linearGradient></defs>
-    ${grid}<path d="${area}" fill="url(#tgFill)"/><path d="${line}" class="tg-line"/>
-    ${c.rows.map((r,i)=>`<g class="tg-pt" tabindex="0" data-tip="${esc(r.k)}: ${r.v}×"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="12" fill="transparent"/><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="${i===n-1?5:4}" class="tg-dot${i===n-1?" end":""}"/><text x="${pts[i][0]}" y="${H-6}" class="tg-ax" text-anchor="middle">${esc(r.k)}</text></g>`).join("")}
-    <text x="${pts[n-1][0]-8}" y="${pts[n-1][1]-10}" class="tg-lab" text-anchor="end">${c.rows[n-1].v}×</text>
+function trTotals(weeks){
+  const W=480,H=140,pl=8,pr=8,pt=16,pb=22, n=weeks.length, max=Math.max(...weeks.map(w=>w.total))*1.15;
+  const x=i=>pl+i*(W-pl-pr)/(n-1), y=v=>pt+(H-pt-pb)*(1-v/max);
+  const line=weeks.map((w,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(w.total).toFixed(1)).join(" ");
+  const grid=[.25,.5,.75,1].map(f=>`<line x1="${pl}" x2="${W-pr}" y1="${y(max*f/1.15)}" y2="${y(max*f/1.15)}" class="tg-grid"/>`).join("");
+  return `<svg class="tr-total" viewBox="0 0 ${W} ${H}" role="img" aria-label="New AI papers per week: ${weeks.map(w=>wkLabel(w.start)+" "+w.total).join(", ")}">
+    <defs><linearGradient id="trFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--amber);stop-opacity:.32"/><stop offset="1" style="stop-color:var(--amber);stop-opacity:0"/></linearGradient></defs>
+    ${grid}<path d="${line} L${x(n-1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z" fill="url(#trFill)"/><path d="${line}" class="tg-line"/>
+    ${weeks.map((w,i)=>`<g class="tg-pt" tabindex="0" data-tip="Week of ${wkLabel(w.start)}: ${fmtN(w.total)} new AI papers">
+      <rect x="${(x(i)-(W-pl-pr)/(n-1)/2).toFixed(1)}" y="0" width="${((W-pl-pr)/(n-1)).toFixed(1)}" height="${H-pb}" fill="transparent"/>
+      <circle cx="${x(i).toFixed(1)}" cy="${y(w.total).toFixed(1)}" r="${i===n-1?5:3}" class="tg-dot${i===n-1?" end":""}"/>
+      ${i%3===(n-1)%3?`<text x="${x(i).toFixed(1)}" y="${H-5}" class="tg-ax" text-anchor="${i===0?"start":i===n-1?"end":"middle"}">${wkLabel(w.start)}</text>`:""}</g>`).join("")}
   </svg>`;
 }
 function trendsSection(){
-  if(!TR||!Array.isArray(TR.CHARTS)) return "";
-  const draw={bars:trendBars,change:trendChange,growth:trendGrowth};
-  return `<div class="wrap"><section class="block trends" aria-labelledby="trendsTitle">
-    <div class="sec-head"><div><h2 class="sec-title" id="trendsTitle">How AI is shaping up</h2><p class="sec-sub">The big numbers behind the headlines: money, models, adoption and computing power.</p>
-      <div class="tr-src label">Source · <a href="${esc(TR.SOURCE.url)}" target="_blank" rel="noopener">${esc(TR.SOURCE.name)}</a> · data for 2025</div></div></div>
-    <div class="tr-stats">${(TR.STATS||[]).map(s=>`<div class="tr-stat"><div class="tr-big num">${esc(s.value)}</div><div class="tr-lbl">${esc(s.label)}</div><div class="tr-sub label">${esc(s.sub)}</div></div>`).join("")}</div>
-    <div class="tr-grid">${TR.CHARTS.filter(c=>draw[c.type]).map(c=>`<figure class="tr-card" id="trend-${esc(c.id)}">
-      <figcaption><h3>${esc(c.title)}</h3><p class="label">${esc(c.sub)}</p></figcaption>
-      ${draw[c.type](c)}
-      <p class="tr-take">${esc(c.takeaway)}</p>
-      <a class="tr-link label" href="${esc(c.src)}" target="_blank" rel="noopener">Source ↗</a></figure>`).join("")}</div>
+  if(!TR||!Array.isArray(TR.THEMES)) return "";
+  const W=Array.isArray(TR.WEEKS)?TR.WEEKS.filter(w=>w&&w.total>0&&w.themes):[];
+  const head=`<div class="sec-head"><div><h2 class="sec-title" id="trendsTitle">How AI is shaping up</h2>
+      <p class="sec-sub">Where AI is heading, week by week, based on the new research papers posted each week. Updated every Monday.</p>
+      <div class="tr-src label">Source · <a href="${esc(TR.SOURCE.url)}" target="_blank" rel="noopener">${esc(TR.SOURCE.name)}</a>${W.length?` · last ${W.length} weeks, to ${wkLabel(W[W.length-1].end)}`:""}</div></div></div>`;
+  if(W.length<4) return `<div class="wrap"><section class="block trends" aria-labelledby="trendsTitle">${head}
+    <div class="tr-panel tr-empty"><p>The first weekly numbers are on their way. They appear here after the next weekly update.</p></div></section></div>`;
+  const last=W[W.length-1], prev=W.slice(-5,-1), base=W[W.length-5];
+  const avg=prev.reduce((a,w)=>a+w.total,0)/prev.length, dTot=(last.total-avg)/avg*100;
+  const share=(w,id)=>w.themes[id]/w.total*100;
+  const rows=TR.THEMES.map(t=>{const vals=W.map(w=>share(w,t.id)), now=vals[vals.length-1], then=share(base,t.id);return {t,vals,now,chg:now-then,n:last.themes[t.id]}});
+  const riser=rows.reduce((a,r)=>r.chg>a.chg?r:a,rows[0]);
+  const chip=c=>{const up=c>=0.05,down=c<=-0.05;return `<span class="tr-chg ${up?"up":down?"down":"flat"}">${up?"▲":down?"▼":"●"} ${Math.abs(c).toFixed(1)} pts</span>`};
+  return `<div class="wrap"><section class="block trends" aria-labelledby="trendsTitle">${head}
+    <div class="tr-panel">
+      <div class="tr-top">
+        <div class="tr-hero">
+          <div class="label">New AI papers last week</div>
+          <div class="tr-big num">${fmtN(last.total)}</div>
+          <div class="tr-sub label">${dTot>=0?"▲":"▼"} ${Math.abs(dTot).toFixed(0)}% vs the 4 weeks before</div>
+          <p class="tr-note">Week of ${wkLabel(last.start)} to ${wkLabel(last.end)}. Hover the chart for each week.</p>
+        </div>
+        <div class="tr-chart">${trTotals(W)}</div>
+      </div>
+      <div class="tr-rows">
+        <div class="tr-row tr-rhead label"><span>Theme</span><span>Last ${W.length} weeks</span><span>Share of papers</span><span>vs 4 weeks ago</span></div>
+        ${rows.map(r=>`<div class="tr-row${r===riser&&r.chg>0?" rising":""}" tabindex="0" data-tip="${esc(r.t.label)}: ${r.now.toFixed(1)}% of last week's papers (${fmtN(r.n)})">
+          <span class="tr-theme"><b>${esc(r.t.label)}</b>${r===riser&&r.chg>0?`<i class="tr-flag">Rising fastest</i>`:""}<small>${esc(r.t.hint)}</small></span>
+          ${trSpark(r.vals,W,r.t)}
+          <span class="tr-now num">${r.now.toFixed(1)}%</span>
+          ${chip(r.chg)}</div>`).join("")}
+      </div>
+      <p class="tr-method">${esc(TR.METHOD||"")}</p>
+    </div>
     <div class="tr-tip" id="trTip" role="status" hidden></div>
   </section></div>`;
 }
@@ -496,7 +514,7 @@ function trendsSection(){
   const show=e=>{const t=e.target.closest&&e.target.closest("[data-tip]"),tip=document.getElementById("trTip");if(!tip)return;
     if(!t){tip.hidden=true;return}
     tip.textContent=t.getAttribute("data-tip");tip.hidden=false;
-    const r=t.getBoundingClientRect();tip.style.left=Math.min(window.innerWidth-tip.offsetWidth-12,Math.max(12,r.left+r.width/2-tip.offsetWidth/2))+"px";tip.style.top=(r.top-tip.offsetHeight-8)+"px";};
+    const r=t.getBoundingClientRect();tip.style.left=Math.min(window.innerWidth-tip.offsetWidth-12,Math.max(12,r.left+r.width/2-tip.offsetWidth/2))+"px";tip.style.top=Math.max(8,r.top-tip.offsetHeight-8)+"px";};
   document.addEventListener("pointerover",show);document.addEventListener("focusin",show);
   document.addEventListener("scroll",()=>{const tip=document.getElementById("trTip");if(tip)tip.hidden=true},{passive:true});
 })();

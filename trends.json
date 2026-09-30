@@ -1,32 +1,36 @@
 {
-  "UPDATED": "2026-09-30",
-  "SOURCE": {"name": "Stanford HAI, AI Index Report 2026", "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report"},
-  "NOTE": "Figures are for calendar year 2025, from the 2026 AI Index. The index is published once a year, so this file only needs updating when the next edition comes out.",
-  "STATS": [
-    {"value": "$344.7B", "label": "Private money invested in AI worldwide in 2025", "sub": "Up 127.5% on 2024", "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy"},
-    {"value": "88%", "label": "Organisations using AI in at least one part of the business", "sub": "Up from 78% in 2024", "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy"},
-    {"value": "17.1M", "label": "AI chips' worth of computing power in the world (H100 equivalents)", "sub": "Growing 3.3× a year since 2022", "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/research-and-development"}
-  ],
-  "CHARTS": [
-    {"id": "money", "type": "bars", "title": "Where the AI money went", "sub": "Private investment in AI, 2025, in US$ billions", "unit": "$B", "prefix": "$", "suffix": "B",
-     "rows": [{"k": "United States", "v": 285.9}, {"k": "China", "v": 12.4}, {"k": "United Kingdom", "v": 5.9}, {"k": "India", "v": 4, "approx": true, "hl": true}],
-     "takeaway": "The US attracted about 23 times more than China, the next country. India is in the top ten at about $4 billion.",
-     "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy"},
-    {"id": "models", "type": "bars", "title": "Who builds the leading models", "sub": "Notable AI models released in 2025, by country", "suffix": "",
-     "rows": [{"k": "United States", "v": 59}, {"k": "China", "v": 35}, {"k": "South Korea", "v": 8}],
-     "takeaway": "Industry made 93 of these models; universities made 2.",
-     "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/research-and-development"},
-    {"id": "labs", "type": "bars", "title": "The busiest labs", "sub": "Notable AI models released in 2025, by organisation", "suffix": "",
-     "rows": [{"k": "OpenAI", "v": 20}, {"k": "Google", "v": 14}, {"k": "Alibaba", "v": 11}],
-     "takeaway": "Three companies released 45 notable models between them.",
-     "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/research-and-development"},
-    {"id": "adoption", "type": "change", "title": "AI at work, one year on", "sub": "Share of organisations using it in at least one business function", "suffix": "%", "from": "2024", "to": "2025",
-     "rows": [{"k": "Any AI", "a": 78, "b": 88}, {"k": "Generative AI", "a": 71, "b": 79}],
-     "takeaway": "Nearly nine in ten organisations now use AI somewhere.",
-     "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy"},
-    {"id": "compute", "type": "growth", "title": "Computing power keeps compounding", "sub": "World AI compute, 2022 = 1×, at the reported 3.3× a year", "suffix": "×",
-     "rows": [{"k": "2022", "v": 1}, {"k": "2023", "v": 3.3}, {"k": "2024", "v": 10.9}, {"k": "2025", "v": 35.9}],
-     "takeaway": "At 3.3× a year, capacity is roughly 36 times its 2022 level, reaching 17.1 million H100 equivalents.",
-     "src": "https://hai.stanford.edu/ai-index/2026-ai-index-report/research-and-development"}
-  ]
+ "UPDATED": null,
+ "SOURCE": {
+  "name": "arXiv",
+  "url": "https://arxiv.org/"
+ },
+ "METHOD": "New papers posted to arXiv each week in AI, machine learning, language, computer vision and robotics. A theme counts when a paper's summary mentions it.",
+ "THEMES": [
+  {
+   "id": "agents",
+   "label": "AI agents",
+   "hint": "AI that plans and takes actions"
+  },
+  {
+   "id": "reasoning",
+   "label": "Reasoning",
+   "hint": "Step-by-step thinking and problem solving"
+  },
+  {
+   "id": "multimodal",
+   "label": "Multimodal",
+   "hint": "Text, images, audio and video together"
+  },
+  {
+   "id": "robotics",
+   "label": "Robots & physical world",
+   "hint": "AI that moves and senses in the real world"
+  },
+  {
+   "id": "safety",
+   "label": "Safety & alignment",
+   "hint": "Making AI reliable and on our side"
+  }
+ ],
+ "WEEKS": []
 }
