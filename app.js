@@ -234,10 +234,10 @@ function articleRow(a){
     <span class="arrow">Read on the blog ↗</span></a>`;
 }
 function commCard(c){
-  const col=CAT[c.cats[0]].c, initials=c.name.replace(/[^A-Za-z ]/g,"").split(" ").filter(Boolean).map(w=>w[0]).join("").slice(0,2);
+  const col=CAT[c.cats[0]].c;
   const next=LIVE().filter(e=>e.org===c.org).sort((a,b)=>a.at-b.at)[0];
   return `<article class="comm" style="--c:${col}">
-    <div class="comm-top"><span class="mono-mark" style="--c:${col}">${esc(initials)}</span><div><h3>${esc(c.name)}</h3><div class="label">${esc(c.area)}</div></div></div>
+    <div class="comm-top"><div><h3>${esc(c.name)}</h3><div class="label">${esc(c.area)}</div></div></div>
     <p>${esc(c.focus)}</p>
     <dl class="kv"><dt>Topics</dt><dd>${c.cats.map(esc).join(", ")}</dd>
     ${next?`<dt>Next</dt><dd><a href="#discover" data-open-event="${next.id}">${esc(next.title)}</a> · ${rel(next.day)}</dd>`:""}</dl>
