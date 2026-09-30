@@ -322,6 +322,8 @@ function xSheet(id){
 }
 
 let insightsOpen=false;
+let themesOpen=false; // trend themes start folded
+document.addEventListener("toggle",e=>{if(e.target.id==="foldThemes")themesOpen=e.target.open},true);
 let bayOpen=false; // Bay Area posts start folded; remembered while you move around the site
 document.addEventListener("toggle",e=>{if(e.target.id==="foldBayArea")bayOpen=e.target.open},true);
 document.addEventListener("toggle",e=>{if(e.target.id==="foldInsights")insightsOpen=e.target.open},true);
@@ -498,7 +500,9 @@ function trendsSection(){
         </div>
         <div class="tr-chart">${trTotals(W)}</div>
       </div>
-      <div class="tr-rows">
+      <details class="fold tr-fold" id="foldThemes" ${themesOpen?"open":""}>
+      <summary class="fold-head tr-fold-head" aria-label="Themes to watch: show or hide"><div><h3 class="tr-fold-title">Themes to watch</h3><p class="tr-fold-sub">${TR.THEMES.length} themes${riser.chg>0?` · Rising fastest: <b>${esc(riser.t.label)}</b>`:""}</p></div><span class="fold-btn" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></summary>
+      <div class="fold-body tr-rows">
         <div class="tr-row tr-rhead label"><span>Theme</span><span>Last ${W.length} weeks</span><span>Share of papers</span><span>vs 4 weeks ago</span></div>
         ${rows.map(r=>`<div class="tr-row${r===riser&&r.chg>0?" rising":""}" tabindex="0" data-tip="${esc(r.t.label)}: ${r.now.toFixed(1)}% of last week's papers (${fmtN(r.n)})">
           <span class="tr-theme"><b>${esc(r.t.label)}</b>${r===riser&&r.chg>0?`<i class="tr-flag">Rising fastest</i>`:""}<small>${esc(r.t.hint)}</small></span>
@@ -506,6 +510,7 @@ function trendsSection(){
           <span class="tr-now num">${r.now.toFixed(1)}%</span>
           ${chip(r.chg)}</div>`).join("")}
       </div>
+      </details>
       <p class="tr-method">${esc(TR.METHOD||"")}</p>
     </div>
     <div class="tr-tip" id="trTip" role="status" hidden></div>
