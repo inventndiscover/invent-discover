@@ -1,4 +1,31 @@
 {
+ "ai-for-non-techies": {
+  "id": "ai-for-non-techies",
+  "title": "AI for Non-Techies: live workshop",
+  "cat": "AI",
+  "tags": [
+   "Workshop",
+   "No-code",
+   "Hinglish"
+  ],
+  "area": "Andheri East",
+  "venue": "Mickey Square, MIDC Road No. 7, Kondivita",
+  "start": "2026-10-03T14:00",
+  "end": "18:00",
+  "fmt": "Offline",
+  "price": 3999,
+  "priceNote": "₹3,999 · includes three months of Biscuit access",
+  "aud": [
+   "Professional",
+   "Open to All"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/yocnzgej",
+  "org": "Annkur P Agarwal & Maria Martin",
+  "access": "approval",
+  "desc": "A small four-hour workshop where non-technical professionals bring a real work problem and turn it into a simple AI-powered tool without writing code. Capped at 15 people and run mostly in Hinglish.",
+  "firstSeen": "2026-09-30"
+ },
  "aicd-mumbai": {
   "id": "aicd-mumbai",
   "title": "AICD Mumbai",
@@ -225,13 +252,12 @@
   ],
   "area": "BKC",
   "venue": "Jio World Convention Centre",
-  "start": "2026-10-26",
+  "start": "2026-10-26T09:00",
   "endDate": "2026-10-28",
-  "end": null,
-  "timeNote": "Times on the event page",
+  "end": "17:00",
   "fmt": "Offline",
   "price": 0,
-  "priceNote": "No ticket price shown on Luma",
+  "priceNote": "Free on Eventbrite; no ticket price shown on Luma",
   "aud": [
    "Professional",
    "Founder"
@@ -241,6 +267,7 @@
   "org": "stage-x",
   "access": "open",
   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
+  "also": "Eventbrite",
   "firstSeen": "2026-09-28"
  },
  "evm-capital-hackathon": {
@@ -393,9 +420,8 @@
   ],
   "area": "Mumbai",
   "venue": "Venue on the event page",
-  "start": "2026-10-13",
-  "end": null,
-  "timeNote": "Times on the event page",
+  "start": "2026-10-13T08:30",
+  "end": "19:35",
   "fmt": "Offline",
   "price": null,
   "priceNote": "Registration on IBM's site",
@@ -408,6 +434,65 @@
   "access": "open",
   "desc": "IBM's large one-day conference for business and technology leaders on scaling AI in enterprises, hybrid cloud and data sovereignty.",
   "firstSeen": "2026-09-29"
+ },
+ "ifp-festival-16": {
+  "id": "ifp-festival-16",
+  "title": "IFP Festival Season 16",
+  "cat": "Art",
+  "tags": [
+   "Festival",
+   "Film",
+   "Music",
+   "Design"
+  ],
+  "area": "Bandra West",
+  "venue": "Mehboob Studios, Hill Road",
+  "start": "2026-10-24T10:00",
+  "endDate": "2026-10-25",
+  "end": "21:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Student and citizen passes; prices go up in phases from 1 Oct",
+  "aud": [
+   "Student",
+   "Open to All"
+  ],
+  "src": "IFP",
+  "url": "https://ifp.world/festival/",
+  "org": "IFP",
+  "access": "open",
+  "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper.",
+  "firstSeen": "2026-09-30"
+ },
+ "india-blockchain-week": {
+  "id": "india-blockchain-week",
+  "title": "India Blockchain Week 2026",
+  "cat": "Tech",
+  "tags": [
+   "Web3",
+   "Conference",
+   "Devcon week"
+  ],
+  "area": "Andheri East",
+  "venue": "Fairmont Mumbai",
+  "start": "2026-11-01",
+  "endDate": "2026-11-02",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": 1499,
+  "priceNote": "Early bird general ₹1,499 · student ₹999 with hackathon eligibility",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Student"
+  ],
+  "src": "IBW",
+  "url": "https://indiablockchainweek.com/",
+  "org": "India Blockchain Week",
+  "access": "open",
+  "desc": "A two-day Web3 conference for builders, founders and investors held just before Devcon in Mumbai. Student passes include workshop access and hackathon eligibility.",
+  "firstSeen": "2026-09-30"
  },
  "lunch-and-learn-meta": {
   "id": "lunch-and-learn-meta",
@@ -463,6 +548,34 @@
   "access": "approval",
   "desc": "A Devcon-week side event that connects blockchain and AI startups with investors and media, with mentoring and a pool of funding and grants for selected teams.",
   "firstSeen": "2026-09-28"
+ },
+ "mongodb-local-mumbai": {
+  "id": "mongodb-local-mumbai",
+  "title": "MongoDB.local Mumbai",
+  "cat": "Tech",
+  "tags": [
+   "Databases",
+   "Agentic AI",
+   "Conference"
+  ],
+  "area": "Powai",
+  "venue": "The Westin Mumbai Powai Lake",
+  "start": "2026-10-06",
+  "end": null,
+  "timeNote": "Times on the event page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · request to attend",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "MongoDB",
+  "url": "https://www.mongodb.com/events/mongodb-local/mumbai",
+  "org": "MongoDB",
+  "access": "approval",
+  "desc": "MongoDB's one-day developer event on taking AI apps from pilot to production and modernising older systems, with technical sessions and time to meet the MongoDB team.",
+  "firstSeen": "2026-09-30"
  },
  "mumbai-meets-ai-06": {
   "id": "mumbai-meets-ai-06",

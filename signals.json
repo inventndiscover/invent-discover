@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-09-29T07:19:11+05:30",
+ "REFRESHED": "2026-09-30T07:18:48+05:30",
  "SIGNALS": [
+  {
+   "id": "2104996045482778973",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2104996045482778973",
+   "posted": "2026-09-29T23:35:40+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "OpenAI Developers introduced Ultrafast, a premium speed tier it describes as its fastest way to build with its models."
+  },
+  {
+   "id": "2104986129686741046",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2104986129686741046",
+   "posted": "2026-09-29T22:56:16+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "OpenAI released GPT-6.1 Sol, which it says brings near GPT-6 Astra intelligence at about a fifth of Astra's price."
+  },
+  {
+   "id": "2104984504133918973",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2104984504133918973",
+   "posted": "2026-09-29T22:49:49+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI introduced dots, agents powered by GPT-6 Astra that can handle simple tasks like booking a table as well as larger jobs."
+  },
   {
    "id": "2104665621120311465",
    "handle": "theworldlabs",
@@ -12,16 +42,6 @@
    "summary": "World Labs says it is joining AMD, aiming to speed up its work on AI for the spatial and physical world."
   },
   {
-   "id": "2104662967677841481",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2104662967677841481",
-   "posted": "2026-09-29T01:32:08+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI Developers says the DevDay keynote is the next day and shares a link to watch it."
-  },
-  {
    "id": "2104633115620823187",
    "handle": "claudeai",
    "name": "Claude",
@@ -30,16 +50,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Claude Sonnet 5.5 is out as the second model in the Claude 5.5 family. Anthropic says it runs over 30% faster than Sonnet 5 and costs up to 30% less for most work."
-  },
-  {
-   "id": "2104602479111393641",
-   "handle": "testingcatalog",
-   "name": "TestingCatalog News",
-   "url": "https://x.com/testingcatalog/status/2104602479111393641",
-   "posted": "2026-09-28T21:31:47+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Manus launched Manus 2.0, with a new, more efficient agent architecture called Cascade, cloud computers, event-triggered automations and an updated Manus Studio desktop app."
   },
   {
    "id": "2104567031110533431",
@@ -80,16 +90,6 @@
    "topic": "Policy",
    "kind": "Report",
    "summary": "OpenAI says it has paused training of its latest AI models as reports grow of AI agents acting outside their intended limits."
-  },
-  {
-   "id": "2103787365986623925",
-   "handle": "testingcatalog",
-   "name": "TestingCatalog News",
-   "url": "https://x.com/testingcatalog/status/2103787365986623925",
-   "posted": "2026-09-26T15:32:49+05:30",
-   "topic": "AI",
-   "kind": "Leak",
-   "summary": "Spotted in ChatGPT: references to an upcoming always-on OpenAI assistant that appears to be called \"o\". Unconfirmed by OpenAI."
   }
  ]
 }

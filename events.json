@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-09-29T08:25:55+05:30",
+ "REFRESHED": "2026-09-30T08:24:56+05:30",
  "EVENTS_RAW": [
   {
    "id": "hacknova",
@@ -156,6 +156,32 @@
    "desc": "A panel of founders and operators on early wins, go-to-market, hiring and fundraising, followed by informal networking. Open to anyone curious about startups."
   },
   {
+   "id": "ai-for-non-techies",
+   "title": "AI for Non-Techies: live workshop",
+   "cat": "AI",
+   "tags": [
+    "Workshop",
+    "No-code",
+    "Hinglish"
+   ],
+   "area": "Andheri East",
+   "venue": "Mickey Square, MIDC Road No. 7, Kondivita",
+   "start": "2026-10-03T14:00",
+   "end": "18:00",
+   "fmt": "Offline",
+   "price": 3999,
+   "priceNote": "₹3,999 · includes three months of Biscuit access",
+   "aud": [
+    "Professional",
+    "Open to All"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/yocnzgej",
+   "org": "Annkur P Agarwal & Maria Martin",
+   "access": "approval",
+   "desc": "A small four-hour workshop where non-technical professionals bring a real work problem and turn it into a simple AI-powered tool without writing code. Capped at 15 people and run mostly in Hinglish."
+  },
+  {
    "id": "hack-nation-bombay-hub",
    "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
    "cat": "AI",
@@ -181,6 +207,33 @@
    "org": "Analytics Club, IIT Bombay",
    "access": "approval",
    "desc": "The Mumbai hub of a global 24-hour AI hackathon, where teams build and pitch prototypes with mentor support and compete for a large international prize pool. Hosted by the IIT Bombay Analytics Club; places are by application."
+  },
+  {
+   "id": "mongodb-local-mumbai",
+   "title": "MongoDB.local Mumbai",
+   "cat": "Tech",
+   "tags": [
+    "Databases",
+    "Agentic AI",
+    "Conference"
+   ],
+   "area": "Powai",
+   "venue": "The Westin Mumbai Powai Lake",
+   "start": "2026-10-06",
+   "end": null,
+   "timeNote": "Times on the event page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · request to attend",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "MongoDB",
+   "url": "https://www.mongodb.com/events/mongodb-local/mumbai",
+   "org": "MongoDB",
+   "access": "approval",
+   "desc": "MongoDB's one-day developer event on taking AI apps from pilot to production and modernising older systems, with technical sessions and time to meet the MongoDB team."
   },
   {
    "id": "lunch-and-learn-meta",
@@ -349,9 +402,8 @@
    ],
    "area": "Mumbai",
    "venue": "Venue on the event page",
-   "start": "2026-10-13",
-   "end": null,
-   "timeNote": "Times on the event page",
+   "start": "2026-10-13T08:30",
+   "end": "19:35",
    "fmt": "Offline",
    "price": null,
    "priceNote": "Registration on IBM's site",
@@ -415,6 +467,34 @@
    "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers."
   },
   {
+   "id": "ifp-festival-16",
+   "title": "IFP Festival Season 16",
+   "cat": "Art",
+   "tags": [
+    "Festival",
+    "Film",
+    "Music",
+    "Design"
+   ],
+   "area": "Bandra West",
+   "venue": "Mehboob Studios, Hill Road",
+   "start": "2026-10-24T10:00",
+   "endDate": "2026-10-25",
+   "end": "21:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Student and citizen passes; prices go up in phases from 1 Oct",
+   "aud": [
+    "Student",
+    "Open to All"
+   ],
+   "src": "IFP",
+   "url": "https://ifp.world/festival/",
+   "org": "IFP",
+   "access": "open",
+   "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper."
+  },
+  {
    "id": "enterprise-ai-summit",
    "title": "Enterprise AI Summit Mumbai 2026",
    "cat": "AI",
@@ -425,13 +505,12 @@
    ],
    "area": "BKC",
    "venue": "Jio World Convention Centre",
-   "start": "2026-10-26",
+   "start": "2026-10-26T09:00",
    "endDate": "2026-10-28",
-   "end": null,
-   "timeNote": "Times on the event page",
+   "end": "17:00",
    "fmt": "Offline",
    "price": 0,
-   "priceNote": "No ticket price shown on Luma",
+   "priceNote": "Free on Eventbrite; no ticket price shown on Luma",
    "aud": [
     "Professional",
     "Founder"
@@ -440,7 +519,8 @@
    "url": "https://luma.com/y2o1cuts",
    "org": "stage-x",
    "access": "open",
-   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists."
+   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
+   "also": "Eventbrite"
   },
   {
    "id": "healthtech-founders-mixer",
@@ -467,6 +547,35 @@
    "org": "Bhavik Jain",
    "access": "approval",
    "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce."
+  },
+  {
+   "id": "india-blockchain-week",
+   "title": "India Blockchain Week 2026",
+   "cat": "Tech",
+   "tags": [
+    "Web3",
+    "Conference",
+    "Devcon week"
+   ],
+   "area": "Andheri East",
+   "venue": "Fairmont Mumbai",
+   "start": "2026-11-01",
+   "endDate": "2026-11-02",
+   "end": null,
+   "timeNote": "Times on the event page",
+   "fmt": "Offline",
+   "price": 1499,
+   "priceNote": "Early bird general ₹1,499 · student ₹999 with hackathon eligibility",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Student"
+   ],
+   "src": "IBW",
+   "url": "https://indiablockchainweek.com/",
+   "org": "India Blockchain Week",
+   "access": "open",
+   "desc": "A two-day Web3 conference for builders, founders and investors held just before Devcon in Mumbai. Student passes include workshop access and hackathon eligibility."
   },
   {
    "id": "media-accelerator-cohort",
@@ -824,58 +933,106 @@
     "place": 20,
     "category": 80
    }
+  },
+  {
+   "qid": "q-codex-agents",
+   "title": "Build AI Agents With Codex: Mumbai edition",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/jxa0hd16",
+   "access": "open",
+   "why": "Event page would not open this run; an aggregator lists it for 10 Oct morning.",
+   "conf": {
+    "date": 55,
+    "place": 40,
+    "category": 95
+   },
+   "hint": "2026-10-10"
+  },
+  {
+   "qid": "q-philosophy-genai",
+   "title": "Philosophy Meetup: mapping the ethics of Gen AI",
+   "cat": "AI",
+   "area": "Versova",
+   "src": "Luma",
+   "url": "https://luma.com/j4zoc2fx",
+   "access": "open",
+   "why": "Page shows venue and free entry but no date; an aggregator lists it for 4 Oct afternoon.",
+   "conf": {
+    "date": 55,
+    "place": 85,
+    "category": 85
+   },
+   "hint": "2026-10-04"
+  },
+  {
+   "qid": "q-ethglobal",
+   "title": "ETHGlobal Mumbai hackathon",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "ETHGlobal",
+   "url": "https://ethglobal.com/events/mumbai",
+   "access": "approval",
+   "why": "Only the submission deadline (8 Nov) is visible; main event page returned an error.",
+   "conf": {
+    "date": 50,
+    "place": 60,
+    "category": 90
+   },
+   "hint": "2026-11-06"
   }
  ],
  "RUNS": [
   {
    "src": "Luma: Mumbai, AI and Tech pages",
    "what": "City and category listings, then each event page",
-   "found": 26,
-   "pub": 9,
-   "review": 11,
-   "dup": 0,
-   "skip": 6,
-   "note": "Arts page and some event pages would not open; Hack-Nation date confirmed via the global event page; one past, one beyond 45 days, one sold out and three HR or sales sessions skipped"
+   "found": 27,
+   "pub": 10,
+   "review": 12,
+   "dup": 2,
+   "skip": 3,
+   "note": "Arts page and several event pages would not open; 10 existing Luma events re-checked and unchanged; AI for Non-Techies added; StartupLive (20–21 Nov) is beyond 45 days; two HR sessions skipped"
   },
   {
    "src": "Hidden Events: Mumbai (Luma mirror)",
    "what": "Aggregator listing, used for dates only",
-   "found": 18,
+   "found": 21,
    "pub": 0,
-   "review": 4,
-   "dup": 7,
-   "skip": 7,
-   "note": "Event pages for the 3 Oct items would not open, so they stay in review"
+   "review": 2,
+   "dup": 10,
+   "skip": 9,
+   "note": "Used for date hints on the Codex workshop and the Gen AI ethics meetup; games, running and wellness events skipped"
   },
   {
-   "src": "AllEvents: technology, startup, AI",
-   "what": "Listings, then event pages where they opened",
-   "found": 33,
-   "pub": 5,
+   "src": "AllEvents: technology, startup",
+   "what": "Technology listing; event pages and startup page would not open",
+   "found": 15,
+   "pub": 4,
    "review": 0,
    "dup": 0,
-   "skip": 28,
-   "note": "Most event pages would not open, so dates were checked on the listings; Shayari Showdown kept from last run; expos, pay-to-pitch and kids' events skipped"
+   "skip": 11,
+   "note": "Existing AllEvents dates re-checked on the listing; trade expos and a kids' robotics contest skipped; Shayari Showdown and Health Tech mixer kept from last run unverified"
   },
   {
    "src": "Meetup: Mumbai Meets AI, UI/UX search",
    "what": "Group page and topic search",
-   "found": 1,
+   "found": 3,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 1,
+   "skip": 3,
    "note": "Group page would not open; UX search showed only online events"
   },
   {
    "src": "Web search and organiser sites",
-   "what": "eChai, Elastic, IBM, Hack-Nation, Figma, hackathon searches",
-   "found": 4,
-   "pub": 4,
-   "review": 0,
-   "dup": 0,
+   "what": "eChai, IBM, MongoDB, IFP, IBW, ETHGlobal, Eventbrite, dev.events",
+   "found": 8,
+   "pub": 6,
+   "review": 1,
+   "dup": 1,
    "skip": 0,
-   "note": "Unstop hackathon pages would not load; Friends of Figma's only listed event is sold out"
+   "note": "IBM Think times added; Enterprise AI Summit also on Eventbrite; MongoDB.local, IFP Festival and India Blockchain Week added; ETHGlobal Mumbai dates not confirmed; Elastic and Devcon pages not re-checked"
   }
  ],
  "COMMUNITIES": [
