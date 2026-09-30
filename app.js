@@ -439,11 +439,74 @@ function viewInvent(){
   </div>`;
 }
 
+
+/* ---------- AI trends (Insights page) ----------
+   trends.json holds researched numbers with their source (Stanford AI Index).
+   It changes about once a year. If it fails to load, the section is skipped. */
+const TR = window.__TRENDS;
+function trendNum(v,c){return (c.prefix||"")+(Number.isInteger(v)?v:v.toFixed(1))+(c.suffix||"");}
+function trendBars(c){
+  const max=Math.max(...c.rows.map(r=>r.v));
+  return `<div class="tb">${c.rows.map((r,i)=>{
+    const w=Math.max(r.v/max*100,1.2), val=(r.approx?"≈ ":"")+trendNum(r.v,c);
+    return `<div class="tb-row${r.hl?" hl":""}" tabindex="0" data-tip="${esc(r.k)}: ${esc(val)}">
+      <span class="tb-k">${esc(r.k)}</span>
+      <span class="tb-track"><span class="tb-fill" style="--w:${w}%;--d:${i*90}ms"></span></span>
+      <span class="tb-v num">${esc(val)}</span></div>`}).join("")}</div>`;
+}
+function trendChange(c){
+  return `<div class="tc"><div class="tc-legend"><span><i class="tc-a"></i>${esc(c.from)}</span><span><i class="tc-b"></i>${esc(c.to)}</span></div>
+  ${c.rows.map(r=>`<div class="tc-row" tabindex="0" data-tip="${esc(r.k)}: ${r.a}${c.suffix} in ${esc(c.from)}, ${r.b}${c.suffix} in ${esc(c.to)}">
+    <span class="tb-k">${esc(r.k)}</span>
+    <span class="tc-track"><span class="tc-span" style="left:${r.a}%;width:${r.b-r.a}%"></span><span class="tc-dot a" style="left:${r.a}%"></span><span class="tc-dot b" style="left:${r.b}%"></span></span>
+    <span class="tb-v num">${r.a} → ${r.b}${esc(c.suffix)}</span></div>`).join("")}
+  <div class="tc-axis num"><span>0%</span><span>50%</span><span>100%</span></div></div>`;
+}
+function trendGrowth(c){
+  const W=320,H=150,px=28,pt=22,pb=24, max=40, n=c.rows.length;
+  const x=i=>px+i*(W-2*px)/(n-1), y=v=>pt+(H-pt-pb)*(1-v/max);
+  const pts=c.rows.map((r,i)=>[x(i),y(r.v)]);
+  const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const area=line+` L${x(n-1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
+  const grid=[0,10,20,30,40].map(g=>`<line x1="${px}" x2="${W-px}" y1="${y(g)}" y2="${y(g)}" class="tg-grid"/><text x="${px-6}" y="${y(g)+3}" class="tg-ax" text-anchor="end">${g}×</text>`).join("");
+  return `<svg class="tg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}: ${c.rows.map(r=>r.k+" "+r.v+"×").join(", ")}">
+    <defs><linearGradient id="tgFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--amber);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--amber);stop-opacity:0"/></linearGradient></defs>
+    ${grid}<path d="${area}" fill="url(#tgFill)"/><path d="${line}" class="tg-line"/>
+    ${c.rows.map((r,i)=>`<g class="tg-pt" tabindex="0" data-tip="${esc(r.k)}: ${r.v}×"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="12" fill="transparent"/><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="${i===n-1?5:4}" class="tg-dot${i===n-1?" end":""}"/><text x="${pts[i][0]}" y="${H-6}" class="tg-ax" text-anchor="middle">${esc(r.k)}</text></g>`).join("")}
+    <text x="${pts[n-1][0]-8}" y="${pts[n-1][1]-10}" class="tg-lab" text-anchor="end">${c.rows[n-1].v}×</text>
+  </svg>`;
+}
+function trendsSection(){
+  if(!TR||!Array.isArray(TR.CHARTS)) return "";
+  const draw={bars:trendBars,change:trendChange,growth:trendGrowth};
+  return `<div class="wrap"><section class="block trends" aria-labelledby="trendsTitle">
+    <div class="sec-head"><div><h2 class="sec-title" id="trendsTitle">How AI is shaping up</h2><p class="sec-sub">The big numbers behind the headlines: money, models, adoption and computing power.</p>
+      <div class="tr-src label">Source · <a href="${esc(TR.SOURCE.url)}" target="_blank" rel="noopener">${esc(TR.SOURCE.name)}</a> · data for 2025</div></div></div>
+    <div class="tr-stats">${(TR.STATS||[]).map(s=>`<div class="tr-stat"><div class="tr-big num">${esc(s.value)}</div><div class="tr-lbl">${esc(s.label)}</div><div class="tr-sub label">${esc(s.sub)}</div></div>`).join("")}</div>
+    <div class="tr-grid">${TR.CHARTS.filter(c=>draw[c.type]).map(c=>`<figure class="tr-card" id="trend-${esc(c.id)}">
+      <figcaption><h3>${esc(c.title)}</h3><p class="label">${esc(c.sub)}</p></figcaption>
+      ${draw[c.type](c)}
+      <p class="tr-take">${esc(c.takeaway)}</p>
+      <a class="tr-link label" href="${esc(c.src)}" target="_blank" rel="noopener">Source ↗</a></figure>`).join("")}</div>
+    <div class="tr-tip" id="trTip" role="status" hidden></div>
+  </section></div>`;
+}
+// One shared tooltip for every chart mark (hover or keyboard focus).
+(function(){
+  const show=e=>{const t=e.target.closest&&e.target.closest("[data-tip]"),tip=document.getElementById("trTip");if(!tip)return;
+    if(!t){tip.hidden=true;return}
+    tip.textContent=t.getAttribute("data-tip");tip.hidden=false;
+    const r=t.getBoundingClientRect();tip.style.left=Math.min(window.innerWidth-tip.offsetWidth-12,Math.max(12,r.left+r.width/2-tip.offsetWidth/2))+"px";tip.style.top=(r.top-tip.offsetHeight-8)+"px";};
+  document.addEventListener("pointerover",show);document.addEventListener("focusin",show);
+  document.addEventListener("scroll",()=>{const tip=document.getElementById("trTip");if(tip)tip.hidden=true},{passive:true});
+})();
+
 function viewInsights(){
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 30%"><div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Insights</span></div><h1 class="mega">Insights</h1><p>Essays, visit notes and event recaps from the Invent &amp; Discover blog.</p></div>
   </div></div>
+  ${trendsSection()}
   ${xSection(0)}
   <div class="wrap">
     <section class="block">
