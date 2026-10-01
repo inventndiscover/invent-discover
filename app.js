@@ -60,6 +60,9 @@ const DEMOS = [
   needs:"Best on a laptop or desktop with a recent Chrome, Edge or Safari. Older phones may not run it.",
   vr:"inventndiscover.com/demos/tufani-samundar",
   desc:"A force-10 storm at sea, simulated live in the browser. Dive under the waves to a coral reef with a humpback whale, sharks, manta rays, turtles and an octopus. Change the sea state, time of day, cloud and rain, switch on a dive torch, and hear sound made on the fly. Everything is generated in one web page, with nothing to download."},
+ {id:"paper-heart",name:"Paper Heart",line:"A neon, step-by-step origami heart tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+  gif:"media/paper-heart.gif",video:"media/paper-heart-tutorial.mp4",poster:"media/paper-heart-poster.jpg",
+  desc:"Seven folds turn one square sheet into a heart, drawn as glowing line art. No glue, under five minutes. A short animated tutorial made with AI, the second in a series turning origami into screen-based lessons."},
  {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-fan.gif",video:"media/paper-fan-tutorial.mp4",poster:"media/paper-fan-poster.jpg",
   desc:"Eight folds, from a flat sheet to a finished fan, drawn as glowing line art. A one-minute animated tutorial made with AI, as part of a series turning origami into screen-based lessons."},
@@ -441,7 +444,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Tufani Samundar and Paper Fan.</b> Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Tufani Samundar, Paper Heart and Paper Fan.</b> Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
