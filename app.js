@@ -53,8 +53,11 @@ async function sendForm(data){
   return j;
 }
 
-// Example demos: Invent has no real submissions yet.
+// Demos in Invent. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+  gif:"media/paper-fan.gif",video:"media/paper-fan-tutorial.mp4",poster:"media/paper-fan-poster.jpg",
+  desc:"Eight folds, from a flat sheet to a finished fan, drawn as glowing line art. A one-minute animated tutorial made with AI, as part of a series turning origami into screen-based lessons."},
  {id:"tapri",name:"Tapri",line:"Voice-first ordering for neighbourhood tea stalls",cat:"Civic",status:"Prototype",makers:["Two design students"],inst:"Example",tools:["Speech-to-text","React Native"],desc:"Customers speak an order in Hindi, Marathi or English; the stall owner sees a running tab without typing."},
  {id:"local-lines",name:"Local Lines",line:"AR help for first-time train riders",cat:"XR",status:"Concept",makers:["XR studio team"],inst:"Example",tools:["Unity","AR Foundation"],desc:"Point a phone at a platform indicator board and see which coach to board and which side the doors open."},
  {id:"dabba-route",name:"Dabba Route",line:"An interactive map of how lunchboxes cross the city",cat:"UX",status:"Live",makers:["Independent designer"],inst:"Example",tools:["D3.js","Mapbox"],desc:"A visual explainer tracing one tiffin from a Borivali kitchen to a Fort office, stop by stop."},
@@ -218,12 +221,13 @@ function demoCard(d){
     {k:"Stage",v:esc(d.status),cls:d.status==="Live"?"free":"paid"},
     {k:"Built with",v:esc(d.tools.join(" · ")),cls:"when small",span:1}
   ],CAT[d.cat].c,d.id);
+  const coverHTML=d.gif?`<div class="demo-gif"><img src="${d.gif}" alt="${esc(d.name)}: ${esc(d.line)}" loading="lazy" width="400" height="250"><span class="play" aria-hidden="true">▶ Watch</span></div>`:mxHTML;
   return `<article class="card">
-    <button class="cover-link" data-open-demo="${d.id}" aria-label="Open ${esc(d.name)}">${mxHTML}</button>
+    <button class="cover-link" data-open-demo="${d.id}" aria-label="Open ${esc(d.name)}">${coverHTML}</button>
     <div class="card-body">
       <h3><a href="#invent" data-open-demo="${d.id}" style="text-decoration:none">${esc(d.name)}</a></h3>
       <p style="margin:0;color:var(--ink2);font-size:14px">${esc(d.line)}</p>
-      <div class="card-foot"><span class="src">${esc(d.makers.join(", "))}</span><span class="tag sample">Example</span></div>
+      <div class="card-foot"><span class="src">${esc(d.makers.join(", "))}</span>${d.inst==="Example"?'<span class="tag sample">Example</span>':'<span class="tag new">New</span>'}</div>
     </div></article>`;
 }
 function articleRow(a){
@@ -431,7 +435,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>Invent opens with its first real demos.</b> The cards below are examples that show the format. Submit yours and it replaces them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demo is up: Paper Fan.</b> Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
@@ -691,13 +695,15 @@ function eventSheet(id){
 }
 function demoSheet(id){
   const d=DEMOS.find(x=>x.id===id);if(!d)return;
-  openSheet(`${cover(d.name.split(" ")[0],CAT[d.cat].c,d.id+"x",{tag:d.cat,stamp:d.status})}
+  const real=d.inst!=="Example";
+  const top=d.video?`<video class="demo-video" src="${d.video}" poster="${d.poster||""}" controls playsinline preload="metadata"></video>`:cover(d.name.split(" ")[0],CAT[d.cat].c,d.id+"x",{tag:d.cat,stamp:d.status});
+  openSheet(`${top}
   <div class="sheet-body">
-    <div><div class="label">Example demo</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
+    <div><div class="label">${real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
     <p style="margin:0;font-size:16px">${esc(d.desc)}</p>
     <div class="facts"><div><span class="label">Stage</span><b>${esc(d.status)}</b></div><div><span class="label">Made by</span><b>${esc(d.makers.join(", "))}</b></div><div style="grid-column:1/-1"><span class="label">Built with</span><b>${esc(d.tools.join(" · "))}</b></div></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
-    <div class="note"><b>Example.</b> This shows the format of a demo page. Real demos open the maker's live link or video.</div>
+    ${real?(d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
+    <div class="note"><b>Example.</b> This shows the format of a demo page. Real demos open the maker's live link or video.</div>`}
   </div>`,d.name);
 }
 
