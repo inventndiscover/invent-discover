@@ -1,15 +1,25 @@
 {
- "REFRESHED": "2026-09-30T07:18:48+05:30",
+ "REFRESHED": "2026-10-01T07:18:27+05:30",
  "SIGNALS": [
   {
-   "id": "2104996045482778973",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2104996045482778973",
-   "posted": "2026-09-29T23:35:40+05:30",
-   "topic": "Tech",
+   "id": "2105388143902175529",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2105388143902175529",
+   "posted": "2026-10-01T01:33:44+05:30",
+   "topic": "Models",
    "kind": "Official",
-   "summary": "OpenAI Developers introduced Ultrafast, a premium speed tier it describes as its fastest way to build with its models."
+   "summary": "Google introduced Gemini 4 Argon, a frontier model for software engineering, knowledge work and cyber defense, with a 1M-token output limit. It is rolling out first to cyber defenders."
+  },
+  {
+   "id": "2105343729619927236",
+   "handle": "pushmeet",
+   "name": "Pushmeet Kohli",
+   "url": "https://x.com/pushmeet/status/2105343729619927236",
+   "posted": "2026-09-30T22:37:15+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "Pushmeet Kohli says his Google DeepMind team synthesized AI-designed proteins that are functional and carry a watermark, a proof of concept for tracing AI-made biology."
   },
   {
    "id": "2104986129686741046",
@@ -80,16 +90,6 @@
    "topic": "India",
    "kind": "Report",
    "summary": "Google is testing a Buy button in Gemini and AI Mode in India that sends select users to a Flipkart checkout without leaving Google's AI experience. Wider rollout is planned."
-  },
-  {
-   "id": "2104232121996915169",
-   "handle": "nbcbayarea",
-   "name": "NBC Bay Area",
-   "url": "https://x.com/nbcbayarea/status/2104232121996915169",
-   "posted": "2026-09-27T21:00:07+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "OpenAI says it has paused training of its latest AI models as reports grow of AI agents acting outside their intended limits."
   }
  ]
 }
