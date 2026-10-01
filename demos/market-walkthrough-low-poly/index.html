@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Walkthrough Low Poly · Invent + Discover</title>
+<link rel="canonical" href="https://inventndiscover.com/demos/market-walkthrough-low-poly/">
+<meta name="description" content="A walkable low-poly shopping plaza with a city skyline, traffic and mountains. Explore it in the browser or in VR on a Meta Quest.">
+<meta property="og:title" content="Market Walkthrough Low Poly">
+<meta property="og:image" content="https://inventndiscover.com/media/market-walkthrough-cover.jpg">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: #1a1a1e;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #eeece6; }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+
+  #hud { position: fixed; left: 18px; bottom: 18px; max-width: 280px;
+    padding: 13px 16px; background: rgba(20,20,26,0.82); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-size: 13px; line-height: 1.5; z-index: 10; }
+  #hud h1 { font-size: 14px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.02em; }
+  #hud .keys { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+  #hud kbd { display: inline-block; min-width: 18px; padding: 2px 6px; text-align: center;
+    background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 5px; font-family: ui-monospace, monospace; font-size: 11px; }
+  #hud .d { color: #b3b0aa; align-self: center; }
+
+  #vr-btn { position: fixed; top: 16px; right: 18px; padding: 9px 18px; cursor: pointer;
+    background: #c9a24a; color: #1a1a1e; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.03em; z-index: 10; }
+  #vr-btn:disabled { background: #444; color: #999; cursor: default; }
+
+  #crosshair { position: fixed; left: 50%; top: 50%; width: 6px; height: 6px;
+    margin: -3px 0 0 -3px; border-radius: 50%; background: rgba(255,255,255,0.5);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.4); pointer-events: none; z-index: 10; }
+
+  #enter { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px; background: rgba(10,10,14,0.6); backdrop-filter: blur(4px);
+    cursor: pointer; z-index: 20; transition: opacity 0.35s; }
+  #enter .t { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; }
+  #enter .s { font-size: 14px; color: #a9a6a0; }
+  .hidden { opacity: 0; pointer-events: none; }
+
+  #time-panel { position: fixed; right: 18px; bottom: 18px; width: 220px;
+    padding: 13px 15px; background: rgba(20,20,26,0.82); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; z-index: 10; }
+  #time-panel .tp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; }
+  #time-label { font-size: 13px; font-weight: 600; }
+  #time-slider { width: 100%; cursor: pointer; accent-color: #c9a24a; }
+  .tp-presets { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-top: 9px; }
+  .tp-presets button { padding: 5px 0; font-size: 11px; font-weight: 600; cursor: pointer;
+    background: rgba(255,255,255,0.08); color: #ddd; border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px; }
+  .tp-presets button:hover { background: rgba(201,162,74,0.3); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<button id="vr-btn" disabled>Checking VR…</button>
+<div id="sound-tag" style="position:fixed;top:56px;right:18px;padding:6px 12px;background:rgba(20,20,26,0.8);color:#eee;border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:12px;z-index:30;cursor:pointer;user-select:none;">🔇 Sound: off</div>
+<div id="enter"><div class="t">MARKET WALKTHROUGH</div><div class="s">Low Poly · Click to enter · walk with keyboard · or press Enter VR on a headset</div></div>
+<div id="crosshair"></div>
+
+<div id="hud">
+  <h1>Store controls</h1>
+  <div class="keys">
+    <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><div class="d">Walk / arrows</div>
+    <div><kbd>Shift</kbd></div><div class="d">Walk faster</div>
+    <div>Mouse</div><div class="d">Look (drag if visible)</div>
+    <div>Scroll</div><div class="d">Zoom in / out</div>
+    <div><kbd>T</kbd></div><div class="d">Cycle time of day</div>
+    <div>Walk up</div><div class="d">to a case to inspect a watch</div>
+    <div>Headset</div><div class="d">Enter VR button ↗</div>
+  </div>
+</div>
+
+<div id="time-panel">
+  <div class="tp-row">
+    <span id="time-label">☀ Midday</span>
+  </div>
+  <input id="time-slider" type="range" min="0" max="100" value="50" />
+  <div class="tp-presets">
+    <button data-t="18">Dawn</button>
+    <button data-t="50">Noon</button>
+    <button data-t="80">Dusk</button>
+    <button data-t="95">Night</button>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+// VRButton is optional — load defensively so a CDN miss can't break the page.
+let VRButton = null;
+try { ({ VRButton } = await import("three/addons/webxr/VRButton.js")); }
+catch(e){ console.warn("VRButton addon unavailable; desktop still works.", e); }
+
+/* ============================================================================
+   AURUM WATCH STORE — WebXR walkthrough
+
+   Runs two ways from ONE file:
+     • Desktop: click, then WASD + mouse (as before).
+     • VR: on a Meta Quest, open this page in the Quest browser and press the
+       "Enter VR" button. WebXR hands rendering to the headset; you look with
+       your head and (in this simple version) glide with the thumbstick.
+
+   HOW VR WORKS HERE, in one idea: we set renderer.xr.enabled = true and add a
+   VR button. In VR, Three.js automatically renders a separate image per eye
+   and tracks the headset's position/rotation — we don't hand-code any of that.
+   Our job is just to build a nice room and move the "player rig" around.
+============================================================================ */
+
+/* ---- 1. CORE ---- */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xbcd0dc);
+scene.fog = new THREE.Fog(0xbcd0dc, 45, 200);           // haze: near clear, deep city fades into it
+
+const camera = new THREE.PerspectiveCamera(72, innerWidth/innerHeight, 0.1, 400);
+
+// PLAYER RIG: in VR the headset moves the camera, so we don't move the camera
+// directly — we move a "rig" (a group) that the camera sits inside. On desktop
+// the camera does the looking; in VR the rig is the body and the head is tracked.
+const rig = new THREE.Group();
+rig.add(camera);
+rig.position.set(0, 1.6, 6);      // eye height ~1.6m, standing just inside the door
+scene.add(rig);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.xr.enabled = true;        // <-- turns on VR support
+// floor-relative tracking so height is measured from the real floor (pairs with rig y=0)
+try { renderer.xr.setReferenceSpaceType("local-floor"); } catch(_){}
+renderer.xr.addEventListener("sessionstart", ()=>{
+  // never carry a desktop zoom into the headset
+  camera.fov = FOV_NORMAL; camera.updateProjectionMatrix();
+});
+document.getElementById("app").appendChild(renderer.domElement);
+const canvas = renderer.domElement;
+
+/* ---- 2. VR BUTTON wiring ----
+   The reliable way: use three.js's own VRButton and put IT on the page. It is
+   the element that actually starts the immersive session when tapped, and it
+   manages its own enabled/disabled/"not supported" text. We hide our decorative
+   placeholder button and drop the real one in its place (top-right), so on a
+   Quest it reads "ENTER VR" and works with a single tap. */
+const placeholder = document.getElementById("vr-btn");
+if (VRButton) {
+  const realBtn = VRButton.createButton(renderer);   // the working button
+  // A VR-headset icon prepended to three.js's label (it flips to ENTER VR / etc.)
+  const vrIcon = '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:8px;flex:none;"><path d="M20.5 6h-17A1.5 1.5 0 0 0 2 7.5v7A1.5 1.5 0 0 0 3.5 16h3.2c.5 0 .95-.28 1.17-.72l.86-1.7a1.3 1.3 0 0 1 2.34 0l.86 1.7c.22.44.67.72 1.17.72h3.2A1.5 1.5 0 0 0 22 14.5v-7A1.5 1.5 0 0 0 20.5 6Zm-13 6.5A1.5 1.5 0 1 1 9 11a1.5 1.5 0 0 1-1.5 1.5Zm9 0A1.5 1.5 0 1 1 18 11a1.5 1.5 0 0 1-1.5 1.5Z"/></svg>';
+  const applyLook = ()=>{
+    const label = realBtn.textContent || "ENTER VR";
+    realBtn.innerHTML = vrIcon + '<span style="vertical-align:middle;">'+label+'</span>';
+  };
+  applyLook();
+  renderer.xr.addEventListener("sessionstart", applyLook);
+  renderer.xr.addEventListener("sessionend", applyLook);
+  // bold gold CTA styling, above any overlay (z 30) so the tap always lands
+  Object.assign(realBtn.style, {
+    position:"fixed", top:"16px", right:"18px", left:"auto", bottom:"auto",
+    transform:"none", zIndex:"30",
+    display:"flex", alignItems:"center", justifyContent:"center",
+    width:"auto", minWidth:"180px", height:"auto",
+    padding:"14px 24px", border:"2px solid #f4d27a", borderRadius:"12px",
+    background:"linear-gradient(135deg,#e8b84a,#c9902f)", color:"#1a1206",
+    font:"700 17px/1 ui-sans-serif,system-ui,sans-serif", letterSpacing:"0.06em",
+    opacity:"1", cursor:"pointer", boxShadow:"0 4px 18px rgba(0,0,0,0.45), 0 0 0 4px rgba(233,183,74,0.18)"
+  });
+  document.body.appendChild(realBtn);
+  placeholder.style.display = "none";                 // hide the fake one
+} else {
+  placeholder.textContent = "VR unavailable (three.js VRButton didn't load)";
+}
+
+/* ---- 3. LIGHTING: warm boutique interior + cool daylight outside ----
+   The sun (daylight) and ambient (hemi) are named so the time-of-day control
+   can move the sun, recolour it, and dim everything as evening falls. */
+const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8478, 0.55);
+scene.add(hemi);
+const daylight = new THREE.DirectionalLight(0xfff3e0, 1.1);
+daylight.position.set(10, 20, 8); daylight.castShadow = true;
+daylight.shadow.mapSize.set(2048,2048);
+Object.assign(daylight.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:60});
+scene.add(daylight);
+// warm ceiling spots inside the store (pools of gold light on the cases)
+function spot(x,z){
+  const s=new THREE.SpotLight(0xffe6b0, 22, 9, Math.PI/6, 0.4, 1.5);
+  s.position.set(x,3.1,z); s.target.position.set(x,0,z);
+  s.castShadow=true; scene.add(s); scene.add(s.target);
+}
+
+/* ---- 4. MATERIALS ---- */
+const M = {
+  floor:   new THREE.MeshStandardMaterial({ color:0x2a2622, roughness:0.25, metalness:0.3 }), // polished dark
+  wall:    new THREE.MeshStandardMaterial({ color:0x3a3630, roughness:0.7 }),
+  trim:    new THREE.MeshStandardMaterial({ color:0xc9a24a, roughness:0.35, metalness:0.7 }),  // gold trim
+  glass:   new THREE.MeshStandardMaterial({ color:0xbfe0ea, roughness:0.03, metalness:0.1, transparent:true, opacity:0.22 }),
+  // large tinted glass for luxury storefronts — dark, reflective, semi-see-through
+  tint:    new THREE.MeshStandardMaterial({ color:0x1c2630, roughness:0.05, metalness:0.6, transparent:true, opacity:0.55 }),
+  mullion: new THREE.MeshStandardMaterial({ color:0x2a2c30, roughness:0.4, metalness:0.7 }), // slim frame dividers
+  case:    new THREE.MeshStandardMaterial({ color:0x1a1714, roughness:0.4 }),
+  cushion: new THREE.MeshStandardMaterial({ color:0x14110e, roughness:0.9 }),
+  gold:    new THREE.MeshStandardMaterial({ color:0xd8b25a, roughness:0.25, metalness:0.85 }),
+  steel:   new THREE.MeshStandardMaterial({ color:0xc8ccd0, roughness:0.2, metalness:0.9 }),
+  leather: new THREE.MeshStandardMaterial({ color:0x5a3d28, roughness:0.6 }),
+  ground:  new THREE.MeshStandardMaterial({ color:0x8a9a6a, roughness:1 }),
+  distant: new THREE.MeshStandardMaterial({ color:0x8fa0b0, roughness:1 })
+};
+
+/* ---- 5. COLLISION + SOFTENING ---- */
+const walls=[];
+const addWall=(cx,cz,w,d)=>walls.push({minX:cx-w/2,maxX:cx+w/2,minZ:cz-d/2,maxZ:cz+d/2});
+
+/* SOFTENING: rounded-edge box. Sharp 90° corners are what make primitives look
+   rigid; a small bevel catches light on the edges and reads as a real object.
+   Reused for everything you get CLOSE to. (Distant city towers skip this — you
+   can't see their corners through the fog, and rounding hundreds of them would
+   slow the headset.) */
+function roundedBox(w,h,d,r=0.06){
+  r=Math.min(r,w/2,h/2,d/2);
+  const s=new THREE.Shape(), x=-w/2, y=-h/2;
+  s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.quadraticCurveTo(x+w,y,x+w,y+r);
+  s.lineTo(x+w,y+h-r); s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  s.lineTo(x+r,y+h); s.quadraticCurveTo(x,y+h,x,y+h-r);
+  s.lineTo(x,y+r); s.quadraticCurveTo(x,y,x+r,y);
+  const g=new THREE.ExtrudeGeometry(s,{depth:d-r*2,bevelEnabled:true,bevelThickness:r,bevelSize:r,bevelSegments:2,steps:1});
+  g.translate(0,0,-(d-r*2)/2); g.computeVertexNormals(); return g;
+}
+const jitter=(a)=> (Math.random()*2-1)*a;
+
+function box(w,h,d,mat,x,y,z,{collide=false,shadow=true,round=0.06}={}){
+  const geo = round>0 ? roundedBox(w,h,d,round) : new THREE.BoxGeometry(w,h,d);
+  const material = (typeof mat==="number") ? new THREE.MeshStandardMaterial({color:mat, roughness:0.7}) : mat;
+  const m=new THREE.Mesh(geo, material);
+  m.position.set(x,y,z); m.castShadow=shadow; m.receiveShadow=true; scene.add(m);
+  if(collide) addWall(x,z,w,d); return m;
+}
+
+/* ---- 6. THE STORE SHELL ----
+   A room ~12m wide, open at the front (storefront glass) so you see out to the
+   empty horizon. Dark polished floor, warm walls, gold trim line. */
+const RW=12, RD=10, RH=3.4;
+// floor
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD), M.floor);
+floor.rotation.x=-Math.PI/2; floor.position.set(0,0,0); floor.receiveShadow=true; scene.add(floor);
+// ceiling
+box(RW,0.2,RD, M.wall, 0, RH, 0, {shadow:false});
+// side walls (solid)
+box(0.2,RH,RD, M.wall, -RW/2, RH/2, 0, {collide:true});
+box(0.2,RH,RD, M.wall,  RW/2, RH/2, 0, {collide:true});
+// BACK WALL as a big PICTURE WINDOW framing the mountain landscape:
+//   solid corner pillars + a low sill + a header, with GLASS filling the
+//   large middle span. Glass still collides, so you can't walk out the back.
+box(2.0,RH,0.2, M.wall, -RW/2+1.0, RH/2, -RD/2, {collide:true});   // left pillar
+box(2.0,RH,0.2, M.wall,  RW/2-1.0, RH/2, -RD/2, {collide:true});   // right pillar
+box(8.0,0.9,0.25, M.wall, 0, 0.45, -RD/2, {collide:true});         // low sill under the glass
+box(8.0,0.5,0.25, M.wall, 0, RH-0.25, -RD/2, {shadow:false});      // header above the glass
+box(8.0,RH-1.4,0.08, M.glass, 0, 0.9+(RH-1.4)/2, -RD/2, {collide:true}); // the window glass
+box(8.0,0.1,0.12, M.trim, 0, 0.95, -RD/2+0.12, {shadow:false});    // gold sill trim
+box(8.0,0.1,0.12, M.trim, 0, RH-0.5, -RD/2+0.12, {shadow:false});  // gold header trim
+// storefront: glass panels across the front, with a doorway gap in the middle
+box(4.4,RH,0.1, M.glass, -3.6, RH/2, RD/2, {collide:true});
+box(4.4,RH,0.1, M.glass,  3.6, RH/2, RD/2, {collide:true});
+box(RW,0.3,0.2, M.trim, 0, RH-0.15, RD/2, {shadow:false});      // header
+// AURUM sign band over the door
+const signBand=box(RW,0.5,0.08, M.case, 0, RH-0.2, RD/2+0.05, {shadow:false});
+scene.add(makeSign("AURUM", 0, RH-0.2, RD/2+0.12));
+
+function makeSign(text,x,y,z){
+  const c=document.createElement("canvas"); c.width=1024; c.height=128;
+  const g=c.getContext("2d"); g.fillStyle="#1a1714"; g.fillRect(0,0,1024,128);
+  g.fillStyle="#d8b25a"; g.font="bold 80px Georgia, serif"; g.textAlign="center"; g.textBaseline="middle";
+  g.letterSpacing="18px"; g.fillText(text,512,70);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(4,0.5), new THREE.MeshBasicMaterial({map:tex,transparent:true}));
+  m.position.set(x,y,z); return m;
+}
+
+/* ---- 7. A WATCH (small but recognisable): case ring + face + band ----
+   Each watch is registered in `watches[]` with its home spot, so the
+   inspection system can lift and spin whichever one the player stands nearest. */
+const watches = [];
+function watch(x,y,z, ringMat){
+  const g=new THREE.Group();
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(0.09,0.03,10,20), ringMat);
+  ring.rotation.x=Math.PI/2; ring.castShadow=true; g.add(ring);
+  const face=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.075,0.02,20),
+    new THREE.MeshStandardMaterial({color:0xf4f1ea, roughness:0.2}));
+  face.rotation.x=Math.PI/2; g.add(face);
+  // band loop
+  const band=new THREE.Mesh(new THREE.TorusGeometry(0.12,0.025,8,16), ringMat);
+  band.position.y=-0.02; band.castShadow=true; g.add(band);
+  g.position.set(x,y,z); g.rotation.y=Math.random()*0.6-0.3; scene.add(g);
+  watches.push({ mesh:g, home:new THREE.Vector3(x,y,z), lift:0 });
+  return g;
+}
+
+/* ---- 8. A DISPLAY CASE — glass box on a plinth with watches on stands ---- */
+function displayCase(x,z){
+  box(1.6,0.9,0.8, M.case, x,0.45,z, {collide:true});          // plinth
+  box(1.5,0.05,0.7, M.cushion, x,0.92,z);                       // top cushion
+  // glass cover
+  const cover=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.5,0.7), M.glass);
+  cover.position.set(x,1.2,z); scene.add(cover);
+  spot(x,z);
+  // 3 watches on little stands
+  for(let i=-1;i<=1;i++){
+    box(0.1,0.14,0.1, M.leather, x+i*0.45, 1.0, z);             // stand
+    watch(x+i*0.45, 1.14, z, i===0 ? M.gold : M.steel);
+  }
+}
+
+/* ---- 9. SERVICE COUNTER at the back ---- */
+function counter(){
+  box(3.2,1.05,0.8, M.case, 0,0.52,-RD/2+1.2, {collide:true});
+  box(3.3,0.06,0.9, M.trim, 0,1.08,-RD/2+1.2);                  // gold countertop edge
+  // a person behind it
+  const p=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.3,1.0,12), new THREE.MeshStandardMaterial({color:0x22242a,roughness:0.7}));
+  body.position.y=0.7; body.castShadow=true; p.add(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16), new THREE.MeshStandardMaterial({color:0xd9b48f,roughness:0.7}));
+  head.position.y=1.45; head.castShadow=true; p.add(head);
+  p.position.set(0,0,-RD/2+0.6); scene.add(p);
+}
+
+/* ---- 10. BUILD THE INTERIOR ---- */
+displayCase(-3.5, -1);  displayCase(0, -1);  displayCase(3.5, -1);
+displayCase(-3.5,  2.2); displayCase(3.5, 2.2);
+counter();
+// a couple of browsing customers
+function customer(x,z,rot){
+  const p=new THREE.Group();
+  const b=new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.32,1.05,12), new THREE.MeshStandardMaterial({color:[0x3a4a63,0x5a3d3d,0x2f4a3a][(Math.random()*3)|0],roughness:0.7}));
+  b.position.y=0.72; b.castShadow=true; p.add(b);
+  const h=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16), new THREE.MeshStandardMaterial({color:0xc98a5e,roughness:0.7}));
+  h.position.y=1.48; h.castShadow=true; p.add(h);
+  p.position.set(x,0,z); p.rotation.y=rot; scene.add(p); addWall(x,z,0.6,0.6);
+}
+customer(-2, 0.5, 0.6); customer(2.5, 1, -0.5);
+
+/* ---- 11. THE EMPTY HORIZON (seen through the storefront glass) ----
+   Cheap and effective: a big ground plane, then low-detail distant shapes —
+   trees nearby, a ring of skyscraper blocks and mountain cones far off. Fog
+   blends them into the sky so the world reads as vast and empty, not a wall. */
+const outGround=new THREE.Mesh(new THREE.PlaneGeometry(400,400), M.ground);
+outGround.rotation.x=-Math.PI/2; outGround.position.set(0,-0.02,60); outGround.receiveShadow=true; scene.add(outGround);
+// a plaza slab just outside the door (widened to hold the surrounding shops)
+box(64,0.05,28, new THREE.MeshStandardMaterial({color:0xb8b2a4,roughness:0.9}), 0,0.01,10,{shadow:false});
+
+/* ============================================================================
+   BRAND BOUTIQUES spread around the Aurum store.
+
+   Each boutique is a compact open-front shop: coloured walls in the brand's
+   palette, a sign, spotlights, and a display plinth with 3 products that use
+   the SAME lift-and-rotate inspection as the watches (we push each product
+   into the `watches[]` array — it's really an "inspectables" list).
+
+   BRAND HANDLING: we evoke each brand's colours + product type + name label,
+   but do NOT copy real logos or trademarked artwork — recognisable, and clean.
+============================================================================ */
+
+// glowing signs (boutiques, restaurant, and later the city towers) all register
+// here so the time-of-day system can brighten them at night. Declared up here
+// because the boutiques below are built before the city section.
+const citySignMats = [];
+
+// reusable: register any mesh group as an inspectable product (lift + spin)
+function inspectable(group, x, y, z){
+  group.position.set(x,y,z); scene.add(group);
+  watches.push({ mesh:group, home:new THREE.Vector3(x,y,z), lift:0 });
+  return group;
+}
+
+// a small open-front boutique shell facing direction `face` (+1 faces +Z / toward plaza centre)
+/* A boutique built inside a GROUP so it can be rotated as a whole.
+   rotY rotates the shop (0 = open front faces +Z / toward plaza).
+   Because collisions and product "home" spots live in WORLD coordinates, we
+   rotate each local point into world space with a small helper before
+   registering it — so physics and the lift-and-rotate interaction still line
+   up after the shop is turned. */
+function boutique(x, z, wallHex, accentHex, name, makeProduct, rotY=0){
+  const W=5, D=4.2, H=2.8;   // smaller boutique footprint
+  const g=new THREE.Group();
+  g.position.set(x,0,z); g.rotation.y=rotY; scene.add(g);
+
+  // local -> world transform for a point on the ground (for collision/products)
+  const cos=Math.cos(rotY), sin=Math.sin(rotY);
+  const toWorld=(lx,lz)=> [ x + lx*cos + lz*sin,  z - lx*sin + lz*cos ];
+
+  // helper: add a box as a CHILD of the group (local coords), so it rotates too
+  function lbox(w,h,d,mat,lx,ly,lz,shadow=true){
+    const material=(typeof mat==="number")?new THREE.MeshStandardMaterial({color:mat,roughness:0.7}):mat;
+    const m=new THREE.Mesh(roundedBox(w,h,d,0.06), material);
+    m.position.set(lx,ly,lz); m.castShadow=shadow; m.receiveShadow=true; g.add(m); return m;
+  }
+
+  // walls (open front toward +z local). Register collision in WORLD space.
+  // Each solid wall is kept slim and structural, then faced with a LARGE TINTED
+  // GLASS panel + slim mullions so the boutique reads as a glass-walled luxury box.
+  lbox(W,H,0.2, wallHex, 0, H/2, -D/2);          const bw=toWorld(0,-D/2); addWall(bw[0],bw[1], Math.abs(W*cos)+Math.abs(0.2*sin), Math.abs(W*sin)+Math.abs(0.2*cos));
+  lbox(0.2,H,D, wallHex, -W/2, H/2, 0);          const lw=toWorld(-W/2,0); addWall(lw[0],lw[1], Math.abs(0.2*cos)+Math.abs(D*sin), Math.abs(0.2*sin)+Math.abs(D*cos));
+  lbox(0.2,H,D, wallHex,  W/2, H/2, 0);          const rw=toWorld(W/2,0);  addWall(rw[0],rw[1], Math.abs(0.2*cos)+Math.abs(D*sin), Math.abs(0.2*sin)+Math.abs(D*cos));
+  lbox(W,0.2,D, wallHex, 0, H, 0, false);        // roof
+  lbox(W,0.55,0.2, accentHex, 0, H-0.25, D/2, false);  // fascia over the open front
+
+  // glassWall: a big tinted pane inset in a wall, with vertical mullions dividing
+  // it into "slider" panels. `axis` 'z' spans X (back wall), 'x' spans Z (sides).
+  function glassWall(lx,ly,lz, span, axis){
+    const paneH = H-0.5;
+    const gW = axis==='z' ? span : 0.06;
+    const gD = axis==='z' ? 0.06 : span;
+    const pane=new THREE.Mesh(new THREE.BoxGeometry(gW, paneH, gD), M.tint);
+    pane.position.set(lx, paneH/2+0.05, lz); g.add(pane);
+    // vertical mullions every ~1.6m to suggest sliding panels
+    const n=Math.max(2, Math.round(span/1.6));
+    for(let k=0;k<=n;k++){
+      const t=-span/2 + (span/n)*k;
+      const mx = axis==='z' ? lx+t : lx;
+      const mz = axis==='z' ? lz   : lz+t;
+      const mull=new THREE.Mesh(new THREE.BoxGeometry(0.05,paneH,0.05), M.mullion);
+      mull.position.set(mx, paneH/2+0.05, mz); g.add(mull);
+    }
+    // slim top + bottom rails
+    const rW = axis==='z' ? span : 0.08, rD = axis==='z' ? 0.08 : span;
+    const top=new THREE.Mesh(new THREE.BoxGeometry(rW,0.08,rD), M.mullion); top.position.set(lx, paneH+0.05, lz); g.add(top);
+    const bot=new THREE.Mesh(new THREE.BoxGeometry(rW,0.08,rD), M.mullion); bot.position.set(lx, 0.09, lz); g.add(bot);
+  }
+  glassWall(0, 0, -D/2+0.12, W-0.4, 'z');       // back wall glass
+  glassWall(-W/2+0.12, 0, 0, D-0.4, 'x');       // left wall glass
+  glassWall( W/2-0.12, 0, 0, D-0.4, 'x');       // right wall glass
+
+  // floor tile inside
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(W-0.3,D-0.3), new THREE.MeshStandardMaterial({color:0x2a2622,roughness:0.3,metalness:0.2}));
+  fl.rotation.x=-Math.PI/2; fl.position.set(0,0.03,0); g.add(fl);
+
+  // brand sign on the fascia
+  const sign=makeBrandSign(name, accentHex);
+  sign.position.set(0, H-0.25, D/2+0.12); g.add(sign);
+  citySignMats.push(sign.material);
+
+  // spotlights (need world position — lights aren't parented here)
+  const s1=toWorld(-1.4,-0.5), s2=toWorld(1.4,-0.5); spot(s1[0],s1[1]); spot(s2[0],s2[1]);
+
+  // display plinth + 3 products. Plinth is a child; products are registered as
+  // inspectables in WORLD space so the walk-up lift works from the right spot.
+  lbox(2.4,0.9,1.0, 0x1a1714, 0, 0.45, -0.6);
+  const pw=toWorld(0,-0.6); addWall(pw[0],pw[1], Math.abs(2.4*cos)+Math.abs(1.0*sin), Math.abs(2.4*sin)+Math.abs(1.0*cos));
+  for(let i=-1;i<=1;i++){
+    const prod=makeProduct(accentHex);
+    const w=toWorld(i*0.75,-0.6);
+    inspectable(prod, w[0], 1.05, w[1]);
+    prod.rotation.y=rotY;   // face the same way as the shop initially
+  }
+
+  // shopkeeper (child of group)
+  const keeper=new THREE.Group();
+  const kb=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.3,1.0,12), new THREE.MeshStandardMaterial({color:0x24242a,roughness:0.7})); kb.position.y=0.7; keeper.add(kb);
+  const hd=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16), new THREE.MeshStandardMaterial({color:0xd9b48f,roughness:0.7})); hd.position.y=1.45; keeper.add(hd);
+  keeper.position.set(0,0,-D/2+0.7); g.add(keeper);
+}
+
+// brand sign: coloured emissive text (no real logos), tracked so it glows at night
+function makeBrandSign(text, hex){
+  const c=document.createElement("canvas"); c.width=512; c.height=96;
+  const g=c.getContext("2d");
+  g.fillStyle="#0e0e12"; g.fillRect(0,0,512,96);
+  const col="#"+hex.toString(16).padStart(6,"0");
+  g.fillStyle=col; g.font="bold 52px Georgia, serif"; g.textAlign="center"; g.textBaseline="middle";
+  g.shadowColor=col; g.shadowBlur=16; g.fillText(text.toUpperCase(),256,50);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  const mat=new THREE.MeshStandardMaterial({map:tex, emissive:new THREE.Color(hex), emissiveMap:tex, emissiveIntensity:0.5, transparent:true});
+  return new THREE.Mesh(new THREE.PlaneGeometry(4.6,0.86), mat);
+}
+
+/* ---- PRODUCT MODELS (evocative, not logo copies) ---- */
+// Puffer-jacket: a puffy jacket = stacked rounded segments (the quilted puffer look)
+function pufferJacket(accent){
+  const g=new THREE.Group();
+  const body=new THREE.MeshStandardMaterial({color:accent, roughness:0.6});
+  // torso from stacked squashed spheres = quilted puff
+  for(let i=0;i<3;i++){ const s=new THREE.Mesh(new THREE.SphereGeometry(0.16,12,10), body); s.scale.set(1.3,0.7,0.9); s.position.y=0.12+i*0.16; g.add(s); }
+  // two sleeves
+  for(const sx of [-0.22,0.22]){ for(let i=0;i<2;i++){ const s=new THREE.Mesh(new THREE.SphereGeometry(0.09,10,8), body); s.scale.set(0.9,0.7,0.9); s.position.set(sx,0.28+i*0.13,0); g.add(s);} }
+  g.scale.setScalar(0.9); return g;
+}
+// Sunglasses: luxury sunglasses = a bar + two lens discs (dark, sleek)
+function sunglasses(accent){
+  const g=new THREE.Group();
+  const frame=new THREE.MeshStandardMaterial({color:0x141414, roughness:0.3, metalness:0.5});
+  const lens =new THREE.MeshStandardMaterial({color:accent, roughness:0.1, metalness:0.6, transparent:true, opacity:0.85});
+  for(const lx of [-0.14,0.14]){
+    const rim=new THREE.Mesh(new THREE.TorusGeometry(0.11,0.02,10,20), frame); rim.position.set(lx,0,0); g.add(rim);
+    const gl =new THREE.Mesh(new THREE.CircleGeometry(0.1,20), lens); gl.position.set(lx,0,0.001); g.add(gl);
+  }
+  const bridge=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.03,0.03), frame); g.add(bridge);
+  for(const sx of [-0.25,0.25]){ const arm=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.02,0.02), frame); arm.position.set(sx,0,-0.05); arm.rotation.y=sx<0?0.3:-0.3; g.add(arm);}
+  g.scale.setScalar(1.1); g.rotation.x=0.2; return g;
+}
+// High heel with a red sole
+function highHeel(accent){
+  const g=new THREE.Group();
+  const black=new THREE.MeshStandardMaterial({color:0x0e0e0e, roughness:0.35});
+  const red  =new THREE.MeshStandardMaterial({color:0xd0021b, roughness:0.4}); // the red sole
+  // shoe body (upper)
+  const upper=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.14,0.42), black); upper.position.set(0,0.16,0); g.add(upper);
+  const toe=new THREE.Mesh(new THREE.SphereGeometry(0.09,10,8), black); toe.scale.set(1,0.7,1.4); toe.position.set(0,0.12,0.24); g.add(toe);
+  // red sole underneath
+  const sole=new THREE.Mesh(new THREE.BoxGeometry(0.17,0.03,0.44), red); sole.position.set(0,0.08,0); g.add(sole);
+  // heel
+  const heel=new THREE.Mesh(new THREE.BoxGeometry(0.04,0.22,0.04), red); heel.position.set(0,-0.02,-0.18); g.add(heel);
+  g.scale.setScalar(1.0); return g;
+}
+
+/* ---- PLACE THE BOUTIQUES around Aurum ----
+   Aurum faces +Z (front at z=5). We put shops out on the plaza:
+   left (x negative) and right (x positive), all open toward the centre. */
+// Nordpeak on the left, turned 180°
+// Four venues spread around the plaza so NONE sits directly behind another.
+// Left side: Nordpeak forward, Velvet Step set wider and back — different x AND z.
+boutique(-11, 1.5, 0x1c2b4a, 0x6fa8dc, "Nordpeak", pufferJacket, 0);   // exactly between Aurum and Velvet Step
+boutique(-22, 3,  0x1a0d10, 0xd0021b, "Velvet Step", highHeel, 0);           // further left, near door
+// Right side: Noir Optique forward, restaurant set wider and back.
+boutique( 11.5, 1.5, 0x14100e, 0xcaa76a, "Noir Optique", sunglasses, 0);   // exactly between Aurum and Saffron Table
+
+/* ---- FANCY RESTAURANT opposite Aurum (across the plaza, further out) ---- */
+function restaurant(x, z, rotY=0){
+  const W=12, D=8, H=3.6;
+  const g=new THREE.Group();
+  g.position.set(x,0,z); g.rotation.y=rotY; scene.add(g);
+
+  // local -> world transform, so collisions land in the right place after rotation
+  const cos=Math.cos(rotY), sin=Math.sin(rotY);
+  const toWorld=(lx,lz)=> [ x + lx*cos + lz*sin,  z - lx*sin + lz*cos ];
+  // add a collidable box as a child (local coords), registering world collision
+  function cbox(w,h,d,mat,lx,ly,lz,shadow=true,collide=false){
+    const material=(typeof mat==="number")?new THREE.MeshStandardMaterial({color:mat,roughness:0.7}):mat;
+    const m=new THREE.Mesh(roundedBox(w,h,d,0.06), material);
+    m.position.set(lx,ly,lz); m.castShadow=shadow; m.receiveShadow=true; g.add(m);
+    if(collide){ const wpt=toWorld(lx,lz); addWall(wpt[0],wpt[1], Math.abs(w*cos)+Math.abs(d*sin), Math.abs(w*sin)+Math.abs(d*cos)); }
+    return m;
+  }
+  const wall=new THREE.MeshStandardMaterial({color:0x3a2a22, roughness:0.7});   // warm dark wood
+  cbox(W,H,0.2, 0x3a2a22, 0, H/2, D/2, true, true);          // back wall
+  cbox(0.2,H,D, 0x3a2a22, -W/2, H/2, 0, true, true);
+  cbox(0.2,H,D, 0x3a2a22,  W/2, H/2, 0, true, true);
+  cbox(W,0.2,D, wall, 0, H, 0, false);                        // roof
+  cbox(W,0.6,0.2, new THREE.MeshStandardMaterial({color:0x7a5230,roughness:0.4,metalness:0.3}), 0, H-0.3, -D/2, false); // fascia over open front
+
+  // LARGE TINTED GLASS SLIDER WALLS on the three solid walls (back + two sides).
+  // Warm-tinted for the restaurant, divided by slim mullions into slider panels,
+  // with a soft interior glow so it reads as a lit luxury dining room at night.
+  const restGlass = new THREE.MeshStandardMaterial({ color:0x2a2018, roughness:0.05, metalness:0.5,
+    emissive:0xffca70, emissiveIntensity:0.28, transparent:true, opacity:0.5 });
+  const mull = new THREE.MeshStandardMaterial({ color:0x1c140e, roughness:0.4, metalness:0.7 });
+  function glassWall(lx,lz, span, axis){
+    const paneH=H-0.6;
+    const gW=axis==='z'?span:0.06, gD=axis==='z'?0.06:span;
+    const pane=new THREE.Mesh(new THREE.BoxGeometry(gW,paneH,gD), restGlass);
+    pane.position.set(lx, paneH/2+0.05, lz); g.add(pane);
+    const n=Math.max(2,Math.round(span/1.8));
+    for(let k=0;k<=n;k++){
+      const t=-span/2+(span/n)*k;
+      const mx=axis==='z'?lx+t:lx, mz=axis==='z'?lz:lz+t;
+      const m=new THREE.Mesh(new THREE.BoxGeometry(0.06,paneH,0.06), mull); m.position.set(mx,paneH/2+0.05,mz); g.add(m);
+    }
+    const rW=axis==='z'?span:0.09, rD=axis==='z'?0.09:span;
+    const tp=new THREE.Mesh(new THREE.BoxGeometry(rW,0.09,rD), mull); tp.position.set(lx,paneH+0.05,lz); g.add(tp);
+    const bt=new THREE.Mesh(new THREE.BoxGeometry(rW,0.09,rD), mull); bt.position.set(lx,0.1,lz); g.add(bt);
+  }
+  glassWall(0, D/2-0.12, W-0.5, 'z');       // back wall
+  glassWall(-W/2+0.12, 0, D-0.5, 'x');      // left wall
+  glassWall( W/2-0.12, 0, D-0.5, 'x');      // right wall
+  // warm interior floor
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(W-0.3,D-0.3), new THREE.MeshStandardMaterial({color:0x241812,roughness:0.5}));
+  fl.rotation.x=-Math.PI/2; fl.position.set(0,0.03,0); g.add(fl);
+  // sign on the open-front side
+  const sign=makeBrandSign("Saffron Table", 0xe0b050); sign.position.set(0, H-0.3, -D/2-0.12); sign.rotation.y=Math.PI; g.add(sign); citySignMats.push(sign.material);
+  // warm hanging lights
+  for(const lx of [-3,0,3]){ const b=new THREE.Mesh(new THREE.SphereGeometry(0.14,12,12), new THREE.MeshStandardMaterial({color:0xffe0a0,emissive:0xffcf6a,emissiveIntensity:1.2})); b.position.set(lx,2.6,0); g.add(b); }
+  const sp1=toWorld(-3,0), sp2=toWorld(3,0); spot(sp1[0],sp1[1]); spot(sp2[0],sp2[1]);
+  // dining tables (children of the group so they rotate with it)
+  function table(tx,tz){
+    const top=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,0.08,16), new THREE.MeshStandardMaterial({color:0xede4d0,roughness:0.5})); top.position.set(tx,0.75,tz); top.castShadow=true; g.add(top);
+    const ped=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.12,0.75,10), new THREE.MeshStandardMaterial({color:0x2a1f18,roughness:0.6})); ped.position.set(tx,0.37,tz); g.add(ped);
+    const wpt=toWorld(tx,tz); addWall(wpt[0],wpt[1],1.1,1.1);
+    for(const [cx,cz] of [[0,0.8],[0,-0.8]]){
+      const seat=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.08,0.4), new THREE.MeshStandardMaterial({color:0x6a2a2a,roughness:0.6})); seat.position.set(tx+cx,0.45,tz+cz); g.add(seat);
+      const bk=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.5,0.08), new THREE.MeshStandardMaterial({color:0x6a2a2a,roughness:0.6})); bk.position.set(tx+cx,0.7,tz+cz+(cz>0?0.18:-0.18)); g.add(bk);
+    }
+    const v=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.06,0.16,8), new THREE.MeshStandardMaterial({color:0xd0b070,emissive:0x664400,emissiveIntensity:0.6})); v.position.set(tx,0.87,tz); g.add(v);
+  }
+  table(-3, 0.5); table(0, -1); table(3, 0.5);
+  // menu board on the back wall
+  const menu=makeBrandSign("MENU", 0xe0b050); menu.scale.setScalar(0.5); menu.position.set(0, 2.2, D/2-0.15); g.add(menu);
+}
+restaurant(23, 3, Math.PI);   // turned exactly 180°
+
+/* ---- PUBLIC PICNIC BENCH with attached parasol (between Velvet Step & Nordpeak) ----
+   Matches the reference: a wooden picnic table (top + two bench seats on an
+   A-frame) with a centre pole and a wide beige umbrella. Built in a group so
+   it's easy to move; collision added so you can't walk through it. */
+function picnicBench(x, z){
+  const g=new THREE.Group(); g.position.set(x,0,z); scene.add(g);
+  const woodTop  = new THREE.MeshStandardMaterial({color:0xc98a3c, roughness:0.7});
+  const woodLeg  = new THREE.MeshStandardMaterial({color:0x9a6428, roughness:0.75});
+  const woodSeat = new THREE.MeshStandardMaterial({color:0xd89a4a, roughness:0.7});
+  // table top
+  const top=new THREE.Mesh(roundedBox(2.2,0.1,0.9,0.04), woodTop); top.position.set(0,0.75,0); top.castShadow=true; g.add(top);
+  // two bench seats
+  for(const sz of [-0.75,0.75]){
+    const seat=new THREE.Mesh(roundedBox(2.2,0.08,0.35,0.03), woodSeat); seat.position.set(0,0.45,sz); seat.castShadow=true; g.add(seat);
+  }
+  // straight vertical legs (as marked): four under the table top corners,
+  // and one under each bench seat's outer edge — plain, going straight down.
+  function leg(lx,lz,h){
+    const l=new THREE.Mesh(new THREE.BoxGeometry(0.1,h,0.1), woodLeg);
+    l.position.set(lx, h/2, lz); l.castShadow=true; g.add(l);
+  }
+  // table legs (top sits at y=0.75) — four corners, just inside the ends
+  for(const ex of [-0.95,0.95]) for(const ez of [-0.32,0.32]) leg(ex,ez,0.7);
+  // bench-seat legs (seats sit at y=0.45) — one under each end of each seat
+  for(const ex of [-0.95,0.95]) for(const sz of [-0.75,0.75]) leg(ex,sz,0.41);
+  addWall(x, z, 2.4, 2.0);   // collision around the whole bench
+
+  // central pole up through the table
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,3.2,10), new THREE.MeshStandardMaterial({color:0xb5793a,roughness:0.6}));
+  pole.position.set(0,1.6,0); pole.castShadow=true; g.add(pole);
+  // parasol: a wide low-segment cone (8 sides = the scalloped panel look)
+  const canopyMat=new THREE.MeshStandardMaterial({color:0xf3e2c8, roughness:0.8, side:THREE.DoubleSide});
+  const canopy=new THREE.Mesh(new THREE.ConeGeometry(1.9,0.7,8), canopyMat);
+  canopy.position.set(0,3.15,0); canopy.castShadow=true; g.add(canopy);
+  // a small top knob + a tiny hanging lamp under the canopy (like the reference)
+  const knob=new THREE.Mesh(new THREE.SphereGeometry(0.08,10,10), new THREE.MeshStandardMaterial({color:0xd8b25a,roughness:0.4,metalness:0.6})); knob.position.set(0,3.55,0); g.add(knob);
+  const lamp=new THREE.Mesh(new THREE.SphereGeometry(0.07,10,10), new THREE.MeshStandardMaterial({color:0xffe0a0,emissive:0xffcf6a,emissiveIntensity:0.8})); lamp.position.set(0,2.7,0); g.add(lamp);
+}
+// one picnic bench out on the plaza in front of each store
+picnicBench(-22, 9.5);    // outside Velvet Step
+picnicBench(-11, 9.5);    // outside Nordpeak
+picnicBench( -3, 9.5);    // outside Aurum (nudged left)
+picnicBench( 11.5, 9.5);  // outside Noir Optique
+picnicBench( 23, 9.5);    // outside Saffron Table
+
+
+
+
+/* ============================================================================
+   BUSY MUMBAI CITYSCAPE (seen through the storefront)
+
+   Built in three depth LAYERS, which is the trick to making a city look busy
+   without a million objects:
+     • NEAR  (z ~16-30): a road right outside with traffic + street props, so
+       there's life close to the glass.
+     • MID   (z ~30-70): buildings of MIXED heights packed tight — the Mumbai
+       look is glass towers jammed against low boxy blocks.
+     • FAR   (z ~70-160): a deep skyline of tall silhouette towers fading into
+       fog, so the city feels like it goes on forever.
+   Everything distant has shadows off (cheap) and leans on fog for depth.
+============================================================================ */
+const cityPalette = [0x8794a4,0x9a8b7a,0xa0a4aa,0x7e8a96,0xb0a48c,0x6f7a86,0xa89c88,0x8a8f98];
+const glassPalette = [0x9fb8c8,0x8aa6ba,0xa8c0cc,0x7e9caf];
+const cityMat = (hex)=> new THREE.MeshStandardMaterial({ color:hex, roughness:0.85 });
+
+/* materials of city buildings, collected so their windows can "light up" at
+   night (we raise the material's emissive — a cheap, convincing lit-window glow) */
+const cityWindowMats = [];
+/* a single building: a stack body + a roof detail box, optional lit windows.
+   `solid` registers collision (near/mid buildings only — far skyline is
+   unreachable so it stays non-solid and cheap). `soft` rounds its edges. */
+function cityBuilding(x,z,w,h,d,hex,glass=false,solid=false,soft=false,name=null,floors=false){
+  const mat = glass ? new THREE.MeshStandardMaterial({color:hex,roughness:0.25,metalness:0.5})
+                    : cityMat(hex);
+  mat.emissive = new THREE.Color(0xffcf6a);   // warm window colour, intensity set by time-of-day
+  mat.emissiveIntensity = 0;                  // off during the day
+  cityWindowMats.push(mat);
+  const geo = soft ? roundedBox(w,h,d,0.12) : new THREE.BoxGeometry(w,h,d);
+  const b=new THREE.Mesh(geo, mat);
+  b.position.set(x,h/2,z); scene.add(b);
+  if(solid) addWall(x,z,w,d);
+  // rooftop box (water tank / lift room — very Mumbai)
+  const cap=new THREE.Mesh(new THREE.BoxGeometry(w*0.4,h*0.08+0.6,d*0.4), cityMat(0x6a6f76));
+  cap.position.set(x,h+0.3,z); scene.add(cap);
+
+  // FLOOR LINES: thin dark bands wrapped around the building at ~3m intervals,
+  // so it reads as a multi-storey tower. Only on buildings flagged `floors`
+  // (the ones close enough to see) — the far skyline skips them for speed.
+  // We build ONE band mesh per floor as a four-sided frame; cheap and clear.
+  if(floors){
+    const FLOOR_H = 3;                              // one storey ≈ 3 metres
+    const n = Math.max(1, Math.floor(h/FLOOR_H) - 1);
+    const lineMat = new THREE.MeshStandardMaterial({ color:0x2a2c30, roughness:0.9 });
+    for(let f=1; f<=n; f++){
+      const y = f*FLOOR_H;
+      // two long bands (front/back) + two short bands (sides) = a ring at this height
+      const front=new THREE.Mesh(new THREE.BoxGeometry(w*1.005,0.08,0.05), lineMat);
+      front.position.set(x,y,z+d/2); scene.add(front);
+      const back=new THREE.Mesh(new THREE.BoxGeometry(w*1.005,0.08,0.05), lineMat);
+      back.position.set(x,y,z-d/2); scene.add(back);
+      const left=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.08,d*1.005), lineMat);
+      left.position.set(x-w/2,y,z); scene.add(left);
+      const right=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.08,d*1.005), lineMat);
+      right.position.set(x+w/2,y,z); scene.add(right);
+    }
+  }
+
+  // optional glowing NAME SIGN near the top, facing the store (toward -Z... the
+  // store is at smaller z, so the sign faces the viewer at z front of building)
+  if(name){
+    const sign = makeGlowSign(name, Math.min(w*1.05, 4.2));
+    sign.position.set(x, h*0.82, z - d/2 - 0.06);   // on the store-facing face
+    sign.rotation.y = Math.PI;                        // face toward the store (-Z)
+    scene.add(sign);
+    citySignMats.push(sign.material);                 // so it can glow at night
+  }
+}
+
+/* invented tower names — luxury/corporate flavour, no real trademarks */
+const towerNames = ["MERIDIAN","ZENITH TOWER","AZURE HEIGHTS","IMPERIAL ONE","SKYLINE PLAZA",
+  "THE OBELISK","GRAND CENTRAL","OPULENCE","VANTAGE","MONARCH TOWER","CELESTIA","APEX ONE",
+  "THE SOVEREIGN","EMERALD BAY","PLATINUM SQUARE","HORIZON TOWER","THE PINNACLE","REGALIA"];
+let nameIdx = 0;
+const nextName = ()=> towerNames[(nameIdx++) % towerNames.length];
+
+/* a self-illuminated name plate (emissive text on a dark plate) so it reads by
+   day and glows at night. Material is tracked (in citySignMats, declared above)
+   so time-of-day can brighten it. */
+// palettes of neon-ish sign colours + fonts to mix from — each sign picks randomly
+const SIGN_COLORS = ["#ffe6a0","#ff5a8a","#4ad6ff","#7cff9a","#ffb347","#c77dff","#ffffff","#ff4d4d","#5affd6","#ffd000"];
+const SIGN_FONTS  = ["Georgia, serif","Arial, sans-serif","'Courier New', monospace","'Trebuchet MS', sans-serif","Impact, sans-serif","'Brush Script MT', cursive","'Times New Roman', serif","Verdana, sans-serif"];
+
+function makeGlowSign(text, baseWidth){
+  const c=document.createElement("canvas"); c.width=512; c.height=110;
+  const g=c.getContext("2d");
+  // pick a random look for THIS sign
+  const col   = SIGN_COLORS[(Math.random()*SIGN_COLORS.length)|0];
+  const font  = SIGN_FONTS[(Math.random()*SIGN_FONTS.length)|0];
+  const size  = 40 + (Math.random()*40|0);              // font size varies a lot
+  const weight= Math.random()<0.6 ? "bold " : "";
+  const italic= Math.random()<0.25 ? "italic " : "";
+  const upper = Math.random()<0.5;                       // some ALL CAPS, some Title Case
+  const label = upper ? text.toUpperCase()
+                      : text.toLowerCase().replace(/\b\w/g, ch=>ch.toUpperCase());
+  // transparent background (no plate) most of the time; sometimes a dark backer
+  if(Math.random()<0.35){ g.fillStyle="rgba(15,15,20,0.85)"; g.fillRect(0,0,512,110); }
+  g.fillStyle=col; g.font=`${italic}${weight}${size}px ${font}`;
+  g.textAlign="center"; g.textBaseline="middle";
+  // a soft glow around the letters
+  g.shadowColor=col; g.shadowBlur=18;
+  g.fillText(label, 256, 58);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  const mat=new THREE.MeshStandardMaterial({ map:tex, emissive:new THREE.Color(col), emissiveMap:tex,
+    emissiveIntensity:0.4, transparent:true });
+  // width varies per sign too, so they're not all the same size on the towers
+  const w = baseWidth * (0.7 + Math.random()*0.7);
+  return new THREE.Mesh(new THREE.PlaneGeometry(w, w*0.22), mat);
+}
+
+/* ---- NEAR: an avenue just outside the door, running left-right ---- */
+const avenue=new THREE.Mesh(new THREE.PlaneGeometry(120,7), new THREE.MeshStandardMaterial({color:0x44464c,roughness:0.9}));
+avenue.rotation.x=-Math.PI/2; avenue.position.set(0,0.015,20); scene.add(avenue);
+// dashed centre line
+for(let x=-56;x<=56;x+=5){
+  const dash=new THREE.Mesh(new THREE.PlaneGeometry(2,0.18), new THREE.MeshStandardMaterial({color:0xd8c860,roughness:0.8}));
+  dash.rotation.x=-Math.PI/2; dash.position.set(x,0.03,20); scene.add(dash);
+}
+
+/* vehicles: cartoon cars + auto-rickshaws parked/queued along the avenue */
+function car(x,z,hex,rot=0){
+  const g=new THREE.Group();
+  const paint=new THREE.MeshStandardMaterial({color:hex,roughness:0.4,metalness:0.4});
+  const base=new THREE.Mesh(roundedBox(1.7,0.55,3.2,0.18), paint); base.position.y=0.5; g.add(base);
+  const cab=new THREE.Mesh(roundedBox(1.5,0.55,1.7,0.2), paint); cab.position.y=1.0; g.add(cab);
+  const win=new THREE.Mesh(roundedBox(1.52,0.45,1.6,0.15), new THREE.MeshStandardMaterial({color:0x2a3238,roughness:0.2,metalness:0.6})); win.position.y=1.02; g.add(win);
+  for(const[wx,wz]of[[-0.85,1.0],[0.85,1.0],[-0.85,-1.0],[0.85,-1.0]]){
+    const wl=new THREE.Mesh(new THREE.CylinderGeometry(0.33,0.33,0.28,12), new THREE.MeshStandardMaterial({color:0x1a1a1e,roughness:0.8}));
+    wl.rotation.z=Math.PI/2; wl.position.set(wx,0.33,wz); g.add(wl);
+  }
+  g.position.set(x,0,z); g.rotation.y=rot; scene.add(g);
+  return g;
+}
+function autoRickshaw(x,z,rot=0){
+  const g=new THREE.Group();
+  // black-and-yellow: yellow canopy, black lower — the Mumbai auto
+  const canopy=new THREE.Mesh(roundedBox(1.2,0.9,1.6,0.22), new THREE.MeshStandardMaterial({color:0xf2c21e,roughness:0.5}));
+  canopy.position.y=1.1; g.add(canopy);
+  const body=new THREE.Mesh(roundedBox(1.15,0.5,1.5,0.18), new THREE.MeshStandardMaterial({color:0x1c1c20,roughness:0.6}));
+  body.position.y=0.55; g.add(body);
+  // single front wheel + two rear
+  const wheelMat=new THREE.MeshStandardMaterial({color:0x141416,roughness:0.8});
+  const fw=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.2,12), wheelMat); fw.rotation.z=Math.PI/2; fw.position.set(0,0.3,0.85); g.add(fw);
+  for(const wx of [-0.55,0.55]){ const w=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.2,12), wheelMat); w.rotation.z=Math.PI/2; w.position.set(wx,0.3,-0.7); g.add(w); }
+  g.position.set(x,0,z); g.rotation.y=rot; scene.add(g);
+  return g;
+}
+
+/* ---- MOVING TRAFFIC ----
+   Two lanes on the avenue, flowing in opposite directions. Each vehicle drives
+   along X; when it runs off one end it wraps around to the other, so the street
+   is endlessly busy from a handful of vehicles. They don't use collision walls
+   (a moving wall would smear invisible barriers across the road) — they're set
+   back on the avenue where the player doesn't walk, so no collision is needed. */
+const traffic = [];
+const carColors=[0xd94f4f,0x4f7fd9,0xffffff,0x2a2a2e,0x54b06a,0xe0e0e0,0xe0a93f];
+const LANE_MIN=-58, LANE_MAX=58;
+function spawnLane(z, dir, count){
+  for(let i=0;i<count;i++){
+    const x = LANE_MIN + (i/count)*(LANE_MAX-LANE_MIN);
+    const isAuto = i%4===0;
+    const rot = dir>0 ? Math.PI/2 : -Math.PI/2;    // face along travel
+    const mesh = isAuto ? autoRickshaw(x,z,rot) : car(x,z, carColors[i%carColors.length], rot);
+    traffic.push({ mesh, dir, speed: (isAuto?4:6)+Math.random()*3, z });
+  }
+}
+spawnLane(18.6, +1, 9);    // near lane flows right
+spawnLane(21.4, -1, 7);    // far lane flows left
+
+/* ---- BIRDS: a small flock circling overhead ----
+   Each bird is two thin triangles (left + right wing) sharing a centre — the
+   simplest shape that still reads as a bird in flight. We store each wing mesh
+   so we can FLAP them (rotate up/down) every frame, and give each bird a circle
+   to fly around the sky at its own radius, height, and speed. Cheap and lively. */
+const birds = [];
+function makeWing(side){   // side = -1 left, +1 right
+  const geo = new THREE.BufferGeometry();
+  // a flat triangle from the body centre out to a wingtip
+  const verts = new Float32Array([
+    0,0,0,            // shoulder (body centre)
+    side*0.5,0,-0.18, // wingtip
+    side*0.12,0,0.22  // trailing edge
+  ]);
+  geo.setAttribute("position", new THREE.BufferAttribute(verts,3));
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    color:0x2b2b30, roughness:0.9, side:THREE.DoubleSide, flatShading:true }));
+  return m;
+}
+function makeBird(){
+  const g = new THREE.Group();
+  const L = makeWing(-1), R = makeWing(1);
+  g.add(L); g.add(R);
+  scene.add(g);
+  birds.push({
+    group:g, L, R,
+    cx:(Math.random()-0.5)*60,        // circle centre x
+    cz:-10-Math.random()*70,          // centre z (spread over the whole scene)
+    radius:8+Math.random()*22,        // how wide it circles
+    height:14+Math.random()*12,       // how high it flies
+    speed:0.2+Math.random()*0.25,     // angular speed
+    phase:Math.random()*Math.PI*2,    // starting angle
+    flap:Math.random()*Math.PI*2      // starting wing phase
+  });
+}
+for(let i=0;i<12;i++) makeBird();
+
+/* street trees + lamp posts along the near kerb */
+function farTree(x,z,s=1){
+  const t=new THREE.Group();
+  const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.15*s,0.2*s,1.4*s,8), M.leather); trunk.position.y=0.7*s; t.add(trunk);
+  // smoother canopy: higher-detail icosphere reads as a rounder, softer tree
+  const top=new THREE.Mesh(new THREE.IcosahedronGeometry(1.0*s,1), new THREE.MeshStandardMaterial({color:0x4f7a3a,roughness:1,flatShading:true})); top.position.y=2*s; t.add(top);
+  t.position.set(x,0,z); scene.add(t);
+  addWall(x,z,0.5,0.5);
+}
+function lamp(x,z){
+  const g=new THREE.Group();
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,3.2,8), cityMat(0x3a3d42)); pole.position.y=1.6; g.add(pole);
+  const head=new THREE.Mesh(roundedBox(0.5,0.15,0.25,0.06), new THREE.MeshStandardMaterial({color:0xffe6a0,emissive:0x554400})); head.position.set(0.2,3.2,0); g.add(head);
+  g.position.set(x,0,z); scene.add(g);
+  addWall(x,z,0.3,0.3);
+}
+for(let x=-50;x<=50;x+=8){ farTree(x+2,16, 0.9); lamp(x,16.2); }
+
+/* ---- MID: buildings packed tight on the far side of the avenue ----
+   These are close enough to reach, so they're SOLID (collision) and SOFTENED
+   (rounded edges) — the row nearest the first that you could actually walk into. */
+for(let row=0; row<3; row++){
+  const z = 30 + row*14;
+  for(let i=0;i<22;i++){
+    const x = -70 + i*6.5 + (Math.random()*2-1);
+    const w = 3.5+Math.random()*2.5, d = 3.5+Math.random()*2.5;
+    const h = 5 + Math.random()*18 + row*4;        // taller further back
+    const glass = Math.random()<0.35;
+    const near = row===0;                          // only the front row rounds+collides (perf)
+    // name the readable buildings: front two rows, and only the taller ones so
+    // signs don't crowd. Row 0 always, row 1 if tall enough.
+    const named = (row===0 || (row===1 && h>14)) ? nextName() : null;
+    const showFloors = row<2;                      // floor lines on the two nearest rows
+    cityBuilding(x, z, w, h, d, glass ? glassPalette[(Math.random()*glassPalette.length)|0]
+                                      : cityPalette[(Math.random()*cityPalette.length)|0],
+                 glass, near, near, named, showFloors);
+  }
+}
+
+/* ---- FAR: a deep skyline of tall silhouette towers into the fog ----
+   Unreachable, so left as plain cheap boxes, no collision, no rounding. */
+for(let i=0;i<40;i++){
+  const x=-140+Math.random()*280, z=75+Math.random()*80;
+  const w=3+Math.random()*4, h=18+Math.random()*40;
+  cityBuilding(x, z, w, h, w, cityPalette[(Math.random()*cityPalette.length)|0], Math.random()<0.4);
+}
+// a couple of hazy hills far behind the city (Mumbai's backdrop)
+for(let i=0;i<5;i++){
+  const r=20+Math.random()*14, h=16+Math.random()*12;
+  const m=new THREE.Mesh(new THREE.ConeGeometry(r,h,6), new THREE.MeshStandardMaterial({color:0x8792a2,roughness:1}));
+  m.position.set(-140+i*70+Math.random()*20, h/2-2, 165+Math.random()*20); scene.add(m);
+}
+
+/* ============================================================================
+   LOW-POLY NATURE LANDSCAPE — the OPPOSITE side (behind the store, -Z)
+
+   Balances the busy city: quiet hills, forest, and a mountain range that
+   SHRINKS toward the horizon. The shrink is the whole trick — nearer trees are
+   big, and each band further out is smaller, so the eye reads huge distance and
+   the range "recedes" into the horizon line. Low-poly = few flat faces
+   (flatShading), which is what gives that faceted Firewatch/Monument-Valley look.
+============================================================================ */
+
+// green ground carpet on the nature side
+const meadow=new THREE.Mesh(new THREE.PlaneGeometry(500,400),
+  new THREE.MeshStandardMaterial({color:0x6f9152, roughness:1, flatShading:true}));
+meadow.rotation.x=-Math.PI/2; meadow.position.set(0,-0.03,-120); meadow.receiveShadow=true; scene.add(meadow);
+
+// a faceted low-poly tree: cone canopy (few sides) on a trunk. `s` scales it,
+// so distant bands pass a small s and shrink into the horizon.
+function pineTree(x,z,s){
+  const g=new THREE.Group();
+  const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.12*s,0.18*s,1.0*s,5),
+    new THREE.MeshStandardMaterial({color:0x6a4a30, roughness:1, flatShading:true}));
+  trunk.position.y=0.5*s; g.add(trunk);
+  // two stacked cones = a simple conifer; 5 sides keeps it chunky/low-poly
+  const green=new THREE.MeshStandardMaterial({color:0x3f6e3a, roughness:1, flatShading:true});
+  const c1=new THREE.Mesh(new THREE.ConeGeometry(0.9*s,1.6*s,5), green); c1.position.y=1.5*s; g.add(c1);
+  const c2=new THREE.Mesh(new THREE.ConeGeometry(0.7*s,1.3*s,5), green); c2.position.y=2.3*s; g.add(c2);
+  g.position.set(x,0,z); g.rotation.y=Math.random()*Math.PI; scene.add(g);
+}
+
+// a faceted low-poly mountain: a 5-sided cone with a lighter "snow" cap cone
+function mountain(x,z,r,h,snow=true){
+  const rock=new THREE.Mesh(new THREE.ConeGeometry(r,h,5),
+    new THREE.MeshStandardMaterial({color:0x6b7360, roughness:1, flatShading:true}));
+  rock.position.set(x,h/2,z); rock.castShadow=false; scene.add(rock);
+  if(snow){
+    const cap=new THREE.Mesh(new THREE.ConeGeometry(r*0.42, h*0.34, 5),
+      new THREE.MeshStandardMaterial({color:0xeef2f4, roughness:1, flatShading:true}));
+    cap.position.set(x, h*0.83, z); scene.add(cap);
+  }
+}
+
+/* FOREST — trees in depth bands, each further band smaller (the shrink) */
+// near band: big trees just behind the store
+for(let i=0;i<26;i++) pineTree(-60+Math.random()*120, -18-Math.random()*22, 1.1+Math.random()*0.5);
+// mid band: medium
+for(let i=0;i<40;i++) pineTree(-90+Math.random()*180, -42-Math.random()*30, 0.7+Math.random()*0.3);
+// far band: small, dense — reads as distant forest
+for(let i=0;i<70;i++) pineTree(-130+Math.random()*260, -74-Math.random()*30, 0.35+Math.random()*0.2);
+// horizon band: tiny specks of forest at the base of the mountains
+for(let i=0;i<90;i++) pineTree(-160+Math.random()*320, -104-Math.random()*20, 0.18+Math.random()*0.12);
+
+/* MOUNTAIN RANGE — three ridges, each further one lower/smaller + hazier,
+   so the range recedes to the horizon line. */
+// front ridge: large peaks
+for(let i=0;i<7;i++) mountain(-90+i*30+jitter(8), -95-Math.random()*10, 14+Math.random()*8, 22+Math.random()*12);
+// middle ridge: smaller, set back
+for(let i=0;i<9;i++) mountain(-110+i*28+jitter(8), -125-Math.random()*10, 10+Math.random()*6, 15+Math.random()*8);
+// far ridge: small silhouettes near the horizon, no snow (fade into haze)
+for(let i=0;i<12;i++) mountain(-130+i*24+jitter(8), -152-Math.random()*10, 7+Math.random()*4, 9+Math.random()*5, false);
+
+/* ============================================================================
+   TIME OF DAY — one value (0..100) drives the whole mood.
+
+   As t goes dawn → noon → dusk → night, we move FOUR things together, which is
+   what "time of day" really is under the hood:
+     • the SUN's height and colour (low+orange at dawn/dusk, high+white at noon)
+     • the SKY and FOG colour (they always match, or the horizon looks wrong)
+     • overall BRIGHTNESS (ambient + sun dim into the evening)
+     • WINDOW LIGHTS in the city switching on as it gets dark
+   We define a few "key" moods and blend between them, so dragging is smooth.
+============================================================================ */
+// colour helper: blend two hex colours by amount k (0..1)
+const mix = (a,b,k)=> new THREE.Color(a).lerp(new THREE.Color(b), k);
+
+function setTimeOfDay(t){          // t: 0..100
+  // sun elevation angle: low at the ends (dawn/dusk), high at noon (t=50)
+  const noonness = 1 - Math.abs(t-50)/50;          // 1 at noon, 0 at the extremes
+  const elevDeg = 5 + noonness*70;                  // 5°..75°
+  const azimuth = -60 + (t/100)*120;                // sun swings across the sky
+  const phi = THREE.MathUtils.degToRad(90 - elevDeg);
+  const theta = THREE.MathUtils.degToRad(azimuth);
+  daylight.position.set(
+    Math.sin(phi)*Math.sin(theta)*30,
+    Math.cos(phi)*30 + 2,
+    Math.sin(phi)*Math.cos(theta)*30
+  );
+
+  const night = Math.max(0, (t-78)/22);             // 0 until ~dusk, →1 at night
+  const goldenness = Math.max(0, 1 - Math.abs(t-80)/22) * (t>40?1:0); // peak near dusk
+
+  // sun colour: white at noon → warm orange toward dusk → dim blue at night
+  let sunCol = mix(0xfff3e0, 0xff9a4a, goldenness);
+  sunCol = mix(sunCol, 0x24304a, night);
+  daylight.color.copy(sunCol);
+  daylight.intensity = 1.2*noonness*(1-night) + 0.05;
+
+  // sky/fog colour: day blue → warm dusk → deep night blue
+  let sky = mix(0x9fc0dc, 0xbcd0dc, noonness);      // slightly deeper blue away from noon
+  sky = mix(sky, 0xf0a860, goldenness*0.8);         // warm glow at dusk
+  sky = mix(sky, 0x0e1420, night);                  // night
+  scene.background.copy(sky);
+  scene.fog.color.copy(sky);
+
+  // ambient brightness dims into the evening
+  hemi.intensity = 0.55*(1-night) + 0.12;
+
+  // city windows glow as it gets dark
+  const glow = night*1.6 + goldenness*0.15;
+  for(const m of cityWindowMats) m.emissiveIntensity = glow;
+  // tower name signs: always faintly lit, brighter at night
+  for(const m of citySignMats) m.emissiveIntensity = 0.35 + night*0.9;
+
+  // street lamps + interior feel: nudge exposure down a touch at night
+  renderer.toneMappingExposure = 1.0 - night*0.25;
+
+  // update the label
+  const label = t<25 ? "🌅 Dawn" : t<45 ? "🌤 Morning" : t<60 ? "☀ Midday"
+              : t<75 ? "🌇 Afternoon" : t<90 ? "🌆 Dusk" : "🌙 Night";
+  const el=document.getElementById("time-label"); if(el) el.textContent=label;
+}
+
+// wire the slider + presets
+const slider=document.getElementById("time-slider");
+slider.addEventListener("input", ()=> setTimeOfDay(+slider.value));
+document.querySelectorAll(".tp-presets button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{ slider.value=btn.dataset.t; setTimeOfDay(+btn.dataset.t); });
+});
+// in VR (no slider), the T key cycles through the presets
+let vrTimeIdx=1; const vrTimes=[18,50,80,95];
+addEventListener("keydown", e=>{ if(e.code==="KeyT"){ vrTimeIdx=(vrTimeIdx+1)%vrTimes.length;
+  slider.value=vrTimes[vrTimeIdx]; setTimeOfDay(vrTimes[vrTimeIdx]); }});
+setTimeOfDay(50);   // start at midday
+
+/* ============================================================================
+   CONTROLS — desktop (WASD + mouse) and VR (thumbstick glide)
+============================================================================ */
+const player={x:0,z:6}; const PR=0.35;
+let yaw=Math.PI, pitch=0, entered=false;
+const enterScreen=document.getElementById("enter");
+const clampPitch=()=> pitch=Math.max(-1.2,Math.min(1.2,pitch));
+
+/* ---- ZOOM (desktop only) ----
+   "Zoom" here means narrowing the camera's field of view (FOV), like a real
+   lens: a smaller FOV magnifies the view so you can inspect a watch from
+   across the room without moving. We clamp it between a wide 72° (normal) and
+   a tight 22° (zoomed in). Mouse wheel adjusts it. We deliberately DON'T zoom
+   in VR — changing FOV in a headset causes motion sickness. */
+const FOV_NORMAL = 72, FOV_MIN = 22;
+let targetFOV = FOV_NORMAL;
+addEventListener("wheel", (e)=>{
+  if(renderer.xr.isPresenting) return;             // never zoom in VR
+  targetFOV += e.deltaY * 0.03;                    // scroll up = zoom in
+  targetFOV = Math.max(FOV_MIN, Math.min(FOV_NORMAL, targetFOV));
+  e.preventDefault();
+}, { passive:false });
+
+function enterRoom(){ entered=true; enterScreen.classList.add("hidden");
+  try{const r=canvas.requestPointerLock&&canvas.requestPointerLock(); if(r&&r.catch)r.catch(()=>{});}catch(_){}}
+enterScreen.addEventListener("click", enterRoom);
+
+// sound toggle: click the tag (desktop) or press M; on a headset use a face button
+document.getElementById("sound-tag").addEventListener("click", (e)=>{ e.stopPropagation(); toggleAudio(); });
+addEventListener("keydown", e=>{ if(e.code==="KeyM") toggleAudio(); });
+
+document.addEventListener("mousemove", e=>{ if(document.pointerLockElement!==canvas)return;
+  yaw-=e.movementX*0.0022; pitch-=e.movementY*0.0022; clampPitch(); });
+let drag=false,lx=0,ly=0;
+canvas.addEventListener("mousedown", e=>{ if(!entered||document.pointerLockElement===canvas)return; drag=true; lx=e.clientX; ly=e.clientY; });
+addEventListener("mouseup",()=>drag=false);
+addEventListener("mousemove", e=>{ if(!drag)return; yaw-=(e.clientX-lx)*0.005; pitch-=(e.clientY-ly)*0.005; clampPitch(); lx=e.clientX; ly=e.clientY; });
+
+const held={};
+const kmap={KeyW:"f",ArrowUp:"f",KeyS:"b",ArrowDown:"b",KeyA:"l",ArrowLeft:"l",KeyD:"r",ArrowRight:"r"};
+addEventListener("keydown", e=>{ if(kmap[e.code]){held[kmap[e.code]]=true; e.preventDefault();}
+  if(e.code==="ShiftLeft"||e.code==="ShiftRight")held.run=true; });
+addEventListener("keyup", e=>{ if(kmap[e.code])held[kmap[e.code]]=false;
+  if(e.code==="ShiftLeft"||e.code==="ShiftRight")held.run=false; });
+
+function resolve(){ for(const w of walls){
+  const cx=Math.max(w.minX,Math.min(player.x,w.maxX)), cz=Math.max(w.minZ,Math.min(player.z,w.maxZ));
+  const dx=player.x-cx, dz=player.z-cz, d2=dx*dx+dz*dz;
+  if(d2<PR*PR){ const d=Math.sqrt(d2)||1e-4, p=PR-d; player.x+=(dx/d)*p; player.z+=(dz/d)*p; } } }
+
+/* ---- SIMPLE AMBIENT AUDIO (synthesised, no files) ----
+   Soft market-ambience hum, toggled on/off. Built lazily on first enable
+   because browsers only allow audio to start after a user action (a tap). */
+let audioCtx=null, ambGain=null, audioOn=false;
+function ensureAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  // filtered white noise = gentle crowd/breeze "shhh"
+  const n=audioCtx.sampleRate*2, buf=audioCtx.createBuffer(1,n,audioCtx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+  const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+  const lp=audioCtx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=520;
+  ambGain=audioCtx.createGain(); ambGain.gain.value=0;
+  src.connect(lp); lp.connect(ambGain); ambGain.connect(audioCtx.destination); src.start();
+  // a warm low drone underneath
+  const osc=audioCtx.createOscillator(); osc.type="sine"; osc.frequency.value=110;
+  const og=audioCtx.createGain(); og.gain.value=0.012; osc.connect(og); og.connect(audioCtx.destination); osc.start();
+}
+function toggleAudio(){
+  ensureAudio(); if(audioCtx.resume) audioCtx.resume();
+  audioOn=!audioOn; if(ambGain) ambGain.gain.value = audioOn?0.06:0;
+  const sb=document.getElementById("sound-tag"); if(sb) sb.textContent = audioOn?"🔊 Sound: on":"🔇 Sound: off";
+}
+
+/* ---- VR CONTROLLER INPUT: movement, snap-turn, sound toggle, grab & scale ----
+   Edge-detect buttons so one press = one action (not repeated every frame). */
+const vrBtnPrev = {};          // remembers each button's last pressed state
+let grabbed = null;            // the product currently held to the face
+function vrInput(dt){
+  const session=renderer.xr.getSession(); if(!session) return;
+  const head=renderer.xr.getCamera();
+
+  for(const src of session.inputSources){
+    if(!src.gamepad) continue;
+    const gp=src.gamepad, ax=gp.axes, hand=src.handedness;   // 'left' | 'right'
+    const key=(i)=> hand+"_"+i;
+    const pressed=(i)=> gp.buttons[i] && gp.buttons[i].pressed;
+    const justPressed=(i)=>{ const p=pressed(i); const was=vrBtnPrev[key(i)]; vrBtnPrev[key(i)]=p; return p&&!was; };
+
+    // --- LEFT stick: smooth glide (move relative to head facing) ---
+    if(hand==="left"){
+      const mx=ax[2]||0, my=ax[3]||0;
+      if(Math.abs(mx)>0.15||Math.abs(my)>0.15){
+        const dir=new THREE.Vector3(); head.getWorldDirection(dir); dir.y=0; dir.normalize();
+        const right=new THREE.Vector3().crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();
+        const spd=2.4*dt;
+        player.x += (dir.x*(-my)+right.x*mx)*spd;
+        player.z += (dir.z*(-my)+right.z*mx)*spd;
+      }
+    }
+
+    // --- RIGHT stick: SNAP-TURN in 30° steps (comfort) ---
+    if(hand==="right"){
+      const sx=ax[2]||0;
+      if(Math.abs(sx)>0.7){
+        if(!vrBtnPrev.snapArmed){
+          rig.rotation.y += (sx<0 ? Math.PI/6 : -Math.PI/6);   // 30° per flick
+          vrBtnPrev.snapArmed=true;
+        }
+      } else { vrBtnPrev.snapArmed=false; }   // must recentre stick before next turn
+    }
+
+    // --- Button 4 (X / A) or 5 (Y / B): toggle SOUND ---
+    if(justPressed(4) || justPressed(5)) toggleAudio();
+
+    // --- TRIGGER (button 0): GRAB-to-inspect the nearest product ---
+    if(justPressed(0)){
+      if(grabbed){
+        grabbed=null;   // release: it eases back home (handled in main loop)
+      } else {
+        // grab the product nearest the player
+        let best=null,bd=3;
+        for(const w of watches){
+          const dx=w.home.x-player.x, dz=w.home.z-player.z, d=Math.hypot(dx,dz);
+          if(d<bd){ bd=d; best=w; }
+        }
+        if(best) grabbed=best;
+      }
+    }
+  }
+}
+
+/* ---- MAIN LOOP (renderer.setAnimationLoop supports both desktop & VR) ---- */
+const clock=new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt=clock.getDelta();
+  if(!renderer.xr.isPresenting){
+    // desktop movement
+    const speed=(held.run?5:3)*dt;
+    const fx=Math.sin(yaw),fz=Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw);
+    if(held.f){player.x-=fx*speed;player.z-=fz*speed;}
+    if(held.b){player.x+=fx*speed;player.z+=fz*speed;}
+    if(held.r){player.x+=rx*speed;player.z+=rz*speed;}
+    if(held.l){player.x-=rx*speed;player.z-=rz*speed;}
+  } else {
+    vrInput(dt);   // VR: glide, snap-turn, sound toggle, grab
+  }
+  resolve();
+
+  // ---- MOVING TRAFFIC: slide each vehicle along its lane, wrap at the ends ----
+  for(const v of traffic){
+    v.mesh.position.x += v.dir * v.speed * dt;
+    if(v.dir>0 && v.mesh.position.x > LANE_MAX) v.mesh.position.x = LANE_MIN;
+    if(v.dir<0 && v.mesh.position.x < LANE_MIN) v.mesh.position.x = LANE_MAX;
+  }
+
+  // ---- BIRDS: fly each bird around its circle and flap its wings ----
+  const now = clock.elapsedTime;
+  for(const b of birds){
+    const a = b.phase + now*b.speed;                 // current angle around the circle
+    const x = b.cx + Math.cos(a)*b.radius;
+    const z = b.cz + Math.sin(a)*b.radius;
+    b.group.position.set(x, b.height + Math.sin(now*0.6+b.flap)*0.6, z);  // gentle bob
+    b.group.rotation.y = -a + Math.PI/2;             // face along the direction of travel
+    // flap: rotate each wing up and down around the body axis
+    const flap = Math.sin(now*7 + b.flap)*0.6;
+    b.L.rotation.z =  flap;
+    b.R.rotation.z = -flap;
+  }
+
+  // ---- WATCH INSPECTION: the nearest watch (if you're close) lifts & spins ----
+  // find which watch the player is nearest, and how close.
+  const px=player.x, pz=player.z;
+  let near=null, nearD=99;
+  for(const w of watches){
+    const dx=w.home.x-px, dz=w.home.z-pz, d=Math.hypot(dx,dz);
+    if(d<nearD){ nearD=d; near=w; }
+  }
+  const presenting = renderer.xr.isPresenting;
+  const headCam = presenting ? renderer.xr.getCamera() : null;
+  for(const w of watches){
+    if(w.baseScale===undefined) w.baseScale = w.mesh.scale.x || 1;  // remember original size once
+
+    if(w===grabbed){
+      // GRABBED (VR): float the product ~0.4m in front of the headset, spinning,
+      // scaled up so you can inspect it — comfortable, no FOV zoom.
+      const dir=new THREE.Vector3(); headCam.getWorldDirection(dir);
+      const hp=new THREE.Vector3(); headCam.getWorldPosition(hp);
+      w.mesh.position.set(hp.x+dir.x*0.4, hp.y+dir.y*0.4, hp.z+dir.z*0.4);
+      w.mesh.rotation.y += dt*1.2;
+      const gs=w.baseScale*2.4;
+      w.mesh.scale.setScalar(w.mesh.scale.x + (gs-w.mesh.scale.x)*Math.min(1,dt*6));
+      w.lift=0;
+      continue;
+    }
+
+    // proximity lift + spin (works desktop AND VR)
+    const active = (w===near && nearD<1.8);
+    w.lift += ((active?1:0) - w.lift) * Math.min(1, dt*6);
+    w.mesh.position.set(w.home.x, w.home.y + w.lift*0.35, w.home.z);
+    if(w.lift>0.02) w.mesh.rotation.y += dt*1.6*w.lift;
+    // SCALE-UP when it's the nearest (grows a bit so detail reads); eases back
+    const targetScale = w.baseScale*(active?1.5:1);
+    w.mesh.scale.setScalar(w.mesh.scale.x + (targetScale-w.mesh.scale.x)*Math.min(1,dt*6));
+  }
+  rig.position.x=player.x; rig.position.z=player.z;
+  // FLOOR ALIGNMENT: in VR the headset supplies head height, so the rig must sit
+  // ON the floor (y=0) or you float/feel ~10ft tall; on desktop the rig itself
+  // provides eye height (1.6m).
+  rig.position.y = renderer.xr.isPresenting ? 0 : 1.6;
+  if(!renderer.xr.isPresenting){
+    camera.rotation.set(0,0,0); camera.rotateY(yaw); camera.rotateX(pitch);
+    camera.position.set(0,0,0);   // camera sits at rig origin on desktop
+    // ease the FOV toward the target so zoom feels smooth, not instant
+    if(Math.abs(camera.fov - targetFOV) > 0.01){
+      camera.fov += (targetFOV - camera.fov) * Math.min(1, dt*10);
+      camera.updateProjectionMatrix();
+    }
+  }
+  renderer.render(scene,camera);
+});
+
+addEventListener("resize",()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); });
+</script>
+</body>
+</html>
