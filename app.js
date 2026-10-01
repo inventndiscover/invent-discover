@@ -56,8 +56,9 @@ async function sendForm(data){
 // Demos in Invent. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
  {id:"tufani-samundar",name:"Tufani Samundar",line:"A real-time 3D storm ocean you can dive into, in VR too",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
-  img:"media/tufani-samundar-storm.jpg",sheetImg:"media/tufani-samundar-whale.jpg",url:"demos/tufani-samundar/",
-  needs:"Best on a laptop or desktop with a recent Chrome, Edge or Safari. For VR, open it in the Meta Quest browser and tap Enter VR. Older phones may not run it.",
+  img:"media/tufani-samundar-whale.jpg",sheetImg:"media/tufani-samundar-storm.jpg",url:"demos/tufani-samundar/",
+  needs:"Best on a laptop or desktop with a recent Chrome, Edge or Safari. Older phones may not run it.",
+  vr:"inventndiscover.com/demos/tufani-samundar",
   desc:"A force-10 storm at sea, simulated live in the browser. Dive under the waves to a coral reef with a humpback whale, sharks, manta rays, turtles and an octopus. Change the sea state, time of day, cloud and rain, switch on a dive torch, and hear sound made on the fly. Everything is generated in one web page, with nothing to download."},
  {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-fan.gif",video:"media/paper-fan-tutorial.mp4",poster:"media/paper-fan-poster.jpg",
@@ -707,7 +708,7 @@ function demoSheet(id){
     <div><div class="label">${real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
     <p style="margin:0;font-size:16px">${esc(d.desc)}</p>
     <div class="facts"><div><span class="label">Stage</span><b>${esc(d.status)}</b></div><div><span class="label">Made by</span><b>${esc(d.makers.join(", "))}</b></div><div style="grid-column:1/-1"><span class="label">Built with</span><b>${esc(d.tools.join(" · "))}</b></div></div>
-    ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">Open the simulation ↗</a></div>${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
+    ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">Open the simulation ↗</a></div>${d.vr?`<div class="note"><b>Experience it in VR.</b> Put on your Meta Quest, open the Meta Quest browser, go to <b style="overflow-wrap:anywhere">${esc(d.vr)}</b> and tap <b>Enter VR</b>.</div>`:""}${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
     <div class="note"><b>Example.</b> This shows the format of a demo page. Real demos open the maker's live link or video.</div>`}
   </div>`,d.name);
 }
