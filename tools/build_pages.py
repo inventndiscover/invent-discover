@@ -451,7 +451,10 @@ def main():
 
     # llms.txt, sitemap, robots
     open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf-8").write(llms_txt(upcoming, today))
-    urls = [(f"{SITE}/", today), (f"{SITE}/about/", today), (f"{SITE}/events/", today)] + [(u, today) for u in pages] + [(f"{SITE}/weekly/", today)]
+    urls = [(f"{SITE}/", today), (f"{SITE}/about/", today), (f"{SITE}/events/", today)]
+    demo_root = os.path.join(ROOT, "demos")  # hand-made demo pages, e.g. demos/tufani-samundar/
+    if os.path.isdir(demo_root):
+        urls += [(f"{SITE}/demos/{d}/", today) for d in sorted(os.listdir(demo_root)) if os.path.exists(os.path.join(demo_root, d, "index.html"))] + [(u, today) for u in pages] + [(f"{SITE}/weekly/", today)]
     urls += [(f"{SITE}/weekly/{m}/", today if m >= monday(today) else (datetime.strptime(m, "%Y-%m-%d") + timedelta(days=7)).strftime("%Y-%m-%d")) for m in sorted(weeks)]
     urls += [(f"{SITE}/events/{e['id']}/", today if status(e) == "upcoming" else min(today, (datetime.strptime(last_day(e), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d"))) for e in everything]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
