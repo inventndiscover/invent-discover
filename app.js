@@ -56,12 +56,12 @@ async function sendForm(data){
 // Demos in Invent. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
  {id:"tufani-samundar",name:"Tufani Samundar",line:"A real-time 3D storm ocean you can dive into, in VR too",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
-  img:"media/tufani-samundar-whale.jpg",sheetImg:"media/tufani-samundar-storm.jpg",url:"demos/tufani-samundar/",
+  gif:"media/tufani-samundar.gif",img:"media/tufani-samundar-whale.jpg",sheetImg:"media/tufani-samundar-storm.jpg",url:"demos/tufani-samundar/",
   needs:"Best on a laptop or desktop with a recent Chrome, Edge or Safari. Older phones may not run it.",
   vr:"inventndiscover.com/demos/tufani-samundar",
   desc:"A force-10 storm at sea, simulated live in the browser. Dive under the waves to a coral reef with a humpback whale, sharks, manta rays, turtles and an octopus. Change the sea state, time of day, cloud and rain, switch on a dive torch, and hear sound made on the fly. Everything is generated in one web page, with nothing to download."},
  {id:"market-walkthrough",name:"Market Walkthrough Low Poly",line:"A walkable low-poly shopping plaza, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio"],
-  img:"media/market-walkthrough-cover.jpg",sheetImg:"media/market-walkthrough-cover.jpg",url:"demos/market-walkthrough-low-poly/",
+  gif:"media/market-walkthrough.gif",img:"media/market-walkthrough-cover.jpg",sheetImg:"media/market-walkthrough-cover.jpg",url:"demos/market-walkthrough-low-poly/",
   vr:"inventndiscover.com/demos/market-walkthrough-low-poly",
   needs:"On a laptop: click to enter, walk with W A S D, look with the mouse, scroll to zoom, press T to change the time of day. Walk up to a display to lift and turn a product. Works best in a recent Chrome, Edge or Safari.",
   desc:"A low-poly shopping plaza you can walk around: a watch store, three boutiques and a restaurant, with traffic on the avenue, birds overhead, a city skyline on one side and mountains on the other. Slide from dawn to night and watch the city lights come on. In VR, pick up a product with the trigger to look at it up close."},
