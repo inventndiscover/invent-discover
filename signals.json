@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-01T07:18:27+05:30",
+ "REFRESHED": "2026-10-02T07:18:19+05:30",
  "SIGNALS": [
   {
    "id": "2105388143902175529",
@@ -12,6 +12,26 @@
    "summary": "Google introduced Gemini 4 Argon, a frontier model for software engineering, knowledge work and cyber defense, with a 1M-token output limit. It is rolling out first to cyber defenders."
   },
   {
+   "id": "2105366155917656502",
+   "handle": "PeterMcCrory",
+   "name": "Peter McCrory",
+   "url": "https://x.com/PeterMcCrory/status/2105366155917656502",
+   "posted": "2026-10-01T00:06:22+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "Announces new research from colleagues exploring what work robots can do today and what that could mean for the structure of the economy in the coming years."
+  },
+  {
+   "id": "2105348732464070823",
+   "handle": "demishassabis",
+   "name": "Demis Hassabis",
+   "url": "https://x.com/demishassabis/status/2105348732464070823",
+   "posted": "2026-09-30T22:57:07+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "Hassabis says Google DeepMind is bringing SynthID watermarking to biology so AI-generated proteins can be tagged, and is open-sourcing the SynthID Bio tools. The work is published in Nature."
+  },
+  {
    "id": "2105343729619927236",
    "handle": "pushmeet",
    "name": "Pushmeet Kohli",
@@ -20,6 +40,26 @@
    "topic": "Research",
    "kind": "Official",
    "summary": "Pushmeet Kohli says his Google DeepMind team synthesized AI-designed proteins that are functional and carry a watermark, a proof of concept for tracing AI-made biology."
+  },
+  {
+   "id": "2105329322609520770",
+   "handle": "Benzinga",
+   "name": "Benzinga",
+   "url": "https://x.com/Benzinga/status/2105329322609520770",
+   "posted": "2026-09-30T21:40:00+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "Reports that President Trump hosted AI executives at the White House to sign a voluntary safety agreement, the White House Accord on Super Intelligence, focused on oversight of advanced systems."
+  },
+  {
+   "id": "2105316356035854537",
+   "handle": "FT",
+   "name": "Financial Times",
+   "url": "https://x.com/FT/status/2105316356035854537",
+   "posted": "2026-09-30T20:48:28+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "The Financial Times reports that AI voice start-up ElevenLabs has doubled its valuation to $22bn."
   },
   {
    "id": "2104986129686741046",
@@ -42,54 +82,14 @@
    "summary": "OpenAI introduced dots, agents powered by GPT-6 Astra that can handle simple tasks like booking a table as well as larger jobs."
   },
   {
-   "id": "2104665621120311465",
-   "handle": "theworldlabs",
-   "name": "World Labs",
-   "url": "https://x.com/theworldlabs/status/2104665621120311465",
-   "posted": "2026-09-29T01:42:41+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "World Labs says it is joining AMD, aiming to speed up its work on AI for the spatial and physical world."
-  },
-  {
-   "id": "2104633115620823187",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2104633115620823187",
-   "posted": "2026-09-28T23:33:31+05:30",
+   "id": "2104640155843989864",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2104640155843989864",
+   "posted": "2026-09-29T00:01:30+05:30",
    "topic": "Models",
-   "kind": "Official",
-   "summary": "Claude Sonnet 5.5 is out as the second model in the Claude 5.5 family. Anthropic says it runs over 30% faster than Sonnet 5 and costs up to 30% less for most work."
-  },
-  {
-   "id": "2104567031110533431",
-   "handle": "nvidia",
-   "name": "NVIDIA",
-   "url": "https://x.com/nvidia/status/2104567031110533431",
-   "posted": "2026-09-28T19:10:55+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "NVIDIA launched the Open Agent Safety Platform to control what AI agents can access and do, pairing its open-source OpenShell runtime with the Sentry reference design."
-  },
-  {
-   "id": "2104550609403695581",
-   "handle": "finkd",
-   "name": "Mark Zuckerberg",
-   "url": "https://x.com/finkd/status/2104550609403695581",
-   "posted": "2026-09-28T18:05:40+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Meta is starting Meta Enterprise Platform, a new business that sells its AI stack, including the Muse agent and models, directly to companies and developers."
-  },
-  {
-   "id": "2104462412430852229",
-   "handle": "IndianTechGuide",
-   "name": "Indian Tech & Infra",
-   "url": "https://x.com/IndianTechGuide/status/2104462412430852229",
-   "posted": "2026-09-28T12:15:12+05:30",
-   "topic": "India",
    "kind": "Report",
-   "summary": "Google is testing a Buy button in Gemini and AI Mode in India that sends select users to a Flipkart checkout without leaving Google's AI experience. Wider rollout is planned."
+   "summary": "Artificial Analysis says Claude Sonnet 5.5 scores 56 on its Intelligence Index, two points behind Opus 5.5 at max effort, with the highest output tokens per task it has recorded."
   }
  ]
 }
