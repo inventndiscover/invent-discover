@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-10-02T07:18:19+05:30",
+ "REFRESHED": "2026-10-03T07:18:44+05:30",
  "SIGNALS": [
+  {
+   "id": "2105888862249849082",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2105888862249849082",
+   "posted": "2026-10-02T10:43:24+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Says OpenAI's Tibo posted that a usage reset for all paid ChatGPT accounts, covering ChatGPT Work and Codex, lands tomorrow at 10am PST."
+  },
+  {
+   "id": "2105709302484729879",
+   "handle": "kimmonismus",
+   "name": "Chubby",
+   "url": "https://x.com/kimmonismus/status/2105709302484729879",
+   "posted": "2026-10-01T22:49:54+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Relays a Google DeepMind engineer's pushback on a Bloomberg report that Gemini 4 scores well on benchmarks but underperforms when employees use it at work."
+  },
   {
    "id": "2105388143902175529",
    "handle": "Google",
@@ -32,16 +52,6 @@
    "summary": "Hassabis says Google DeepMind is bringing SynthID watermarking to biology so AI-generated proteins can be tagged, and is open-sourcing the SynthID Bio tools. The work is published in Nature."
   },
   {
-   "id": "2105343729619927236",
-   "handle": "pushmeet",
-   "name": "Pushmeet Kohli",
-   "url": "https://x.com/pushmeet/status/2105343729619927236",
-   "posted": "2026-09-30T22:37:15+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Pushmeet Kohli says his Google DeepMind team synthesized AI-designed proteins that are functional and carry a watermark, a proof of concept for tracing AI-made biology."
-  },
-  {
    "id": "2105329322609520770",
    "handle": "Benzinga",
    "name": "Benzinga",
@@ -60,36 +70,6 @@
    "topic": "Tech",
    "kind": "Report",
    "summary": "The Financial Times reports that AI voice start-up ElevenLabs has doubled its valuation to $22bn."
-  },
-  {
-   "id": "2104986129686741046",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2104986129686741046",
-   "posted": "2026-09-29T22:56:16+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "OpenAI released GPT-6.1 Sol, which it says brings near GPT-6 Astra intelligence at about a fifth of Astra's price."
-  },
-  {
-   "id": "2104984504133918973",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2104984504133918973",
-   "posted": "2026-09-29T22:49:49+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI introduced dots, agents powered by GPT-6 Astra that can handle simple tasks like booking a table as well as larger jobs."
-  },
-  {
-   "id": "2104640155843989864",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2104640155843989864",
-   "posted": "2026-09-29T00:01:30+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Artificial Analysis says Claude Sonnet 5.5 scores 56 on its Intelligence Index, two points behind Opus 5.5 at max effort, with the highest output tokens per task it has recorded."
   }
  ]
 }
