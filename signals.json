@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-03T07:18:44+05:30",
+ "REFRESHED": "2026-10-04T07:18:15+05:30",
  "SIGNALS": [
   {
    "id": "2105888862249849082",
@@ -20,6 +20,16 @@
    "topic": "Models",
    "kind": "Report",
    "summary": "Relays a Google DeepMind engineer's pushback on a Bloomberg report that Gemini 4 scores well on benchmarks but underperforms when employees use it at work."
+  },
+  {
+   "id": "2105392625788637299",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Artificial Analysis says Google's new Gemini 4 Argon matches GPT-6 Astra on its Intelligence Index at about 60% of the cost per task, putting Google back among the top three labs.",
+   "url": "https://x.com/ArtificialAnlys/status/2105392625788637299",
+   "posted": "2026-10-01T01:51:32+05:30"
   },
   {
    "id": "2105388143902175529",
@@ -70,6 +80,16 @@
    "topic": "Tech",
    "kind": "Report",
    "summary": "The Financial Times reports that AI voice start-up ElevenLabs has doubled its valuation to $22bn."
+  },
+  {
+   "id": "2105000726690668905",
+   "handle": "axios",
+   "name": "Axios",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Axios reports OpenAI unveiled more than 20 new products and features at its DevDay 2026 conference and lists the five biggest announcements.",
+   "url": "https://x.com/axios/status/2105000726690668905",
+   "posted": "2026-09-29T23:54:16+05:30"
   }
  ]
 }

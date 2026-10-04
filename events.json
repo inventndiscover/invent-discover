@@ -1,186 +1,6 @@
 {
- "REFRESHED": "2026-09-30T08:24:56+05:30",
+ "REFRESHED": "2026-10-04T08:05:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "hacknova",
-   "title": "HackNova",
-   "cat": "Tech",
-   "tags": [
-    "Hackathon",
-    "24 hours"
-   ],
-   "area": "Goregaon",
-   "venue": "VIP Grounds, NESCO",
-   "start": "2026-09-30",
-   "endDate": "2026-10-01",
-   "end": null,
-   "timeNote": "24-hour sprint · check timings on the listing",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Fee per team",
-   "aud": [
-    "Student"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/hacknova/3900030522895912",
-   "org": "YouEvolve",
-   "access": "open",
-   "desc": "A 24-hour build sprint for undergraduate and postgraduate students in teams of two to five, across several technology tracks, with a ₹10 lakh prize pool."
-  },
-  {
-   "id": "weathers-of-our-work",
-   "title": "The Weathers of Our Work",
-   "cat": "Art",
-   "tags": [
-    "Exhibition",
-    "Climate"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue on the event page",
-   "start": "2026-09-30",
-   "end": null,
-   "timeNote": "Time on the event page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free",
-   "aud": [
-    "Open to All"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/OneFutureCollective_WeathersOfOurWork_30Sep26",
-   "org": "One Future Collective",
-   "access": "open",
-   "desc": "An interactive exhibition built from a 30-day diary kept by women and gender-marginalised urban professionals facing climate impacts at work, with room installations and games."
-  },
-  {
-   "id": "elasticon-mumbai",
-   "title": "Elastic{ON} Mumbai",
-   "cat": "AI",
-   "tags": [
-    "Search",
-    "Observability",
-    "Agentic AI"
-   ],
-   "area": "Andheri East",
-   "venue": "JW Marriott Mumbai Sahar",
-   "start": "2026-09-30",
-   "end": null,
-   "timeNote": "Times on the event page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · registration required, limited space",
-   "aud": [
-    "Developer",
-    "Professional"
-   ],
-   "src": "Elastic",
-   "url": "https://www.elastic.co/events/elasticon/mumbai",
-   "org": "Elastic",
-   "access": "open",
-   "desc": "Elastic's one-day community conference for developers, SREs and security analysts, with technical tracks, hands-on breakouts and demos on search, observability and agentic AI."
-  },
-  {
-   "id": "climate-panchayat",
-   "title": "Climate Panchayat: solutions for marginalised Mumbaikars",
-   "cat": "Climate",
-   "tags": [
-    "Dialogue",
-    "Climate Week India"
-   ],
-   "area": "Goregaon West",
-   "venue": "Rasā – The Stage, Studio A, Sangam Society",
-   "start": "2026-10-03",
-   "end": null,
-   "timeNote": "Time on the event page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · event full, waitlist open",
-   "aud": [
-    "Open to All"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/SaveMumbaiMangroves_ClimatePanchayat_3Oct26",
-   "org": "Save Mumbai Mangroves",
-   "access": "open",
-   "desc": "A working dialogue where people from vulnerable Mumbai communities describe the climate problems they face, and the audience works with them on practical responses. Part of Climate Week India."
-  },
-  {
-   "id": "build-and-fly",
-   "title": "Build & Fly: hands-on drone workshop",
-   "cat": "Tech",
-   "tags": [
-    "Drones",
-    "Workshop"
-   ],
-   "area": "Thane",
-   "venue": "Drona Aviation, Punjani Industrial Estate, Thane West",
-   "start": "2026-10-03T10:00",
-   "end": "15:00",
-   "fmt": "Offline",
-   "price": 2500,
-   "priceNote": "₹2,500 · materials included",
-   "aud": [
-    "Student"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/thane/build-and-fly-hands-on-drone-workshop-tickets/80002143626775",
-   "org": "Drona Aviation",
-   "access": "open",
-   "desc": "Build a small drone, learn how it flies, then take part in a flying challenge. For beginners aged 10 and up."
-  },
-  {
-   "id": "echai-startup-meetup-oct",
-   "title": "Mumbai Startup Meetup (eChai)",
-   "cat": "Startup",
-   "tags": [
-    "Panel",
-    "Networking"
-   ],
-   "area": "Andheri East",
-   "venue": "DevX Dynasty, Dynasty Business Park, Andheri-Kurla Road",
-   "start": "2026-10-03T11:00",
-   "end": "13:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free",
-   "aud": [
-    "Founder",
-    "Student",
-    "Open to All"
-   ],
-   "src": "eChai",
-   "also": "Luma",
-   "url": "https://echai.ventures/events/mumbai-startup-meetup-oct-03-2026",
-   "org": "eChai Ventures",
-   "access": "open",
-   "desc": "A panel of founders and operators on early wins, go-to-market, hiring and fundraising, followed by informal networking. Open to anyone curious about startups."
-  },
-  {
-   "id": "ai-for-non-techies",
-   "title": "AI for Non-Techies: live workshop",
-   "cat": "AI",
-   "tags": [
-    "Workshop",
-    "No-code",
-    "Hinglish"
-   ],
-   "area": "Andheri East",
-   "venue": "Mickey Square, MIDC Road No. 7, Kondivita",
-   "start": "2026-10-03T14:00",
-   "end": "18:00",
-   "fmt": "Offline",
-   "price": 3999,
-   "priceNote": "₹3,999 · includes three months of Biscuit access",
-   "aud": [
-    "Professional",
-    "Open to All"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/yocnzgej",
-   "org": "Annkur P Agarwal & Maria Martin",
-   "access": "approval",
-   "desc": "A small four-hour workshop where non-technical professionals bring a real work problem and turn it into a simple AI-powered tool without writing code. Capped at 15 people and run mostly in Hinglish."
-  },
   {
    "id": "hack-nation-bombay-hub",
    "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
@@ -234,6 +54,32 @@
    "org": "MongoDB",
    "access": "approval",
    "desc": "MongoDB's one-day developer event on taking AI apps from pilot to production and modernising older systems, with technical sessions and time to meet the MongoDB team."
+  },
+  {
+   "id": "servicenow-world-forum-mumbai",
+   "title": "ServiceNow World Forum Mumbai 2026",
+   "cat": "AI",
+   "tags": [
+    "Enterprise AI",
+    "Conference",
+    "Hands-on labs"
+   ],
+   "area": "BKC",
+   "venue": "Jio World Centre, G Block, Bandra Kurla Complex",
+   "start": "2026-10-06T08:00",
+   "end": "18:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · registration confirmed within about five business days",
+   "aud": [
+    "Professional",
+    "Developer"
+   ],
+   "src": "ServiceNow",
+   "url": "https://www.servicenow.com/events/world-forum/mumbai.html",
+   "org": "ServiceNow",
+   "access": "approval",
+   "desc": "ServiceNow's first Mumbai forum on AI transformation, with keynotes, more than 30 breakout sessions, hands-on AI labs and networking."
   },
   {
    "id": "lunch-and-learn-meta",
@@ -403,7 +249,7 @@
    "area": "Mumbai",
    "venue": "Venue on the event page",
    "start": "2026-10-13T08:30",
-   "end": "19:35",
+   "end": "18:45",
    "fmt": "Offline",
    "price": null,
    "priceNote": "Registration on IBM's site",
@@ -661,70 +507,6 @@
  ],
  "QUEUE_RAW": [
   {
-   "qid": "q-build-room",
-   "title": "Build Room: design engineering & branding workshop",
-   "cat": "Design",
-   "area": "Andheri",
-   "src": "Luma",
-   "url": "https://luma.com/q1ygdwsc",
-   "access": "open",
-   "why": "Event page would not open this run; an aggregator lists it for 3 Oct at Pearl Academy.",
-   "conf": {
-    "date": 50,
-    "place": 70,
-    "category": 95
-   },
-   "hint": "2026-10-03"
-  },
-  {
-   "qid": "q-proxima",
-   "title": "At the Frontier of Fundraising (Proxima Mumbai)",
-   "cat": "Startup",
-   "area": "Chakala",
-   "src": "Luma",
-   "url": "https://luma.com/pbwscyth",
-   "access": "open",
-   "why": "Event page would not open; an aggregator lists 3 Oct.",
-   "conf": {
-    "date": 50,
-    "place": 70,
-    "category": 90
-   },
-   "hint": "2026-10-03"
-  },
-  {
-   "qid": "q-elephanta",
-   "title": "Elephanta Island mangrove clean-up",
-   "cat": "Climate",
-   "area": "Elephanta",
-   "src": "Luma",
-   "url": "https://luma.com/SameMumbaiMangroves_ElephantaMangrove_3Oct26",
-   "access": "open",
-   "why": "Event page would not open; date appears in the link (3 Oct).",
-   "conf": {
-    "date": 60,
-    "place": 90,
-    "category": 95
-   },
-   "hint": "2026-10-03"
-  },
-  {
-   "qid": "q-civic-sim",
-   "title": "Civic Simulation (Save Mumbai Mangroves)",
-   "cat": "Climate",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/SaveMumbaiMangroves_CivicSimulation_3Oct26",
-   "access": "open",
-   "why": "Event page would not open; the link says 3 Oct but an aggregator lists 2 Oct.",
-   "conf": {
-    "date": 40,
-    "place": 60,
-    "category": 85
-   },
-   "hint": "2026-10-03"
-  },
-  {
    "qid": "q-datatalks",
    "title": "Making Agentic AI Real: Data & AI on Snowflake",
    "cat": "AI",
@@ -981,58 +763,90 @@
     "category": 90
    },
    "hint": "2026-11-06"
+  },
+  {
+   "qid": "q-vibeathon",
+   "title": "Vibeathon 2026 (Devnovate)",
+   "cat": "Tech",
+   "area": "Navi Mumbai",
+   "src": "HackathonRadar",
+   "url": "https://devnovate.co/event/vibeathon-2026-3",
+   "access": "open",
+   "why": "Date 10 Oct seen only on an aggregator listing; the organiser page would not open.",
+   "conf": {
+    "date": 70,
+    "place": 80,
+    "category": 85
+   },
+   "hint": "2026-10-10"
+  },
+  {
+   "qid": "q-hackverse",
+   "title": "Hackverse.2026 (TECHFEST)",
+   "cat": "Education",
+   "area": "Navi Mumbai",
+   "src": "HackathonRadar",
+   "url": "https://hackverse-19.devfolio.co",
+   "access": "open",
+   "why": "Dates 5-6 Oct seen only on an aggregator listing; the Devfolio page would not open.",
+   "conf": {
+    "date": 70,
+    "place": 80,
+    "category": 80
+   },
+   "hint": "2026-10-05"
   }
  ],
  "RUNS": [
   {
-   "src": "Luma: Mumbai, AI and Tech pages",
-   "what": "City and category listings, then each event page",
-   "found": 27,
-   "pub": 10,
-   "review": 12,
-   "dup": 2,
-   "skip": 3,
-   "note": "Arts page and several event pages would not open; 10 existing Luma events re-checked and unchanged; AI for Non-Techies added; StartupLive (20–21 Nov) is beyond 45 days; two HR sessions skipped"
+   "src": "Luma: Mumbai, AI, Tech, Arts pages",
+   "what": "City and category listings",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Luma pages would not open this run; existing Luma events carried forward unchecked"
   },
   {
-   "src": "Hidden Events: Mumbai (Luma mirror)",
-   "what": "Aggregator listing, used for dates only",
-   "found": 21,
+   "src": "Hidden Events (Luma mirror)",
+   "what": "Aggregator listing",
+   "found": 0,
    "pub": 0,
-   "review": 2,
-   "dup": 10,
-   "skip": 9,
-   "note": "Used for date hints on the Codex workshop and the Gen AI ethics meetup; games, running and wellness events skipped"
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Would not open this run"
   },
   {
    "src": "AllEvents: technology, startup",
-   "what": "Technology listing; event pages and startup page would not open",
-   "found": 15,
-   "pub": 4,
-   "review": 0,
-   "dup": 0,
-   "skip": 11,
-   "note": "Existing AllEvents dates re-checked on the listing; trade expos and a kids' robotics contest skipped; Shayari Showdown and Health Tech mixer kept from last run unverified"
-  },
-  {
-   "src": "Meetup: Mumbai Meets AI, UI/UX search",
-   "what": "Group page and topic search",
-   "found": 3,
+   "what": "Listing pages",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Group page would not open; UX search showed only online events"
+   "skip": 0,
+   "note": "Would not open this run; existing AllEvents entries carried forward unchecked"
+  },
+  {
+   "src": "Meetup: Mumbai Meets AI",
+   "what": "Group page",
+   "found": 1,
+   "pub": 0,
+   "review": 0,
+   "dup": 1,
+   "skip": 0,
+   "note": "Mumbai Meets AI 06 re-confirmed for 10 Oct, 11:00-14:00; registration on Luma only"
   },
   {
    "src": "Web search and organiser sites",
-   "what": "eChai, IBM, MongoDB, IFP, IBW, ETHGlobal, Eventbrite, dev.events",
-   "found": 8,
-   "pub": 6,
-   "review": 1,
-   "dup": 1,
-   "skip": 0,
-   "note": "IBM Think times added; Enterprise AI Summit also on Eventbrite; MongoDB.local, IFP Festival and India Blockchain Week added; ETHGlobal Mumbai dates not confirmed; Elastic and Devcon pages not re-checked"
+   "what": "ServiceNow, IBM, HackathonRadar, conference listings, dev.events",
+   "found": 6,
+   "pub": 2,
+   "review": 2,
+   "dup": 0,
+   "skip": 2,
+   "note": "ServiceNow World Forum (6 Oct) added; IBM Think end time corrected; MongoDB, IFP, Devcon, IBW pages would not open and were carried forward; two student hackathons queued (aggregator only); academic conference-mill listings skipped; no XR or AI Tinkerers events found; no cancellations seen"
   }
  ],
  "COMMUNITIES": [

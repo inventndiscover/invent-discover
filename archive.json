@@ -421,7 +421,7 @@
   "area": "Mumbai",
   "venue": "Venue on the event page",
   "start": "2026-10-13T08:30",
-  "end": "19:35",
+  "end": "18:45",
   "fmt": "Offline",
   "price": null,
   "priceNote": "Registration on IBM's site",
@@ -603,6 +603,33 @@
   "access": "approval",
   "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup.",
   "firstSeen": "2026-09-28"
+ },
+ "servicenow-world-forum-mumbai": {
+  "id": "servicenow-world-forum-mumbai",
+  "title": "ServiceNow World Forum Mumbai 2026",
+  "cat": "AI",
+  "tags": [
+   "Enterprise AI",
+   "Conference",
+   "Hands-on labs"
+  ],
+  "area": "BKC",
+  "venue": "Jio World Centre, G Block, Bandra Kurla Complex",
+  "start": "2026-10-06T08:00",
+  "end": "18:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · registration confirmed within about five business days",
+  "aud": [
+   "Professional",
+   "Developer"
+  ],
+  "src": "ServiceNow",
+  "url": "https://www.servicenow.com/events/world-forum/mumbai.html",
+  "org": "ServiceNow",
+  "access": "approval",
+  "desc": "ServiceNow's first Mumbai forum on AI transformation, with keynotes, more than 30 breakout sessions, hands-on AI labs and networking.",
+  "firstSeen": "2026-10-04"
  },
  "shayari-showdown": {
   "id": "shayari-showdown",
