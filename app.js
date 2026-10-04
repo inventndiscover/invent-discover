@@ -53,7 +53,7 @@ async function sendForm(data){
   return j;
 }
 
-// Demos in Invent. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
+// Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
  {id:"tufani-samundar",name:"Tufani Samundar",line:"A real-time 3D storm ocean you can dive into, in VR too",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/tufani-samundar.gif",img:"media/tufani-samundar-whale.jpg",sheetImg:"media/tufani-samundar-storm.jpg",url:"demos/tufani-samundar/",
@@ -65,10 +65,10 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/market-walkthrough-low-poly",
   needs:"On a laptop: click to enter, walk with W A S D, look with the mouse, scroll to zoom, press T to change the time of day. Walk up to a display to lift and turn a product. Works best in a recent Chrome, Edge or Safari.",
   desc:"A low-poly shopping plaza you can walk around: a watch store, three boutiques and a restaurant, with traffic on the avenue, birds overhead, a city skyline on one side and mountains on the other. Slide from dawn to night and watch the city lights come on. In VR, pick up a product with the trigger to look at it up close."},
- {id:"paper-heart",name:"Paper Heart",line:"A neon, step-by-step origami heart tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+ {id:"paper-heart",name:"Paper Heart",line:"A neon, step-by-step origami heart tutorial",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-heart.gif",video:"media/paper-heart-tutorial.mp4",poster:"media/paper-heart-poster.jpg",
   desc:"Seven folds turn one square sheet into a heart, drawn as glowing line art. No glue, under five minutes. A short animated tutorial made with AI, the second in a series turning origami into screen-based lessons."},
- {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+ {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-fan.gif",video:"media/paper-fan-tutorial.mp4",poster:"media/paper-fan-poster.jpg",
   desc:"Eight folds, from a flat sheet to a finished fan, drawn as glowing line art. A one-minute animated tutorial made with AI, as part of a series turning origami into screen-based lessons."},
  {id:"tapri",name:"Tapri",line:"Voice-first ordering for neighbourhood tea stalls",cat:"Civic",status:"Prototype",makers:["Two design students"],inst:"Example",tools:["Speech-to-text","React Native"],desc:"Customers speak an order in Hindi, Marathi or English; the stall owner sees a running tab without typing."},
@@ -437,19 +437,21 @@ function viewDiscover(){
       <span style="display:flex;gap:8px;align-items:center"><label for="sortSel" class="label">Sort</label><select class="sel" id="sortSel" data-sort>${opt("date",state.sort,"Soonest first")}${opt("free",state.sort,"Free first")}</select></span></div>
     ${list.length?`<div class="grid">${list.map(eventCard).join("")}</div>`:`<div class="empty"><p style="margin:0 0 12px"><b>No events match these filters.</b> Try a wider date range or another area.</p><button class="btn ghost" data-clear>Clear filters</button></div>`}
     <div class="banner"><span aria-hidden="true">↻</span><span><b>${QUEUE.length} more events are waiting for a date.</b> Some Luma pages don't show their date publicly, so they stay off this list until a curator confirms it. Know of an event we're missing? <a href="#submit" data-go="submit">Submit it</a>.</span></div>
+    ${communitiesBlock()}
   </div>`;
 }
 
 function viewInvent(){
-  const cats=["all",...new Set(DEMOS.map(d=>d.cat))];
-  const list=DEMOS.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat)&&(state.demoStatus==="all"||d.status===state.demoStatus));
+  const inv=DEMOS.filter(d=>d.kind!=="tutorial");
+  const cats=["all",...new Set(inv.map(d=>d.cat))];
+  const list=inv.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat)&&(state.demoStatus==="all"||d.status===state.demoStatus));
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:70% 55%"><div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Invent</span></div><h1 class="mega">Invent</h1><p>A gallery of things people in Mumbai are building: student projects, prototypes and early products. Every demo links to something you can try or watch.</p></div>
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Tufani Samundar, Market Walkthrough, Paper Heart and Paper Fan.</b> Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
@@ -561,13 +563,23 @@ function viewInsights(){
   </div>`;
 }
 
-function viewCommunities(){
+function viewLearn(){
+  const list=DEMOS.filter(d=>d.kind==="tutorial");
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 70%"><div class="wrap head-row">
-    <div><div class="kicker"><span class="pill">Communities</span></div><h1 class="mega">Communities</h1><p>Groups behind the events in Discover. Visit their pages to join; their next event shows up here when it's listed.</p></div>
-    <a class="btn ghost" href="#submit" data-go="submit" data-kind="community">+ List your community</a>
+    <div><div class="kicker"><span class="pill">Learn</span></div><h1 class="mega">Learn</h1><p>Short tutorials you can follow at your own pace, one step at a time. Each one plays here, and you can download it to watch offline.</p></div>
   </div></div>
-  <div class="wrap" style="padding-top:28px"><div class="grid">${COMMUNITIES.map(commCard).join("")}</div></div>`;
+  <div class="wrap" style="padding-top:28px">
+    <section class="block" style="padding-top:0"><div class="sec-head"><div><h2 class="sec-title">Origami</h2><p class="sec-sub">One square sheet of paper, no glue, a few minutes each.</p></div></div>
+      <div class="grid">${list.map(demoCard).join("")}</div>
+    </section>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>More tutorials are on the way,</b> starting with music. Have a tutorial to share? <a href="mailto:hello@inventndiscover.com">Write to us</a>.</span></div>
+  </div>`;
+}
+
+function communitiesBlock(){
+  return `<section class="block" id="communities"><div class="sec-head"><div><h2 class="sec-title">Communities</h2><p class="sec-sub">Groups behind the events above. Visit their pages to join; their next event shows up here when it's listed.</p></div><a class="btn ghost" href="#submit" data-go="submit" data-kind="community">+ List your community</a></div>
+    <div class="grid">${COMMUNITIES.map(commCard).join("")}</div></section>`;
 }
 
 function viewSubmit(){
@@ -864,7 +876,7 @@ function closeSearch(){$("#searchOv")?.remove()}
 /* =========================================================
    6. ROUTER + INTERACTIONS
    ========================================================= */
-const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,insights:viewInsights,communities:viewCommunities,submit:viewSubmit};
+const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,learn:viewLearn,insights:viewInsights,submit:viewSubmit};
 /* The curator desk is not linked anywhere. It opens only at this unlisted address. */
 const DESK="desk-hnljwj364a";
 VIEWS[DESK]=viewCurator;
@@ -879,9 +891,13 @@ function render(){
 // Count each section as its own page in GoatCounter (the private desk is never counted)
 function countView(v){try{if(window.goatcounter&&window.goatcounter.count&&v!==DESK)window.goatcounter.count({path:"/#"+v,title:v})}catch(e){}}
 function go(v){
+  // Communities now sits inside Discover: old #communities links land on that section.
+  const toComm=v==="communities";if(toComm)v="discover";
   state.view=VIEWS[v]?v:"home";
   if(location.hash!=="#"+state.view)history.replaceState(null,"","#"+state.view);
-  render();countView(state.view);window.scrollTo({top:0});
+  render();countView(toComm?"communities":state.view);
+  const sec=toComm&&$("#communities");
+  if(sec)sec.scrollIntoView();else window.scrollTo({top:0});
 }
 function tick(){const c=$("#clock");if(c)c.textContent=new Intl.DateTimeFormat("en-IN",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Kolkata"}).format(new Date())+" IST"}
 setInterval(tick,1000);
@@ -978,8 +994,9 @@ function curate(d){
   render();
 }
 
-function fromHash(){const h=location.hash.replace("#","");if(VIEWS[h]&&h!==state.view){state.view=h;render();window.scrollTo({top:0})}}
+function fromHash(){const h=location.hash.replace("#","");if(h==="communities"){go(h);return}if(VIEWS[h]&&h!==state.view){state.view=h;render();window.scrollTo({top:0})}}
 window.addEventListener("hashchange",fromHash);
 applyPhase(PHASE,false);
 state.view=VIEWS[location.hash.replace("#","")]?location.hash.replace("#",""):"home";
 render();
+if(location.hash==="#communities")go("communities");

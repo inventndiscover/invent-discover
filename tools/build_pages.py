@@ -358,7 +358,7 @@ def home_static(upcoming, signals, weekend_n):
     xs = "".join(f'<li><a href="{esc(p["url"])}">{esc(p["name"])}</a>: {esc(p["summary"])}</li>' for p in (signals or [])[:6])
     return f"""<div class="seo-static wrap" style="padding:40px 22px">
 <h1>Invent + Discover: Mumbai tech events, product demos and ideas</h1>
-<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
+<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), step-by-step tutorials (Learn), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
 <h2>Coming up in Mumbai</h2><ul>{ev}</ul>
 <p><a href="/events/">All {len(upcoming)} upcoming events</a> · {weekend_n} this weekend: <a href="/mumbai/tech-events-this-weekend/">see the weekend list</a></p>
 <h2>Browse by topic</h2><ul>{topics}<li><a href="/weekly/">Weekly roundups</a></li></ul>
@@ -370,13 +370,13 @@ def home_static(upcoming, signals, weekend_n):
 def llms_txt(upcoming, today):
     lines = ["# Invent + Discover", "",
              "> A Mumbai platform listing AI, design, XR and startup events (checked daily against each organiser's page), "
-             "plus product demos, tech communities and a daily digest of AI and tech news.", "",
+             "plus product demos, step-by-step tutorials, tech communities and a daily digest of AI and tech news.", "",
              f"Last updated: {today}. Contact: hello@inventndiscover.com", "",
              "## Events in Mumbai", f"- [All upcoming events]({SITE}/events/): every upcoming event, one page each with date, venue, price and the organiser's link"]
     lines += [f"- [{t}]({SITE}/mumbai/{slug}/): {intro}" for slug, t, _, intro, _ in TOPICS]
     lines += [f"- [Weekly roundups]({SITE}/weekly/): one page per week, including past weeks", "", "## Next events"]
     lines += [f"- [{e['title']}]({SITE}/events/{e['id']}/): {when_words(e)}, {e.get('area')}. {price_words(e)}." for e in upcoming[:20]]
-    lines += ["", "## Other", f"- [Home]({SITE}/): events, demos, insights and communities in one page",
+    lines += ["", "## Other", f"- [Home]({SITE}/): events, demos, tutorials, insights and communities in one page",
               f"- [About]({SITE}/about/): who collates Invent + Discover and how events are chosen and checked",
               "- [Blog](https://blog.inventndiscover.com/): longer writing on design, XR and technology"]
     return "\n".join(lines) + "\n"
