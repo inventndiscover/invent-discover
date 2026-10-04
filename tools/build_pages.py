@@ -358,7 +358,7 @@ def home_static(upcoming, signals, weekend_n):
     xs = "".join(f'<li><a href="{esc(p["url"])}">{esc(p["name"])}</a>: {esc(p["summary"])}</li>' for p in (signals or [])[:6])
     return f"""<div class="seo-static wrap" style="padding:40px 22px">
 <h1>Invent + Discover: Mumbai tech events, product demos and ideas</h1>
-<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), step-by-step tutorials (Learn), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
+<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), step-by-step tutorials (Learn), free idea tools such as SCAMPER (Tools), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
 <h2>Coming up in Mumbai</h2><ul>{ev}</ul>
 <p><a href="/events/">All {len(upcoming)} upcoming events</a> · {weekend_n} this weekend: <a href="/mumbai/tech-events-this-weekend/">see the weekend list</a></p>
 <h2>Browse by topic</h2><ul>{topics}<li><a href="/weekly/">Weekly roundups</a></li></ul>
@@ -370,13 +370,14 @@ def home_static(upcoming, signals, weekend_n):
 def llms_txt(upcoming, today):
     lines = ["# Invent + Discover", "",
              "> A Mumbai platform listing AI, design, XR and startup events (checked daily against each organiser's page), "
-             "plus product demos, step-by-step tutorials, tech communities and a daily digest of AI and tech news.", "",
+             "plus product demos, step-by-step tutorials, free design-thinking tools, tech communities and a daily digest of AI and tech news.", "",
              f"Last updated: {today}. Contact: hello@inventndiscover.com", "",
              "## Events in Mumbai", f"- [All upcoming events]({SITE}/events/): every upcoming event, one page each with date, venue, price and the organiser's link"]
     lines += [f"- [{t}]({SITE}/mumbai/{slug}/): {intro}" for slug, t, _, intro, _ in TOPICS]
     lines += [f"- [Weekly roundups]({SITE}/weekly/): one page per week, including past weeks", "", "## Next events"]
     lines += [f"- [{e['title']}]({SITE}/events/{e['id']}/): {when_words(e)}, {e.get('area')}. {price_words(e)}." for e in upcoming[:20]]
     lines += ["", "## Other", f"- [Home]({SITE}/): events, demos, tutorials, insights and communities in one page",
+              f"- [SCAMPER idea tool]({SITE}/toolkit/scamper/): free browser tool that walks through the seven SCAMPER questions (Bob Eberle, 1971, from Alex Osborn's checklist)",
               f"- [About]({SITE}/about/): who collates Invent + Discover and how events are chosen and checked",
               "- [Blog](https://blog.inventndiscover.com/): longer writing on design, XR and technology"]
     return "\n".join(lines) + "\n"
@@ -455,6 +456,9 @@ def main():
     demo_root = os.path.join(ROOT, "demos")  # hand-made demo pages, e.g. demos/tufani-samundar/
     if os.path.isdir(demo_root):
         urls += [(f"{SITE}/demos/{d}/", today) for d in sorted(os.listdir(demo_root)) if os.path.exists(os.path.join(demo_root, d, "index.html"))] + [(u, today) for u in pages] + [(f"{SITE}/weekly/", today)]
+    tool_root = os.path.join(ROOT, "toolkit")  # hand-made framework tools, e.g. toolkit/scamper/
+    if os.path.isdir(tool_root):
+        urls += [(f"{SITE}/toolkit/{d}/", today) for d in sorted(os.listdir(tool_root)) if os.path.exists(os.path.join(tool_root, d, "index.html"))]
     urls += [(f"{SITE}/weekly/{m}/", today if m >= monday(today) else (datetime.strptime(m, "%Y-%m-%d") + timedelta(days=7)).strftime("%Y-%m-%d")) for m in sorted(weeks)]
     urls += [(f"{SITE}/events/{e['id']}/", today if status(e) == "upcoming" else min(today, (datetime.strptime(last_day(e), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d"))) for e in everything]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

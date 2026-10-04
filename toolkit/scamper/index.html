@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en-IN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SCAMPER idea tool · Invent + Discover</title>
+<meta name="description" content="A free SCAMPER tool: seven questions that turn something you already know into new ideas. Works in your browser, nothing to sign up for.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/scamper/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="SCAMPER idea tool · Invent + Discover">
+<meta property="og:description" content="Seven questions that turn something you already know into new ideas. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/scamper/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"SCAMPER idea tool","url":"https://inventndiscover.com/toolkit/scamper/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"Invent + Discover","url":"https://inventndiscover.com/"},"description":"Seven questions that turn something you already know into new ideas."}</script>
+<style>
+:root{
+  --bg:#05060A;--card:#0E1118;--card2:#131722;--ink:#F4F5F7;--ink2:rgba(244,245,247,.7);--ink3:rgba(244,245,247,.45);
+  --hair:rgba(255,255,255,.12);--hair2:rgba(255,255,255,.2);--acc:#A58BFF;--onacc:#0D0820;
+  --S:#A58BFF;--C:#7B8CFF;--A:#3D9BFF;--M:#2FD1C5;--P:#46D69A;--E:#FFB23F;--R:#FF7B8A;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Geist",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:70vw;height:70vw;max-width:900px;max-height:900px;background:radial-gradient(circle,rgba(110,80,220,.22),transparent 65%);pointer-events:none;z-index:-1}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:8px}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+.top{border-bottom:1px solid var(--hair);padding:16px 0;position:sticky;top:0;background:rgba(5,6,10,.7);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:10}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{text-decoration:none;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.plus{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--acc);color:var(--onacc);margin:0 6px;font-size:15px;box-shadow:0 0 16px rgba(165,139,255,.6)}
+.back{font-size:14px;color:var(--ink2);text-decoration:none}
+.back:hover{color:var(--ink)}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:44px 0 10px}
+h1{display:inline-block;font-size:clamp(44px,9vw,88px);line-height:.95;letter-spacing:-.045em;margin:0 0 16px;background:linear-gradient(90deg,var(--S),var(--A) 40%,var(--P) 65%,var(--E) 85%,var(--R));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--ink2);font-size:19px;max-width:56ch;margin:0}
+.credit{color:var(--ink3);font-size:14px;margin:14px 0 0}
+.credit a{color:var(--ink2)}
+
+/* the seven-letter strip: our own diagram, doubles as navigation */
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:34px 0 8px}
+.tile{position:relative;border:1px solid var(--hair);background:var(--card);border-radius:16px;padding:12px 6px 10px;text-align:center;transition:transform .15s,border-color .2s,background .2s}
+.tile:hover{transform:translateY(-2px);border-color:var(--hair2)}
+.tile b{display:block;font-size:clamp(22px,4.4vw,34px);line-height:1;font-weight:700;color:var(--c)}
+.tile span{display:block;font:500 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .n{position:absolute;top:6px;right:7px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--c);color:var(--onacc);font:600 11px/18px var(--mono);display:none}
+.tile.has .n{display:block}
+.tile[aria-current="step"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--card));box-shadow:0 0 24px color-mix(in srgb,var(--c) 30%,transparent)}
+.progress{height:4px;border-radius:2px;background:var(--hair);overflow:hidden;margin:0 0 6px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--S),var(--A),var(--P),var(--E),var(--R));transition:width .3s}
+.plabel{font:500 12px var(--mono);color:var(--ink3);letter-spacing:.06em}
+
+.panel{border:1px solid var(--hair);background:var(--card);border-radius:22px;padding:clamp(20px,4vw,34px);margin:22px 0}
+.lab{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px;display:block}
+.topic{width:100%;background:var(--card2);border:1px solid var(--hair);border-radius:14px;padding:14px 16px;font-size:20px;font-weight:500}
+.topic::placeholder{color:var(--ink3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chip{border:1px solid var(--hair);background:transparent;border-radius:999px;padding:7px 14px;font-size:14px;color:var(--ink2)}
+.chip:hover{border-color:var(--acc);color:var(--ink)}
+
+.step{--c:var(--S)}
+.step-head{display:flex;gap:18px;align-items:flex-start}
+.big{flex:none;width:84px;height:84px;border-radius:22px;display:grid;place-items:center;font-size:52px;font-weight:700;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 50%,transparent);background:color-mix(in srgb,var(--c) 10%,transparent);box-shadow:0 0 34px color-mix(in srgb,var(--c) 28%,transparent)}
+.step h2{margin:2px 0 4px;font-size:clamp(26px,4.5vw,36px);letter-spacing:-.03em;line-height:1.1}
+.step .mean{margin:0;color:var(--ink2)}
+.q{margin:24px 0 0;padding:18px 20px;border-radius:16px;background:var(--card2);border-left:3px solid var(--c)}
+.q p{margin:0;font-size:clamp(19px,3vw,23px);font-weight:500;letter-spacing:-.015em;line-height:1.35}
+.q .for{color:var(--c)}
+.qrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ghost{border:1px solid var(--hair);background:transparent;border-radius:999px;padding:7px 14px;font-size:14px;color:var(--ink2)}
+.ghost:hover{border-color:var(--hair2);color:var(--ink)}
+.ghost[aria-pressed="true"]{border-color:var(--c);color:var(--ink)}
+.timer{font:600 14px var(--mono);color:var(--c);min-width:3.2em}
+.eg{margin:14px 0 0;color:var(--ink3);font-size:14px}
+.eg b{color:var(--ink2);font-weight:500}
+.add{display:flex;gap:8px;margin:22px 0 0}
+.add input{flex:1;min-width:0;background:var(--card2);border:1px solid var(--hair);border-radius:14px;padding:13px 15px;font-size:16px}
+.add input::placeholder{color:var(--ink3)}
+.btn{border:1px solid var(--acc);background:var(--acc);color:var(--onacc);border-radius:999px;padding:12px 20px;font-weight:600;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--hair2)}
+.ideas{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:8px}
+.ideas li{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 16px;border:1px solid var(--hair);border-radius:14px;background:var(--card2)}
+.ideas li span{flex:1;min-width:0;overflow-wrap:anywhere}
+.ideas li.star{border-color:color-mix(in srgb,var(--E) 60%,transparent)}
+.ic{flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:var(--ink3);display:grid;place-items:center;font-size:17px}
+.ic:hover{background:var(--glass,rgba(255,255,255,.06));color:var(--ink)}
+.ic.on{color:var(--E)}
+.empty{color:var(--ink3);font-size:14px;margin:14px 0 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:26px 0 0;flex-wrap:wrap}
+
+.sum h2{margin:0 0 4px;font-size:clamp(26px,4.5vw,36px);letter-spacing:-.03em}
+.sum .grp{margin:20px 0 0}
+.sum .grp h3{margin:0 0 8px;font-size:16px;display:flex;gap:10px;align-items:center}
+.sum .grp h3 i{font-style:normal;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 50%,transparent);font-weight:700}
+.sum ul{margin:0;padding-left:22px;color:var(--ink2)}
+.sum li.star{color:var(--ink)}
+.sum li.star::marker{content:"★  ";color:var(--E)}
+.tip{margin:20px 0 0;padding:14px 18px;border-radius:14px;border:1px solid rgba(165,139,255,.4);background:rgba(165,139,255,.08);color:var(--ink2);font-size:15px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.privacy{color:var(--ink3);font-size:13px;margin:12px 0 0}
+
+.about h2{font-size:22px;letter-spacing:-.02em;margin:0 0 10px}
+.about p{color:var(--ink2);margin:0 0 12px;max-width:68ch}
+.about ol{color:var(--ink2);padding-left:20px;margin:0 0 12px}
+.sitefoot{border-top:1px solid var(--hair);margin-top:40px;padding:28px 0 60px;color:var(--ink3);font-size:14px}
+.sitefoot a{color:var(--ink2);margin-right:14px;display:inline-block;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:#1A1E2A;border:1px solid var(--hair2);padding:10px 16px;border-radius:999px;font-size:14px;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%)}
+[hidden]{display:none!important}
+
+@media (max-width:600px){
+  .strip{gap:5px}.tile{border-radius:12px;padding:10px 2px 8px}.tile span{display:none}
+  .big{width:60px;height:60px;font-size:36px;border-radius:16px}
+  .step-head{gap:14px}
+  .add{flex-direction:column}.add .btn{width:100%}
+}
+@media print{
+  body{background:#fff;color:#000}body::before,.top,.strip,.progress,.plabel,#start,#stepPanel,.actions,.privacy,.about,.sitefoot,.hero,.toast{display:none!important}
+  #sumPanel{display:block!important;border:0;background:#fff;padding:0}
+  .sum ul,.sum li.star{color:#000}.tip{display:none}
+}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Invent and Discover, home">INVENT<span class="plus">+</span>DISCOVER</a>
+  <a class="back" href="/">← Back to the site</a>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Tools · Idea generation</p>
+    <h1>SCAMPER</h1><br>
+    <p class="sub">Seven questions that turn something you already know into new ideas. Pick a thing, answer one letter at a time, and leave with a list worth building on.</p>
+    <p class="credit">SCAMPER was put together by Bob Eberle in 1971, from Alex Osborn's idea-spurring questions. <a href="#where">Where it comes from</a></p>
+  </section>
+
+  <nav class="strip" id="strip" aria-label="SCAMPER steps"></nav>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  <p class="plabel" id="plabel">0 of 7 letters answered</p>
+
+  <!-- Step 0: what are you working on -->
+  <section class="panel" id="start">
+    <label class="lab" for="topic">What are you working on?</label>
+    <input class="topic" id="topic" maxlength="80" placeholder="A product, a service, a place, a habit…" autocomplete="off">
+    <div class="chips" id="egs" aria-label="Examples"></div>
+    <div class="nav"><span></span><button class="btn" id="begin">Start with S →</button></div>
+  </section>
+
+  <!-- One letter at a time -->
+  <section class="panel step" id="stepPanel" hidden aria-live="polite">
+    <div class="step-head">
+      <div class="big" id="sLetter">S</div>
+      <div><h2 id="sWord">Substitute</h2><p class="mean" id="sMean"></p></div>
+    </div>
+    <div class="q">
+      <p id="sQ"></p>
+      <div class="qrow">
+        <button class="ghost" id="nextQ">Another question ↻</button>
+        <button class="ghost" id="sprint" aria-pressed="false">90-second sprint</button>
+        <span class="timer" id="timer" aria-live="off"></span>
+      </div>
+    </div>
+    <p class="eg" id="sEg"></p>
+    <form class="add" id="addForm" autocomplete="off">
+      <label for="idea" style="position:absolute;left:-9999px">Your idea</label>
+      <input id="idea" maxlength="160" placeholder="Type an idea and press Enter. Wild ones count.">
+      <button class="btn" type="submit">Add idea</button>
+    </form>
+    <ul class="ideas" id="ideas"></ul>
+    <p class="empty" id="noIdeas">No ideas yet for this letter. Even a silly one helps the next one along.</p>
+    <div class="nav">
+      <button class="btn sec" id="prev">← Back</button>
+      <button class="btn" id="next">Next →</button>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section class="panel sum" id="sumPanel" hidden>
+    <p class="lab">Your SCAMPER</p>
+    <h2 id="sumTitle">Your ideas</h2>
+    <div id="sumBody"></div>
+    <p class="tip"><b>Next:</b> star your top three (tap ☆ on any letter), then ask of each one: who would use it, and what's the smallest version you could try this week?</p>
+    <div class="actions">
+      <button class="btn" id="copy">Copy as text</button>
+      <button class="btn sec" id="dl">Download .txt</button>
+      <button class="btn sec" id="print">Print</button>
+      <button class="btn sec" id="edit">← Keep going</button>
+      <button class="btn sec" id="reset">Start a new one</button>
+    </div>
+    <p class="privacy">Your ideas are saved in this browser only. Nothing is sent to us or anyone else.</p>
+  </section>
+
+  <section class="panel about" id="where">
+    <h2>Where SCAMPER comes from</h2>
+    <p>In 1953 the advertising executive <b>Alex Osborn</b>, who also gave us the word "brainstorming", published a checklist of questions for sparking ideas in his book <i>Applied Imagination</i>. In 1971 the educator <b>Bob Eberle</b> arranged those questions into the easy-to-remember word SCAMPER, in <i>SCAMPER: Games for Imagination Development</i>.</p>
+    <p>The questions, examples and diagram on this page are written by Invent + Discover. How to use it:</p>
+    <ol>
+      <li>Pick one specific thing. "Our college canteen" works better than "food".</li>
+      <li>Go letter by letter. Quantity first: judge later.</li>
+      <li>Not every letter will fit every topic. Skip one if it's stuck, and come back.</li>
+      <li>At the end, star the few ideas worth testing.</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="wrap sitefoot">
+  <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+  <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- content: the seven letters ---------- */
+const L=[
+ {k:"S",w:"Substitute",m:"Swap a part, material, person or rule for something else.",
+  q:["What part of {t} could you swap for something else?","Could a different material, person or place do the job in {t}?","What rule does everyone follow with {t}? What if you replaced it?","What would {t} look like if it used something you'd never expect?"],
+  eg:"Replace paper tokens with a UPI scan at the counter."},
+ {k:"C",w:"Combine",m:"Join two things, ideas or purposes into one.",
+  q:["What two parts of {t} could become one?","What other product or service could {t} team up with?","What if {t} did its job and a second job at the same time?","Who else's skills could you combine with {t}?"],
+  eg:"Turn the canteen into a study corner after lunch."},
+ {k:"A",w:"Adapt",m:"Borrow an idea that already works somewhere else.",
+  q:["What else is like {t}, and what can you borrow from it?","How does nature or a different industry solve the problem {t} solves?","What worked in the past that could work for {t} now?","Which app or game would you copy one feature from for {t}?"],
+  eg:"Borrow the dabbawala colour code to sort pre-orders."},
+ {k:"M",w:"Modify",m:"Make it bigger, smaller, faster, louder, or change its shape.",
+  q:["What about {t} could be bigger, or much smaller?","What if {t} were ten times faster, or deliberately slower?","What could you change about the shape, colour, sound or feel of {t}?","What one thing about {t} could you exaggerate?"],
+  eg:"Snack-size portions at a lower price."},
+ {k:"P",w:"Put to other uses",m:"Find new people, places or jobs for it.",
+  q:["Who else could use {t}?","Where else could {t} work, beyond where it is now?","What could {t} do that it was never meant to?","If {t} had to earn money on weekends, what would it do?"],
+  eg:"Use the canteen for weekend cooking workshops."},
+ {k:"E",w:"Eliminate",m:"Remove what isn't needed and see what's left.",
+  q:["What could you remove from {t} and still have it work?","Which step of {t} do people skip anyway?","What if {t} were half as complicated?","What would {t} be without its most expensive part?"],
+  eg:"Remove the queue: order ahead, collect from a shelf."},
+ {k:"R",w:"Reverse",m:"Flip the order, the roles, or the whole idea.",
+  q:["What if the steps of {t} happened in the opposite order?","What if the user and the maker of {t} swapped roles?","What is the opposite of how {t} works now?","What if {t} came to people, instead of people going to it?"],
+  eg:"Students plan the week's menu instead of the staff."}
+];
+const EXAMPLES=["Our college canteen","A water bottle","A local train ticket","A college fest","A study app","A neighbourhood library"];
+
+/* ---------- state, saved in this browser only ---------- */
+const KEY="id-scamper-v1";
+let st={topic:"",step:-1,ideas:{S:[],C:[],A:[],M:[],P:[],E:[],R:[]},qi:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.ideas)st={...st,...s}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const topicName=()=>st.topic.trim()||"your idea";
+const count=()=>L.filter(l=>st.ideas[l.k].length).length;
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),1800)}
+
+/* ---------- strip (diagram + navigation) ---------- */
+function drawStrip(){
+  $("#strip").innerHTML=L.map((l,i)=>`<button class="tile ${st.ideas[l.k].length?"has":""}" style="--c:var(--${l.k})" data-go="${i}" ${st.step===i?'aria-current="step"':""} aria-label="${l.k}: ${l.w}${st.ideas[l.k].length?", "+st.ideas[l.k].length+" ideas":""}"><b>${l.k}</b><span>${l.w.split(" ")[0]}</span><em class="n">${st.ideas[l.k].length}</em></button>`).join("");
+  const n=count();$("#bar").style.width=(n/7*100)+"%";
+  $("#plabel").textContent=`${n} of 7 letters answered`;
+}
+
+/* ---------- views ---------- */
+function show(){
+  $("#start").hidden=st.step!==-1;
+  $("#stepPanel").hidden=!(st.step>=0&&st.step<7);
+  $("#sumPanel").hidden=st.step!==7;
+  if(st.step>=0&&st.step<7)drawStep();
+  if(st.step===7)drawSum();
+  drawStrip();save();
+}
+function drawStep(){
+  const l=L[st.step],p=$("#stepPanel");
+  p.style.setProperty("--c",`var(--${l.k})`);
+  $("#sLetter").textContent=l.k;$("#sWord").textContent=l.w;$("#sMean").textContent=l.m;
+  const qi=(st.qi[l.k]||0)%l.q.length;
+  $("#sQ").innerHTML=esc(l.q[qi]).replace("{t}",`<span class="for">${esc(topicName())}</span>`);
+  $("#sEg").innerHTML=`<b>Example, for a school canteen:</b> ${esc(l.eg)}`;
+  drawIdeas();
+  $("#prev").textContent=st.step===0?"← Change topic":"← Back";
+  $("#next").textContent=st.step===6?"See all my ideas →":`Next: ${L[st.step+1].k} →`;
+}
+function drawIdeas(){
+  const l=L[st.step],list=st.ideas[l.k];
+  $("#ideas").innerHTML=list.map((x,i)=>`<li class="${x.s?"star":""}"><span>${esc(x.t)}</span>
+    <button class="ic ${x.s?"on":""}" data-star="${i}" aria-label="${x.s?"Unstar":"Star"} this idea" aria-pressed="${!!x.s}">${x.s?"★":"☆"}</button>
+    <button class="ic" data-del="${i}" aria-label="Remove this idea">✕</button></li>`).join("");
+  $("#noIdeas").hidden=list.length>0;
+}
+function drawSum(){
+  const total=L.reduce((a,l)=>a+st.ideas[l.k].length,0);
+  $("#sumTitle").textContent=`${total} ${total===1?"idea":"ideas"} for ${topicName()}`;
+  $("#sumBody").innerHTML=L.map(l=>{
+    const xs=[...st.ideas[l.k]].sort((a,b)=>(b.s?1:0)-(a.s?1:0));
+    return `<div class="grp" style="--c:var(--${l.k})"><h3><i>${l.k}</i>${l.w}</h3>${xs.length?`<ul>${xs.map(x=>`<li class="${x.s?"star":""}">${esc(x.t)}</li>`).join("")}</ul>`:`<p class="empty" style="margin:0">Skipped</p>`}</div>`}).join("");
+}
+function asText(){
+  let out=`SCAMPER: ${topicName()}\n`;
+  L.forEach(l=>{out+=`\n${l.k} · ${l.w}\n`;const xs=st.ideas[l.k];out+=xs.length?xs.map(x=>`${x.s?"★":"-"} ${x.t}`).join("\n")+"\n":"(skipped)\n"});
+  return out+"\nMade with the SCAMPER tool at inventndiscover.com/toolkit/scamper\nSCAMPER by Bob Eberle (1971), from Alex Osborn's questions in Applied Imagination (1953).\n";
+}
+
+/* ---------- 90-second sprint ---------- */
+let tmr=null,left=0;
+function stopSprint(){clearInterval(tmr);tmr=null;$("#timer").textContent="";$("#sprint").setAttribute("aria-pressed","false");$("#sprint").textContent="90-second sprint"}
+function startSprint(){
+  left=90;$("#sprint").setAttribute("aria-pressed","true");$("#sprint").textContent="Stop sprint";
+  const t=()=>{$("#timer").textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`};t();
+  tmr=setInterval(()=>{left--;t();if(left<=0){stopSprint();toast(`Time! ${st.ideas[L[st.step].k].length} ideas for ${L[st.step].k}`)}},1000);
+  $("#idea").focus();
+}
+
+/* ---------- events ---------- */
+$("#egs").innerHTML=EXAMPLES.map(e=>`<button class="chip" data-eg="${esc(e)}">${esc(e)}</button>`).join("");
+$("#topic").value=st.topic;
+$("#topic").addEventListener("input",e=>{st.topic=e.target.value;save()});
+$("#topic").addEventListener("keydown",e=>{if(e.key==="Enter")$("#begin").click()});
+$("#begin").onclick=()=>{if(!st.topic.trim()){$("#topic").focus();toast("Type what you're working on, or pick an example");return}st.step=0;show();$("#idea").focus()};
+$("#addForm").onsubmit=e=>{e.preventDefault();const v=$("#idea").value.trim();if(!v)return;st.ideas[L[st.step].k].push({t:v,s:false});$("#idea").value="";drawIdeas();drawStrip();save()};
+$("#nextQ").onclick=()=>{const k=L[st.step].k;st.qi[k]=(st.qi[k]||0)+1;drawStep();save()};
+$("#sprint").onclick=()=>tmr?stopSprint():startSprint();
+$("#prev").onclick=()=>{stopSprint();st.step--;show();window.scrollTo({top:$("#strip").offsetTop-90,behavior:"smooth"})};
+$("#next").onclick=()=>{stopSprint();st.step++;show();window.scrollTo({top:$("#strip").offsetTop-90,behavior:"smooth"})};
+$("#edit").onclick=()=>{st.step=6;show()};
+$("#copy").onclick=()=>{navigator.clipboard?.writeText(asText()).then(()=>toast("Copied. Paste it anywhere")).catch(()=>toast("Copy didn't work here. Try Download"))};
+$("#dl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([asText()],{type:"text/plain"}));a.download="scamper-"+topicName().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".txt";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+$("#print").onclick=()=>window.print();
+$("#reset").onclick=()=>{if(!confirm("Clear these ideas and start a new SCAMPER?"))return;st={topic:"",step:-1,ideas:{S:[],C:[],A:[],M:[],P:[],E:[],R:[]},qi:{}};$("#topic").value="";show();$("#topic").focus()};
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.eg){st.topic=b.dataset.eg;$("#topic").value=st.topic;save();return}
+  if(b.dataset.go!==undefined){if(!st.topic.trim()&&st.step===-1){$("#topic").focus();toast("First, what are you working on?");return}stopSprint();st.step=+b.dataset.go;show();return}
+  if(b.dataset.star!==undefined){const x=st.ideas[L[st.step].k][+b.dataset.star];x.s=!x.s;drawIdeas();save();return}
+  if(b.dataset.del!==undefined){st.ideas[L[st.step].k].splice(+b.dataset.del,1);drawIdeas();drawStrip();save();return}
+});
+show();
+</script>
+</body></html>

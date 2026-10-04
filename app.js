@@ -577,6 +577,27 @@ function viewLearn(){
   </div>`;
 }
 
+/* Tools: hand-made framework tools, each a standalone page under /toolkit/. */
+const TOOLS=[
+ {id:"scamper",name:"SCAMPER",line:"Seven questions that turn something you already know into new ideas.",url:"/toolkit/scamper/",
+  credit:"Bob Eberle (1971), from Alex Osborn's questions in Applied Imagination (1953)",time:"15–30 minutes",letters:["S","C","A","M","P","E","R"]}
+];
+function viewTools(){
+  const col=["#A58BFF","#7B8CFF","#3D9BFF","#2FD1C5","#46D69A","#FFB23F","#FF7B8A"];
+  return `
+  <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:30% 50%"><div class="wrap head-row">
+    <div><div class="kicker"><span class="pill">Tools</span></div><h1 class="mega">Tools</h1><p>Free tools for design thinking and idea generation. They work in your browser with nothing to sign up for, and every framework is credited to the people who created it.</p></div>
+  </div></div>
+  <div class="wrap" style="padding-top:28px">
+    ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
+      <div class="tool-letters" aria-hidden="true">${t.letters.map((l,i)=>`<b style="color:${col[i%col.length]}">${l}</b>`).join("")}</div>
+      <div><span class="tag new">New</span><h3>${esc(t.name)}</h3><p>${esc(t.line)}</p>
+      <p class="tool-meta"><span class="label">Credit</span> ${esc(t.credit)}<br><span class="label">Time</span> ${esc(t.time)}</p></div>
+      <span class="go">Open the tool →</span></a>`).join("")}
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>More frameworks are on the way,</b> each credited to the people who created it. Want one sooner? <a href="mailto:hello@inventndiscover.com">Tell us which</a>.</span></div>
+  </div>`;
+}
+
 function communitiesBlock(){
   return `<section class="block" id="communities"><div class="sec-head"><div><h2 class="sec-title">Communities</h2><p class="sec-sub">Groups behind the events above. Visit their pages to join; their next event shows up here when it's listed.</p></div><a class="btn ghost" href="#submit" data-go="submit" data-kind="community">+ List your community</a></div>
     <div class="grid">${COMMUNITIES.map(commCard).join("")}</div></section>`;
@@ -876,7 +897,7 @@ function closeSearch(){$("#searchOv")?.remove()}
 /* =========================================================
    6. ROUTER + INTERACTIONS
    ========================================================= */
-const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,learn:viewLearn,insights:viewInsights,submit:viewSubmit};
+const VIEWS={home:viewHome,discover:viewDiscover,invent:viewInvent,learn:viewLearn,tools:viewTools,insights:viewInsights,submit:viewSubmit};
 /* The curator desk is not linked anywhere. It opens only at this unlisted address. */
 const DESK="desk-hnljwj364a";
 VIEWS[DESK]=viewCurator;

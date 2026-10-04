@@ -67,6 +67,17 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .nav a:hover{color:var(--ink)}
 .nav a[aria-current="page"]{color:var(--ink);background:var(--glass2)}
 #communities{scroll-margin-top:190px}
+.tool-card{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;text-decoration:none;padding:28px;border:1px solid var(--hair);border-radius:var(--r);background:var(--glass);transition:border-color .2s,transform .2s}
+.tool-card:hover{border-color:var(--hair2);transform:translateY(-2px)}
+.tool-letters{display:grid;grid-template-columns:repeat(4,44px);gap:6px}
+.tool-letters b{display:grid;place-items:center;height:44px;border-radius:12px;border:1px solid var(--hair);background:rgba(255,255,255,.03);font-size:22px}
+.tool-card h3{font-size:28px;letter-spacing:-.02em;margin:8px 0 4px}
+.tool-card p{margin:0;color:var(--ink2)}
+.tool-card .tool-meta{margin-top:12px;font-size:13.5px;color:var(--ink3);line-height:1.8}
+.tool-card .go{color:var(--ink);font-weight:600;white-space:nowrap}
+@media (max-width:480px){.nav a{padding:7px 8px;font-size:13.5px}}
+@media (max-width:380px){.nav a{padding:7px 6px;font-size:13px}}
+@media (max-width:760px){.tool-card{grid-template-columns:1fr;gap:18px;padding:22px}.tool-letters{grid-template-columns:repeat(7,1fr)}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
 .icon-btn:hover{color:var(--ink);border-color:var(--hair2)}
@@ -588,6 +599,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
       <a href="#invent" data-go="invent"><span class="en">Invent</span></a>
       <a href="#discover" data-go="discover"><span class="en">Discover</span></a>
       <a href="#learn" data-go="learn"><span class="en">Learn</span></a>
+      <a href="#tools" data-go="tools"><span class="en">Tools</span></a>
       <a href="#insights" data-go="insights"><span class="en">Insights</span></a>
     </nav>
     <div class="actions">
@@ -617,6 +629,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
         <li><a href="#invent" data-go="invent">Invent: product demos</a></li>
         <li><a href="#discover" data-go="discover">Discover: events</a></li>
         <li><a href="#learn" data-go="learn">Learn: tutorials</a></li>
+        <li><a href="#tools" data-go="tools">Tools: SCAMPER</a></li>
         <li><a href="#insights" data-go="insights">Insights</a></li>
         <li><a href="#communities" data-go="communities">Communities</a></li>
       </ul></div>
