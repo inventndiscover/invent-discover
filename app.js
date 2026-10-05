@@ -355,7 +355,7 @@ function viewHome(){
   const free=upcoming.filter(e=>e.price===0);
   const students=upcoming.filter(e=>e.aud.includes("Student"));
   return `
-  <section class="hero"><canvas id="necklace" aria-hidden="true"></canvas><span class="photo-credit">Bandra–Worli Sea Link</span><div class="wrap">
+  <section class="hero"><canvas id="necklace" aria-hidden="true"></canvas>${photoCredit("sealink")}<div class="wrap">
     <div class="hero-grid">
       <div>
         <div class="kicker"><span class="pill">Mumbai · ${TOD_LABEL[PHASE]}</span></div>
@@ -414,11 +414,21 @@ function digestHTML(){
     <form data-digest><label for="digestEmail" style="position:absolute;left:-9999px">Email address</label><input id="digestEmail" type="email" required placeholder="you@college.edu"><button class="btn" type="submit">Subscribe</button></form></div>`;
 }
 
+/* Photo credits. All four photos are from Unsplash, graded into dawn/day/golden/night versions. */
+const PHOTO_CREDIT={
+ sealink:{place:"Bandra–Worli Sea Link",name:"Previn Samuel",url:"https://unsplash.com/@samuelprevin?utm_source=inventndiscover&utm_medium=referral"},
+ train:{place:"",name:"engin akyurt",url:"https://unsplash.com/@enginakyurt?utm_source=inventndiscover&utm_medium=referral"},
+ skyline:{place:"Mumbai skyline",name:"",url:"https://unsplash.com/?utm_source=inventndiscover&utm_medium=referral"},
+ marine:{place:"Marine Drive",name:"Satyajeet Mazumdar",url:"https://unsplash.com/@satyajeetm?utm_source=inventndiscover&utm_medium=referral"}
+};
+function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
+  return `<span class="photo-credit">${c.place?c.place+" · ":""}Photo${c.name?` by <a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`:""} on <a href="https://unsplash.com/?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></span>`}
+
 function viewDiscover(){
   const f=state.f, list=filterEvents();
   const opt=(v,cur,label)=>`<option value="${v}" ${v===cur?"selected":""}>${label??v}</option>`;
   return `
-  <div class="page-head has-img"><img class="ph-img" src="${img("train")}" alt=""><div class="wrap head-row">
+  <div class="page-head has-img"><img class="ph-img" src="${img("train")}" alt="">${photoCredit("train")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Discover</span></div><h1 class="mega">Discover</h1><p>Upcoming events around Mumbai, each checked on its source page. You register on the organiser's own page.</p><div style="margin-top:14px">${freshLine()}</div></div>
   </div></div>
   <div class="filters"><div class="wrap">
@@ -449,7 +459,7 @@ function viewInvent(){
   const cats=["all",...new Set(inv.map(d=>d.cat))];
   const list=inv.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat)&&(state.demoStatus==="all"||d.status===state.demoStatus));
   return `
-  <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:70% 55%"><div class="wrap head-row">
+  <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:70% 55%">${photoCredit("skyline")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Invent</span></div><h1 class="mega">Invent</h1><p>A gallery of things people in Mumbai are building: student projects, prototypes and early products. Every demo links to something you can try or watch.</p></div>
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
@@ -551,7 +561,7 @@ function trendsSection(){
 
 function viewInsights(){
   return `
-  <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 30%"><div class="wrap head-row">
+  <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 30%">${photoCredit("marine")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Insights</span></div><h1 class="mega">Insights</h1><p>Essays, visit notes and event recaps from the Invent &amp; Discover blog.</p></div>
   </div></div>
   ${trendsSection()}
@@ -569,7 +579,7 @@ function viewInsights(){
 function viewLearn(){
   const list=DEMOS.filter(d=>d.kind==="tutorial");
   return `
-  <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 70%"><div class="wrap head-row">
+  <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 70%">${photoCredit("marine")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Learn</span></div><h1 class="mega">Learn</h1><p>Short tutorials you can follow at your own pace, one step at a time. Each one plays here, and you can download it to watch offline.</p></div>
   </div></div>
   <div class="wrap" style="padding-top:28px">
@@ -595,7 +605,7 @@ const TOOLS=[
 ];
 function viewTools(){
   return `
-  <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:30% 50%"><div class="wrap head-row">
+  <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:30% 50%">${photoCredit("skyline")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Tools</span></div><h1 class="mega">Tools</h1><p>Free tools for design thinking, new ideas, career growth and 3D. They work in your browser with nothing to sign up for, and every framework is credited to the people who created it.</p></div>
   </div></div>
   <div class="wrap" style="padding-top:28px">

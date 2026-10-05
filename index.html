@@ -419,6 +419,8 @@ footer{margin-top:110px;border-top:1px solid var(--hair);padding-block:40px 52px
 .foot a{text-decoration:none}
 .foot a:hover{color:var(--ink)}
 .proto{margin-top:30px;padding-top:20px;border-top:1px solid var(--hair);font-size:13px;color:var(--ink3)}
+.proto.photo-thanks + .proto{margin-top:10px;padding-top:0;border-top:0}
+.photo-thanks a{color:var(--ink2)}
 .proto b{color:var(--ink2);font-weight:500}
 @media (max-width:760px){.foot{grid-template-columns:1fr 1fr}}
 
@@ -451,7 +453,11 @@ footer{margin-top:110px;border-top:1px solid var(--hair);padding-block:40px 52px
 .page-head.has-img::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,6,10,.9) 0%,rgba(5,6,10,.55) 50%,rgba(5,6,10,.2) 100%),linear-gradient(to bottom,rgba(5,6,10,.2) 60%,var(--bg))}
 .page-head.has-img::before{z-index:-1;opacity:.6}
 .hero{padding-block:120px 150px}
-.photo-credit{position:absolute;right:22px;bottom:18px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.photo-credit{position:absolute;right:22px;bottom:18px;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.photo-credit a{color:rgba(255,255,255,.75);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3)}
+.photo-credit a:hover{color:#fff;border-color:#fff}
+.page-head .photo-credit{bottom:12px}
+@media (max-width:600px){.photo-credit{right:14px;left:14px;text-align:right;bottom:10px;font-size:9px}}
 
 /* ---------- all-caps display titles ---------- */
 .mega,.door h3{text-transform:uppercase;font-weight:700;letter-spacing:-.035em;line-height:.9}
@@ -736,6 +742,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
         <li><a href="https://blog.inventndiscover.com/" target="_blank" rel="noopener">Blog ↗</a></li>
       </ul></div>
     </div>
+    <p class="proto photo-thanks">Photos by <a href="https://unsplash.com/@samuelprevin?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Previn Samuel</a>, <a href="https://unsplash.com/@enginakyurt?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">engin akyurt</a>, <a href="https://unsplash.com/@satyajeetm?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Satyajeet Mazumdar</a> and others on <a href="https://unsplash.com/?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a>, colour-graded for each time of day. <a href="/about/#photos">Photo credits</a></p>
     <p class="proto" id="protoNote"><b>How this page stays current.</b> Events and communities come from public listings on Luma, Meetup and AllEvents, checked against each event page before publishing, and refreshed daily. Registration always happens on the original page. Demos in Invent are examples until the first real submissions arrive.</p>
   </div>
 </footer>
