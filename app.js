@@ -593,10 +593,14 @@ function viewTools(){
   </div></div>
   <div class="wrap" style="padding-top:28px">
     ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
-      <div class="tool-letters" aria-hidden="true">${t.letters.map((l,i)=>`<b style="color:${col[i%col.length]}">${l}</b>`).join("")}</div>
+      <div class="tool-wheel" aria-hidden="true" style="--n:${t.letters.length}">
+        <i class="ring"></i>
+        ${t.letters.map((l,i)=>`<b style="--c:${col[i%col.length]};--a:${(360/t.letters.length*i-90).toFixed(2)}deg;--i:${i}">${l}</b>`).join("")}
+        <span class="hub"><strong>${t.letters.length}</strong>questions</span>
+      </div>
       <div><span class="tag new">New</span><h3>${esc(t.name)}</h3><p>${esc(t.line)}</p>
       <p class="tool-meta"><span class="label">Credit</span> ${esc(t.credit)}<br><span class="label">Time</span> ${esc(t.time)}</p></div>
-      <span class="go">Open the tool →</span></a>`).join("")}
+      <span class="tool-cta"><span class="btn-grad">Start ${esc(t.name)} <span class="arr">→</span></span><small>Free · no sign-up</small></span></a>`).join("")}
     <div class="banner"><span aria-hidden="true">✦</span><span><b>More frameworks are on the way,</b> each credited to the people who created it. Want one sooner? <a href="mailto:hello@inventndiscover.com">Tell us which</a>.</span></div>
   </div>`;
 }

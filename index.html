@@ -67,17 +67,40 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .nav a:hover{color:var(--ink)}
 .nav a[aria-current="page"]{color:var(--ink);background:var(--glass2)}
 #communities{scroll-margin-top:190px}
-.tool-card{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;text-decoration:none;padding:28px;border:1px solid var(--hair);border-radius:var(--r);background:var(--glass);transition:border-color .2s,transform .2s}
-.tool-card:hover{border-color:var(--hair2);transform:translateY(-2px)}
-.tool-letters{display:grid;grid-template-columns:repeat(4,44px);gap:6px}
-.tool-letters b{display:grid;place-items:center;height:44px;border-radius:12px;border:1px solid var(--hair);background:rgba(255,255,255,.03);font-size:22px}
-.tool-card h3{font-size:28px;letter-spacing:-.02em;margin:8px 0 4px}
+.tool-card{display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:center;text-decoration:none;padding:30px 34px;border:1px solid var(--hair);border-radius:var(--r);
+  background:radial-gradient(ellipse 40% 90% at 0% 50%,rgba(165,139,255,.12),transparent 70%),var(--glass);transition:border-color .25s,transform .25s,box-shadow .25s}
+.tool-card:hover{border-color:rgba(165,139,255,.45);transform:translateY(-3px);box-shadow:0 24px 60px -24px rgba(124,96,255,.45)}
+.tool-card h3{font-size:30px;letter-spacing:-.02em;margin:8px 0 4px}
 .tool-card p{margin:0;color:var(--ink2)}
 .tool-card .tool-meta{margin-top:12px;font-size:13.5px;color:var(--ink3);line-height:1.8}
-.tool-card .go{color:var(--ink);font-weight:600;white-space:nowrap}
-@media (max-width:480px){.nav a{padding:7px 8px;font-size:13.5px}}
-@media (max-width:380px){.nav a{padding:7px 6px;font-size:13px}}
-@media (max-width:760px){.tool-card{grid-template-columns:1fr;gap:18px;padding:22px}.tool-letters{grid-template-columns:repeat(7,1fr)}}
+/* SCAMPER wheel: seven letters on a colour ring, each lights up in turn */
+.tool-wheel{position:relative;width:200px;height:200px;flex:none}
+.tool-wheel .ring{position:absolute;inset:22px;border-radius:50%;
+  background:conic-gradient(from -90deg,#A58BFF,#7B8CFF,#3D9BFF,#2FD1C5,#46D69A,#FFB23F,#FF7B8A,#A58BFF);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));
+  opacity:.55;filter:drop-shadow(0 0 8px rgba(165,139,255,.6));animation:id-spin 24s linear infinite}
+.tool-wheel b{position:absolute;left:50%;top:50%;width:42px;height:42px;margin:-21px 0 0 -21px;display:grid;place-items:center;border-radius:13px;
+  font-size:20px;font-weight:700;color:var(--c);background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  transform:rotate(var(--a)) translate(78px) rotate(calc(-1 * var(--a)));
+  animation:id-lit 7s ease-in-out infinite;animation-delay:calc(var(--i) * 1s)}
+@keyframes id-lit{0%,16%,100%{box-shadow:none;background:color-mix(in srgb,var(--c) 14%,#0B0D14);color:var(--c)}
+  6%,10%{box-shadow:0 0 22px color-mix(in srgb,var(--c) 70%,transparent),0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent);background:var(--c);color:#0B0D14}}
+@keyframes id-spin{to{transform:rotate(360deg)}}
+.tool-wheel .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);line-height:1.2}
+.tool-wheel .hub strong{font-family:var(--sans);font-size:38px;letter-spacing:-.04em;color:var(--ink);font-weight:700;line-height:1;margin-bottom:2px;
+  background:linear-gradient(135deg,#A58BFF,#3D9BFF 40%,#46D69A 65%,#FFB23F 85%,#FF7B8A);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* the call to action: a bold gradient pill */
+.tool-cta{display:flex;flex-direction:column;align-items:center;gap:8px}
+.tool-cta small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.btn-grad{position:relative;display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:700;font-size:16px;white-space:nowrap;color:#0B0D14;
+  background:linear-gradient(100deg,#A58BFF,#3D9BFF 35%,#46D69A 65%,#FFB23F 90%);background-size:180% 100%;background-position:0% 50%;
+  box-shadow:0 10px 30px -8px rgba(124,96,255,.65),inset 0 1px 0 rgba(255,255,255,.35);transition:background-position .5s,box-shadow .25s,transform .25s}
+.btn-grad .arr{display:inline-block;transition:transform .25s}
+.tool-card:hover .btn-grad{background-position:100% 50%;box-shadow:0 14px 40px -8px rgba(70,214,154,.6),inset 0 1px 0 rgba(255,255,255,.35);transform:scale(1.03)}
+.tool-card:hover .btn-grad .arr{transform:translateX(4px)}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b{animation:none}}
+@media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
 .icon-btn:hover{color:var(--ink);border-color:var(--hair2)}
