@@ -500,6 +500,16 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
   color:rgba(var(--acc-rgb),.26);-webkit-text-stroke:0;background:none;filter:drop-shadow(0 0 40px rgba(var(--acc-rgb),.35));opacity:1}
 @media (max-width:600px){.hero-title > .amp-bg.amp-bg:first-child{font-size:3em;left:86%;top:24%}}
 
+/* hero title contrast: a soft dark fade behind the text side of the photo, plus a shadow
+   hugging the letters, so INVENT + DISCOVER stays readable in every time-of-day look */
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,6,10,.72) 0%,rgba(5,6,10,.55) 32%,rgba(5,6,10,.22) 58%,rgba(5,6,10,0) 78%)}
+#necklace{z-index:-2}
+.hero-title > span:not(.amp-bg){filter:drop-shadow(0 1px 1px rgba(0,0,0,.45)) drop-shadow(0 6px 24px rgba(0,0,0,.55))}
+.hero-title > span:nth-child(2){background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.88))!important;-webkit-background-clip:text!important;background-clip:text!important}
+.hero-copy{text-shadow:0 1px 12px rgba(0,0,0,.6)}
+@media (max-width:900px){.hero::before{background:linear-gradient(180deg,rgba(5,6,10,.55),rgba(5,6,10,.35) 60%,rgba(5,6,10,.15))}}
+
 /* logo: upper case with a "+" */
 .foot{grid-template-columns:minmax(0,1.4fr) repeat(4,minmax(0,1fr))}
 @media (max-width:760px){.foot{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.foot > div:first-child{grid-column:1/-1}}
