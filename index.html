@@ -510,6 +510,31 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
 .hero-copy{text-shadow:0 1px 12px rgba(0,0,0,.6)}
 @media (max-width:900px){.hero::before{background:linear-gradient(180deg,rgba(5,6,10,.55),rgba(5,6,10,.35) 60%,rgba(5,6,10,.15))}}
 
+/* hero title v2: stronger, focused shade behind the words + subtle motion */
+.hero::before{background:
+  radial-gradient(ellipse 46% 52% at 24% 42%,rgba(5,6,10,.62),rgba(5,6,10,0) 72%),
+  linear-gradient(90deg,rgba(5,6,10,.8) 0%,rgba(5,6,10,.62) 32%,rgba(5,6,10,.26) 60%,rgba(5,6,10,0) 80%)}
+@media (max-width:900px){.hero::before{background:
+  radial-gradient(ellipse 90% 40% at 30% 32%,rgba(5,6,10,.55),rgba(5,6,10,0) 75%),
+  linear-gradient(180deg,rgba(5,6,10,.66),rgba(5,6,10,.42) 60%,rgba(5,6,10,.18))}}
+/* crisp dark edge so letters hold against bright haze */
+.hero-title > span:not(.amp-bg){filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 8px 28px rgba(0,0,0,.6))}
+/* DISCOVER: colours slowly flow through the word, with a soft neon halo */
+.hero-title > span.d{background:linear-gradient(95deg,var(--acc-hi),var(--amber) 25%,var(--g3) 50%,var(--g4) 75%,var(--acc-hi))!important;
+  background-size:200% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(var(--acc-rgb),.38));
+  animation:id-flow 10s ease-in-out infinite alternate}
+@keyframes id-flow{from{background-position:0% 50%}to{background-position:100% 50%}}
+/* INVENT: a light sweep crosses the word every 8 seconds */
+.hero-title > span:nth-child(2){background:linear-gradient(100deg,#fff 0%,#fff 42%,var(--acc-hi) 50%,#fff 58%,#fff 100%)!important;
+  background-size:300% 100%!important;background-position:100% 50%;-webkit-background-clip:text!important;background-clip:text!important;
+  animation:id-sweep 8s ease-in-out infinite}
+@keyframes id-sweep{0%,62%{background-position:100% 50%}86%,100%{background-position:0% 50%}}
+/* the big "+" breathes */
+.hero-title > .amp-bg.amp-bg:first-child{animation:id-breathe 6s ease-in-out infinite}
+@keyframes id-breathe{0%,100%{opacity:.75;filter:drop-shadow(0 0 30px rgba(var(--acc-rgb),.25))}50%{opacity:1;filter:drop-shadow(0 0 60px rgba(var(--acc-rgb),.55))}}
+@media (prefers-reduced-motion:reduce){.hero-title > span,.hero-title > .amp-bg{animation:none!important}}
+
 /* logo: upper case with a "+" */
 .foot{grid-template-columns:minmax(0,1.4fr) repeat(4,minmax(0,1fr))}
 @media (max-width:760px){.foot{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.foot > div:first-child{grid-column:1/-1}}
