@@ -115,7 +115,17 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-grid .ax{position:absolute;font:500 9px var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .tool-grid .ay{left:-22px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
 .tool-grid .axx{bottom:-18px;left:50%;transform:translateX(-50%)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-grid i{animation:none}}
+/* GLB studio card: a glowing wireframe cube turning in 3D */
+.tool-cube{position:relative;width:200px;height:200px;flex:none;display:grid;place-items:center;perspective:600px}
+.tool-cube::before{content:"";position:absolute;inset:30px;border-radius:50%;background:radial-gradient(circle,rgba(47,209,197,.22),rgba(165,139,255,.12) 55%,transparent 70%)}
+.tool-cube .cube{position:relative;width:90px;height:90px;transform-style:preserve-3d;animation:id-cube 12s linear infinite}
+.tool-cube .cube span{position:absolute;inset:0;border:2px solid #2FD1C5;border-radius:6px;background:linear-gradient(135deg,rgba(47,209,197,.14),rgba(165,139,255,.14));box-shadow:0 0 16px rgba(47,209,197,.45),inset 0 0 18px rgba(165,139,255,.25)}
+.tool-cube .f{transform:translateZ(45px)}.tool-cube .b{transform:rotateY(180deg) translateZ(45px)}
+.tool-cube .l{transform:rotateY(-90deg) translateZ(45px);border-color:#A58BFF!important}.tool-cube .r{transform:rotateY(90deg) translateZ(45px);border-color:#A58BFF!important}
+.tool-cube .t{transform:rotateX(90deg) translateZ(45px);border-color:#3D9BFF!important}.tool-cube .d{transform:rotateX(-90deg) translateZ(45px);border-color:#3D9BFF!important}
+@keyframes id-cube{from{transform:rotateX(-22deg) rotateY(0)}to{transform:rotateX(-22deg) rotateY(360deg)}}
+.tool-cube em{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font:600 12px var(--mono);font-style:normal;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-grid i,.tool-cube .cube{animation:none}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
@@ -703,7 +713,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
         <li><a href="#invent" data-go="invent">Invent: product demos</a></li>
         <li><a href="#discover" data-go="discover">Discover: events</a></li>
         <li><a href="#learn" data-go="learn">Learn: tutorials</a></li>
-        <li><a href="#tools" data-go="tools">Tools: SCAMPER, PSHE, more</a></li>
+        <li><a href="#tools" data-go="tools">Tools: ideas, careers, 3D</a></li>
         <li><a href="#insights" data-go="insights">Insights</a></li>
         <li><a href="#communities" data-go="communities">Communities</a></li>
       </ul></div>

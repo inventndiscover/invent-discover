@@ -358,7 +358,7 @@ def home_static(upcoming, signals, weekend_n):
     xs = "".join(f'<li><a href="{esc(p["url"])}">{esc(p["name"])}</a>: {esc(p["summary"])}</li>' for p in (signals or [])[:6])
     return f"""<div class="seo-static wrap" style="padding:40px 22px">
 <h1>Invent + Discover: Mumbai tech events, product demos and ideas</h1>
-<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), step-by-step tutorials (Learn), free idea, career and project tools such as SCAMPER, PSHE and a stakeholder matrix (Tools), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
+<p>Invent + Discover lists AI, design, XR and startup events around Mumbai, checked every morning against each organiser's own page on Luma, Meetup and AllEvents. It also shows product demos (Invent), step-by-step tutorials (Learn), free tools such as SCAMPER, PSHE, a stakeholder matrix and a GLB to Three.js studio (Tools), the week's AI and tech news (Insights) and Mumbai tech communities.</p>
 <h2>Coming up in Mumbai</h2><ul>{ev}</ul>
 <p><a href="/events/">All {len(upcoming)} upcoming events</a> · {weekend_n} this weekend: <a href="/mumbai/tech-events-this-weekend/">see the weekend list</a></p>
 <h2>Browse by topic</h2><ul>{topics}<li><a href="/weekly/">Weekly roundups</a></li></ul>
@@ -380,6 +380,7 @@ def llms_txt(upcoming, today):
               f"- [SCAMPER idea tool]({SITE}/toolkit/scamper/): free browser tool that walks through the seven SCAMPER questions (Bob Eberle, 1971, from Alex Osborn's checklist)",
               f"- [PSHE career ladder tool]({SITE}/toolkit/pshe/): free browser self-check and project worksheet for the Problem, Solution, How, Execution framework (Shishir Mehrotra, Google/YouTube)",
               f"- [Stakeholder power/interest matrix]({SITE}/toolkit/stakeholder-map/): free browser tool to map stakeholders by power and interest (Mendelow 1981; popularised by Johnson and Scholes)",
+              f"- [GLB to Three.js Studio]({SITE}/toolkit/glb-studio/): free in-browser 3D model viewer and converter (.glb, .gltf, .fbx, .obj, .stl to Three.js code, standalone HTML or .glb); files are never uploaded; built on three.js",
               f"- [About]({SITE}/about/): who collates Invent + Discover and how events are chosen and checked",
               "- [Blog](https://blog.inventndiscover.com/): longer writing on design, XR and technology"]
     return "\n".join(lines) + "\n"

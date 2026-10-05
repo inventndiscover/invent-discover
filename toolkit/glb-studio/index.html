@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en-IN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GLB to Three.js Studio · Invent + Discover</title>
+<meta name="description" content="Free GLB to Three.js studio: open a .glb, .gltf, .fbx, .obj or .stl model, preview it in 3D, check what makes it heavy, and get Three.js code, a standalone web page or a clean .glb. Runs in your browser, nothing is uploaded.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/glb-studio/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="GLB to Three.js Studio · Invent + Discover">
+<meta property="og:description" content="Preview 3D models and turn them into Three.js code, a web page or a .glb. Free, in your browser, nothing uploaded.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/glb-studio/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"GLB to Three.js Studio","url":"https://inventndiscover.com/toolkit/glb-studio/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (web browser with WebGL)","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"Invent + Discover","url":"https://inventndiscover.com/"},"description":"Preview .glb, .gltf, .fbx, .obj and .stl models and export Three.js code, a standalone HTML page or a .glb. Built on three.js."}</script>
+<style>
+:root{
+  --bg:#05060A;--card:#0E1118;--card2:#131722;--ink:#F4F5F7;--ink2:rgba(244,245,247,.7);--ink3:rgba(244,245,247,.45);
+  --hair:rgba(255,255,255,.12);--hair2:rgba(255,255,255,.2);--acc:#A58BFF;--onacc:#0D0820;
+  --ok:#46D69A;--warn:#FFB23F;--bad:#FF7B8A;--sea:#3D9BFF;--teal:#2FD1C5;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Geist",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:70vw;height:70vw;max-width:900px;max-height:900px;background:radial-gradient(circle,rgba(47,209,197,.13),rgba(110,80,220,.12) 40%,transparent 68%);pointer-events:none;z-index:-1}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.top{border-bottom:1px solid var(--hair);padding:16px 0;position:sticky;top:0;background:rgba(5,6,10,.7);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:10}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{text-decoration:none;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.plus{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--acc);color:var(--onacc);margin:0 6px;font-size:15px;box-shadow:0 0 16px rgba(165,139,255,.6)}
+.back{font-size:14px;color:var(--ink2);text-decoration:none}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:44px 0 10px}
+h1{display:inline-block;font-size:clamp(40px,7.5vw,80px);line-height:.98;letter-spacing:-.045em;margin:0 0 16px;background:linear-gradient(90deg,var(--teal),var(--sea) 40%,var(--acc) 75%,#FF7B8A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--ink2);font-size:19px;max-width:62ch;margin:0}
+.credit{color:var(--ink3);font-size:14px;margin:14px 0 0}
+.credit a{color:var(--ink2)}
+
+.notice{display:grid;grid-template-columns:auto 1fr;gap:14px;margin:28px 0 0;padding:16px 18px;border-radius:18px;border:1px solid rgba(70,214,154,.4);background:rgba(70,214,154,.07)}
+.notice .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(70,214,154,.18);color:var(--ok);font-size:18px}
+.notice b{color:var(--ink)}
+.notice p{margin:0;color:var(--ink2);font-size:15px}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.sizes span{font:500 12px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--hair)}
+.sizes .s1{color:var(--ok);border-color:rgba(70,214,154,.45)}.sizes .s2{color:var(--warn);border-color:rgba(255,178,63,.45)}.sizes .s3{color:var(--bad);border-color:rgba(255,123,138,.45)}
+
+.drop{display:block;cursor:pointer;position:relative;margin:22px 0 0;border:2px dashed var(--hair2);border-radius:22px;padding:38px 20px;text-align:center;background:var(--card);transition:border-color .2s,background .2s}
+.drop.over{border-color:var(--teal);background:rgba(47,209,197,.08)}
+.drop h2{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}
+.drop p{margin:0;color:var(--ink2)}
+.drop .fmts{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:14px 0 18px}
+.drop .fmts span{font:600 12px var(--mono);padding:4px 10px;border-radius:8px;background:var(--card2);border:1px solid var(--hair);color:var(--ink)}
+.drop .tipline{font-size:13px;color:var(--ink3);margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--acc);background:var(--acc);color:var(--onacc);border-radius:999px;padding:12px 20px;font-weight:600;white-space:nowrap;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--hair2)}
+.btn.sm{padding:8px 14px;font-size:14px}
+.msg{margin:14px 0 0;padding:12px 16px;border-radius:14px;font-size:15px}
+.msg.warn{border:1px solid rgba(255,178,63,.5);background:rgba(255,178,63,.08);color:#FFD58A}
+.msg.bad{border:1px solid rgba(255,123,138,.5);background:rgba(255,123,138,.08);color:#FFC2CA}
+.msg.ok{border:1px solid rgba(70,214,154,.45);background:rgba(70,214,154,.07);color:#B7F0D6}
+
+.studio{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin:22px 0 0;align-items:start}
+.viewer{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;border:1px solid var(--hair);background:radial-gradient(circle at 50% 40%,#161a26,#07080c)}
+.viewer canvas{display:block;width:100%;height:100%;touch-action:none}
+.vbar{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
+.vbar button,.vbar select{border:1px solid var(--hair2);background:rgba(5,6,10,.75);backdrop-filter:blur(8px);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink)}
+.vbar button[aria-pressed="true"]{background:var(--ink);color:#0B0D14}
+.vname{position:absolute;left:14px;top:12px;font:600 13px var(--mono);background:rgba(5,6,10,.7);padding:4px 10px;border-radius:999px;border:1px solid var(--hair)}
+.loading{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,6,10,.6);font:500 14px var(--mono);color:var(--ink2)}
+.panel{border:1px solid var(--hair);background:var(--card);border-radius:22px;padding:clamp(18px,3vw,26px)}
+.lab{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;display:block}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+.stats div{background:var(--card2);padding:10px 12px}
+.stats span{display:block;font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.stats b{font-size:17px;font-weight:600}
+.weight{margin:14px 0 0}
+.wbar{height:10px;border-radius:5px;background:var(--hair);overflow:hidden}
+.wbar i{display:block;height:100%;border-radius:5px;transition:width .4s}
+.wlabel{display:flex;justify-content:space-between;font:500 12px var(--mono);margin-top:6px;color:var(--ink2)}
+.advice{margin:12px 0 0;padding:0 0 0 18px;color:var(--ink2);font-size:14px}
+.advice li{margin:4px 0}
+
+.out{margin:22px 0 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.tabs button{border:1px solid var(--hair);background:var(--card2);border-radius:999px;padding:9px 16px;font-weight:600;font-size:14px;color:var(--ink2)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:#0B0D14;border-color:var(--ink)}
+.pane p{color:var(--ink2);margin:0 0 12px;max-width:75ch}
+pre{margin:0;max-height:420px;overflow:auto;background:#07090E;border:1px solid var(--hair);border-radius:14px;padding:16px;font:13px/1.55 var(--mono);color:#D9E1F2;white-space:pre}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0;align-items:center}
+.small{font-size:13px;color:var(--ink3)}
+.about h2{font-size:22px;letter-spacing:-.02em;margin:0 0 10px}
+.about p,.about li{color:var(--ink2);max-width:75ch}
+.about p{margin:0 0 12px}
+.sitefoot{border-top:1px solid var(--hair);margin-top:40px;padding:28px 0 60px;color:var(--ink3);font-size:14px}
+.sitefoot a{color:var(--ink2);margin-right:14px;display:inline-block;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:#1A1E2A;border:1px solid var(--hair2);padding:10px 16px;border-radius:999px;font-size:14px;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%)}
+[hidden]{display:none!important}
+@media (max-width:860px){.studio{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/jsm/"}}</script>
+</head><body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Invent and Discover, home">INVENT<span class="plus">+</span>DISCOVER</a>
+  <a class="back" href="/#tools">← All tools</a>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Tools · 3D &amp; XR</p>
+    <h1>GLB → Three.js Studio</h1>
+    <p class="sub">Open a 3D model, spin it around, see what makes it heavy, and take it to the web: ready-to-paste Three.js code, a single web page you can share, or a clean .glb.</p>
+    <p class="credit">Built on <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a>, the open-source 3D library by Ricardo Cabello (mrdoob) and contributors. <a href="#where">Credits</a></p>
+  </section>
+
+  <div class="notice" role="note">
+    <span class="ic" aria-hidden="true">🔒</span>
+    <div>
+      <p><b>Your model never leaves your device.</b> The studio runs entirely in your browser: nothing is uploaded to Invent + Discover or anywhere else, and nothing is stored online. Only use models you made or have the right to use.</p>
+      <div class="sizes" aria-label="Size guide"><span class="s1">Up to 25 MB · smooth on most devices</span><span class="s2">25–50 MB · may be slow on phones</span><span class="s3">Over 50 MB · not accepted</span></div>
+    </div>
+  </div>
+
+  <label class="drop" id="drop" for="file">
+    <h2>Drop your 3D model here</h2>
+    <p>or choose a file from your device</p>
+    <div class="fmts"><span>.glb</span><span>.gltf</span><span>.fbx</span><span>.obj</span><span>.stl</span></div>
+    <span class="btn">Choose model</span>
+    <input type="file" id="file" multiple accept=".glb,.gltf,.fbx,.obj,.stl,.mtl,.bin,.png,.jpg,.jpeg,.webp,.ktx2,.tga" hidden>
+    <p class="tipline">Model with separate files (.gltf + .bin + textures, or .obj + .mtl)? Select them all together.</p>
+  </label>
+  <div id="msg"></div>
+
+  <section class="studio" id="studio" hidden>
+    <div>
+      <div class="viewer" id="viewer">
+        <span class="vname" id="vname"></span>
+        <div class="vbar">
+          <button id="bRotate" aria-pressed="true">Auto-rotate</button>
+          <button id="bWire" aria-pressed="false">Wireframe</button>
+          <button id="bGrid" aria-pressed="true">Floor grid</button>
+          <button id="bReset">Reset view</button>
+          <select id="clip" aria-label="Animation" hidden></select>
+        </div>
+        <div class="loading" id="loading" hidden>Opening model…</div>
+      </div>
+      <p class="small" style="margin:8px 4px 0">Drag to orbit · scroll or pinch to zoom · right-drag to pan</p>
+    </div>
+    <div class="panel">
+      <span class="lab">What's inside</span>
+      <div class="stats" id="stats"></div>
+      <div class="weight">
+        <span class="lab" style="margin-top:14px">How heavy is it for the web?</span>
+        <div class="wbar"><i id="wfill"></i></div>
+        <div class="wlabel"><span id="wtext"></span><span id="wscore"></span></div>
+      </div>
+      <ul class="advice" id="advice"></ul>
+    </div>
+  </section>
+
+  <section class="panel out" id="outs" hidden>
+    <span class="lab">Take it to the web</span>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-t="code" aria-selected="true">Three.js code</button>
+      <button role="tab" data-t="html" aria-selected="false">Single web page</button>
+      <button role="tab" data-t="glb" aria-selected="false">.glb file</button>
+      <button role="tab" data-t="r3f" aria-selected="false">React Three Fiber</button>
+    </div>
+    <div class="pane" data-p="code">
+      <p>A complete page that loads your model with lights, orbit controls and animation. Save it as <b>index.html</b> and put <b id="cName">model.glb</b> in the same folder. Run it from a local server or any web host (opening the file directly won't load the model).</p>
+      <pre id="code"></pre>
+      <div class="row"><button class="btn" id="copyCode">Copy code</button><button class="btn sec" id="dlCode">Download index.html</button><span class="small" id="needGlb"></span></div>
+    </div>
+    <div class="pane" data-p="html" hidden>
+      <p>One .html file with your model packed inside. Double-click it to open in any browser, send it to a friend, or upload it anywhere. It loads three.js from a public CDN, so it needs an internet connection.</p>
+      <div class="row"><button class="btn" id="dlHtml">Download the web page</button><span class="small" id="htmlNote"></span></div>
+    </div>
+    <div class="pane" data-p="glb" hidden>
+      <p>One self-contained .glb, the format the web, Meta Quest and most AR tools prefer. Useful for turning .fbx, .obj, .stl or multi-file .gltf models into a single file.</p>
+      <div class="row"><button class="btn" id="dlGlb">Download .glb</button><span class="small" id="glbNote"></span></div>
+    </div>
+    <div class="pane" data-p="r3f" hidden>
+      <p>For React projects using <b>@react-three/fiber</b> and <b>@react-three/drei</b>. Put the .glb in your <b>public</b> folder.</p>
+      <pre id="r3f"></pre>
+      <div class="row"><button class="btn" id="copyR3f">Copy code</button></div>
+    </div>
+  </section>
+
+  <section class="panel about" id="where" style="margin-top:22px">
+    <h2>Credits and good to know</h2>
+    <p>This studio is built on <b>three.js</b> (MIT licence), created by <b>Ricardo Cabello (mrdoob)</b> and maintained by its open-source contributors, including the loaders for glTF, FBX, OBJ and STL and the glTF exporter. Compressed models are opened with Google's <b>Draco</b> decoder and the <b>meshoptimizer</b> decoder by Arseny Kapoulkine. The glTF format itself is a standard from the <b>Khronos Group</b>.</p>
+    <ul>
+      <li><b>Working files</b> from Blender (.blend), 3ds Max, Cinema 4D or Maya can't be opened here: export them as .glb or .fbx first.</li>
+      <li><b>Converting</b> keeps shapes, materials, textures and most animations, but some effects specific to one app may not carry over.</li>
+      <li>The studio needs a browser with <b>WebGL</b>, which almost every modern phone and laptop has.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap sitefoot">
+  <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+  <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
+import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
+import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
+import {STLLoader} from 'three/addons/loaders/STLLoader.js';
+import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+
+const MB=1024*1024, SOFT=25*MB, HARD=50*MB;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtMB=b=>b>=MB?(b/MB).toFixed(b>=10*MB?0:1)+" MB":Math.max(1,Math.round(b/1024))+" KB";
+const fmtN=n=>n.toLocaleString("en-IN");
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2000)}
+function msg(kind,html){$("#msg").innerHTML=html?`<div class="msg ${kind}">${html}</div>`:""}
+
+/* ---------- viewer ---------- */
+const viewer=$("#viewer");
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
+viewer.prepend(renderer.domElement);
+const scene=new THREE.Scene();
+const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(renderer),0.04).texture;
+const camera=new THREE.PerspectiveCamera(45,4/3,0.01,1000);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.autoRotate=true;controls.autoRotateSpeed=1.2;
+const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(3,5,4);scene.add(key);scene.add(new THREE.HemisphereLight(0xbfd4ff,0x202030,0.6));
+let grid=null,model=null,mixer=null,clips=[],home=null,current=null;
+const clock=new THREE.Clock();
+function resize(){const r=viewer.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(viewer);
+renderer.setAnimationLoop(()=>{const dt=clock.getDelta();if(mixer)mixer.update(dt);controls.update();renderer.render(scene,camera)});
+
+function frame(obj){
+  const box=new THREE.Box3().setFromObject(obj),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+  const r=Math.max(size.x,size.y,size.z)||1;
+  obj.position.sub(center);obj.position.y+=size.y/2; // sit on the floor
+  if(grid)scene.remove(grid);
+  grid=new THREE.GridHelper(r*3,20,0x6a5acd,0x2a2f3d);grid.material.transparent=true;grid.material.opacity=.55;grid.visible=$("#bGrid").getAttribute("aria-pressed")==="true";scene.add(grid);
+  const rad=size.length()/2||1,dist=rad/Math.sin(THREE.MathUtils.degToRad(camera.fov/2))*1.45;
+  camera.near=dist/100;camera.far=dist*100;camera.updateProjectionMatrix();
+  camera.position.copy(new THREE.Vector3(0.62,0.42,0.66).normalize().multiplyScalar(dist)).add(new THREE.Vector3(0,size.y/2,0));controls.target.set(0,size.y/2,0);controls.update();
+  home={p:camera.position.clone(),t:controls.target.clone()};
+  return size;
+}
+
+/* ---------- loading ---------- */
+const PRIORITY=["glb","gltf","fbx","obj","stl"];
+const ext=n=>(n.split(".").pop()||"").toLowerCase();
+const base=n=>n.split(/[\\/]/).pop();
+function pickMain(files){for(const e of PRIORITY){const f=files.find(x=>ext(x.name)===e);if(f)return f}return null}
+
+async function open(fileList){
+  const files=[...fileList];if(!files.length)return;
+  const main=pickMain(files);
+  if(!main){
+    const bad=files.find(f=>/\.(blend|max|c4d|ma|mb|3ds|skp|usdz|usd|dae|ply|vrm)$/i.test(f.name));
+    msg("bad",bad?`<b>${esc(bad.name)}</b> isn't supported here. Export it from your 3D app as <b>.glb</b> (best) or <b>.fbx</b>, then open that.`:"Choose a <b>.glb, .gltf, .fbx, .obj</b> or <b>.stl</b> file.");return;
+  }
+  const total=files.reduce((a,f)=>a+f.size,0);
+  if(total>HARD){msg("bad",`This model is <b>${fmtMB(total)}</b>, over the 50 MB limit. Try compressing it first (for example with gltf-transform or gltf.report), or reduce texture sizes in your 3D app.`);return}
+  if(total>SOFT)msg("warn",`This model is <b>${fmtMB(total)}</b>. It will work on most laptops but may be slow on phones.`);else msg("","");
+  $("#studio").hidden=false;$("#loading").hidden=false;$("#outs").hidden=true;
+  // map every chosen file by name so .gltf/.obj/.fbx can find their textures and .bin
+  const urls=new Map(files.map(f=>[base(f.name),URL.createObjectURL(f)]));
+  const manager=new THREE.LoadingManager();
+  manager.setURLModifier(u=>{const k=decodeURIComponent(base(u.split("?")[0]));return urls.get(k)||u});
+  try{
+    const e=ext(main.name),buf=await main.arrayBuffer();let root,anims=[];
+    if(e==="glb"||e==="gltf"){
+      const l=new GLTFLoader(manager);const d=new DRACOLoader();d.setDecoderPath("./vendor/jsm/libs/draco/gltf/");d.setDecoderConfig({type:"wasm"});l.setDRACOLoader(d);l.setMeshoptDecoder(MeshoptDecoder);
+      const g=await l.parseAsync(e==="glb"?buf:new TextDecoder().decode(buf),"");root=g.scene;anims=g.animations||[];
+    }else if(e==="fbx"){
+      root=new FBXLoader(manager).parse(buf,"");anims=root.animations||[];
+    }else if(e==="obj"){
+      const ol=new OBJLoader(manager),mtl=files.find(f=>ext(f.name)==="mtl");
+      if(mtl){const m=new MTLLoader(manager).parse(await mtl.text(),"");m.preload();ol.setMaterials(m)}
+      root=ol.parse(await main.text());
+    }else{
+      const geo=new STLLoader().parse(buf);geo.computeVertexNormals();
+      const mat=new THREE.MeshStandardMaterial({color:geo.hasColors?0xffffff:0xb9c2d9,metalness:.1,roughness:.55,vertexColors:!!geo.hasColors});
+      root=new THREE.Group();root.add(new THREE.Mesh(geo,mat));root.name=main.name.replace(/\.stl$/i,"");
+    }
+    show(root,anims,{name:main.name,ext:e,bytes:total,buf,files});
+  }catch(err){
+    console.error(err);$("#loading").hidden=true;$("#studio").hidden=!model;
+    msg("bad",`Couldn't open <b>${esc(main.name)}</b>. ${e2help(ext(main.name))}<br><span style="opacity:.7;font-size:13px">${esc(err&&err.message||err)}</span>`);
+  }
+}
+const e2help=e=>({gltf:"If it uses a separate .bin file or textures, select them together with the .gltf.",obj:"If it has a .mtl file and textures, select them together with the .obj.",fbx:"Very old FBX files (before 2011) aren't supported; re-export as FBX 2013 or newer, or as .glb.",glb:"The file may be damaged or use a compression this studio doesn't read (KTX2 textures)."}[e]||"The file may be damaged.");
+
+function show(root,anims,info){
+  if(model){scene.remove(model);model.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
+  model=root;scene.add(model);
+  mixer=null;clips=anims;const sel=$("#clip");
+  if(anims.length){mixer=new THREE.AnimationMixer(model);mixer.clipAction(anims[0]).play();
+    sel.innerHTML=anims.map((a,i)=>`<option value="${i}">▶ ${esc(a.name||"Animation "+(i+1))}</option>`).join("");sel.hidden=false}else sel.hidden=true;
+  const size=frame(model);applyWire();
+  current=info;$("#vname").textContent=info.name;$("#loading").hidden=true;
+  stats(size,info);outputs();$("#outs").hidden=false;
+  $("#studio").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ---------- stats + weight ---------- */
+function stats(size,info){
+  let meshes=0,tris=0,verts=0;const mats=new Set(),tex=new Map();
+  model.traverse(o=>{if(!o.isMesh)return;meshes++;const g=o.geometry,p=g.attributes.position;if(!p)return;verts+=p.count;tris+=g.index?g.index.count/3:p.count/3;
+    (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(!m)return;mats.add(m);for(const k in m){const v=m[k];if(v&&v.isTexture&&!tex.has(v.uuid)){const im=v.image||{};tex.set(v.uuid,Math.max(im.width||0,im.height||0))}}})});
+  const maxTex=Math.max(0,...tex.values());
+  let comp="—";
+  if(info.ext==="glb"){try{const dv=new DataView(info.buf),len=dv.getUint32(12,true),js=JSON.parse(new TextDecoder().decode(new Uint8Array(info.buf,20,len)));const u=js.extensionsUsed||[];
+    comp=[u.includes("KHR_draco_mesh_compression")&&"Draco",(u.includes("EXT_meshopt_compression")||u.includes("KHR_meshopt_compression"))&&"meshopt",u.includes("KHR_texture_basisu")&&"KTX2"].filter(Boolean).join(" + ")||"None"}catch(e){}}
+  const units=v=>v>=100?v.toFixed(0):v>=1?v.toFixed(2):v.toFixed(3);
+  current.tris=Math.round(tris);current.anims=clips.length;
+  $("#stats").innerHTML=[["File size",fmtMB(info.bytes)],["Format","."+info.ext],["Meshes",fmtN(meshes)],["Triangles",fmtN(Math.round(tris))],["Vertices",fmtN(verts)],["Materials",fmtN(mats.size)],["Textures",tex.size?`${tex.size} · max ${maxTex}px`:"None"],["Animations",clips.length||"None"],["Size (units)",`${units(size.x)} × ${units(size.y)} × ${units(size.z)}`],["Compression",comp]]
+    .map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join("");
+  // weight score: file size, triangles, biggest texture
+  const s=Math.min(100,Math.round(Math.max(info.bytes/(25*MB)*100,tris/1e6*100,maxTex/8192*100)));
+  const col=s<40?"var(--ok)":s<75?"var(--warn)":"var(--bad)";
+  $("#wfill").style.width=Math.max(4,s)+"%";$("#wfill").style.background=col;
+  $("#wtext").textContent=s<40?"Light: great for phones and the web":s<75?"Medium: fine on laptops, test on phones":"Heavy: may be slow on phones";$("#wtext").style.color=col;
+  $("#wscore").textContent=s+"/100";
+  const tips=[];
+  if(tris>1e6)tips.push(`<b>${fmtN(Math.round(tris))} triangles</b> is a lot for the web. Use a "Decimate" modifier in Blender to cut it to under 300,000.`);
+  else if(tris>3e5)tips.push("Triangle count is fine for laptops. For phones and VR, aim for under 300,000.");
+  if(maxTex>2048)tips.push(`Textures up to <b>${maxTex}px</b>. Resizing to 2048px or 1024px often halves the file with little visible difference.`);
+  if(info.bytes>10*MB)tips.push("Large file: compressing with Draco or meshopt (try gltf.report or gltf-transform) can shrink it a lot.");
+  if(info.ext==="stl")tips.push("STL files have no colours or textures, so the model is shown in a neutral grey.");
+  if(info.ext==="fbx"||info.ext==="obj"||info.ext==="stl")tips.push("For the web, convert it to .glb using the <b>.glb file</b> tab below.");
+  if(!tips.length)tips.push("Looks web-ready. Nice!");
+  $("#advice").innerHTML=tips.map(t=>`<li>${t}</li>`).join("");
+}
+
+/* ---------- viewer buttons ---------- */
+function applyWire(){const on=$("#bWire").getAttribute("aria-pressed")==="true";model&&model.traverse(o=>{if(o.isMesh)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m)m.wireframe=on})})}
+const toggle=b=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);return on};
+$("#bRotate").onclick=e=>{controls.autoRotate=toggle(e.currentTarget)};
+$("#bWire").onclick=e=>{toggle(e.currentTarget);applyWire()};
+$("#bGrid").onclick=e=>{const on=toggle(e.currentTarget);if(grid)grid.visible=on};
+$("#bReset").onclick=()=>{if(home){camera.position.copy(home.p);controls.target.copy(home.t);controls.update()}};
+$("#clip").onchange=e=>{if(!mixer)return;mixer.stopAllAction();mixer.clipAction(clips[+e.target.value]).play()};
+
+/* ---------- outputs ---------- */
+const CDN="https://cdn.jsdelivr.net/npm/three@0.160.0";
+const slug=n=>n.replace(/\.[^.]+$/,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"model";
+function pageCode(src,title,hasAnim){
+  return [
+'<!doctype html>',
+'<html lang="en">',
+'<head>',
+'  <meta charset="utf-8">',
+'  <meta name="viewport" content="width=device-width,initial-scale=1">',
+'  <title>'+esc(title)+'</title>',
+'  <style>html,body{margin:0;height:100%;background:#0b0d14}canvas{display:block}</style>',
+'  <script type="importmap">{"imports":{"three":"'+CDN+'/build/three.module.js","three/addons/":"'+CDN+'/examples/jsm/"}}<\/script>',
+'</head>',
+'<body>',
+'<script type="module">',
+"import * as THREE from 'three';",
+"import { OrbitControls } from 'three/addons/controls/OrbitControls.js';",
+"import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';",
+"import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';",
+"import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';",
+'',
+'// Renderer, scene and camera',
+'const renderer = new THREE.WebGLRenderer({ antialias: true });',
+'renderer.setPixelRatio(Math.min(2, devicePixelRatio));',
+'renderer.setSize(innerWidth, innerHeight);',
+'renderer.toneMapping = THREE.ACESFilmicToneMapping;',
+'document.body.appendChild(renderer.domElement);',
+'const scene = new THREE.Scene();',
+'scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(renderer), 0.04).texture;',
+'const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.01, 1000);',
+'const controls = new OrbitControls(camera, renderer.domElement);',
+'controls.enableDamping = true;',
+'',
+'// Load the model (Draco-compressed files work too)',
+'const loader = new GLTFLoader();',
+'const draco = new DRACOLoader();',
+"draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');",
+'loader.setDRACOLoader(draco);',
+'let mixer;',
+'loader.load('+src+', (gltf) => {',
+'  const model = gltf.scene;',
+'  scene.add(model);',
+'  // Centre the model and point the camera at it',
+'  const box = new THREE.Box3().setFromObject(model);',
+'  const size = box.getSize(new THREE.Vector3()).length();',
+'  model.position.sub(box.getCenter(new THREE.Vector3()));',
+'  camera.position.set(size * 0.9, size * 0.6, size * 1.2);',
+'  camera.near = size / 100; camera.far = size * 100; camera.updateProjectionMatrix();',
+'  controls.update();',
+...(hasAnim?[
+'  // Play the first animation',
+'  if (gltf.animations.length) {',
+'    mixer = new THREE.AnimationMixer(model);',
+'    mixer.clipAction(gltf.animations[0]).play();',
+'  }']:[]),
+'});',
+'',
+'// Render loop',
+'const clock = new THREE.Clock();',
+'renderer.setAnimationLoop(() => {',
+'  if (mixer) mixer.update(clock.getDelta());',
+'  controls.update();',
+'  renderer.render(scene, camera);',
+'});',
+"addEventListener('resize', () => {",
+'  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();',
+'  renderer.setSize(innerWidth, innerHeight);',
+'});',
+'<\/script>',
+'</body>',
+'</html>'].join("\n");
+}
+function r3fCode(file,hasAnim){
+  const name=slug(file).replace(/(^|-)(\w)/g,(m,a,b)=>b.toUpperCase()).replace(/^\d/,"M$&")||"Model";
+  return [
+"import { Canvas } from '@react-three/fiber';",
+"import { OrbitControls, Environment, useGLTF"+(hasAnim?", useAnimations":"")+" } from '@react-three/drei';",
+...(hasAnim?["import { useEffect, useRef } from 'react';"]:[]),
+'',
+'function '+name+'(props) {',
+"  const { scene"+(hasAnim?", animations":"")+" } = useGLTF('/"+file+"');",
+...(hasAnim?[
+'  const ref = useRef();',
+'  const { actions, names } = useAnimations(animations, ref);',
+'  useEffect(() => { actions[names[0]]?.play(); }, [actions, names]);',
+'  return <primitive ref={ref} object={scene} {...props} />;']:[
+'  return <primitive object={scene} {...props} />;']),
+'}',
+'',
+'export default function App() {',
+'  return (',
+"    <Canvas camera={{ position: [2, 1.5, 3], fov: 45 }} style={{ height: '100vh' }}>",
+'      <'+name+' />',
+'      <Environment preset="city" />',
+'      <OrbitControls makeDefault />',
+'    </Canvas>',
+'  );',
+'}',
+'',
+"useGLTF.preload('/"+file+"');"].join("\n");
+}
+function outputs(){
+  const isGlb=current.ext==="glb",file=isGlb?base(current.name):slug(current.name)+".glb",hasAnim=clips.length>0;
+  $("#cName").textContent=file;
+  $("#code").textContent=pageCode("'./"+file+"'",current.name.replace(/\.[^.]+$/,""),hasAnim);
+  $("#r3f").textContent=r3fCode(file,hasAnim);
+  $("#needGlb").innerHTML=isGlb?"":"Convert it first: get the .glb from the <b>.glb file</b> tab.";
+  $("#dlGlb").disabled=isGlb;$("#glbNote").textContent=isGlb?"It's already a .glb, so you can use the file you have.":"";
+  $("#htmlNote").textContent=current.bytes>SOFT?"Big model: the page will be about a third larger than the model.":"";
+}
+async function toGlb(){
+  if(current.ext==="glb")return current.buf;
+  const ex=new GLTFExporter();
+  return await ex.parseAsync(model,{binary:true,animations:clips,onlyVisible:true});
+}
+function download(data,name,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+function b64(buf){const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));document.querySelectorAll(".pane").forEach(p=>p.hidden=p.dataset.p!==b.dataset.t)});
+$("#copyCode").onclick=()=>navigator.clipboard?.writeText($("#code").textContent).then(()=>toast("Code copied")).catch(()=>toast("Copy didn't work here. Try Download"));
+$("#copyR3f").onclick=()=>navigator.clipboard?.writeText($("#r3f").textContent).then(()=>toast("Code copied")).catch(()=>toast("Copy didn't work here"));
+$("#dlCode").onclick=()=>download($("#code").textContent,"index.html","text/html");
+$("#dlGlb").onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent="Converting…";
+  try{const out=await toGlb();download(out,slug(current.name)+".glb","model/gltf-binary");toast(`Saved ${slug(current.name)}.glb (${fmtMB(out.byteLength)})`)}
+  catch(err){console.error(err);msg("bad","Converting to .glb didn't work for this model. "+esc(err&&err.message||""))}
+  b.disabled=false;b.textContent="Download .glb"};
+$("#dlHtml").onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent="Packing…";
+  try{const glb=await toGlb();
+    const src="URL.createObjectURL(new Blob([Uint8Array.from(atob(MODEL),c=>c.charCodeAt(0))],{type:'model/gltf-binary'}))";
+    let html=pageCode(src,current.name.replace(/\.[^.]+$/,""),clips.length>0);
+    html=html.replace("<script type=\"module\">","<script>const MODEL=\""+b64(glb)+"\";<\/script>\n<script type=\"module\">");
+    html=html.replace("</body>","<p style=\"position:fixed;left:12px;bottom:8px;margin:0;font:12px system-ui;color:#8a90a6\">Made with GLB → Three.js Studio · inventndiscover.com/toolkit/glb-studio</p>\n</body>");
+    download(html,slug(current.name)+".html","text/html");toast("Web page saved")}
+  catch(err){console.error(err);msg("bad","Packing the web page didn't work for this model. "+esc(err&&err.message||""))}
+  b.disabled=false;b.textContent="Download the web page"};
+
+/* ---------- file input + drag and drop ---------- */
+const drop=$("#drop");
+$("#file").onchange=e=>{open(e.target.files);e.target.value=""};
+["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>open(e.dataTransfer.files));
+window.__studio={open,state:()=>({current,tris:current&&current.tris,anims:clips.length})};
+</script>
+<noscript><p class="wrap">The studio needs JavaScript and WebGL to run.</p></noscript>
+</body></html>

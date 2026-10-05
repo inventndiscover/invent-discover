@@ -589,16 +589,18 @@ const TOOLS=[
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
   colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
  {id:"stakeholder-map",name:"Power / Interest",line:"Map everyone your project affects by power and interest, and know who to manage closely, keep satisfied, keep informed or monitor.",url:"/toolkit/stakeholder-map/",
-  credit:"Aubrey Mendelow (1981), popularised by Gerry Johnson and Kevan Scholes",time:"10–20 minutes",visual:"grid",tag:"Projects & people",cta:"Start mapping"}
+  credit:"Aubrey Mendelow (1981), popularised by Gerry Johnson and Kevan Scholes",time:"10–20 minutes",visual:"grid",tag:"Projects & people",cta:"Start mapping"},
+ {id:"glb-studio",name:"GLB → Three.js Studio",line:"Open a .glb, .gltf, .fbx, .obj or .stl model, see what makes it heavy, and get Three.js code, a shareable web page or a clean .glb.",url:"/toolkit/glb-studio/",
+  credit:"Built on three.js by Ricardo Cabello (mrdoob) and contributors",time:"2–5 minutes · nothing uploaded",visual:"cube",tag:"3D & XR",cta:"Open the studio"}
 ];
 function viewTools(){
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:30% 50%"><div class="wrap head-row">
-    <div><div class="kicker"><span class="pill">Tools</span></div><h1 class="mega">Tools</h1><p>Free tools for design thinking, new ideas and career growth. They work in your browser with nothing to sign up for, and every framework is credited to the people who created it.</p></div>
+    <div><div class="kicker"><span class="pill">Tools</span></div><h1 class="mega">Tools</h1><p>Free tools for design thinking, new ideas, career growth and 3D. They work in your browser with nothing to sign up for, and every framework is credited to the people who created it.</p></div>
   </div></div>
   <div class="wrap" style="padding-top:28px">
     ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
-      ${t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
+      ${t.visual==="cube"?`<div class="tool-cube" aria-hidden="true"><div class="cube">${["f","b","l","r","t","d"].map(f=>`<span class="${f}"></span>`).join("")}</div><em>.glb → .js</em></div>`:t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
         <span class="tq" style="--c:#A58BFF">Keep<br>satisfied</span><span class="tq r" style="--c:#FF7B8A">Manage<br>closely</span>
         <span class="tq b" style="--c:#3D9BFF">Monitor</span><span class="tq r b" style="--c:#2FD1C5">Keep<br>informed</span>
         ${[["#FF7B8A",78,22,0],["#A58BFF",26,30,1],["#2FD1C5",80,72,2],["#3D9BFF",30,78,3],["#FF7B8A",62,38,4]].map(([c,x,y,i])=>`<i style="--c:${c};left:${x}%;top:${y}%;--i:${i}"></i>`).join("")}
