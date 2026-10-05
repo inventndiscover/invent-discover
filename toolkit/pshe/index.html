@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en-IN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PSHE career ladder tool · Invent + Discover</title>
+<meta name="description" content="A free PSHE tool: find where you are on the Problem, Solution, How, Execution career ladder, and map what you figured out on any project. Works in your browser.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/pshe/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="PSHE career ladder tool · Invent + Discover">
+<meta property="og:description" content="Find where you are on the Problem, Solution, How, Execution ladder, and what to practise next. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/pshe/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"PSHE career ladder tool","url":"https://inventndiscover.com/toolkit/pshe/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"Invent + Discover","url":"https://inventndiscover.com/"},"description":"Find where you are on the Problem, Solution, How, Execution career ladder, created by Shishir Mehrotra."}</script>
+<style>
+:root{
+  --bg:#05060A;--card:#0E1118;--card2:#131722;--ink:#F4F5F7;--ink2:rgba(244,245,247,.7);--ink3:rgba(244,245,247,.45);
+  --hair:rgba(255,255,255,.12);--hair2:rgba(255,255,255,.2);--acc:#A58BFF;--onacc:#0D0820;
+  --E:#3D9BFF;--H:#2FD1C5;--S:#A58BFF;--P:#FFB23F;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Geist",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:70vw;height:70vw;max-width:900px;max-height:900px;background:radial-gradient(circle,rgba(255,178,63,.13),rgba(110,80,220,.12) 40%,transparent 68%);pointer-events:none;z-index:-1}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:8px}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+.top{border-bottom:1px solid var(--hair);padding:16px 0;position:sticky;top:0;background:rgba(5,6,10,.7);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:10}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{text-decoration:none;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.plus{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--acc);color:var(--onacc);margin:0 6px;font-size:15px;box-shadow:0 0 16px rgba(165,139,255,.6)}
+.back{font-size:14px;color:var(--ink2);text-decoration:none}
+.back:hover{color:var(--ink)}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:44px 0 10px}
+h1{display:inline-block;font-size:clamp(52px,10vw,96px);line-height:.95;letter-spacing:-.045em;margin:0 0 16px;background:linear-gradient(90deg,var(--P),var(--S) 40%,var(--H) 70%,var(--E));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--ink2);font-size:19px;max-width:58ch;margin:0}
+.credit{color:var(--ink3);font-size:14px;margin:14px 0 0}
+.credit a{color:var(--ink2)}
+
+/* the ladder: our own diagram, E at the bottom, P at the top */
+.ladder{display:flex;flex-direction:column-reverse;gap:8px;margin:34px 0 0}
+.rung{--c:var(--E);display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;border:1px solid var(--hair);background:var(--card);border-radius:16px;padding:12px 16px;transition:border-color .25s,box-shadow .25s,background .25s}
+.rung:nth-child(1){margin-right:30%}.rung:nth-child(2){margin-right:20%;margin-left:10%}.rung:nth-child(3){margin-right:10%;margin-left:20%}.rung:nth-child(4){margin-left:30%}
+.rung b{display:grid;place-items:center;width:56px;height:56px;border-radius:14px;font-size:30px;font-weight:700;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 50%,transparent);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.rung h3{margin:0;font-size:18px;letter-spacing:-.01em}
+.rung p{margin:2px 0 0;color:var(--ink2);font-size:14px}
+.rung .you{display:none;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--c);margin-left:8px}
+.rung.here{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--card));box-shadow:0 0 30px color-mix(in srgb,var(--c) 30%,transparent)}
+.rung.here b{background:var(--c);color:#0B0D14}
+.rung.here .you{display:inline}
+.axis{display:flex;justify-content:space-between;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:10px 2px 0}
+
+.tabs{display:flex;gap:6px;margin:34px 0 0;border:1px solid var(--hair);border-radius:999px;padding:5px;width:max-content;max-width:100%;background:var(--card)}
+.tabs button{border:0;background:transparent;border-radius:999px;padding:10px 18px;font-weight:600;font-size:15px;color:var(--ink2)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:#0B0D14}
+
+.panel{border:1px solid var(--hair);background:var(--card);border-radius:22px;padding:clamp(20px,4vw,34px);margin:18px 0}
+.lab{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px;display:block}
+.qcount{font:500 12px var(--mono);color:var(--ink3);letter-spacing:.08em}
+.bar{height:4px;border-radius:2px;background:var(--hair);overflow:hidden;margin:10px 0 22px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--E),var(--H),var(--S),var(--P));transition:width .3s}
+.q{font-size:clamp(21px,3.4vw,27px);font-weight:600;letter-spacing:-.02em;line-height:1.3;margin:0 0 18px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;border:1px solid var(--hair);background:var(--card2);border-radius:14px;padding:14px 16px;font-size:16px;color:var(--ink);transition:border-color .2s,background .2s}
+.opt:hover{border-color:var(--hair2)}
+.opt[aria-pressed="true"]{border-color:var(--acc);background:rgba(165,139,255,.12)}
+.row{display:flex;justify-content:space-between;gap:10px;margin:22px 0 0;flex-wrap:wrap}
+.btn{border:1px solid var(--acc);background:var(--acc);color:var(--onacc);border-radius:999px;padding:12px 20px;font-weight:600;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--hair2)}
+
+.result{--c:var(--S)}
+.big{display:flex;gap:18px;align-items:center}
+.big b{flex:none;width:84px;height:84px;border-radius:22px;display:grid;place-items:center;font-size:52px;font-weight:700;color:#0B0D14;background:var(--c);box-shadow:0 0 40px color-mix(in srgb,var(--c) 50%,transparent)}
+.big h2{margin:0;font-size:clamp(26px,4.5vw,36px);letter-spacing:-.03em;line-height:1.1}
+.big p{margin:4px 0 0;color:var(--ink2)}
+.result h3{margin:26px 0 8px;font-size:17px}
+.result ul{margin:0;padding-left:20px;color:var(--ink2)}
+.result li{margin:4px 0}
+.note{margin:20px 0 0;padding:14px 18px;border-radius:14px;border:1px solid rgba(165,139,255,.4);background:rgba(165,139,255,.08);color:var(--ink2);font-size:15px}
+.privacy{color:var(--ink3);font-size:13px;margin:12px 0 0}
+
+.field{width:100%;background:var(--card2);border:1px solid var(--hair);border-radius:14px;padding:13px 15px;font-size:17px}
+.field::placeholder{color:var(--ink3)}
+.wrow{--c:var(--E);border:1px solid var(--hair);border-left:3px solid var(--c);border-radius:16px;background:var(--card2);padding:16px;margin:12px 0 0}
+.wrow .head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.wrow .l{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:20px;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 50%,transparent)}
+.wrow h3{margin:0;font-size:17px;flex:1;min-width:160px}
+.seg{display:flex;gap:4px;border:1px solid var(--hair);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-size:13.5px;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--c);color:#0B0D14;font-weight:600}
+.wrow textarea{width:100%;margin:12px 0 0;background:transparent;border:1px dashed var(--hair);border-radius:12px;padding:10px 12px;font-size:15px;resize:vertical;min-height:44px}
+.wrow textarea::placeholder{color:var(--ink3)}
+.out{margin:20px 0 0;padding:18px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(255,178,63,.08),rgba(165,139,255,.1));border:1px solid var(--hair2)}
+.out p{margin:0}
+.out .line{font-size:clamp(18px,2.6vw,21px);font-weight:500;letter-spacing:-.01em;line-height:1.45}
+.out .lvl{margin-top:10px;color:var(--ink2);font-size:15px}
+
+.about h2{font-size:22px;letter-spacing:-.02em;margin:0 0 10px}
+.about p{color:var(--ink2);margin:0 0 12px;max-width:68ch}
+.sitefoot{border-top:1px solid var(--hair);margin-top:40px;padding:28px 0 60px;color:var(--ink3);font-size:14px}
+.sitefoot a{color:var(--ink2);margin-right:14px;display:inline-block;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:#1A1E2A;border:1px solid var(--hair2);padding:10px 16px;border-radius:999px;font-size:14px;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%)}
+[hidden]{display:none!important}
+@media (max-width:600px){
+  .rung,.rung:nth-child(n){margin-left:0;margin-right:0;grid-template-columns:46px 1fr}
+  .rung b{width:46px;height:46px;font-size:24px}
+  .tabs{width:100%}.tabs button{flex:1;padding:10px 8px}
+  .big b{width:64px;height:64px;font-size:38px}
+}
+@media print{body{background:#fff;color:#000}body::before,.top,.tabs,.hero,.ladder,.axis,.about,.sitefoot,.row,.toast,#quiz{display:none!important}.panel{border:0;background:#fff}.out{background:#fff;border:1px solid #999}.out .lvl,.result ul{color:#000}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Invent and Discover, home">INVENT<span class="plus">+</span>DISCOVER</a>
+  <a class="back" href="/#tools">← All tools</a>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Tools · Career growth</p>
+    <h1>PSHE</h1>
+    <p class="sub">Problem, Solution, How, Execution: four levels that show how careers grow. The higher you go, the less you're told and the more you figure out yourself.</p>
+    <p class="credit">PSHE was created by Shishir Mehrotra at Google (YouTube). <a href="#where">Where it comes from</a></p>
+  </section>
+
+  <div class="ladder" id="ladder"></div>
+  <div class="axis"><span>↓ More is given to you</span><span>You figure out more ↑</span></div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tQuiz" aria-selected="true" aria-controls="quizPane">Where am I?</button>
+    <button role="tab" id="tMap" aria-selected="false" aria-controls="mapPane">Map a project</button>
+  </div>
+
+  <!-- Mode 1: self-check -->
+  <section id="quizPane" role="tabpanel">
+    <div class="panel" id="quiz">
+      <span class="qcount" id="qCount">Question 1 of 6</span>
+      <div class="bar" aria-hidden="true"><i id="qBar"></i></div>
+      <p class="q" id="qText"></p>
+      <div class="opts" id="opts"></div>
+      <div class="row"><button class="btn sec" id="qBack">← Back</button><button class="btn" id="qNext" disabled>Next →</button></div>
+    </div>
+    <div class="panel result" id="result" hidden>
+      <span class="lab">Your PSHE level, for now</span>
+      <div class="big"><b id="rL">S</b><div><h2 id="rTitle"></h2><p id="rSub"></p></div></div>
+      <h3 id="rNextTitle"></h3>
+      <ul id="rTips"></ul>
+      <p class="note">This is a reflection, not a test. Most people sit at different levels on different projects, and every level matters: great execution is what makes good ideas real.</p>
+      <div class="row" style="justify-content:flex-start">
+        <button class="btn" id="rMap">Map a project →</button>
+        <button class="btn sec" id="rCopy">Copy my result</button>
+        <button class="btn sec" id="rAgain">Take it again</button>
+      </div>
+      <p class="privacy">Your answers stay in this browser. Nothing is sent to us or anyone else.</p>
+    </div>
+  </section>
+
+  <!-- Mode 2: project worksheet -->
+  <section id="mapPane" role="tabpanel" hidden>
+    <div class="panel">
+      <label class="lab" for="proj">Which project?</label>
+      <input class="field" id="proj" maxlength="80" placeholder="e.g. Our college fest website, my internship app redesign" autocomplete="off">
+      <p class="privacy" style="margin-top:10px">For each level, mark whether it was handed to you or you worked it out. Add a line about what exactly, if you like.</p>
+      <div id="rows"></div>
+      <div class="out" id="out">
+        <span class="lab">Your line for a portfolio or interview</span>
+        <p class="line" id="outLine"></p>
+        <p class="lvl" id="outLvl"></p>
+      </div>
+      <div class="row" style="justify-content:flex-start">
+        <button class="btn" id="mCopy">Copy as text</button>
+        <button class="btn sec" id="mDl">Download .txt</button>
+        <button class="btn sec" id="mPrint">Print</button>
+        <button class="btn sec" id="mReset">Clear</button>
+      </div>
+      <p class="privacy">Saved in this browser only. Nothing is sent to us or anyone else.</p>
+    </div>
+  </section>
+
+  <section class="panel about" id="where">
+    <h2>Where PSHE comes from</h2>
+    <p><b>PSHE</b> was created by <b>Shishir Mehrotra</b> while he led product for YouTube at <b>Google</b>, as a way to describe how product managers grow. Accounts date it between 2008 and 2011. He later co-founded Coda and is now CEO of Superhuman. Instead of measuring growth by how big your area is, PSHE measures it by how much ambiguity you can turn into clarity. In his words, "the best people create clarity out of ambiguity."</p>
+    <p>The ladder, questions and worksheet on this page are written by Invent + Discover, adapted for students and early-career makers.</p>
+  </section>
+</main>
+
+<footer class="wrap sitefoot">
+  <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+  <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- the four levels, bottom (E) to top (P) ---------- */
+const LV=[
+ {k:"E",w:"Execution",given:"the problem, the solution and how",fig:"doing it well",obj:"the execution",
+  next:"To move up to How",tips:["Before starting a task, write your own plan of steps and share it.","Offer to break a big task into smaller parts for the team.","When you finish, note one thing you'd do differently next time."]},
+ {k:"H",w:"How",given:"the problem and the solution",fig:"how to get it done",obj:"how to get it done",
+  next:"To move up to Solution",tips:["Ask for the problem behind the task, not just the task.","Sketch three different solutions before choosing one.","Present a recommendation with reasons, not just options."]},
+ {k:"S",w:"Solution",given:"the problem",fig:"the solution and how",obj:"the solution",
+  next:"To move up to Problem",tips:["Keep a running list of problems you notice that nobody owns.","Talk to the people affected, outside your team or class.","Each month, pitch one problem you think is worth solving, and why."]},
+ {k:"P",w:"Problem",given:"just a space or an area",fig:"which problem is worth solving at all",obj:"the problem",
+  next:"Keep growing",tips:["Help others climb: hand them problems, not ready-made solutions.","Check your chosen problems against real people's needs often.","Write down why you picked a problem, so others can learn the judgement."]}
+];
+const QS=[
+ {q:"When you start a piece of work, what are you usually handed?",o:["A clear task and how to do it","What to make; I decide how","A problem; I shape the solution","An area; I decide what's worth doing"]},
+ {q:"When something is unclear, you usually…",o:["Ask for exact instructions","Pick a method and plan the steps","Explore options and propose a solution","Question whether it's the right problem"]},
+ {q:"Who decides what \"done\" looks like?",o:["Someone else, completely","They set the goal; I set the plan","I shape it with whoever set the problem","I set the goal myself"]},
+ {q:"In a group project, you usually…",o:["Take tasks and deliver them","Plan who does what, and when","Shape the main idea","Decide what the project should be about"]},
+ {q:"Your proudest recent work makes you proud because…",o:["I did it really well, on time","I got the steps and people organised","I came up with the idea that worked","I spotted a problem nobody else saw"]},
+ {q:"If your mentor or manager vanished for a month, you'd…",o:["Wait for the next tasks","Keep the current plan running","Keep solving the open questions","Find new problems to work on"]}
+];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),1800)}
+const KEY="id-pshe-v1";
+let st={tab:"quiz",qi:0,ans:[],proj:"",map:{E:{s:"",n:""},H:{s:"",n:""},S:{s:"",n:""},P:{s:"",n:""}}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.map)st={...st,...s}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+/* ---------- ladder ---------- */
+function drawLadder(here){
+  $("#ladder").innerHTML=LV.map(l=>`<div class="rung ${here===l.k?"here":""}" style="--c:var(--${l.k})"><b>${l.k}</b><div><h3>${l.w}<span class="you">← you, for now</span></h3><p>Given ${l.given}. You figure out ${l.fig}.</p></div></div>`).join("");
+}
+
+/* ---------- self-check ---------- */
+function level(){const avg=st.ans.reduce((a,b)=>a+b,0)/st.ans.length;return LV[Math.min(3,Math.max(0,Math.round(avg)))]}
+function drawQuiz(){
+  const done=st.ans.length===QS.length&&st.ans.every(a=>a!=null)&&st.qi>=QS.length;
+  $("#quiz").hidden=done;$("#result").hidden=!done;
+  if(done){drawResult();return}
+  const i=Math.min(st.qi,QS.length-1),q=QS[i];
+  $("#qCount").textContent=`Question ${i+1} of ${QS.length}`;
+  $("#qBar").style.width=(i/QS.length*100)+"%";
+  $("#qText").textContent=q.q;
+  $("#opts").innerHTML=q.o.map((t,j)=>`<button class="opt" data-a="${j}" aria-pressed="${st.ans[i]===j}">${esc(t)}</button>`).join("");
+  $("#qBack").style.visibility=i===0?"hidden":"visible";
+  $("#qNext").disabled=st.ans[i]==null;
+  $("#qNext").textContent=i===QS.length-1?"See my level →":"Next →";
+  drawLadder(null);
+}
+function drawResult(){
+  const l=level(),i=LV.indexOf(l);
+  $("#result").style.setProperty("--c",`var(--${l.k})`);
+  $("#rL").textContent=l.k;$("#rTitle").textContent=`You're mostly at ${l.w}`;
+  $("#rSub").textContent=`You're usually given ${l.given}, and you figure out ${l.fig}.`;
+  $("#rNextTitle").textContent=i<3?`${l.next}, try this:`:"You're at the top level. Keep growing:";
+  $("#rTips").innerHTML=l.tips.map(t=>`<li>${esc(t)}</li>`).join("");
+  drawLadder(l.k);
+}
+
+/* ---------- project worksheet ---------- */
+function drawRows(){
+  $("#rows").innerHTML=[...LV].reverse().map(l=>{const m=st.map[l.k];return `<div class="wrow" style="--c:var(--${l.k})">
+    <div class="head"><span class="l">${l.k}</span><h3>${l.w}: ${l.obj}</h3>
+    <div class="seg" role="group" aria-label="${l.w}"><button data-m="${l.k}" data-v="given" aria-pressed="${m.s==="given"}">Given to me</button><button data-m="${l.k}" data-v="fig" aria-pressed="${m.s==="fig"}">I figured it out</button></div></div>
+    <textarea data-n="${l.k}" rows="1" maxlength="200" placeholder="What exactly? (optional)">${esc(m.n)}</textarea></div>`}).join("");
+}
+function mapText(){
+  const name=st.proj.trim()||"this project";
+  const g=LV.filter(l=>st.map[l.k].s==="given").reverse().map(l=>l.obj),f=LV.filter(l=>st.map[l.k].s==="fig").reverse().map(l=>l.obj);
+  const list=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];
+  let line;
+  if(!g.length&&!f.length)line=`Mark each level to build your line for ${name}.`;
+  else if(!g.length)line=`On ${name}, I figured out ${list(f)} myself.`;
+  else if(!f.length)line=`On ${name}, I was given ${list(g)}.`;
+  else line=`On ${name}, I was given ${list(g)}, and I figured out ${list(f)}.`;
+  const top=[...LV].reverse().find(l=>st.map[l.k].s==="fig");
+  return {line,lvl:top?`On this project you worked at the ${top.w} level (${top.k}).`:"",top};
+}
+function drawOut(){const t=mapText();$("#outLine").textContent=t.line;$("#outLvl").textContent=t.lvl;drawLadder(t.top?t.top.k:null)}
+function mapAsText(){
+  const t=mapText();let s=`PSHE map: ${st.proj.trim()||"Untitled project"}\n\n`;
+  [...LV].reverse().forEach(l=>{const m=st.map[l.k];s+=`${l.k} · ${l.w}: ${m.s==="given"?"given to me":m.s==="fig"?"I figured it out":"not marked"}${m.n.trim()?" ("+m.n.trim()+")":""}\n`});
+  return s+`\n${t.line}\n${t.lvl}\n\nMade with the PSHE tool at inventndiscover.com/toolkit/pshe\nPSHE by Shishir Mehrotra, created at Google (YouTube).\n`;
+}
+
+/* ---------- tabs ---------- */
+function setTab(t){st.tab=t;save();
+  $("#tQuiz").setAttribute("aria-selected",t==="quiz");$("#tMap").setAttribute("aria-selected",t==="map");
+  $("#quizPane").hidden=t!=="quiz";$("#mapPane").hidden=t!=="map";
+  if(t==="quiz")drawQuiz();else{drawRows();drawOut()}
+}
+
+/* ---------- events ---------- */
+$("#tQuiz").onclick=()=>setTab("quiz");
+$("#tMap").onclick=()=>setTab("map");
+$("#qNext").onclick=()=>{st.qi++;save();drawQuiz();if(st.qi>=QS.length)$("#result").scrollIntoView({behavior:"smooth",block:"start"})};
+$("#qBack").onclick=()=>{st.qi=Math.max(0,st.qi-1);save();drawQuiz()};
+$("#rAgain").onclick=()=>{st.qi=0;st.ans=[];save();drawQuiz()};
+$("#rMap").onclick=()=>{setTab("map");$("#proj").focus()};
+$("#rCopy").onclick=()=>{const l=level();navigator.clipboard?.writeText(`My PSHE level: ${l.w} (${l.k}). I'm usually given ${l.given}, and I figure out ${l.fig}.\n${l.next}: ${l.tips.join(" ")}\n\nTry it: inventndiscover.com/toolkit/pshe (PSHE by Shishir Mehrotra)`).then(()=>toast("Copied")).catch(()=>toast("Copy didn't work here"))};
+$("#proj").value=st.proj;
+$("#proj").addEventListener("input",e=>{st.proj=e.target.value;save();drawOut()});
+$("#mCopy").onclick=()=>{navigator.clipboard?.writeText(mapAsText()).then(()=>toast("Copied. Paste it anywhere")).catch(()=>toast("Copy didn't work here. Try Download"))};
+$("#mDl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([mapAsText()],{type:"text/plain"}));a.download="pshe-"+(st.proj.trim()||"project").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".txt";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+$("#mPrint").onclick=()=>window.print();
+$("#mReset").onclick=()=>{if(!confirm("Clear this project map?"))return;st.proj="";$("#proj").value="";LV.forEach(l=>st.map[l.k]={s:"",n:""});save();drawRows();drawOut()};
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.a!==undefined){st.ans[Math.min(st.qi,QS.length-1)]=+b.dataset.a;save();drawQuiz();return}
+  if(b.dataset.m){const m=st.map[b.dataset.m];m.s=m.s===b.dataset.v?"":b.dataset.v;save();drawRows();drawOut();return}
+});
+document.addEventListener("input",e=>{if(e.target.dataset.n){st.map[e.target.dataset.n].n=e.target.value;save()}});
+setTab(st.tab);
+</script>
+</body></html>

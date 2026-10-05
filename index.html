@@ -69,6 +69,7 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 #communities{scroll-margin-top:190px}
 .tool-card{display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:center;text-decoration:none;padding:30px 34px;border:1px solid var(--hair);border-radius:var(--r);
   background:radial-gradient(ellipse 40% 90% at 0% 50%,rgba(165,139,255,.12),transparent 70%),var(--glass);transition:border-color .25s,transform .25s,box-shadow .25s}
+.tool-card + .tool-card{margin-top:16px}
 .tool-card:hover{border-color:rgba(165,139,255,.45);transform:translateY(-3px);box-shadow:0 24px 60px -24px rgba(124,96,255,.45)}
 .tool-card h3{font-size:30px;letter-spacing:-.02em;margin:8px 0 4px}
 .tool-card p{margin:0;color:var(--ink2)}
@@ -83,8 +84,11 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
   font-size:20px;font-weight:700;color:var(--c);background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
   transform:rotate(var(--a)) translate(78px) rotate(calc(-1 * var(--a)));
   animation:id-lit 7s ease-in-out infinite;animation-delay:calc(var(--i) * 1s)}
-@keyframes id-lit{0%,16%,100%{box-shadow:none;background:color-mix(in srgb,var(--c) 14%,#0B0D14);color:var(--c)}
-  6%,10%{box-shadow:0 0 22px color-mix(in srgb,var(--c) 70%,transparent),0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent);background:var(--c);color:#0B0D14}}
+@keyframes id-lit{0%,16%,100%{box-shadow:none;background:color-mix(in srgb,var(--c) 14%,#0B0D14)}
+  6%,10%{box-shadow:0 0 22px color-mix(in srgb,var(--c) 70%,transparent),0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent);background:var(--c)}}
+/* letter colour flips instantly (no muddy in-between) */
+.tool-wheel b{animation:id-lit 7s ease-in-out infinite,id-ink 7s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
+@keyframes id-ink{0%,13%,100%{color:var(--c)}2.5%{color:#0B0D14}}
 @keyframes id-spin{to{transform:rotate(360deg)}}
 .tool-wheel .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;
   font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);line-height:1.2}
@@ -687,7 +691,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
         <li><a href="#invent" data-go="invent">Invent: product demos</a></li>
         <li><a href="#discover" data-go="discover">Discover: events</a></li>
         <li><a href="#learn" data-go="learn">Learn: tutorials</a></li>
-        <li><a href="#tools" data-go="tools">Tools: SCAMPER</a></li>
+        <li><a href="#tools" data-go="tools">Tools: SCAMPER, PSHE</a></li>
         <li><a href="#insights" data-go="insights">Insights</a></li>
         <li><a href="#communities" data-go="communities">Communities</a></li>
       </ul></div>
