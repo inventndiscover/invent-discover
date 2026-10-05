@@ -65,6 +65,9 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/market-walkthrough-low-poly",
   needs:"On a laptop: click to enter, walk with W A S D, look with the mouse, scroll to zoom, press T to change the time of day. Walk up to a display to lift and turn a product. Works best in a recent Chrome, Edge or Safari.",
   desc:"A low-poly shopping plaza you can walk around: a watch store, three boutiques and a restaurant, with traffic on the avenue, birds overhead, a city skyline on one side and mountains on the other. Slide from dawn to night and watch the city lights come on. In VR, pick up a product with the trigger to look at it up close."},
+ {id:"flapping-bird",name:"Flapping Bird",line:"A neon, step-by-step origami bird whose wings really flap",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+  gif:"media/flapping-bird.gif",video:"media/flapping-bird-tutorial.mp4",poster:"media/flapping-bird-poster.jpg",
+  desc:"Twelve steps turn one square sheet into a classic flapping bird, drawn as glowing line art. Hold the base of the neck, gently pull the tail, and the wings flap. About ten minutes, no glue. The third animated tutorial in the series, made with AI."},
  {id:"paper-heart",name:"Paper Heart",line:"A neon, step-by-step origami heart tutorial",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-heart.gif",video:"media/paper-heart-tutorial.mp4",poster:"media/paper-heart-poster.jpg",
   desc:"Seven folds turn one square sheet into a heart, drawn as glowing line art. No glue, under five minutes. A short animated tutorial made with AI, the second in a series turning origami into screen-based lessons."},
@@ -746,7 +749,7 @@ function demoSheet(id){
   const top=d.video?`<video class="demo-video" src="${d.video}" poster="${d.poster||""}" controls playsinline preload="metadata"></video>`:d.sheetImg?`<img class="demo-video" src="${d.sheetImg}" alt="${esc(d.name)}">`:cover(d.name.split(" ")[0],CAT[d.cat].c,d.id+"x",{tag:d.cat,stamp:d.status});
   openSheet(`${top}
   <div class="sheet-body">
-    <div><div class="label">${real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
+    <div><div class="label">${d.kind==="tutorial"?"Origami tutorial":real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
     <p style="margin:0;font-size:16px">${esc(d.desc)}</p>
     <div class="facts"><div><span class="label">Stage</span><b>${esc(d.status)}</b></div><div><span class="label">Made by</span><b>${esc(d.makers.join(", "))}</b></div><div style="grid-column:1/-1"><span class="label">Built with</span><b>${esc(d.tools.join(" · "))}</b></div></div>
     ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">Open the simulation ↗</a></div>${d.vr?`<div class="note"><b>Experience it in VR.</b> Put on your Meta Quest, open the Meta Quest browser, go to <b style="overflow-wrap:anywhere">${esc(d.vr)}</b> and tap <b>Enter VR</b>.</div>`:""}${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
