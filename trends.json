@@ -1,5 +1,5 @@
 {
- "UPDATED": "2026-09-30",
+ "UPDATED": "2026-10-05",
  "SOURCE": {
   "name": "arXiv",
   "url": "https://arxiv.org/"
@@ -34,21 +34,9 @@
  ],
  "WEEKS": [
   {
-   "start": "2026-07-06",
-   "end": "2026-07-12",
-   "total": 2317,
-   "themes": {
-    "agents": 404,
-    "reasoning": 364,
-    "multimodal": 293,
-    "robotics": 231,
-    "safety": 142
-   }
-  },
-  {
    "start": "2026-07-13",
    "end": "2026-07-19",
-   "total": 2240,
+   "total": 2241,
    "themes": {
     "agents": 421,
     "reasoning": 350,
@@ -64,7 +52,7 @@
    "themes": {
     "agents": 351,
     "reasoning": 346,
-    "multimodal": 260,
+    "multimodal": 261,
     "robotics": 171,
     "safety": 157
    }
@@ -72,25 +60,25 @@
   {
    "start": "2026-07-27",
    "end": "2026-08-02",
-   "total": 2720,
+   "total": 2723,
    "themes": {
-    "agents": 515,
-    "reasoning": 395,
-    "multimodal": 377,
+    "agents": 516,
+    "reasoning": 396,
+    "multimodal": 376,
     "robotics": 226,
-    "safety": 169
+    "safety": 170
    }
   },
   {
    "start": "2026-08-03",
    "end": "2026-08-09",
-   "total": 2977,
+   "total": 2980,
    "themes": {
     "agents": 571,
-    "reasoning": 460,
-    "multimodal": 425,
-    "robotics": 245,
-    "safety": 179
+    "reasoning": 461,
+    "multimodal": 426,
+    "robotics": 246,
+    "safety": 180
    }
   },
   {
@@ -102,7 +90,7 @@
     "reasoning": 434,
     "multimodal": 332,
     "robotics": 207,
-    "safety": 176
+    "safety": 177
    }
   },
   {
@@ -111,10 +99,10 @@
    "total": 2364,
    "themes": {
     "agents": 433,
-    "reasoning": 338,
-    "multimodal": 307,
+    "reasoning": 337,
+    "multimodal": 308,
     "robotics": 204,
-    "safety": 158
+    "safety": 157
    }
   },
   {
@@ -122,7 +110,7 @@
    "end": "2026-08-30",
    "total": 2798,
    "themes": {
-    "agents": 491,
+    "agents": 492,
     "reasoning": 441,
     "multimodal": 365,
     "robotics": 208,
@@ -132,49 +120,61 @@
   {
    "start": "2026-08-31",
    "end": "2026-09-06",
-   "total": 2952,
+   "total": 2979,
    "themes": {
-    "agents": 538,
-    "reasoning": 464,
-    "multimodal": 351,
+    "agents": 542,
+    "reasoning": 466,
+    "multimodal": 355,
     "robotics": 219,
-    "safety": 176
+    "safety": 177
    }
   },
   {
    "start": "2026-09-07",
    "end": "2026-09-13",
-   "total": 2593,
+   "total": 2618,
    "themes": {
-    "agents": 439,
-    "reasoning": 360,
-    "multimodal": 282,
+    "agents": 446,
+    "reasoning": 363,
+    "multimodal": 283,
     "robotics": 257,
-    "safety": 150
+    "safety": 152
    }
   },
   {
    "start": "2026-09-14",
    "end": "2026-09-20",
-   "total": 2924,
+   "total": 2950,
    "themes": {
-    "agents": 505,
+    "agents": 509,
     "reasoning": 371,
-    "multimodal": 392,
-    "robotics": 459,
-    "safety": 173
+    "multimodal": 394,
+    "robotics": 460,
+    "safety": 175
    }
   },
   {
    "start": "2026-09-21",
    "end": "2026-09-27",
-   "total": 3701,
+   "total": 3741,
    "themes": {
-    "agents": 671,
-    "reasoning": 516,
-    "multimodal": 444,
-    "robotics": 475,
-    "safety": 164
+    "agents": 676,
+    "reasoning": 519,
+    "multimodal": 447,
+    "robotics": 479,
+    "safety": 167
+   }
+  },
+  {
+   "start": "2026-09-28",
+   "end": "2026-10-04",
+   "total": 4418,
+   "themes": {
+    "agents": 873,
+    "reasoning": 738,
+    "multimodal": 556,
+    "robotics": 471,
+    "safety": 207
    }
   }
  ]

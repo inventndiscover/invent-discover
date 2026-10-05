@@ -1,6 +1,46 @@
 {
- "REFRESHED": "2026-10-04T07:18:15+05:30",
+ "REFRESHED": "2026-10-05T07:18:57+05:30",
  "SIGNALS": [
+  {
+   "id": "2106129049718325517",
+   "handle": "CNBC",
+   "name": "CNBC",
+   "url": "https://x.com/CNBC/status/2106129049718325517",
+   "posted": "2026-10-03T02:37:50+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "CNBC reports Anthropic will invest $100 million to train AI engineering talent."
+  },
+  {
+   "id": "2106105400487821764",
+   "handle": "arena",
+   "name": "Arena.ai",
+   "url": "https://x.com/arena/status/2106105400487821764",
+   "posted": "2026-10-03T01:03:51+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Arena.ai says Claude Sonnet 5.5 landed at #3 in its Agent Arena, with a median cost per task of $2.74, higher than the #2 Claude Opus 5.5 at $1.58."
+  },
+  {
+   "id": "2106099776035152231",
+   "handle": "AIatMeta",
+   "name": "AI at Meta",
+   "url": "https://x.com/AIatMeta/status/2106099776035152231",
+   "posted": "2026-10-03T00:41:30+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "Meta says mathematicians worked with its AI over several months on problems with no known solution path, after its models earned gold-medal-level results in five STEM competitions."
+  },
+  {
+   "id": "2106056489836179817",
+   "handle": "NVIDIARTXSpark",
+   "name": "NVIDIA RTX Spark",
+   "url": "https://x.com/NVIDIARTXSpark/status/2106056489836179817",
+   "posted": "2026-10-02T21:49:30+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "NVIDIA says DGX Spark is getting a 64GB option built on the GB10 Grace Blackwell Superchip, for running local agents on device, with a new Sync Cluster Assistant for pairing systems."
+  },
   {
    "id": "2105888862249849082",
    "handle": "AGTPinsights",
@@ -22,74 +62,14 @@
    "summary": "Relays a Google DeepMind engineer's pushback on a Bloomberg report that Gemini 4 scores well on benchmarks but underperforms when employees use it at work."
   },
   {
-   "id": "2105392625788637299",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Artificial Analysis says Google's new Gemini 4 Argon matches GPT-6 Astra on its Intelligence Index at about 60% of the cost per task, putting Google back among the top three labs.",
-   "url": "https://x.com/ArtificialAnlys/status/2105392625788637299",
-   "posted": "2026-10-01T01:51:32+05:30"
-  },
-  {
-   "id": "2105388143902175529",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2105388143902175529",
-   "posted": "2026-10-01T01:33:44+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google introduced Gemini 4 Argon, a frontier model for software engineering, knowledge work and cyber defense, with a 1M-token output limit. It is rolling out first to cyber defenders."
-  },
-  {
-   "id": "2105366155917656502",
-   "handle": "PeterMcCrory",
-   "name": "Peter McCrory",
-   "url": "https://x.com/PeterMcCrory/status/2105366155917656502",
-   "posted": "2026-10-01T00:06:22+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Announces new research from colleagues exploring what work robots can do today and what that could mean for the structure of the economy in the coming years."
-  },
-  {
-   "id": "2105348732464070823",
-   "handle": "demishassabis",
-   "name": "Demis Hassabis",
-   "url": "https://x.com/demishassabis/status/2105348732464070823",
-   "posted": "2026-09-30T22:57:07+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Hassabis says Google DeepMind is bringing SynthID watermarking to biology so AI-generated proteins can be tagged, and is open-sourcing the SynthID Bio tools. The work is published in Nature."
-  },
-  {
-   "id": "2105329322609520770",
-   "handle": "Benzinga",
-   "name": "Benzinga",
-   "url": "https://x.com/Benzinga/status/2105329322609520770",
-   "posted": "2026-09-30T21:40:00+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "Reports that President Trump hosted AI executives at the White House to sign a voluntary safety agreement, the White House Accord on Super Intelligence, focused on oversight of advanced systems."
-  },
-  {
-   "id": "2105316356035854537",
-   "handle": "FT",
-   "name": "Financial Times",
-   "url": "https://x.com/FT/status/2105316356035854537",
-   "posted": "2026-09-30T20:48:28+05:30",
+   "id": "2105689195180179605",
+   "handle": "GoogleVRP",
+   "name": "Google VRP (Google Bug Hunters)",
+   "url": "https://x.com/GoogleVRP/status/2105689195180179605",
+   "posted": "2026-10-01T21:30:00+05:30",
    "topic": "Tech",
-   "kind": "Report",
-   "summary": "The Financial Times reports that AI voice start-up ElevenLabs has doubled its valuation to $22bn."
-  },
-  {
-   "id": "2105000726690668905",
-   "handle": "axios",
-   "name": "Axios",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Axios reports OpenAI unveiled more than 20 new products and features at its DevDay 2026 conference and lists the five biggest announcements.",
-   "url": "https://x.com/axios/status/2105000726690668905",
-   "posted": "2026-09-29T23:54:16+05:30"
+   "kind": "Official",
+   "summary": "Google's bug bounty team says it is temporarily no longer accepting OSS VRP product vulnerability submissions; supply chain reports and outstanding reports are not affected."
   }
  ]
 }

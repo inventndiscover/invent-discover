@@ -1,33 +1,6 @@
 {
- "REFRESHED": "2026-10-04T08:05:00+05:30",
+ "REFRESHED": "2026-10-05T08:13:30+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "hack-nation-bombay-hub",
-   "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
-   "cat": "AI",
-   "tags": [
-    "Hackathon",
-    "24 hours",
-    "IIT Bombay"
-   ],
-   "area": "Powai",
-   "venue": "IIT Bombay (address shared after approval)",
-   "start": "2026-10-03T20:30",
-   "endDate": "2026-10-04",
-   "end": "18:30",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · application only, waitlist",
-   "aud": [
-    "Student",
-    "Developer"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/vpgf3s3t",
-   "org": "Analytics Club, IIT Bombay",
-   "access": "approval",
-   "desc": "The Mumbai hub of a global 24-hour AI hackathon, where teams build and pitch prototypes with mentor support and compete for a large international prize pool. Hosted by the IIT Bombay Analytics Club; places are by application."
-  },
   {
    "id": "mongodb-local-mumbai",
    "title": "MongoDB.local Mumbai",
@@ -201,7 +174,7 @@
    "end": "14:00",
    "fmt": "Offline",
    "price": 0,
-   "priceNote": "Free · approval required",
+   "priceNote": "Free · approval required · currently full, waitlist open",
    "aud": [
     "Developer",
     "Founder"
@@ -733,22 +706,6 @@
    "hint": "2026-10-10"
   },
   {
-   "qid": "q-philosophy-genai",
-   "title": "Philosophy Meetup: mapping the ethics of Gen AI",
-   "cat": "AI",
-   "area": "Versova",
-   "src": "Luma",
-   "url": "https://luma.com/j4zoc2fx",
-   "access": "open",
-   "why": "Page shows venue and free entry but no date; an aggregator lists it for 4 Oct afternoon.",
-   "conf": {
-    "date": 55,
-    "place": 85,
-    "category": 85
-   },
-   "hint": "2026-10-04"
-  },
-  {
    "qid": "q-ethglobal",
    "title": "ETHGlobal Mumbai hackathon",
    "cat": "Tech",
@@ -795,58 +752,93 @@
     "category": 80
    },
    "hint": "2026-10-05"
+  },
+  {
+   "qid": "q-agent-builders",
+   "title": "Agent Builders Meet Mumbai (in person)",
+   "cat": "AI",
+   "area": "Andheri East",
+   "src": "Luma",
+   "url": "https://luma.com/sogt7uq2",
+   "access": "open",
+   "why": "Page lists a free daytime workshop at WeWork Marol but shows no date.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 92
+   }
+  },
+  {
+   "qid": "q-allin1-ai",
+   "title": "AI, Automation & the Human Touch (Allin1Place Mumbai)",
+   "cat": "AI",
+   "area": "Thane",
+   "src": "Luma",
+   "url": "https://luma.com/rt22ydyb",
+   "access": "approval",
+   "why": "Free café meetup in Thane; no date shown on the page.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-desci",
+   "title": "World of DeSci @ Devcon VIII India",
+   "cat": "Tech",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/mc8pq06y",
+   "access": "approval",
+   "why": "Side event at Devcon; date not shown and a Devcon ticket is also needed.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 75
+   }
   }
  ],
  "RUNS": [
   {
-   "src": "Luma: Mumbai, AI, Tech, Arts pages",
+   "src": "Luma: AI discover page and event pages",
+   "what": "Listing plus event pages",
+   "found": 16,
+   "pub": 0,
+   "review": 3,
+   "dup": 0,
+   "skip": 1,
+   "note": "WebFetch needed a search to unlock Luma and many event pages still timed out. Re-confirmed Mumbai Meets AI 06 (10 Oct, now full with waitlist), Lunch & Learn (7 Oct) and Enterprise AI Summit (26-28 Oct). Three undated events queued; a tax fireside chat skipped as off-audience"
+  },
+  {
+   "src": "Luma: Mumbai and Tech and Arts pages",
    "what": "City and category listings",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Luma pages would not open this run; existing Luma events carried forward unchecked"
+   "note": "Did not open this run; existing entries carried forward"
   },
   {
-   "src": "Hidden Events (Luma mirror)",
-   "what": "Aggregator listing",
+   "src": "Meetup and AllEvents and Hidden Events",
+   "what": "Group and listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Would not open this run"
+   "note": "Did not open this run; existing entries carried forward unchecked"
   },
   {
-   "src": "AllEvents: technology, startup",
-   "what": "Listing pages",
-   "found": 0,
-   "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Would not open this run; existing AllEvents entries carried forward unchecked"
-  },
-  {
-   "src": "Meetup: Mumbai Meets AI",
-   "what": "Group page",
+   "src": "Past-event cleanup",
+   "what": "Expiry check",
    "found": 1,
    "pub": 0,
    "review": 0,
-   "dup": 1,
-   "skip": 0,
-   "note": "Mumbai Meets AI 06 re-confirmed for 10 Oct, 11:00-14:00; registration on Luma only"
-  },
-  {
-   "src": "Web search and organiser sites",
-   "what": "ServiceNow, IBM, HackathonRadar, conference listings, dev.events",
-   "found": 6,
-   "pub": 2,
-   "review": 2,
    "dup": 0,
-   "skip": 2,
-   "note": "ServiceNow World Forum (6 Oct) added; IBM Think end time corrected; MongoDB, IFP, Devcon, IBW pages would not open and were carried forward; two student hackathons queued (aggregator only); academic conference-mill listings skipped; no XR or AI Tinkerers events found; no cancellations seen"
+   "skip": 1,
+   "note": "Removed Hack-Nation Bombay Hub (ended 4 Oct); dropped a past queue item. No cancellations seen"
   }
  ],
  "COMMUNITIES": [
