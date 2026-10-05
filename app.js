@@ -587,7 +587,9 @@ const TOOLS=[
   colors:["#A58BFF","#7B8CFF","#3D9BFF","#2FD1C5","#46D69A","#FFB23F","#FF7B8A"],hub:"questions"},
  {id:"pshe",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
-  colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"}
+  colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
+ {id:"stakeholder-map",name:"Power / Interest",line:"Map everyone your project affects by power and interest, and know who to manage closely, keep satisfied, keep informed or monitor.",url:"/toolkit/stakeholder-map/",
+  credit:"Aubrey Mendelow (1981), popularised by Gerry Johnson and Kevan Scholes",time:"10–20 minutes",visual:"grid",tag:"Projects & people",cta:"Start mapping"}
 ];
 function viewTools(){
   return `
@@ -596,14 +598,19 @@ function viewTools(){
   </div></div>
   <div class="wrap" style="padding-top:28px">
     ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
-      <div class="tool-wheel" aria-hidden="true" style="--n:${t.letters.length}">
+      ${t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
+        <span class="tq" style="--c:#A58BFF">Keep<br>satisfied</span><span class="tq r" style="--c:#FF7B8A">Manage<br>closely</span>
+        <span class="tq b" style="--c:#3D9BFF">Monitor</span><span class="tq r b" style="--c:#2FD1C5">Keep<br>informed</span>
+        ${[["#FF7B8A",78,22,0],["#A58BFF",26,30,1],["#2FD1C5",80,72,2],["#3D9BFF",30,78,3],["#FF7B8A",62,38,4]].map(([c,x,y,i])=>`<i style="--c:${c};left:${x}%;top:${y}%;--i:${i}"></i>`).join("")}
+        <em class="ax ay">Power</em><em class="ax axx">Interest</em>
+      </div>`:`<div class="tool-wheel" aria-hidden="true" style="--n:${t.letters.length}">
         <i class="ring"></i>
         ${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--a:${(360/t.letters.length*i-90).toFixed(2)}deg;--i:${i}">${l}</b>`).join("")}
         <span class="hub"><strong style="background-image:linear-gradient(135deg,${t.colors.join(",")})">${t.letters.length}</strong>${t.hub}</span>
-      </div>
-      <div><span class="tag new">New</span>${t.id==="pshe"?`<span class="tag" style="margin-left:6px">Career growth</span>`:`<span class="tag" style="margin-left:6px">Idea generation</span>`}<h3>${esc(t.name)}</h3><p>${esc(t.line)}</p>
+      </div>`}
+      <div><span class="tag new">New</span><span class="tag" style="margin-left:6px">${t.tag||(t.id==="pshe"?"Career growth":"Idea generation")}</span><h3>${esc(t.name)}</h3><p>${esc(t.line)}</p>
       <p class="tool-meta"><span class="label">Credit</span> ${esc(t.credit)}<br><span class="label">Time</span> ${esc(t.time)}</p></div>
-      <span class="tool-cta"><span class="btn-grad">Start ${esc(t.name)} <span class="arr">→</span></span><small>Free · no sign-up</small></span></a>`).join("")}
+      <span class="tool-cta"><span class="btn-grad">${esc(t.cta||"Start "+t.name)} <span class="arr">→</span></span><small>Free · no sign-up</small></span></a>`).join("")}
     <div class="banner"><span aria-hidden="true">✦</span><span><b>More frameworks are on the way,</b> each credited to the people who created it. Want one sooner? <a href="mailto:hello@inventndiscover.com">Tell us which</a>.</span></div>
   </div>`;
 }

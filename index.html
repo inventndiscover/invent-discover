@@ -103,7 +103,19 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .btn-grad .arr{display:inline-block;transition:transform .25s}
 .tool-card:hover .btn-grad{background-position:100% 50%;box-shadow:0 14px 40px -8px rgba(70,214,154,.6),inset 0 1px 0 rgba(255,255,255,.35);transform:scale(1.03)}
 .tool-card:hover .btn-grad .arr{transform:translateX(4px)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b{animation:none}}
+/* Power/Interest card: a mini matrix with gently drifting dots */
+.tool-grid{position:relative;width:200px;height:200px;flex:none;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;padding:0 0 0 0}
+.tool-grid .tq{display:flex;padding:8px;border-radius:6px;font:600 10px/1.15 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--c);
+  background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--c) 22%,transparent),color-mix(in srgb,var(--c) 6%,transparent));border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.tool-grid .tq:nth-child(1){border-radius:16px 6px 6px 6px}.tool-grid .tq:nth-child(2){border-radius:6px 16px 6px 6px}.tool-grid .tq:nth-child(3){border-radius:6px 6px 6px 16px}.tool-grid .tq:nth-child(4){border-radius:6px 6px 16px 6px}
+.tool-grid .tq.r{justify-content:flex-end;text-align:right}.tool-grid .tq.b{align-items:flex-end}
+.tool-grid i{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px rgba(5,6,10,.85),0 0 14px var(--c);
+  animation:id-drift 6s ease-in-out infinite;animation-delay:calc(var(--i) * -1.2s)}
+@keyframes id-drift{0%,100%{transform:translate(0,0)}33%{transform:translate(5px,-4px)}66%{transform:translate(-4px,3px)}}
+.tool-grid .ax{position:absolute;font:500 9px var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.tool-grid .ay{left:-22px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+.tool-grid .axx{bottom:-18px;left:50%;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-grid i{animation:none}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
@@ -691,7 +703,7 @@ body,.btn,.mx-v,.door,.card{transition-property:background-color,color,box-shado
         <li><a href="#invent" data-go="invent">Invent: product demos</a></li>
         <li><a href="#discover" data-go="discover">Discover: events</a></li>
         <li><a href="#learn" data-go="learn">Learn: tutorials</a></li>
-        <li><a href="#tools" data-go="tools">Tools: SCAMPER, PSHE</a></li>
+        <li><a href="#tools" data-go="tools">Tools: SCAMPER, PSHE, more</a></li>
         <li><a href="#insights" data-go="insights">Insights</a></li>
         <li><a href="#communities" data-go="communities">Communities</a></li>
       </ul></div>
