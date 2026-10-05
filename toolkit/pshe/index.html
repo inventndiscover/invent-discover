@@ -41,18 +41,33 @@ h1{display:inline-block;font-size:clamp(52px,10vw,96px);line-height:.95;letter-s
 .credit{color:var(--ink3);font-size:14px;margin:14px 0 0}
 .credit a{color:var(--ink2)}
 
-/* the ladder: our own diagram, E at the bottom, P at the top */
-.ladder{display:flex;flex-direction:column-reverse;gap:8px;margin:34px 0 0}
-.rung{--c:var(--E);display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;border:1px solid var(--hair);background:var(--card);border-radius:16px;padding:12px 16px;transition:border-color .25s,box-shadow .25s,background .25s}
-.rung:nth-child(1){margin-right:30%}.rung:nth-child(2){margin-right:20%;margin-left:10%}.rung:nth-child(3){margin-right:10%;margin-left:20%}.rung:nth-child(4){margin-left:30%}
-.rung b{display:grid;place-items:center;width:56px;height:56px;border-radius:14px;font-size:30px;font-weight:700;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 50%,transparent);background:color-mix(in srgb,var(--c) 12%,transparent)}
-.rung h3{margin:0;font-size:18px;letter-spacing:-.01em}
-.rung p{margin:2px 0 0;color:var(--ink2);font-size:14px}
-.rung .you{display:none;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--c);margin-left:8px}
-.rung.here{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--card));box-shadow:0 0 30px color-mix(in srgb,var(--c) 30%,transparent)}
-.rung.here b{background:var(--c);color:#0B0D14}
-.rung.here .you{display:inline}
-.axis{display:flex;justify-content:space-between;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:10px 2px 0}
+/* the staircase: our own diagram. Steps rise from E to P; each meter shows how much you figure out yourself */
+.stairs{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:end;height:510px;margin:40px 0 0;padding-top:30px}
+.rung{--c:var(--E);--h:46%;position:relative;height:var(--h);display:flex;flex-direction:column;border-radius:20px 20px 14px 14px;padding:18px 18px 16px;
+  border:1px solid color-mix(in srgb,var(--c) 38%,transparent);border-top:3px solid var(--c);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--c) 22%,#0B0D14) 0%,color-mix(in srgb,var(--c) 6%,#0B0D14) 55%,#0B0D14 100%);
+  box-shadow:0 -10px 40px -18px var(--c);transform-origin:bottom;
+  transition:transform .25s,box-shadow .25s}
+.rung:hover{transform:translateY(-4px);box-shadow:0 -14px 50px -14px var(--c)}
+.stairs.anim .rung{animation:id-rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * .12s)}
+@keyframes id-rise{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
+.rung b{font-size:clamp(46px,6vw,72px);line-height:.9;font-weight:700;color:var(--c);letter-spacing:-.04em;text-shadow:0 0 28px color-mix(in srgb,var(--c) 60%,transparent)}
+.rung h3{margin:6px 0 0;font-size:19px;letter-spacing:-.01em}
+.rung .stage{font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:2px}
+.rung p{margin:10px 0 0;color:var(--ink2);font-size:13.5px;line-height:1.45}
+.rung p em{font-style:normal;color:var(--ink)}
+.meter{margin-top:auto;padding-top:12px}
+.meter span{display:block;font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.meter div{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.meter i{height:8px;border-radius:4px;background:rgba(255,255,255,.08)}
+.meter i.on{background:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 70%,transparent)}
+.rung .you{position:absolute;top:-30px;left:50%;transform:translateX(-50%);display:none;white-space:nowrap;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:#0B0D14;background:var(--c);padding:4px 10px;border-radius:999px;box-shadow:0 0 18px color-mix(in srgb,var(--c) 60%,transparent)}
+.rung.here{border-color:var(--c);box-shadow:0 0 0 2px var(--c),0 -16px 60px -10px var(--c)}
+.rung.here .you{display:block}
+.stairs.has-here .rung:not(.here){opacity:.55}
+.axis{display:flex;justify-content:space-between;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:12px 2px 0}
+@media (prefers-reduced-motion:reduce){.stairs.anim .rung{animation:none}}
 
 .tabs{display:flex;gap:6px;margin:34px 0 0;border:1px solid var(--hair);border-radius:999px;padding:5px;width:max-content;max-width:100%;background:var(--card)}
 .tabs button{border:0;background:transparent;border-radius:999px;padding:10px 18px;font-weight:600;font-size:15px;color:var(--ink2)}
@@ -109,12 +124,15 @@ h1{display:inline-block;font-size:clamp(52px,10vw,96px);line-height:.95;letter-s
 .toast.show{opacity:1;transform:translateX(-50%)}
 [hidden]{display:none!important}
 @media (max-width:600px){
-  .rung,.rung:nth-child(n){margin-left:0;margin-right:0;grid-template-columns:46px 1fr}
-  .rung b{width:46px;height:46px;font-size:24px}
+  .stairs{display:flex;flex-direction:column-reverse;height:auto;gap:10px;padding-top:0}
+  .rung{height:auto;display:grid;grid-template-columns:52px 1fr;column-gap:16px;align-items:start}
+  .rung b{grid-row:span 3;font-size:52px}
+  .rung h3{margin:0}.rung p,.meter{grid-column:2}
+  .rung .you{top:14px;right:12px;left:auto;transform:none}
   .tabs{width:100%}.tabs button{flex:1;padding:10px 8px}
   .big b{width:64px;height:64px;font-size:38px}
 }
-@media print{body{background:#fff;color:#000}body::before,.top,.tabs,.hero,.ladder,.axis,.about,.sitefoot,.row,.toast,#quiz{display:none!important}.panel{border:0;background:#fff}.out{background:#fff;border:1px solid #999}.out .lvl,.result ul{color:#000}}
+@media print{body{background:#fff;color:#000}body::before,.top,.tabs,.hero,.stairs,.axis,.about,.sitefoot,.row,.toast,#quiz{display:none!important}.panel{border:0;background:#fff}.out{background:#fff;border:1px solid #999}.out .lvl,.result ul{color:#000}}
 </style>
 </head><body>
 <header class="top"><div class="wrap">
@@ -130,8 +148,8 @@ h1{display:inline-block;font-size:clamp(52px,10vw,96px);line-height:.95;letter-s
     <p class="credit">PSHE was created by Shishir Mehrotra at Google (YouTube). <a href="#where">Where it comes from</a></p>
   </section>
 
-  <div class="ladder" id="ladder"></div>
-  <div class="axis"><span>↓ More is given to you</span><span>You figure out more ↑</span></div>
+  <div class="stairs" id="ladder" role="img" aria-label="The PSHE staircase: Execution, How, Solution and Problem, each figuring out more"></div>
+  <div class="axis"><span>Early career · more is given to you</span><span>Most senior · you figure out more</span></div>
 
   <div class="tabs" role="tablist">
     <button role="tab" id="tQuiz" aria-selected="true" aria-controls="quizPane">Where am I?</button>
@@ -227,7 +245,12 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
 
 /* ---------- ladder ---------- */
 function drawLadder(here){
-  $("#ladder").innerHTML=LV.map(l=>`<div class="rung ${here===l.k?"here":""}" style="--c:var(--${l.k})"><b>${l.k}</b><div><h3>${l.w}<span class="you">← you, for now</span></h3><p>Given ${l.given}. You figure out ${l.fig}.</p></div></div>`).join("");
+  const stage={E:"Early career",H:"Growing",S:"Director / lead",P:"Most senior"},hgt=["58%","72%","86%","100%"];
+  const el=$("#ladder");el.classList.toggle("has-here",!!here);el.classList.toggle("anim",!drawLadder.done);drawLadder.done=true;
+  el.innerHTML=LV.map((l,i)=>`<div class="rung ${here===l.k?"here":""}" style="--c:var(--${l.k});--h:${hgt[i]};--i:${i}">
+    <span class="you">You, for now</span><b>${l.k}</b><h3>${l.w}</h3><span class="stage">${stage[l.k]}</span>
+    <p>Given <em>${l.given}</em>. You figure out <em>${l.fig}</em>.</p>
+    <div class="meter"><span>You figure out</span><div>${[0,1,2,3].map(n=>`<i class="${n<=i?"on":""}"></i>`).join("")}</div></div></div>`).join("");
 }
 
 /* ---------- self-check ---------- */
