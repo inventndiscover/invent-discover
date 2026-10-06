@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-10-05T07:18:57+05:30",
+ "REFRESHED": "2026-10-06T07:18:30+05:30",
  "SIGNALS": [
+  {
+   "id": "2106300727391903852",
+   "handle": "hqmank",
+   "name": "Kai",
+   "url": "https://x.com/hqmank/status/2106300727391903852",
+   "posted": "2026-10-03T14:00:01+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Says Google Antigravity added Claude Opus 5.5 and Sonnet 5.5 for paid Pro and Ultra plans; the free student Pro plan does not include them."
+  },
   {
    "id": "2106129049718325517",
    "handle": "CNBC",
@@ -70,6 +80,16 @@
    "topic": "Tech",
    "kind": "Official",
    "summary": "Google's bug bounty team says it is temporarily no longer accepting OSS VRP product vulnerability submissions; supply chain reports and outstanding reports are not affected."
+  },
+  {
+   "id": "2105482573728088504",
+   "handle": "minchoi",
+   "name": "Min Choi",
+   "url": "https://x.com/minchoi/status/2105482573728088504",
+   "posted": "2026-10-01T07:48:58+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Compares output limits: Gemini 4 Argon allows 1M output tokens, versus 128K for GPT-6.1 Sol and the Claude Opus 5.5, Sonnet 5.5 and Fable 5.1 models."
   }
  ]
 }

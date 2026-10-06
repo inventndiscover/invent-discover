@@ -382,6 +382,35 @@
   "desc": "A 24-hour build sprint for undergraduate and postgraduate students in teams of two to five, across several technology tracks, with a ₹10 lakh prize pool.",
   "firstSeen": "2026-09-28"
  },
+ "hackverse-19": {
+  "id": "hackverse-19",
+  "title": "Hackverse 19",
+  "cat": "Tech",
+  "tags": [
+   "Hackathon",
+   "Space tech",
+   "24 hours"
+  ],
+  "area": "Navi Mumbai",
+  "venue": "Smt. Indira Gandhi College of Engineering",
+  "start": "2026-10-05",
+  "endDate": "2026-10-06",
+  "end": null,
+  "timeNote": "24-hour in-person round",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free to register",
+  "aud": [
+   "Student",
+   "Developer"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/e5ginacu",
+  "org": "Sarang Chaudhari",
+  "access": "open",
+  "desc": "A space-technology hackathon with an online slide round followed by a 24-hour coding round at the college, with a prize pool of ₹35,000.",
+  "firstSeen": "2026-10-06"
+ },
  "healthtech-founders-mixer": {
   "id": "healthtech-founders-mixer",
   "title": "Startup Founders' Mixer: Health Tech",
@@ -549,6 +578,32 @@
   "desc": "A Devcon-week side event that connects blockchain and AI startups with investors and media, with mentoring and a pool of funding and grants for selected teams.",
   "firstSeen": "2026-09-28"
  },
+ "mobile-architecture-lab-4": {
+  "id": "mobile-architecture-lab-4",
+  "title": "Hackathon @ Mobile Architecture Lab 4",
+  "cat": "Tech",
+  "tags": [
+   "Hackathon",
+   "Mobile apps"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue shared on registration",
+  "start": "2026-10-31T10:00",
+  "end": "18:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · registration open",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/q7m53cxm",
+  "org": "Mobile Architecture Lab",
+  "access": "open",
+  "desc": "A one-day hackathon where solo builders or teams of two to three create a mobile app around a challenge announced on the day.",
+  "firstSeen": "2026-10-06"
+ },
  "mongodb-local-mumbai": {
   "id": "mongodb-local-mumbai",
   "title": "MongoDB.local Mumbai",
@@ -655,6 +710,36 @@
   "access": "open",
   "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner.",
   "firstSeen": "2026-09-28"
+ },
+ "startuplive-mumbai-26": {
+  "id": "startuplive-mumbai-26",
+  "title": "StartupLive Mumbai'26",
+  "cat": "Startup",
+  "tags": [
+   "Pitch",
+   "Mentoring",
+   "Investors"
+  ],
+  "area": "Powai",
+  "venue": "Indian Institute of Technology Bombay",
+  "start": "2026-11-20T09:30",
+  "endDate": "2026-11-21",
+  "end": null,
+  "timeNote": "Day 1 from 9:30, day 2 from 10:30",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticket price not shown · some tickets need approval",
+  "aud": [
+   "Founder",
+   "Student",
+   "Professional"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/h5ca7fjs",
+  "org": "Startup Live Global",
+  "access": "approval",
+  "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two.",
+  "firstSeen": "2026-10-06"
  },
  "titan-consumer-mixer": {
   "id": "titan-consumer-mixer",
