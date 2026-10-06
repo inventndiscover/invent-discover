@@ -55,6 +55,11 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"malabar-hill-trail",name:"Malabar Hill Trail",line:"A monsoon forest walk above Mumbai, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
+  gif:"media/malabar-hill-trail.gif",img:"media/malabar-hill-trail-cover.jpg",sheetImg:"media/malabar-hill-trail-skyline.jpg",url:"demos/malabar-hill-trail/",
+  vr:"inventndiscover.com/demos/malabar-hill-trail",
+  needs:"On a laptop: drag to look, W A S D to walk, Shift to walk briskly, F to fly above the trees, M for sound, T to replay the tour. On a phone: drag to look, two-finger drag to move. Best in a recent Chrome, Edge or Safari.",
+  desc:"A 450-metre raised boardwalk winds through the forest canopy of Malabar Hill and ends on a viewing deck above the Arabian Sea, with Mumbai's towers rising out of the haze. Rain trees, banyans with hanging roots, palms and ferns; monsoon mist with sun shafts; kites circling overhead and live birdsong, rain and distant city hum. Slide the time of day, mist, cloud and rain. It starts with a slow cinematic tour, then you walk or fly. Everything is generated in one web page, with nothing to download."},
  {id:"tufani-samundar",name:"Tufani Samundar",line:"A real-time 3D storm ocean you can dive into, in VR too",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/tufani-samundar.gif",img:"media/tufani-samundar-whale.jpg",sheetImg:"media/tufani-samundar-storm.jpg",url:"demos/tufani-samundar/",
   needs:"Best on a laptop or desktop with a recent Chrome, Edge or Safari. Older phones may not run it.",
@@ -467,7 +472,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>The first real demos are up: Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
