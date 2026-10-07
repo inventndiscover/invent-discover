@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-06T07:18:30+05:30",
+ "REFRESHED": "2026-10-07T07:18:39+05:30",
  "SIGNALS": [
+  {
+   "id": "2107461898127954001",
+   "handle": "GuillaumeLample",
+   "name": "Guillaume Lample",
+   "url": "https://x.com/GuillaumeLample/status/2107461898127954001",
+   "posted": "2026-10-06T18:54:05+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Mistral cofounder announces a preview of Mistral Large 4: a 1T-parameter model with 49B active parameters, trained natively with multimodal capabilities."
+  },
+  {
+   "id": "2107186849370247235",
+   "handle": "reflection_ai",
+   "name": "Reflection",
+   "url": "https://x.com/reflection_ai/status/2107186849370247235",
+   "posted": "2026-10-06T00:41:09+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Reflection introduces Beam, an open model with 501B total and 23B active parameters, trained from scratch. Full weights are due to be released this month."
+  },
+  {
+   "id": "2107157619341402241",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2107157619341402241",
+   "posted": "2026-10-05T22:45:00+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "Reports, citing Tibor Blaho, that OpenAI is rolling out invisible text watermarking for ChatGPT and Codex in the EU to meet AI Act text provenance rules."
+  },
   {
    "id": "2106300727391903852",
    "handle": "hqmank",
@@ -52,44 +82,14 @@
    "summary": "NVIDIA says DGX Spark is getting a 64GB option built on the GB10 Grace Blackwell Superchip, for running local agents on device, with a new Sync Cluster Assistant for pairing systems."
   },
   {
-   "id": "2105888862249849082",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2105888862249849082",
-   "posted": "2026-10-02T10:43:24+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Says OpenAI's Tibo posted that a usage reset for all paid ChatGPT accounts, covering ChatGPT Work and Codex, lands tomorrow at 10am PST."
-  },
-  {
-   "id": "2105709302484729879",
-   "handle": "kimmonismus",
-   "name": "Chubby",
-   "url": "https://x.com/kimmonismus/status/2105709302484729879",
-   "posted": "2026-10-01T22:49:54+05:30",
+   "id": "2105388143902175529",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2105388143902175529",
+   "posted": "2026-10-01T01:33:44+05:30",
    "topic": "Models",
-   "kind": "Report",
-   "summary": "Relays a Google DeepMind engineer's pushback on a Bloomberg report that Gemini 4 scores well on benchmarks but underperforms when employees use it at work."
-  },
-  {
-   "id": "2105689195180179605",
-   "handle": "GoogleVRP",
-   "name": "Google VRP (Google Bug Hunters)",
-   "url": "https://x.com/GoogleVRP/status/2105689195180179605",
-   "posted": "2026-10-01T21:30:00+05:30",
-   "topic": "Tech",
    "kind": "Official",
-   "summary": "Google's bug bounty team says it is temporarily no longer accepting OSS VRP product vulnerability submissions; supply chain reports and outstanding reports are not affected."
-  },
-  {
-   "id": "2105482573728088504",
-   "handle": "minchoi",
-   "name": "Min Choi",
-   "url": "https://x.com/minchoi/status/2105482573728088504",
-   "posted": "2026-10-01T07:48:58+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Compares output limits: Gemini 4 Argon allows 1M output tokens, versus 128K for GPT-6.1 Sol and the Claude Opus 5.5, Sonnet 5.5 and Fable 5.1 models."
+   "summary": "Google introduces Gemini 4 Argon, aimed at software engineering, knowledge work and cybersecurity defense, with a 1M token output limit."
   }
  ]
 }

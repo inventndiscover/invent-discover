@@ -1,59 +1,6 @@
 {
- "REFRESHED": "2026-10-06T08:04:15+05:30",
+ "REFRESHED": "2026-10-07T07:58:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "mongodb-local-mumbai",
-   "title": "MongoDB.local Mumbai",
-   "cat": "Tech",
-   "tags": [
-    "Databases",
-    "Agentic AI",
-    "Conference"
-   ],
-   "area": "Powai",
-   "venue": "The Westin Mumbai Powai Lake",
-   "start": "2026-10-06",
-   "end": null,
-   "timeNote": "Times on the event page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · request to attend",
-   "aud": [
-    "Developer",
-    "Professional"
-   ],
-   "src": "MongoDB",
-   "url": "https://www.mongodb.com/events/mongodb-local/mumbai",
-   "org": "MongoDB",
-   "access": "approval",
-   "desc": "MongoDB's one-day developer event on taking AI apps from pilot to production and modernising older systems, with technical sessions and time to meet the MongoDB team."
-  },
-  {
-   "id": "servicenow-world-forum-mumbai",
-   "title": "ServiceNow World Forum Mumbai 2026",
-   "cat": "AI",
-   "tags": [
-    "Enterprise AI",
-    "Conference",
-    "Hands-on labs"
-   ],
-   "area": "BKC",
-   "venue": "Jio World Centre, G Block, Bandra Kurla Complex",
-   "start": "2026-10-06T08:00",
-   "end": "18:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · registration confirmed within about five business days",
-   "aud": [
-    "Professional",
-    "Developer"
-   ],
-   "src": "ServiceNow",
-   "url": "https://www.servicenow.com/events/world-forum/mumbai.html",
-   "org": "ServiceNow",
-   "access": "approval",
-   "desc": "ServiceNow's first Mumbai forum on AI transformation, with keynotes, more than 30 breakout sessions, hands-on AI labs and networking."
-  },
   {
    "id": "lunch-and-learn-meta",
    "title": "Lunch & Learn: AI for the festive rush",
@@ -161,6 +108,31 @@
    "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits."
   },
   {
+   "id": "global-startups-club-oct10",
+   "title": "Global Startups Club: Startup Networking Mumbai",
+   "cat": "Startup",
+   "tags": [
+    "Networking",
+    "Speed dating",
+    "Pitch"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated",
+   "start": "2026-10-10T10:30",
+   "end": "13:30",
+   "fmt": "Offline",
+   "price": 475,
+   "priceNote": "₹475 · tickets on AllEvents",
+   "aud": [
+    "Founder"
+   ],
+   "src": "StartupGrants India",
+   "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-13",
+   "org": "Global Startups Club",
+   "access": "open",
+   "desc": "A networking morning for founders and aspiring entrepreneurs with business speed dating and 30-second pitches."
+  },
+  {
    "id": "mumbai-meets-ai-06",
    "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
    "cat": "AI",
@@ -185,6 +157,31 @@
    "org": "Mumbai Meets AI",
    "access": "approval",
    "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup."
+  },
+  {
+   "id": "we-founders-collab-oct10",
+   "title": "Entrepreneurs Meetup by We Founders Collab",
+   "cat": "Startup",
+   "tags": [
+    "Networking",
+    "Pitch",
+    "Workshop"
+   ],
+   "area": "Mumbai",
+   "venue": "DevX",
+   "start": "2026-10-10T14:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": 475,
+   "priceNote": "₹475 · tickets on District",
+   "aud": [
+    "Founder"
+   ],
+   "src": "StartupGrants India",
+   "url": "https://www.startupgrantsindia.com/events/entrepreneurs-meetup-by-we-founders-collab-mumbai-1",
+   "org": "We Founders Collab",
+   "access": "open",
+   "desc": "A three-hour meetup for founders and aspiring entrepreneurs mixing short talks, workshops, elevator pitches with feedback and open networking."
   },
   {
    "id": "shayari-showdown",
@@ -368,6 +365,31 @@
    "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce."
   },
   {
+   "id": "mobile-architecture-lab-4",
+   "title": "Hackathon @ Mobile Architecture Lab 4",
+   "cat": "Tech",
+   "tags": [
+    "Hackathon",
+    "Mobile apps"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue shared on registration",
+   "start": "2026-10-31T10:00",
+   "end": "18:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · registration open",
+   "aud": [
+    "Developer",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/q7m53cxm",
+   "org": "Mobile Architecture Lab",
+   "access": "open",
+   "desc": "A one-day hackathon where solo builders or teams of two to three create a mobile app around a challenge announced on the day."
+  },
+  {
    "id": "india-blockchain-week",
    "title": "India Blockchain Week 2026",
    "cat": "Tech",
@@ -478,29 +500,32 @@
    "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
   },
   {
-   "id": "mobile-architecture-lab-4",
-   "title": "Hackathon @ Mobile Architecture Lab 4",
-   "cat": "Tech",
+   "id": "earthshot-prize-mumbai",
+   "title": "The Earthshot Prize 2026 Summit and Awards",
+   "cat": "Climate",
    "tags": [
-    "Hackathon",
-    "Mobile apps"
+    "Summit",
+    "Awards",
+    "Climate"
    ],
    "area": "Mumbai",
-   "venue": "Venue shared on registration",
-   "start": "2026-10-31T10:00",
-   "end": "18:00",
+   "venue": "Venue not stated on the official page",
+   "start": "2026-11-16",
+   "end": null,
+   "endDate": "2026-11-17",
+   "timeNote": "Times not published",
    "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · registration open",
+   "price": null,
+   "priceNote": "Access not stated; leaders, investors and philanthropists are invited",
    "aud": [
-    "Developer",
-    "Student"
+    "Founder",
+    "Professional"
    ],
-   "src": "Luma",
-   "url": "https://luma.com/q7m53cxm",
-   "org": "Mobile Architecture Lab",
-   "access": "open",
-   "desc": "A one-day hackathon where solo builders or teams of two to three create a mobile app around a challenge announced on the day."
+   "src": "Official",
+   "url": "https://earthshotprize.org/mumbai2026/",
+   "org": "The Earthshot Prize",
+   "access": "approval",
+   "desc": "The sixth Earthshot Prize summit and awards ceremony, held in India for the first time, with finalists competing for climate and nature solutions funding."
   },
   {
    "id": "startuplive-mumbai-26",
@@ -530,34 +555,6 @@
    "org": "Startup Live Global",
    "access": "approval",
    "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two."
-  },
-  {
-   "id": "hackverse-19",
-   "title": "Hackverse 19",
-   "cat": "Tech",
-   "tags": [
-    "Hackathon",
-    "Space tech",
-    "24 hours"
-   ],
-   "area": "Navi Mumbai",
-   "venue": "Smt. Indira Gandhi College of Engineering",
-   "start": "2026-10-05",
-   "endDate": "2026-10-06",
-   "end": null,
-   "timeNote": "24-hour in-person round",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free to register",
-   "aud": [
-    "Student",
-    "Developer"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/e5ginacu",
-   "org": "Sarang Chaudhari",
-   "access": "open",
-   "desc": "A space-technology hackathon with an online slide round followed by a 24-hour coding round at the college, with a prize pool of ₹35,000."
   }
  ],
  "QUEUE_RAW": [
@@ -694,36 +691,6 @@
     "date": 0,
     "place": 50,
     "category": 90
-   }
-  },
-  {
-   "qid": "q-elastic",
-   "title": "Elastic AI Connect: Mumbai",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/ssouxw3c",
-   "access": "approval",
-   "why": "No date on the page last run; page would not open this run.",
-   "conf": {
-    "date": 0,
-    "place": 40,
-    "category": 96
-   }
-  },
-  {
-   "qid": "q-claude",
-   "title": "Mumbai | Claude Conversation",
-   "cat": "AI",
-   "area": "Vidyanagar",
-   "src": "Luma",
-   "url": "https://luma.com/claude-ley0",
-   "access": "approval",
-   "why": "No date on the page last run; page would not open this run.",
-   "conf": {
-    "date": 0,
-    "place": 60,
-    "category": 94
    }
   },
   {
@@ -898,64 +865,64 @@
  ],
  "RUNS": [
   {
-   "src": "Luma: Mumbai and AI and Tech discover pages",
-   "what": "Listings plus event pages",
-   "found": 22,
-   "pub": 3,
-   "review": 4,
+   "src": "Luma discover pages and event pages",
+   "what": "Direct fetch",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Listings opened after a search unlocked them but show no dates. Event pages confirmed Lunch & Learn, DevDay Exchange, Mumbai Meets AI 06, Enterprise AI Summit, Mobile Architecture Lab hackathon, Hackverse 19 and StartupLive. Several pages would not open. Skipped sold-out Clinical AI Summit and Agent Builders Meet, plus an HR conclave"
+   "skip": 0,
+   "note": "Luma pages could not be fetched this run (access refused); only Mumbai Meets AI 06 page opened and still shows 10 Oct, full with waitlist"
   },
   {
-   "src": "Meetup: Mumbai Meets AI",
-   "what": "Group page",
+   "src": "Meetup, AllEvents, Hidden Events",
+   "what": "Listing pages",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Not reachable this run; skipped"
+  },
+  {
+   "src": "StartupGrants India and eChai (found via web search)",
+   "what": "Event pages",
+   "found": 4,
+   "pub": 2,
+   "review": 0,
+   "dup": 0,
+   "skip": 2,
+   "note": "Added two paid founder meetups on 10 Oct. Skipped a 3 Oct eChai meetup (already happened) and a Delhi-area design event"
+  },
+  {
+   "src": "Earthshot Prize (official)",
+   "what": "Event page",
    "found": 1,
-   "pub": 0,
-   "review": 0,
-   "dup": 1,
-   "skip": 0,
-   "note": "Confirms 10 Oct, 11:00 to 14:00; organisers take RSVPs on Luma only"
-  },
-  {
-   "src": "Hidden Events",
-   "what": "Luma mirror, hints only",
-   "found": 11,
-   "pub": 0,
-   "review": 2,
-   "dup": 0,
-   "skip": 0,
-   "note": "Used for date hints on two queued events; times converted from UTC"
-  },
-  {
-   "src": "AllEvents",
-   "what": "All-events listing",
-   "found": 6,
-   "pub": 0,
+   "pub": 1,
    "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Code to Capital Summit date matches. Skipped a paid drone workshop, a past pitch event and a business-school fair. Technology and startup category pages not opened"
+   "skip": 0,
+   "note": "16-17 Nov summit and awards in Mumbai; venue and ticketing not stated"
   },
   {
-   "src": "Web searches (design, UX, XR, hackathons)",
+   "src": "Web searches (AI, design, UX, XR, climate, hackathons)",
    "what": "Search results",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Returned only generic listings without dated Mumbai events; no design, UX or XR events confirmed"
+   "note": "No dated Mumbai design, UX or XR events found; Elastic AI Connect and Claude Conversation turned out to be 26 Sep, so removed from the queue"
   },
   {
    "src": "Past-event cleanup",
    "what": "Expiry check",
-   "found": 0,
+   "found": 3,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "No events expired; none cancelled. Luma Arts page and Meetup design searches not opened. Other carried-over events not rechecked"
+   "note": "Removed finished events: mongodb-local-mumbai, servicenow-world-forum-mumbai, hackverse-19. Other carried-over events not rechecked this run"
   }
  ],
  "COMMUNITIES": [

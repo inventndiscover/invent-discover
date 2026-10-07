@@ -185,6 +185,35 @@
   "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits.",
   "firstSeen": "2026-09-28"
  },
+ "earthshot-prize-mumbai": {
+  "id": "earthshot-prize-mumbai",
+  "title": "The Earthshot Prize 2026 Summit and Awards",
+  "cat": "Climate",
+  "tags": [
+   "Summit",
+   "Awards",
+   "Climate"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated on the official page",
+  "start": "2026-11-16",
+  "end": null,
+  "endDate": "2026-11-17",
+  "timeNote": "Times not published",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Access not stated; leaders, investors and philanthropists are invited",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "Official",
+  "url": "https://earthshotprize.org/mumbai2026/",
+  "org": "The Earthshot Prize",
+  "access": "approval",
+  "desc": "The sixth Earthshot Prize summit and awards ceremony, held in India for the first time, with finalists competing for climate and nature solutions funding.",
+  "firstSeen": "2026-10-07"
+ },
  "echai-startup-meetup-oct": {
   "id": "echai-startup-meetup-oct",
   "title": "Mumbai Startup Meetup (eChai)",
@@ -326,6 +355,32 @@
   "access": "open",
   "desc": "A full-day summit for consumer-brand founders and operators that mixes hands-on AI bootcamps with panels and keynotes. Registration is on D2C Insider's site.",
   "firstSeen": "2026-09-29"
+ },
+ "global-startups-club-oct10": {
+  "id": "global-startups-club-oct10",
+  "title": "Global Startups Club: Startup Networking Mumbai",
+  "cat": "Startup",
+  "tags": [
+   "Networking",
+   "Speed dating",
+   "Pitch"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated",
+  "start": "2026-10-10T10:30",
+  "end": "13:30",
+  "fmt": "Offline",
+  "price": 475,
+  "priceNote": "₹475 · tickets on AllEvents",
+  "aud": [
+   "Founder"
+  ],
+  "src": "StartupGrants India",
+  "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-13",
+  "org": "Global Startups Club",
+  "access": "open",
+  "desc": "A networking morning for founders and aspiring entrepreneurs with business speed dating and 30-second pitches.",
+  "firstSeen": "2026-10-07"
  },
  "hack-nation-bombay-hub": {
   "id": "hack-nation-bombay-hub",
@@ -766,6 +821,32 @@
   "access": "approval",
   "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval.",
   "firstSeen": "2026-09-28"
+ },
+ "we-founders-collab-oct10": {
+  "id": "we-founders-collab-oct10",
+  "title": "Entrepreneurs Meetup by We Founders Collab",
+  "cat": "Startup",
+  "tags": [
+   "Networking",
+   "Pitch",
+   "Workshop"
+  ],
+  "area": "Mumbai",
+  "venue": "DevX",
+  "start": "2026-10-10T14:00",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": 475,
+  "priceNote": "₹475 · tickets on District",
+  "aud": [
+   "Founder"
+  ],
+  "src": "StartupGrants India",
+  "url": "https://www.startupgrantsindia.com/events/entrepreneurs-meetup-by-we-founders-collab-mumbai-1",
+  "org": "We Founders Collab",
+  "access": "open",
+  "desc": "A three-hour meetup for founders and aspiring entrepreneurs mixing short talks, workshops, elevator pitches with feedback and open networking.",
+  "firstSeen": "2026-10-07"
  },
  "weathers-of-our-work": {
   "id": "weathers-of-our-work",
