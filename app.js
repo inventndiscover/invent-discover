@@ -567,6 +567,15 @@ function trendsSection(){
   document.addEventListener("scroll",()=>{const tip=document.getElementById("trTip");if(tip)tip.hidden=true},{passive:true});
 })();
 
+function interviewSection(){
+  return `<section class="block iv-block">
+    <div class="sec-head"><div><h2 class="sec-title">Interview series</h2><p class="sec-sub">Conversations with people building and shaping technology.</p></div></div>
+    <a class="iv-card" href="https://blog.inventndiscover.com/" target="_blank" rel="noopener">
+      <img src="images/interview-kumar-gaurav.jpg" alt="Black-and-white portrait of Kumar Gaurav, hands clasped under his chin" width="400" height="400">
+      <div class="iv-text"><span class="pill">Interview series</span><h3>In conversation with Kumar Gaurav</h3><span class="arrow">Read on the blog ↗</span></div>
+    </a>
+  </section>`;
+}
 function viewInsights(){
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("marine")}" alt="" style="object-position:50% 30%">${photoCredit("marine")}<div class="wrap head-row">
@@ -575,6 +584,7 @@ function viewInsights(){
   ${trendsSection()}
   ${xSection(0)}
   <div class="wrap">
+    ${interviewSection()}
     <section class="block">
       <details class="fold" id="foldBayArea" ${bayOpen?"open":""}>
         <summary class="fold-head" aria-label="Bay Area immersion, 2025: show or hide the ${ARTICLES.length} posts"><div><h2 class="sec-title">Bay Area immersion, 2025</h2><p class="sec-sub" style="margin:10px 0 0">Notes from university visits on AI, XR and design education · ${ARTICLES.length} posts</p></div><span class="fold-btn" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></summary>
