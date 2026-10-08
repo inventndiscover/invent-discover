@@ -76,6 +76,15 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 #mapInfo b{font-weight:500;color:var(--ink)}
 @media (max-width:560px){#cap{display:none}}
 @media (prefers-reduced-motion:reduce){#ui{transition:none}}
+
+/* Notice shown before the experience starts (digital creation + motion comfort) */
+#notice{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;box-sizing:border-box;background:rgba(5,6,7,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto}
+#notice[hidden]{display:none!important}
+#noticeCard{width:min(520px,100%);box-sizing:border-box;padding:22px 24px 20px;background:rgba(10,12,13,.88);border:1px solid var(--hair);border-radius:6px;font:400 12.5px/1.65 var(--mono);color:var(--dim);letter-spacing:.01em}
+#noticeCard h2{margin:0 0 14px;font:500 11px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
+#noticeCard p{margin:0 0 12px}
+#noticeCard p b{color:var(--ink);font-weight:500}
+#noticeGo{margin-top:6px;font-size:10.5px;padding:7px 11px;color:var(--ink);border-color:var(--faint)}
 </style>
 </head>
 <body>
@@ -103,6 +112,30 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 <div id="mapBox" aria-label="Trail map"><canvas id="map" width="360" height="360"></canvas><div id="mapInfo"><span id="mapWhere">Trail</span><span id="mapDist"></span></div></div>
 <div id="cap"></div>
 <div id="err"></div>
+<div id="notice" role="dialog" aria-modal="true" aria-labelledby="noticeH">
+<div id="noticeCard"><h2 id="noticeH">Notice before you begin</h2>
+<p><b>1. Digital creation.</b> This experience is a digital creation, a representation inspired by the Malabar Hill nature trail in Mumbai. It is not a real place, and it is not a surveyed or accurate map. The route, landmarks, buildings and sounds are illustrative and must not be treated as real.</p>
+<p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
+<p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
+<button id="noticeGo" type="button">I understand, begin</button></div></div>
+<script>
+/* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open. */
+window.__gate=!/[?&]test/.test(location.search);
+(function(){
+  var n=document.getElementById('notice'); if(!window.__gate){ n.hidden=true; return; }
+  var rest=['c','ui','show','mapBox'].map(function(i){return document.getElementById(i);});
+  rest.forEach(function(e){ if(e) e.setAttribute('inert',''); });
+  window.addEventListener('keydown',function(e){ if(window.__gate && e.key!=='Tab' && e.key!=='Enter' && e.key!==' ') e.stopImmediatePropagation(); },true);
+  var b=document.getElementById('noticeGo');
+  b.addEventListener('click',function(){
+    window.__gate=false; n.hidden=true;
+    rest.forEach(function(e){ if(e) e.removeAttribute('inert'); });
+    var c=document.getElementById('c'); if(c) c.focus({preventScroll:true});
+  });
+  b.focus();
+})();
+</script>
+
 <script>
 'use strict';
 (() => {
@@ -3101,7 +3134,7 @@ function updateDesktopCamera(dt){
   const capEl=document.getElementById('cap');
   const fast=keys.has('ShiftLeft')||keys.has('ShiftRight');
   if(cam.mode==='tour'){
-    cam.tourT+=dt;
+    cam.tourT+=(window.__gate?0:dt);
     if(cam.tourT>=TOUR_LEN){ setMode('walk'); }
     else { const r=tourPose(cam.tourT); cam.pos=r.p; const a=lookAtAngles(r.p,r.t); cam.yaw=a.yaw; cam.pitch=a.pitch; cam.fov=r.fov*Math.PI/180;
       capEl.textContent=r.cap; capEl.style.opacity=(r.u>.06&&r.u<.82)?1:0; }
@@ -3257,7 +3290,7 @@ function onXRFrame(t, xf){
     xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt)); speed=V.len(xr.flyV);
     const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); const fl=Math.max(groundH(head[0],head[2]),0)+.6; if(head[1]<fl) xr.rigPos[1]+=fl-head[1];
   } else {
-    cam.tourT+=dt;
+    cam.tourT+=(window.__gate?0:dt);
     if(cam.tourT>=TOUR_LEN){ vrSetMode('walk'); }
     else {
       const r=tourPose(cam.tourT);
