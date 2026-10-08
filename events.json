@@ -1,32 +1,6 @@
 {
- "REFRESHED": "2026-10-07T07:58:00+05:30",
+ "REFRESHED": "2026-10-08T08:05:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "lunch-and-learn-meta",
-   "title": "Lunch & Learn: AI for the festive rush",
-   "cat": "AI",
-   "tags": [
-    "WhatsApp",
-    "Voice agents",
-    "D2C"
-   ],
-   "area": "BKC",
-   "venue": "Meta office, ONE BKC, Bandra East",
-   "start": "2026-10-07T10:00",
-   "end": "14:30",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · approval required",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/rbh7n2um",
-   "org": "BotSpace",
-   "access": "approval",
-   "desc": "A session at Meta's Mumbai office for D2C and e-commerce teams on using AI to handle festive-season support load, WhatsApp marketing and voice agents."
-  },
   {
    "id": "evm-capital-hackathon",
    "title": "EVM Capital Hackathon: Mumbai edition",
@@ -701,7 +675,7 @@
    "src": "Luma",
    "url": "https://luma.com/5lxd2x7o",
    "access": "approval",
-   "why": "No date on the page last run; page would not open this run.",
+   "why": "No date on the page last run; page still would not open this run.",
    "conf": {
     "date": 0,
     "place": 97,
@@ -802,21 +776,6 @@
    }
   },
   {
-   "qid": "q-durable-devops",
-   "title": "Durable DevOps Tech Meetup",
-   "cat": "Tech",
-   "area": "Andheri East",
-   "src": "Luma",
-   "url": "https://luma.com/uvc7v42g",
-   "access": "open",
-   "why": "Page shows a 6 PM start and career and DevOps panels but no date.",
-   "conf": {
-    "date": 0,
-    "place": 90,
-    "category": 85
-   }
-  },
-  {
    "qid": "q-hackamatch",
    "title": "HackAMatch 1.0",
    "cat": "Education",
@@ -861,68 +820,95 @@
     "place": 30,
     "category": 85
    }
+  },
+  {
+   "qid": "q-structuring-ai",
+   "title": "Structuring the AI Way (OpenArrow)",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/c6v1qjx0",
+   "access": "approval",
+   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; address only after approval.",
+   "conf": {
+    "date": 70,
+    "place": 30,
+    "category": 80
+   },
+   "hint": "2026-10-24"
+  },
+  {
+   "qid": "q-yield-layer",
+   "title": "The Yield Layer of Social Impact (Devcon side event)",
+   "cat": "Startup",
+   "area": "Fort",
+   "src": "Luma",
+   "url": "https://luma.com/7729jnr3",
+   "access": "approval",
+   "why": "No date on the page; held alongside Devcon at IFBE, Ballard Estate.",
+   "conf": {
+    "date": 0,
+    "place": 90,
+    "category": 70
+   }
+  },
+  {
+   "qid": "q-ship-safe",
+   "title": "Ship Safe: Devcon Mumbai Security Sessions (QuillAudits)",
+   "cat": "Tech",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/quilla-rvp4",
+   "access": "approval",
+   "why": "Page says last day of Devcon but gives no date; evening session from 18:45.",
+   "conf": {
+    "date": 40,
+    "place": 60,
+    "category": 80
+   },
+   "hint": "2026-11-06"
   }
  ],
  "RUNS": [
   {
-   "src": "Luma discover pages and event pages",
-   "what": "Direct fetch",
-   "found": 0,
+   "src": "Luma /mumbai and event pages",
+   "what": "Listing and event pages",
+   "found": 14,
    "pub": 0,
-   "review": 0,
+   "review": 3,
    "dup": 0,
-   "skip": 0,
-   "note": "Luma pages could not be fetched this run (access refused); only Mumbai Meets AI 06 page opened and still shows 10 Oct, full with waitlist"
+   "skip": 2,
+   "note": "Listing opened (no dates shown). Opened DevDay Exchange and Mumbai Meets AI 06 (dates unchanged; MMA06 full with waitlist). Skipped sold-out Agent Builders Meet and Durable DevOps (removed from queue). Several Luma pages timed out on fetch"
   },
   {
-   "src": "Meetup, AllEvents, Hidden Events",
+   "src": "Luma discover, Hidden Events, AllEvents, Meetup",
    "what": "Listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run; skipped"
+   "note": "Fetch permission timed out; skipped. Meetup only surfaced via search"
   },
   {
-   "src": "StartupGrants India and eChai (found via web search)",
-   "what": "Event pages",
-   "found": 4,
-   "pub": 2,
-   "review": 0,
-   "dup": 0,
-   "skip": 2,
-   "note": "Added two paid founder meetups on 10 Oct. Skipped a 3 Oct eChai meetup (already happened) and a Delhi-area design event"
-  },
-  {
-   "src": "Earthshot Prize (official)",
-   "what": "Event page",
-   "found": 1,
-   "pub": 1,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "16-17 Nov summit and awards in Mumbai; venue and ticketing not stated"
-  },
-  {
-   "src": "Web searches (AI, design, UX, XR, climate, hackathons)",
+   "src": "Web search (AI, design, UX)",
    "what": "Search results",
-   "found": 0,
+   "found": 2,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "No dated Mumbai design, UX or XR events found; Elastic AI Connect and Claude Conversation turned out to be 26 Sep, so removed from the queue"
+   "note": "No new dated Mumbai design, UX or XR events found"
   },
   {
    "src": "Past-event cleanup",
    "what": "Expiry check",
-   "found": 3,
+   "found": 1,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Removed finished events: mongodb-local-mumbai, servicenow-world-forum-mumbai, hackverse-19. Other carried-over events not rechecked this run"
+   "note": "Removed lunch-and-learn-meta (7 Oct). Other carried-over events not rechecked this run"
   }
  ],
  "COMMUNITIES": [

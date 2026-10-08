@@ -1,15 +1,45 @@
 {
- "REFRESHED": "2026-10-07T07:18:39+05:30",
+ "REFRESHED": "2026-10-08T07:20:01+05:30",
  "SIGNALS": [
   {
-   "id": "2107461898127954001",
-   "handle": "GuillaumeLample",
-   "name": "Guillaume Lample",
-   "url": "https://x.com/GuillaumeLample/status/2107461898127954001",
-   "posted": "2026-10-06T18:54:05+05:30",
+   "id": "2107894997538525580",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2107894997538525580",
+   "posted": "2026-10-07T23:35:04+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI says GPT-6 and Intelligent UI are rolling out in ChatGPT for everyone, giving more visual, interactive answers and on-the-spot tools for tasks."
+  },
+  {
+   "id": "2107878924831379676",
+   "handle": "liquidai",
+   "name": "Liquid AI",
+   "url": "https://x.com/liquidai/status/2107878924831379676",
+   "posted": "2026-10-07T22:31:12+05:30",
    "topic": "Open models",
    "kind": "Official",
-   "summary": "Mistral cofounder announces a preview of Mistral Large 4: a 1T-parameter model with 49B active parameters, trained natively with multimodal capabilities."
+   "summary": "Liquid AI releases Open d1, two open-weight multimodal models: d1-3B (text and vision) and d1-omni-600M (text with image or audio), for real-time decisions from data centers to edge devices."
+  },
+  {
+   "id": "2107546569654636883",
+   "handle": "AnthropicAI",
+   "name": "Anthropic",
+   "url": "https://x.com/AnthropicAI/status/2107546569654636883",
+   "posted": "2026-10-07T00:30:33+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Anthropic expands its Cyber Verification Program so verified security professionals can use Claude Mythos 5.1, Opus 5.5 and Sonnet 5.5 with safeguards built for defensive work."
+  },
+  {
+   "id": "2107457414387622310",
+   "handle": "MistralAI",
+   "name": "Mistral AI",
+   "url": "https://x.com/MistralAI/status/2107457414387622310",
+   "posted": "2026-10-06T18:36:16+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Mistral introduces Mistral Large 4, nicknamed Le Chonk: 1T parameters, natively multimodal, 49B active, which it calls the best open-weights model from the US or Europe on aggregated benchmarks."
   },
   {
    "id": "2107186849370247235",
@@ -30,66 +60,6 @@
    "topic": "Policy",
    "kind": "Report",
    "summary": "Reports, citing Tibor Blaho, that OpenAI is rolling out invisible text watermarking for ChatGPT and Codex in the EU to meet AI Act text provenance rules."
-  },
-  {
-   "id": "2106300727391903852",
-   "handle": "hqmank",
-   "name": "Kai",
-   "url": "https://x.com/hqmank/status/2106300727391903852",
-   "posted": "2026-10-03T14:00:01+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Says Google Antigravity added Claude Opus 5.5 and Sonnet 5.5 for paid Pro and Ultra plans; the free student Pro plan does not include them."
-  },
-  {
-   "id": "2106129049718325517",
-   "handle": "CNBC",
-   "name": "CNBC",
-   "url": "https://x.com/CNBC/status/2106129049718325517",
-   "posted": "2026-10-03T02:37:50+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "CNBC reports Anthropic will invest $100 million to train AI engineering talent."
-  },
-  {
-   "id": "2106105400487821764",
-   "handle": "arena",
-   "name": "Arena.ai",
-   "url": "https://x.com/arena/status/2106105400487821764",
-   "posted": "2026-10-03T01:03:51+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Arena.ai says Claude Sonnet 5.5 landed at #3 in its Agent Arena, with a median cost per task of $2.74, higher than the #2 Claude Opus 5.5 at $1.58."
-  },
-  {
-   "id": "2106099776035152231",
-   "handle": "AIatMeta",
-   "name": "AI at Meta",
-   "url": "https://x.com/AIatMeta/status/2106099776035152231",
-   "posted": "2026-10-03T00:41:30+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Meta says mathematicians worked with its AI over several months on problems with no known solution path, after its models earned gold-medal-level results in five STEM competitions."
-  },
-  {
-   "id": "2106056489836179817",
-   "handle": "NVIDIARTXSpark",
-   "name": "NVIDIA RTX Spark",
-   "url": "https://x.com/NVIDIARTXSpark/status/2106056489836179817",
-   "posted": "2026-10-02T21:49:30+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "NVIDIA says DGX Spark is getting a 64GB option built on the GB10 Grace Blackwell Superchip, for running local agents on device, with a new Sync Cluster Assistant for pairing systems."
-  },
-  {
-   "id": "2105388143902175529",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2105388143902175529",
-   "posted": "2026-10-01T01:33:44+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google introduces Gemini 4 Argon, aimed at software engineering, knowledge work and cybersecurity defense, with a 1M token output limit."
   }
  ]
 }
