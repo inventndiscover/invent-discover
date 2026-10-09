@@ -1438,7 +1438,7 @@ void main(){ float s=0.; for(int i=0;i<8;i++) for(int j=0;j<6;j++){ vec3 c=textu
   s=s/48.-uPreLog; float p=texture(uPrev,vec2(.5)).r; if(p==0.||uRate>=1.) p=s; o=vec4(mix(p,s,uRate),0.,0.,1.); }`);
 const P_tone = program(FSQ_VS, `
 ${G_HASH}
-uniform sampler2D uScene, uBloom, uLum; uniform float uExpBias, uBloomAmt, uFrame, uNightDesat, uPre, uVig, uFade; uniform vec2 uRes;
+uniform sampler2D uScene, uBloom, uLum; uniform float uExpBias, uBloomAmt, uFrame, uNightDesat, uPre, uVig, uFade, uVig0; uniform vec2 uRes, uVc;
 in vec2 vUv; out vec4 o;
 vec3 agxC(vec3 x){ vec3 x2=x*x, x4=x2*x2; return 15.5*x4*x2-40.14*x4*x+31.96*x4-6.868*x2*x+.4298*x2+.1191*x-.00232; }
 vec3 agx(vec3 v){
@@ -1461,7 +1461,7 @@ void main(){
   c*=expo;
   // scotopic shift for moonlit scenes
   float Y=dot(c,vec3(.2126,.7152,.0722)); c=mix(c, Y*vec3(.78,.9,1.15), uNightDesat*.55);
-  vec2 q=vUv-.5; c*=1.-dot(q,q)*.35; c*=1.-uVig*smoothstep(.12,.42,dot(q,q)); c*=1.-uFade;
+  vec2 q=vUv-uVc; c*=1.-dot(q,q)*.35*uVig0; c*=1.-uVig*smoothstep(.12,.42,dot(q,q)); c*=1.-uFade;
   vec3 d=agx(c);
   d+=(hash12(gl_FragCoord.xy+fract(uFrame*.1)*113.)-.5)/255.*1.5;
   o=vec4(clamp(d,0.,1.),1.);
@@ -1471,12 +1471,12 @@ void main(){
 let reflTex=null, reflDepth=null, reflF=null, RW=0, RH=0;
 let W=0,H=0, msColor, msDepth, msF, sceneTex, depthTex, resolveF, sceneDF, sceneColF, scene2Tex, scene2F, bloomTex=[], bloomF=[];
 const lumTex=[0,1].map(()=>texture(1,1,gl.RGBA32F,gl.RGBA,gl.FLOAT,{filter:gl.NEAREST})); const lumF=lumTex.map(t=>framebuffer([t])); let lumCur=0;
-let opTex=null, opDepth=null, opF=null, curSamples=0;
+let opTex=null, opDepth=null, opF=null, curSamples=0, mistHTex=null, mistHF=null, MHW=2, MHH=2;
 function ensureTargets(w,h,samples){
   samples=Math.min(samples, gl.getParameter(gl.MAX_SAMPLES));
   if(w===W&&h===H&&samples===curSamples) return; W=w; H=h; curSamples=samples;
-  const del=[msF,resolveF,sceneDF,sceneColF,scene2F,opF,...bloomF,cloudFcur,...cloudFhist]; del.forEach(f=>f&&gl.deleteFramebuffer(f));
-  [sceneTex,depthTex,scene2Tex,opTex,opDepth,...bloomTex,...cloudCur,...cloudHist].forEach(t=>t&&gl.deleteTexture(t));
+  const del=[msF,resolveF,sceneDF,sceneColF,scene2F,opF,mistHF,...bloomF,cloudFcur,...cloudFhist]; del.forEach(f=>f&&gl.deleteFramebuffer(f));
+  [sceneTex,depthTex,scene2Tex,opTex,opDepth,mistHTex,...bloomTex,...cloudCur,...cloudHist].forEach(t=>t&&gl.deleteTexture(t));
   if(msColor){ gl.deleteRenderbuffer(msColor); gl.deleteRenderbuffer(msDepth); }
   msColor=gl.createRenderbuffer(); gl.bindRenderbuffer(gl.RENDERBUFFER,msColor); gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,gl.RGBA16F,w,h);
   msDepth=gl.createRenderbuffer(); gl.bindRenderbuffer(gl.RENDERBUFFER,msDepth); gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,gl.DEPTH_COMPONENT24,w,h);
@@ -1489,6 +1489,7 @@ function ensureTargets(w,h,samples){
   depthTex=depthT(); resolveF=framebuffer([sceneTex], depthTex); sceneColF=framebuffer([sceneTex]);
   opTex=texture(w,h,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{}); opDepth=depthT(); opF=framebuffer([opTex], opDepth);
   scene2Tex=texture(w,h,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{}); scene2F=framebuffer([scene2Tex]);
+  MHW=Math.max(2,(w+1)>>1); MHH=Math.max(2,(h+1)>>1); mistHTex=texture(MHW,MHH,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{filter:gl.NEAREST}); mistHF=framebuffer([mistHTex]);
   bloomTex=[]; bloomF=[]; let bw=w, bh=h;
   for(let i=0;i<6;i++){ bw=Math.max(1,bw>>1); bh=Math.max(1,bh>>1); const t=texture(bw,bh,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{}); bloomTex.push(t); bloomF.push(framebuffer([t])); }
   cloudW=Math.max(2,w>>1); cloudH=Math.max(2,h>>1);
@@ -2454,16 +2455,20 @@ function frustumPlanes(m){ const P=[]; const r=i=>[m[i],m[4+i],m[8+i],m[12+i]];
   for(const [a,s] of [[r0,1],[r0,-1],[r1,1],[r1,-1],[r2,1]]){ const p=[r3[0]+s*a[0], r3[1]+s*a[1], r3[2]+s*a[2], r3[3]+s*a[3]]; const l=Math.hypot(p[0],p[1],p[2]); P.push(p.map(x=>x/l)); } return P; }
 function sphereIn(P, x,y,z, R){ for(const p of P){ if(p[0]*x+p[1]*y+p[2]*z+p[3] < -R) return false; } return true; }
 // fill the instance buffers for one view: camera position (for LOD), planes (relative to the camera) or null
-function packTrees(cam, planes, r0, r1, maxD, shadowBox){
+// planes: a list of {P: frustum planes, o: that eye's offset from cam} -- a tree is kept if ANY view can see it,
+// so in the headset one list serves both eyes. key: where each tree remembers its last detail level, so it only
+// changes level after clearly crossing a boundary (no popping back and forth as your head moves a few cm).
+function packTrees(cam, planes, r0, r1, maxD, shadowBox, key){
   for(const T of TEMPLATES) for(const l of T.lods) l.n=0;
   for(const T of TEMPLATES){ const c=T.crown; const rad=Math.max(c.R, c.yhi*.6)+1;
     for(const t of T.list){ const s=t.s; const cy=t.p[1]+(c.ylo+c.yhi)*.5*s;
       const dx=t.p[0]-cam[0], dy=cy-cam[1], dz=t.p[2]-cam[2]; const d=Math.hypot(dx,dy,dz);
       if(d>maxD+rad*s) continue;
       if(shadowBox){ if(Math.abs(t.p[0]-shadowBox[0])>shadowBox[2]+rad*s || Math.abs(t.p[2]-shadowBox[1])>shadowBox[2]+rad*s) continue; }
-      else if(planes && !sphereIn(planes, dx,dy,dz, rad*s*1.1)) continue;
+      else if(planes){ let vis=false; for(const pl of planes){ if(sphereIn(pl.P, dx-pl.o[0],dy-pl.o[1],dz-pl.o[2], rad*s*1.1+.25)){ vis=true; break; } } if(!vis) continue; }
       const kind=T.kind; const lodBias= kind==='shrub'||kind==='rock' ? .5 : 1;
-      const lod = d<r0*lodBias ? 0 : d<r1*lodBias ? 1 : 2;
+      const pv=key?t[key]:undefined; const m0=pv===undefined?1:pv===0?1.08:.93, m1=pv===undefined?1:pv===2?.93:1.08;
+      const lod = d<r0*lodBias*m0 ? 0 : d<r1*lodBias*m1 ? 1 : 2; if(key) t[key]=lod;
       if(kind==='shrub' && lod===2) continue;
       if(kind==='rock' && d>r1*1.4) continue;
       const L=T.lods[lod]; const o=L.n*INST_F; const D=L.data;
@@ -2694,13 +2699,12 @@ const GC_CELL=.72;
 // mist is there (thicker low down, drifting in patches), and whether sunlight reaches that point (the same shadow
 // map that dapples the boardwalk). Lit mist between the leaves is what makes the shafts. Beyond 140 m the rest
 // of the ray is added in one go (exponential height fog).
-const P_mist = program(FSQ_VS, `
+const MIST_LIB = `
 ${G_HASH}
 ${G_ATMOS}
 uniform sampler2D uScene, uDepth, uCanopy, uHM; uniform sampler3D uNoise; uniform sampler2DShadow uSunSh;
 uniform mat4 uInvVPr, uSunVP; uniform vec3 uCam, uKeyDir, uKeyCol, uAmb; uniform float uDens, uTime, uFrame, uShOn, uH0, uHs, uFlash;
 uniform int uSteps; uniform vec2 uWindOff;
-in vec2 vUv; out vec4 o;
 const float CAN_HALF=${FINE_HALF}.;
 float groundAt(vec2 xz){ vec2 f=xz+CAN_HALF; if(any(lessThan(f,vec2(1.)))||any(greaterThan(f,vec2(2.*CAN_HALF-1.)))) return xz.x<-CAN_HALF?0.:22.;
   ivec2 i=ivec2(floor(f)); vec2 u=f-vec2(i); float a=texelFetch(uHM,i,0).r, b=texelFetch(uHM,i+ivec2(1,0),0).r, c=texelFetch(uHM,i+ivec2(0,1),0).r, d=texelFetch(uHM,i+ivec2(1,1),0).r;
@@ -2720,17 +2724,14 @@ float sunAt(vec3 p){
   if(all(greaterThan(uv,vec2(0.)))&&all(lessThan(uv,vec2(1.)))){ vec2 c2=textureLod(uCanopy,uv,0.).rg; top=c2.r; d=c2.g; }
   return p.y<top ? 1.-.85*clamp(d,0.,1.) : 1.;
 }
-void main(){
-  vec3 col=texture(uScene,vUv).rgb;
-  float z=texture(uDepth,vUv).r;
-  vec4 w=uInvVPr*vec4(vUv*2.-1.,z*2.-1.,1.); vec3 rel=w.xyz/w.w; vec3 rd=normalize(rel);
+void march(vec2 uv, float z, float jit, out vec3 acc, out float T){
+  vec4 w=uInvVPr*vec4(uv*2.-1.,z*2.-1.,1.); vec3 rel=w.xyz/w.w; vec3 rd=normalize(rel);
   float dist = z>=1. ? 2.5e4 : length(rel);
   float mu=dot(rd,uKeyDir);
   float ph=mix(1./(4.*PI), hg(mu,.62), .62) + .08*hg(mu,-.25);
   vec3 Lsun=uKeyCol*ph, Lamb=uAmb;
   float D=min(dist,140.);
-  float jit=fract(hash12(gl_FragCoord.xy)+uFrame*.618034);
-  float S=float(uSteps); vec3 acc=vec3(0.); float T=1.;
+  float S=float(uSteps); acc=vec3(0.); T=1.;
   for(int i=0;i<32;i++){ if(i>=uSteps) break;
     float f0=(float(i)+jit)/S, f1=(float(i)+1.+jit)/S;
     float t=D*f0*f0, dt=D*(f1*f1-f0*f0);
@@ -2751,7 +2752,50 @@ void main(){
     float a=exp(-od);
     acc+=T*(Lsun*.9+Lamb)*(1.-a); T*=a;
   }
+}
+`;
+const P_mist = program(FSQ_VS, `
+${MIST_LIB}
+in vec2 vUv; out vec4 o;
+void main(){
+  vec3 col=texture(uScene,vUv).rgb; vec3 acc; float T;
+  march(vUv, texture(uDepth,vUv).r, fract(hash12(gl_FragCoord.xy)+uFrame*.618034), acc, T);
   o=vec4(col*T+acc,1.);
+}`);
+// HEADSET VERSION. Per-frame random noise in the march is fine on a monitor, but in a headset it 'boils', and
+// because each eye gets different noise the two images disagree, which reads as flicker. So in VR:
+//  1. march at half resolution (a quarter of the pixels, so it can afford more steps),
+//  2. use a FIXED noise pattern (interleaved gradient noise) that does not change from frame to frame,
+//  3. smooth it and bring it back to full size with a depth-aware filter (so mist doesn't bleed across leaf edges).
+const P_mistH = program(FSQ_VS, `
+${MIST_LIB}
+uniform vec2 uFull;
+out vec4 o;
+float ign(vec2 p){ return fract(52.9829189*fract(dot(p,vec2(.06711056,.00583715)))); }
+void main(){
+  ivec2 fp=min(ivec2(gl_FragCoord.xy)*2, ivec2(uFull)-1);          // the full-size pixel this half-size pixel stands for
+  vec2 uv=(vec2(fp)+.5)/uFull;
+  vec3 acc; float T; march(uv, texelFetch(uDepth,fp,0).r, ign(gl_FragCoord.xy), acc, T);
+  o=vec4(acc,T);
+}`);
+const P_mistUp = program(FSQ_VS, `
+uniform sampler2D uScene, uDepth, uMist; uniform vec2 uP; uniform vec2 uFull;
+in vec2 vUv; out vec4 o;
+float lin(float z){ return uP.y/min(z*2.-1.+uP.x, -1e-7); }              // depth buffer -> metres in front of the eye (sky = very far)
+void main(){
+  ivec2 p=ivec2(gl_FragCoord.xy); ivec2 hs=textureSize(uMist,0);
+  float d0=lin(texelFetch(uDepth,p,0).r);
+  vec2 hc=(vec2(p)+.5)*.5-.5;                                          // this pixel in half-size texel units
+  ivec2 b=ivec2(floor(hc)); vec4 sum=vec4(0.); float ws=0.;
+  for(int j=-1;j<=2;j++) for(int i=-1;i<=2;i++){
+    ivec2 q=clamp(b+ivec2(i,j), ivec2(0), hs-1);
+    vec2 dd=vec2(q)-hc; float wsp=exp(-dot(dd,dd)*.55);              // soft spatial weight (smooths the fixed noise)
+    float dq=lin(texelFetch(uDepth, min(q*2, ivec2(uFull)-1), 0).r);
+    float wd=exp(-abs(dq-d0)/(d0*.06+.08));                           // ignore samples from a very different depth
+    float w=wsp*wd+1e-5*wsp; sum+=texelFetch(uMist,q,0)*w; ws+=w;
+  }
+  vec4 m=sum/ws;
+  o=vec4(texture(uScene,vUv).rgb*m.a+m.rgb,1.);
 }`);
 
 // ================================================================ BIRDS: black kites soaring, house crows flapping between the trees
@@ -3069,7 +3113,17 @@ boat.on=false;
 const ui = { tod:document.getElementById('tod'), cld:document.getElementById('cld'), rain:document.getElementById('rain'), mist:document.getElementById('mist') };
 // quality: screen vs headset (two eyes at 72-90 Hz leave far less time per image)
 const QD={msaa:4, clouds:true, bloom:true, mistSteps:22, lod0:62, lod1:150, maxD:620, gcR:34, shR:58};
-const QX={msaa:2, clouds:false, bloom:false, mistSteps:9, lod0:34, lod1:95, maxD:420, gcR:18, shR:36};
+const QX={msaa:2, clouds:false, bloom:false, mistSteps:12, lod0:34, lod1:95, maxD:330, gcR:16, shR:36};
+// In the headset the frame rate matters more than detail: a missed frame on Quest shows up as judder and smearing.
+// These levels trade render size (s = fraction of the headset's pixel size the scene is drawn at) and detail.
+// The game measures its own frame rate in the headset and steps down (or back up) a level automatically.
+const XRL=[
+  {s:1.00, mistSteps:14, maxD:420, gcR:20},
+  {s:.88,  mistSteps:12, maxD:380, gcR:18},
+  {s:.77,  mistSteps:12, maxD:330, gcR:16},
+  {s:.67,  mistSteps:10, maxD:280, gcR:14},
+  {s:.58,  mistSteps:9,  maxD:240, gcR:12},
+];
 let Q=QD;
 function updateLand(){
   E.wetT=clamp(.3+S.rain*.95,0,1); if(E.wet===undefined) E.wet=E.wetT;
@@ -3231,16 +3285,30 @@ bVR.onclick=async()=>{
   try{ await gl.makeXRCompatible(); const session=await navigator.xr.requestSession('immersive-vr',{optionalFeatures:['local-floor']}); startXR(session); }
   catch(e){ say('Could not start VR: '+(e.message||e)); }
 };
+function xrApplyLevel(l){ xr.level=l; Q=Object.assign({}, QX, XRL[l]); xr.scale=XRL[l].s; }
+// watch the real frame rate in the headset; step quality down if frames are being missed, back up if there is room
+function xrAdapt(dt){
+  const A=xr.ad; if(A.hold>0){ A.hold-=dt; return; }          // skip the hitch right after a change
+  A.acc+=dt; A.n++; if(A.acc<1.2) return;
+  const avg=A.acc/A.n; A.acc=0; A.n=0; xr.fps=Math.round(1/avg);
+  const tgt=1/(xr.session.frameRate||72);
+  if(avg>tgt*1.18 && xr.level<XRL.length-1){ if(A.lastUp) A.ceil=xr.level+1; xrApplyLevel(xr.level+1); A.good=0; A.hold=1.5; A.lastUp=false; }
+  else if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
+  else A.good=0;
+}
 async function startXR(session){
-  xr.session=session; Q=QX;
-  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor:.85});
-  if('fixedFoveation' in layer) layer.fixedFoveation=.6;
-  session.updateRenderState({baseLayer:layer, depthNear:.05, depthFar:1e5});
+  xr.session=session; xrApplyLevel(2); xr.ad={acc:0, n:0, good:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
+  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor:.9});
+  session.updateRenderState({baseLayer:layer, depthNear:.1, depthFar:1e5});
+  // ask for 72 Hz (the most time per frame the Quest allows); fewer missed frames = no judder
+  try{ if(session.updateTargetFrameRate && session.supportedFrameRates && Array.from(session.supportedFrameRates).includes(72)) session.updateTargetFrameRate(72).catch(()=>{}); }catch(e){}
   xr.layer=layer; xr.ref=await session.requestReferenceSpace('local');
+  // recentring the headset (holding the Meta button) moves the origin; re-anchor instead of jumping
+  if(xr.ref.addEventListener) xr.ref.addEventListener('reset',()=>{ xr.rigInit=false; xr.head0=null; });
   if(cam.mode==='tour') { xr.rigInit=false; } else setMode('walk');
   xr.rigInit=false; xr.rigYaw=cam.yaw;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · B: next mode':'Left stick walks · right stick turns · B: next mode');
+  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · B: next mode':'Left stick walks where you point · right stick turns · B: mode');
   audioStart();
   session.addEventListener('end',()=>{ xr.session=null; Q=QD; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; W=H=0; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -3251,43 +3319,55 @@ function onXRFrame(t, xf){
   const session=xf.session; session.requestAnimationFrame(onXRFrame);
   const dt=xr.lastT? clamp((t-xr.lastT)/1000,0,.1) : 1/72; xr.lastT=t;
   const pose=xf.getViewerPose(xr.ref); if(!pose) return;
+  xrAdapt(dt);
   const hp=pose.transform.position, hq=pose.transform.orientation;
   const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w]; xr.headLocal=headLocal;
   const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
-  let gaze=yawRot(xr.rigYaw,gazeLocal);
-  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false; xr.hands=[];
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, aimL=null, aimR=null; xr.hands=[]; xr.rays=[];
   for(const src of session.inputSources){
+    const side=src.handedness==='left'?-1:1;
     const gp=src.gamepad; if(gp){
       const ax=gp.axes.length>=4?[gp.axes[2],gp.axes[3]]:[gp.axes[0]||0,gp.axes[1]||0];
       const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
-      if(src.handedness==='left'){ mv=ax; if(btn(0)) fast=true; if(btn(5)) bBtn=true; }
+      if(side<0){ mv=ax; if(btn(0)) fast=true; if(btn(5)) bBtn=true; }
       else { turn=ax[0]; lift=-ax[1]; if(btn(0)) fast=true; if(btn(5)) bBtn=true; }
     }
-    if(src.gripSpace){ const gpose=xf.getPose(src.gripSpace, xr.ref); if(gpose){ const p=gpose.transform.position, q=gpose.transform.orientation; xr.hands.push({p:[p.x,p.y,p.z], q:[q.x,q.y,q.z,q.w], side:src.handedness==='left'?-1:1}); } }
+    if(src.gripSpace){ const gpose=xf.getPose(src.gripSpace, xr.ref); if(gpose){ const p=gpose.transform.position, q=gpose.transform.orientation; xr.hands.push({p:[p.x,p.y,p.z], q:[q.x,q.y,q.z,q.w], side}); } }
+    // where each controller points (its 'target ray'); drawn as a short beam, and the left one steers movement
+    if(src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if(rp){ const p=rp.transform.position, q=rp.transform.orientation;
+      const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if(side<0) aimL=d; else aimR=d; } }
   }
   // B or Y: next mode (walk -> fly -> tour)
   if(bBtn && !xr.bLatch){ const next={walk:'fly', fly:'tour', tour:'walk'}[cam.mode]; vrSetMode(next); }
   xr.bLatch=bBtn;
   const dz=v=>Math.abs(v)<.15?0:v;
   if(cam.mode!=='tour'){
-    if(Math.abs(turn)>.7 && !xr.snapLatch){ xr.snapLatch=true; const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); xr.rigYaw+=Math.sign(turn)*Math.PI/6; xr.rigPos=V.sub(head,yawRot(xr.rigYaw,headLocal)); gaze=yawRot(xr.rigYaw,gazeLocal); }
+    if(Math.abs(turn)>.7 && !xr.snapLatch){ xr.snapLatch=true; const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); xr.rigYaw+=Math.sign(turn)*Math.PI/6; xr.rigPos=V.sub(head,yawRot(xr.rigYaw,headLocal)); xr.fade=Math.max(xr.fade||0,.35); }
     if(Math.abs(turn)<.3) xr.snapLatch=false;
   }
-  const flat=V.norm([gaze[0],0,gaze[2]]), right=V.norm(V.cross(flat,[0,1,0]));
-  let speed=0;
+  // movement follows the LEFT controller's pointing direction (falls back to the right one, then to your gaze)
+  const aim=yawRot(xr.rigYaw, aimL||aimR||gazeLocal);
+  let flat=[aim[0],0,aim[2]]; if(Math.hypot(flat[0],flat[2])<.15){ const g=yawRot(xr.rigYaw,gazeLocal); flat=[g[0],0,g[2]]; }
+  flat=V.norm(flat); const right=V.norm(V.cross(flat,[0,1,0]));
+  const rig0=xr.rigPos.slice();
   if(cam.mode==='walk'){
-    if(!xr.rigInit){ const e=cam.pos; xr.rigPos=V.sub(e, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
+    if(!xr.rigInit){ xr.hy0=headLocal[1]; xr.rigPos=V.sub(cam.pos, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
     const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
     cam.pos=head; const before=head.slice();
     walkStep(dt, V.add(V.mul(flat,-dz(mv[1])),V.mul(right,dz(mv[0]))), fast, true);
-    xr.rigPos=V.add(xr.rigPos, V.sub(cam.pos,before));
-    speed=Math.hypot(cam.vel[0],cam.vel[2]);
+    // walkStep keeps you on the deck and between the rails (sideways), and puts your eyes at standing height above
+    // the boards. Apply the sideways correction to the rig, but set the rig's HEIGHT from the deck only, so that
+    // when you crouch, lean or nod, your real head movement still shows (before, every head bob was cancelled out,
+    // which made the world move with your head).
+    xr.rigPos[0]+=cam.pos[0]-before[0]; xr.rigPos[2]+=cam.pos[2]-before[2];
+    xr.rigPos[1]=cam.pos[1]-xr.hy0;
   } else if(cam.mode==='fly'){
+    if(!xr.rigInit){ xr.rigPos=V.sub(cam.pos, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
     const head0=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
-    let move=V.add(V.mul(gaze,-dz(mv[1])),V.mul(right,dz(mv[0]))); move[1]+=dz(lift);
+    let move=V.add(V.mul(aim,-dz(mv[1])),V.mul(right,dz(mv[0]))); move[1]+=dz(lift);
     const sp=(fast?18:4)*(1+Math.max(head0[1]-40,0)/60);
     xr.flyV=V.lerp(xr.flyV||[0,0,0], V.mul(move,sp), Math.min(1,dt*4));
-    xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt)); speed=V.len(xr.flyV);
+    xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt));
     const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); const fl=Math.max(groundH(head[0],head[2]),0)+.6; if(head[1]<fl) xr.rigPos[1]+=fl-head[1];
   } else {
     cam.tourT+=(window.__gate?0:dt);
@@ -3295,56 +3375,81 @@ function onXRFrame(t, xf){
     else {
       const r=tourPose(cam.tourT);
       if(cam.tourCut){ cam.tourCut=false; xr.fade=1; const td=V.sub(r.t,r.p); xr.rigYaw=Math.atan2(td[2],td[0])-Math.atan2(gazeLocal[2],gazeLocal[0]); xr.head0=headLocal.slice(); vrLabel(r.cap,'B: next mode'); }
-      xr.rigPos=V.sub(r.p, yawRot(xr.rigYaw, xr.head0||headLocal));
+      if(!xr.head0) xr.head0=headLocal.slice();
+      xr.rigPos=V.sub(r.p, yawRot(xr.rigYaw, xr.head0));
     }
   }
+  // how fast the world is moving past you (drives the comfort vignette); a jump between tour shots is not motion
+  { const v=V.len(V.sub(xr.rigPos,rig0))/Math.max(dt,1e-3); xr.speed+=((v>40?0:Math.min(v,8))-xr.speed)*Math.min(1,dt*6); }
   xr.fade=Math.max(0,(xr.fade||0)-dt*2.2);
-  gaze=yawRot(xr.rigYaw,gazeLocal);
+  const gaze=yawRot(xr.rigYaw,gazeLocal);
   const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
   cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
-  xr.speed=speed; xr.head=head;
-  if(vrLab.t>0){ vrLab.t-=dt; const want=V.add(head,V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.5),[0,-.18,0]));
+  xr.head=head;
+  if(vrLab.t>0){ vrLab.t-=dt; const want=V.add(head,V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
     vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; }
   simulate(dt);
   drawMap(false);
   prepareFrame(head);
-  const layer=xr.layer;
-  pose.views.forEach((view,i)=>{
-    const vp=layer.getViewport(view);
-    const p=view.transform.position, q=view.transform.orientation; const vq=[q.x,q.y,q.z,q.w];
-    const RR=v=>yawRot(xr.rigYaw,v);
-    const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z]));
-    renderView({pos:eye, fwd:RR(qRot(vq,[0,0,-1])), up:RR(qRot(vq,[0,1,0])), proj:view.projectionMatrix, w:Math.round(vp.width), h:Math.round(vp.height),
-      fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, fovY:2*Math.atan(1/view.projectionMatrix[5])});
+  const layer=xr.layer, RR=v=>yawRot(xr.rigYaw,v);
+  const eyes=pose.views.map(view=>{
+    const vp=layer.getViewport(view); const p=view.transform.position, q=view.transform.orientation; const vq=[q.x,q.y,q.z,q.w];
+    const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z])), fwd=RR(qRot(vq,[0,0,-1])), up=RR(qRot(vq,[0,1,0]));
+    return {view, vp, eye, fwd, up, VPr:M.mul(view.projectionMatrix, M.lookDir(fwd,up,[0,0,0]))};
+  });
+  // choose the trees ONCE for both eyes, from the middle of your head: before, each eye picked its own detail
+  // level, so near a boundary the left and right eye saw different trees -- a big source of the flicker
+  packTrees(head, eyes.map(e=>({P:frustumPlanes(e.VPr), o:V.sub(e.eye,head)})), Q.lod0, Q.lod1, Q.maxD, null, '_lv');
+  eyes.forEach((e,i)=>{
+    const vp=e.vp;
+    renderView({pos:e.eye, fwd:e.fwd, up:e.up, proj:e.view.projectionMatrix, w:Math.max(2,Math.round(vp.width*xr.scale)), h:Math.max(2,Math.round(vp.height*xr.scale)),
+      fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, packed:true, dt, fovY:2*Math.atan(1/e.view.projectionMatrix[5])});
   });
 }
 function vrSetMode(m){
   if(m==='walk'){ const prev=cam.mode; setMode('walk'); if(prev==='tour') placeWalker(3.5);
     // face along the trail
     const n=nearestOnPath(cam.pos[0],cam.pos[2]); const t=n.p.t, g=xr.gazeLocal||[0,0,-1]; xr.rigYaw=Math.atan2(t[2],t[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks · right stick turns · B: next mode'); }
-  else if(m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you look · right stick up/down · trigger faster'); }
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode'); }
+  else if(m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; xr.rigInit=true; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
   else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
 }
 // floating label in the headset (mode names, tour captions)
 const vrLab={t:0, pos:null};
-const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=200; const labCtx=labCv.getContext('2d');
+const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=384; const labCtx=labCv.getContext('2d');
 const labTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+// The headset message panel. Text is laid out to FIT the panel: the title shrinks if it is long, and the
+// instructions are split at each ' · ' and word-wrapped onto their own lines (before, one long line was simply
+// cut off at the panel's edge). The panel is kept narrow so all of it sits in the sharp centre of the lenses.
+const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
 function vrLabel(title, sub){
-  const c=labCtx; c.clearRect(0,0,1024,200);
-  c.fillStyle='rgba(10,12,13,.62)'; c.beginPath(); if(c.roundRect) c.roundRect(4,4,1016,192,18); else c.rect(4,4,1016,192); c.fill();
-  c.strokeStyle='rgba(238,240,238,.18)'; c.lineWidth=2; c.stroke();
-  c.fillStyle='#eef0ee'; c.font='500 56px "IBM Plex Mono", ui-monospace, Menlo, monospace'; c.textBaseline='middle';
-  if(c.letterSpacing!==undefined) c.letterSpacing='10px';
-  c.fillText(String(title).toUpperCase(), 44, 72);
-  if(c.letterSpacing!==undefined) c.letterSpacing='1px';
-  c.fillStyle='rgba(238,240,238,.62)'; c.font='400 30px "IBM Plex Mono", ui-monospace, Menlo, monospace';
-  let sub2=String(sub||''); while(c.measureText(sub2).width>940 && sub2.length>4) sub2=sub2.slice(0,-2);
-  c.fillText(sub2, 44, 140);
+  const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
+  const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  // title: shrink until it fits on one line
+  const T=String(title||'').toUpperCase(); let tp=52, sp=8;
+  const tw=()=>{ setF(500,tp); if(c.letterSpacing!==undefined) c.letterSpacing=sp+'px'; return c.measureText(T).width; };
+  while(tw()>LAB_TXT && tp>30){ tp-=2; sp=Math.max(2,Math.round(tp*.15)); }
+  // instructions: one item per line, wrapped by words if an item is still too wide
+  if(c.letterSpacing!==undefined) c.letterSpacing='0px';
+  const fs=34; setF(400,fs); const lines=[];
+  for(const item of String(sub||'').split(/\s*·\s*/).filter(Boolean)){
+    let line='';
+    for(const w of item.split(' ')){ const tryL=line?line+' '+w:w; if(c.measureText(tryL).width>LAB_TXT && line){ lines.push(line); line=w; } else line=tryL; }
+    if(line) lines.push(line);
+  }
+  for(let i=0;i<lines.length;i++) lines[i]=lines[i][0].toUpperCase()+lines[i].slice(1);
+  const L=lines.slice(0,5), lh=46, titleH=tp+12, gap=L.length?16:0;
+  const boxH=Math.min(LAB_H-8, 40+titleH+gap+L.length*lh+34), y0=(LAB_H-boxH)/2;   // centred, so the panel's middle is the text's middle
+  c.fillStyle='rgba(10,12,13,.72)'; c.beginPath(); if(c.roundRect) c.roundRect(4,y0,LAB_W-8,boxH,22); else c.rect(4,y0,LAB_W-8,boxH); c.fill();
+  c.strokeStyle='rgba(238,240,238,.2)'; c.lineWidth=2; c.stroke();
+  c.fillStyle='#eef0ee'; tw(); c.fillText(T, LAB_PAD, y0+40+titleH/2);
+  if(c.letterSpacing!==undefined) c.letterSpacing='0px';
+  c.fillStyle='rgba(238,240,238,.78)'; setF(400,fs);
+  L.forEach((l,i)=>c.fillText(l, LAB_PAD, y0+40+titleH+gap+lh*i+lh/2));
   gl.bindTexture(gl.TEXTURE_2D,labTex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
-  vrLab.t=4; vrLab.pos=null;
+  vrLab.t=3+1.1*L.length; vrLab.pos=null;   // longer messages stay up longer
 }
 const P_label=program(`
 uniform mat4 uVPr; uniform vec3 uCam, uC, uR, uU; out vec2 vUv;
@@ -3356,8 +3461,30 @@ function drawVRLabel(VPr, pos){
   if(vrLab.t<=0 || !vrLab.pos) return;
   const to=V.norm(V.sub(pos,vrLab.pos)); const Rv=V.norm(V.cross([0,1,0],to)); const Uv=[0,1,0];
   gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  P_label.use().m('uVPr',VPr).f('uCam',...pos).f('uC',...vrLab.pos).f('uR',...V.mul(Rv,.6)).f('uU',...V.mul(Uv,.117)).tex('uTex',labTex).f('uA',clamp(vrLab.t/.6,0,1));
+  P_label.use().m('uVPr',VPr).f('uCam',...pos).f('uC',...vrLab.pos).f('uR',...V.mul(Rv,.42)).f('uU',...V.mul(Uv,.42*384/1024)).tex('uTex',labTex).f('uA',clamp(vrLab.t/.6,0,1));
   gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,6);
+  gl.disable(gl.BLEND);
+}
+
+// controllers: a dark handle and a short fading beam showing exactly where each one points
+const P_ray=program(`
+uniform mat4 uVPr; uniform vec3 uCam, uA, uB; uniform float uW0, uW1;
+out float vT; out float vS;
+void main(){ int v=gl_VertexID; float t=(v==1||v==2||v==4)?1.:0., s=(v==2||v==4||v==5)?1.:-1.;
+  vec3 a=uA-uCam, b=uB-uCam, p=mix(a,b,t), d=normalize(b-a); vec3 side=cross(d, normalize(p)); side=length(side)>1e-4?normalize(side):vec3(1,0,0);
+  vT=t; vS=s; gl_Position=uVPr*vec4(p+side*s*mix(uW0,uW1,t),1.); }`, `
+uniform vec3 uCol; uniform float uAlpha, uFadeLen; in float vT; in float vS; out vec4 o;
+void main(){ float edge=1.-smoothstep(.55,1.,abs(vS)); float a=uAlpha*edge*mix(1.,pow(1.-vT,1.6),uFadeLen); o=vec4(uCol*a,a); }`);
+function drawControllers(VPr, pos){
+  if(!xr.rays || !xr.rays.length) return;
+  const R=v=>yawRot(xr.rigYaw,v);
+  gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.bindVertexArray(emptyVAO);
+  P_ray.use().m('uVPr',VPr).f('uCam',...pos);
+  for(const r of xr.rays){
+    const o=V.add(xr.rigPos,R(r.p)), d=R(r.d);
+    P_ray.f('uA',...V.add(o,V.mul(d,-.12))).f('uB',...o).f('uW0',.016).f('uW1',.012).f('uCol',.09,.1,.1).f('uAlpha',.92).f('uFadeLen',0); gl.drawArrays(gl.TRIANGLES,0,6);
+    P_ray.f('uA',...o).f('uB',...V.add(o,V.mul(d,1.6))).f('uW0',.0035).f('uW1',.0015).f('uCol',.93,.95,.93).f('uAlpha',r.side<0?.8:.5).f('uFadeLen',1); gl.drawArrays(gl.TRIANGLES,0,6);
+  }
   gl.disable(gl.BLEND);
 }
 
@@ -3484,7 +3611,7 @@ function prepareFrame(viewPos){
   shOn=0;
   const L=E.key; if(L[1]>.03){
     const h=Q.shR; const z=L, x=V.norm(V.cross([0,1,0],z)), y=V.cross(z,x);
-    const c=V.add(viewPos, V.mul(V.norm([cam.mode==='fly'?0:fwdOf(cam.yaw,0)[0],0,cam.mode==='fly'?0:fwdOf(cam.yaw,0)[2]]), h*.35));
+    const c=(cam.mode==='fly'||xr.session) ? viewPos.slice() : V.add(viewPos, V.mul(V.norm([fwdOf(cam.yaw,0)[0],0,fwdOf(cam.yaw,0)[2]]), h*.35));
     const tx=2*h/SUN_N; const cx=Math.round(V.dot(c,x)/tx)*tx, cy=Math.round(V.dot(c,y)/tx)*tx, cz=V.dot(c,z);
     const cs=V.add(V.add(V.mul(x,cx),V.mul(y,cy)),V.mul(z,cz));
     const view=M.lookDir(V.mul(L,-1),[0,1,0],V.add(cs,V.mul(L,160)));
@@ -3492,7 +3619,7 @@ function prepareFrame(viewPos){
     target(sunShF, SUN_N, SUN_N); gl.clear(gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LESS); gl.disable(gl.CULL_FACE);
     gl.enable(gl.POLYGON_OFFSET_FILL); gl.polygonOffset(1.5,2.);
     P_woodSh.use().m('uLVP',sunVP); gl.bindVertexArray(boardwalk.vao); gl.drawElements(gl.TRIANGLES,boardwalk.count,gl.UNSIGNED_INT,0);
-    packTrees(viewPos, null, Q.lod0, Q.lod1, h*2.2, [cs[0],cs[2],h+28]);
+    packTrees(viewPos, null, Q.lod0, Q.lod1, h*2.2, [cs[0],cs[2],h+28], '_ls');
     windU(P_barkSh.use()).m('uVPr',sunVP).f('uCam',0,0,0);
     for(const T of TEMPLATES) for(const l of T.lods){ if(l.n && l.wood){ gl.bindVertexArray(l.wood.vao); gl.drawElementsInstanced(gl.TRIANGLES,l.wood.count,gl.UNSIGNED_INT,0,l.n); } }
     windU(P_leafSh.use()).m('uVPr',sunVP).f('uCam',0,0,0).tex('uAtlas',atlasTex).tex('uCor',corTex).f('uFold',1);
@@ -3541,8 +3668,7 @@ function renderView(v){
   landU(P_wood.use()).tex('uFoam',foamTex).tex('uAtlas',atlasTex);
   gl.bindVertexArray(boardwalk.vao); gl.drawElements(gl.TRIANGLES,boardwalk.count,gl.UNSIGNED_INT,0);
   // trees: choose detail per tree for this view, then bark and leaves for each species/level
-  const planes=frustumPlanes(VPr);
-  packTrees(pos, planes, Q.lod0, Q.lod1, Q.maxD, null);
+  if(!v.packed) packTrees(pos, [{P:frustumPlanes(VPr), o:[0,0,0]}], Q.lod0, Q.lod1, Q.maxD, null, '_lv');
   windU(landU(P_bark.use()));
   for(const T of TEMPLATES) for(const l of T.lods){ if(l.n && l.wood){ gl.bindVertexArray(l.wood.vao); gl.drawElementsInstanced(gl.TRIANGLES,l.wood.count,gl.UNSIGNED_INT,0,l.n); } }
   gl.enable(gl.SAMPLE_ALPHA_TO_COVERAGE);
@@ -3556,8 +3682,8 @@ function renderView(v){
     gl.bindVertexArray(emptyVAO); gl.drawArraysInstanced(gl.TRIANGLES,0,12,dim*dim); }
   gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
   // the water needs a copy of what lies beneath it (rocks in the shallows)
-  gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msF); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, opF);
-  gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.DEPTH_BUFFER_BIT,gl.NEAREST);
+  if(!v.xr){ gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msF); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, opF);
+  gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.DEPTH_BUFFER_BIT,gl.NEAREST); }
   target(msF, W, H); gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL);
   // ---------- the sea
   const wUniforms=(P)=>P.tex('uDisp',dispTex[dispCur],gl.TEXTURE_2D_ARRAY).tex('uDeriv',derivTex,gl.TEXTURE_2D_ARRAY).tex('uVar',varTex,gl.TEXTURE_2D_ARRAY).f('uLen',...LEN)
@@ -3566,7 +3692,7 @@ function renderView(v){
   const uwU=(P)=>P.f('uSigA',...E.sigA).f('uSigS',...E.sigS).f('uKd',...E.kd).f('uE0sun',...E.e0sun).f('uE0sky',...E.e0sky);
   common(wUniforms(uwU(cloudU(P_water.use())))).m('uVPr',VPr).m('uInvVPr',invVPr).f('uQ',water.q).tex('uFoam',foamTex).f('uUnder',0)
     .f('uWindDir',WIND[0],WIND[1]).f('uWindU',sp.U).tex('uShadow',shadowTex).m('uShadowVP',VPr).f('uShadowOn',0).f('uFoamAmt',smooth(2.2,3.6,S.sea)).f('uHs',Math.max(seaHs,.2)).f('uFoamBias',sp.activeBias)
-    .tex('uRefl',reflTex).f('uRes',W,H).f('uReflOn',0).tex('uOpaque',opTex).tex('uOpDepth',opDepth).f('uOpOn',1);
+    .tex('uRefl',reflTex).f('uRes',W,H).f('uReflOn',0).tex('uOpaque',opTex).tex('uOpDepth',opDepth).f('uOpOn',v.xr?0:1);
   gl.bindVertexArray(water.vao); gl.drawElements(gl.TRIANGLES, water.count, gl.UNSIGNED_INT, 0);
   // resolve
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msF); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, resolveF);
@@ -3576,12 +3702,14 @@ function renderView(v){
   gl.disable(gl.DEPTH_TEST);
   // ---------- mist and light shafts
   if(E.mist>.0005){
-    target(scene2F, W, H);
     const amb=E.e0sky.map(x=>x/Math.PI*.9);
-    P_mist.use().tex('uScene',sceneTex).tex('uDepth',depthTex).tex('uCanopy',canTex).tex('uHM',hmTex).tex('uNoise',noiseTex,gl.TEXTURE_3D).tex('uSunSh',sunShTex)
+    const MP= v.xr ? P_mistH : P_mist;
+    if(v.xr) target(mistHF, MHW, MHH); else target(scene2F, W, H);
+    MP.use().f('uFull',W,H).tex('uScene',sceneTex).tex('uDepth',depthTex).tex('uCanopy',canTex).tex('uHM',hmTex).tex('uNoise',noiseTex,gl.TEXTURE_3D).tex('uSunSh',sunShTex)
       .m('uInvVPr',invVPr).m('uSunVP',sunVP).f('uCam',...pos).f('uKeyDir',...E.key).f('uKeyCol',...E.keyCol).f('uAmb',...amb).f('uDens',E.mist).f('uTime',simT).f('uFrame',frame%1024)
       .f('uShOn',shOn).f('uH0',8).f('uHs',16).f('uFlash',flashI).i('uSteps',Q.mistSteps).f('uWindOff',windOff[0]*.02,windOff[1]*.02);
     fullscreen();
+    if(v.xr){ target(scene2F, W, H); P_mistUp.use().tex('uScene',sceneTex).tex('uDepth',depthTex).tex('uMist',mistHTex).f('uP',v.proj[10],v.proj[14]).f('uFull',W,H); fullscreen(); }
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, scene2F); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, sceneColF); gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST);
   }
   if((S.rain>.02) || (bolt.flash>.001 && bolt.count)){
@@ -3617,10 +3745,10 @@ function renderView(v){
   }
   gl.bindFramebuffer(gl.FRAMEBUFFER, v.fb); gl.viewport(v.vp[0],v.vp[1],v.vp[2],v.vp[3]);
   const vig = v.xr ? clamp((xr.speed||0)/2.5,0,1)*.5 : 0;   // comfort vignette while moving in the headset
-  P_tone.use().tex('uScene',sceneTex).tex('uBloom',Q.bloom?bloomTex[0]:sceneTex).tex('uLum',lumTex[lumCur]).f('uExpBias',.15).f('uBloomAmt',Q.bloom?.03:0).f('uFrame',frame).f('uNightDesat',E.nightDesat).f('uPre',E.pre).f('uRes',W,H).f('uVig',vig).f('uFade',v.xr?(xr.fade||0):0);
+  P_tone.use().tex('uScene',sceneTex).tex('uBloom',Q.bloom?bloomTex[0]:sceneTex).tex('uLum',lumTex[lumCur]).f('uExpBias',.15).f('uBloomAmt',Q.bloom?.03:0).f('uFrame',frame).f('uNightDesat',E.nightDesat).f('uPre',E.pre).f('uRes',W,H).f('uVig',vig).f('uFade',v.xr?(xr.fade||0):0).f('uVig0',v.xr?0:1).f('uVc',v.xr?.5-v.proj[8]*.5:.5, v.xr?.5-v.proj[9]*.5:.5);
   fullscreen();
   if(v.xr || forceLabel) drawVRLabel(VPr, pos);
-  if(v.xr) drawWristMap(VPr, pos);
+  if(v.xr){ drawControllers(VPr, pos); drawWristMap(VPr, pos); }
 }
 const blackTex=texture(1,1,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{});
 { const f=framebuffer([blackTex]); gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT); gl.deleteFramebuffer(f); }
@@ -3657,7 +3785,8 @@ window.trail = {
   lookAt(p,t,fov){ setMode('fly'); cam.pos=p.slice(); const a=lookAtAngles(p,t); cam.yaw=a.yaw; cam.pitch=a.pitch; if(fov) cam.fov=fov*Math.PI/180; },
   walkAt(s,u,yawOff,pitch){ setMode('walk'); placeWalker(s); cam.u=u||0; cam.pos=eyeAt(s,cam.u); cam.yaw+=yawOff||0; cam.pitch=pitch||0; },
   tour(t){ setMode('tour'); cam.tourT=t; },
-  testLabel(){ vrLabel('Walk','Left stick walks · right stick turns'); vrLab.pos=V.add(cam.pos,V.mul(fwdOf(cam.yaw,cam.pitch),1.5)); forceLabel=true; },
+  vrLabel, labCanvas:labCv,
+  testLabel(){ vrLabel('Walk','Left stick walks · right stick turns'); vrLab.pos=V.add(cam.pos,V.mul(fwdOf(cam.yaw,cam.pitch),1.6)); forceLabel=true; },
   keys, strike(){ S.bolt=true; bolt.next=0; },
   stats(){ const o={}; for(const T of TEMPLATES){ o[T.kind]=(o[T.kind]||0)+T.list.length; } const c=TEMPLATES.map(T=>T.kind+':'+T.lods.map(l=>l.cards+'/'+l.tris).join(',')); return {count:o, cards:c, pathLen:PATH_LEN}; },
   get simT(){ return simT; }
