@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-08T08:05:00+05:30",
+ "REFRESHED": "2026-10-09T08:04:03+05:30",
  "EVENTS_RAW": [
   {
    "id": "evm-capital-hackathon",
@@ -867,48 +867,70 @@
     "category": 80
    },
    "hint": "2026-11-06"
+  },
+  {
+   "qid": "q-gamingcon",
+   "title": "GamingCon Bharat 2026",
+   "cat": "Tech",
+   "area": "Goregaon",
+   "src": "Time Out Mumbai",
+   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
+   "access": "open",
+   "why": "Dates (17-18 Oct, Bombay Exhibition Centre) seen only in a Time Out roundup; organiser page not found.",
+   "conf": {
+    "date": 85,
+    "place": 90,
+    "category": 70
+   },
+   "hint": "2026-10-17"
+  },
+  {
+   "qid": "q-gujral",
+   "title": "Satish Gujral: The Modernist Returns (NGMA)",
+   "cat": "Art",
+   "area": "Fort",
+   "src": "Time Out Mumbai",
+   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
+   "access": "open",
+   "why": "Exhibition 9 Oct to 20 Nov, free, seen only in a Time Out roundup; museum page not found.",
+   "conf": {
+    "date": 85,
+    "place": 90,
+    "category": 90
+   },
+   "hint": "2026-10-09"
   }
  ],
  "RUNS": [
   {
-   "src": "Luma /mumbai and event pages",
-   "what": "Listing and event pages",
-   "found": 14,
-   "pub": 0,
-   "review": 3,
-   "dup": 0,
-   "skip": 2,
-   "note": "Listing opened (no dates shown). Opened DevDay Exchange and Mumbai Meets AI 06 (dates unchanged; MMA06 full with waitlist). Skipped sold-out Agent Builders Meet and Durable DevOps (removed from queue). Several Luma pages timed out on fetch"
-  },
-  {
-   "src": "Luma discover, Hidden Events, AllEvents, Meetup",
+   "src": "Luma, Meetup, AllEvents, Hidden Events listings",
    "what": "Listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Fetch permission timed out; skipped. Meetup only surfaced via search"
+   "note": "Fetch permission was not granted for these listing pages in this unattended run; skipped"
   },
   {
-   "src": "Web search (AI, design, UX)",
-   "what": "Search results",
-   "found": 2,
-   "pub": 0,
+   "src": "Web search + Luma/StartupGrants pages",
+   "what": "Re-checked Mumbai Meets AI 06, StartupLive, Enterprise AI Summit",
+   "found": 3,
+   "pub": 3,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "No new dated Mumbai design, UX or XR events found"
+   "note": "Dates unchanged. MMA06 is full with a waitlist"
   },
   {
-   "src": "Past-event cleanup",
-   "what": "Expiry check",
-   "found": 1,
+   "src": "Time Out Mumbai October roundup",
+   "what": "Roundup",
+   "found": 4,
    "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Removed lunch-and-learn-meta (7 Oct). Other carried-over events not rechecked this run"
+   "review": 2,
+   "dup": 1,
+   "skip": 1,
+   "note": "IFP already published; GamingCon and NGMA exhibition queued; Meeplecon skipped as unrelated"
   }
  ],
  "COMMUNITIES": [

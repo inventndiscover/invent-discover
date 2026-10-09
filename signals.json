@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-08T07:20:01+05:30",
+ "REFRESHED": "2026-10-09T07:19:13+05:30",
  "SIGNALS": [
   {
    "id": "2107894997538525580",
@@ -12,6 +12,16 @@
    "summary": "OpenAI says GPT-6 and Intelligent UI are rolling out in ChatGPT for everyone, giving more visual, interactive answers and on-the-spot tools for tasks."
   },
   {
+   "id": "2107894039626277339",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2107894039626277339",
+   "posted": "2026-10-07T23:31:16+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Anthropic introduces Claude Haiku 5.5, its cheapest and fastest small model, which it says costs about 75% less to run than Haiku 4.5."
+  },
+  {
    "id": "2107878924831379676",
    "handle": "liquidai",
    "name": "Liquid AI",
@@ -20,6 +30,16 @@
    "topic": "Open models",
    "kind": "Official",
    "summary": "Liquid AI releases Open d1, two open-weight multimodal models: d1-3B (text and vision) and d1-omni-600M (text with image or audio), for real-time decisions from data centers to edge devices."
+  },
+  {
+   "id": "2107573382229188645",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2107573382229188645",
+   "posted": "2026-10-07T02:17:05+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI opens the Decisions API in public beta to all developers, letting apps pick a model, tool or action in near real time, up to 10x faster than GPT-6 Luna through the Responses API."
   },
   {
    "id": "2107546569654636883",
@@ -40,26 +60,6 @@
    "topic": "Open models",
    "kind": "Official",
    "summary": "Mistral introduces Mistral Large 4, nicknamed Le Chonk: 1T parameters, natively multimodal, 49B active, which it calls the best open-weights model from the US or Europe on aggregated benchmarks."
-  },
-  {
-   "id": "2107186849370247235",
-   "handle": "reflection_ai",
-   "name": "Reflection",
-   "url": "https://x.com/reflection_ai/status/2107186849370247235",
-   "posted": "2026-10-06T00:41:09+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Reflection introduces Beam, an open model with 501B total and 23B active parameters, trained from scratch. Full weights are due to be released this month."
-  },
-  {
-   "id": "2107157619341402241",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2107157619341402241",
-   "posted": "2026-10-05T22:45:00+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "Reports, citing Tibor Blaho, that OpenAI is rolling out invisible text watermarking for ChatGPT and Codex in the EU to meet AI Act text provenance rules."
   }
  ]
 }
