@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-09T07:19:13+05:30",
+ "REFRESHED": "2026-10-10T07:19:02+05:30",
  "SIGNALS": [
+  {
+   "id": "2108271559928389679",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2108271559928389679",
+   "posted": "2026-10-09T00:31:24+05:30",
+   "topic": "Design",
+   "kind": "Official",
+   "summary": "Claude Docs, Slides and Design leave beta and become available on every plan including Free, with shared editing between a team and Claude."
+  },
+  {
+   "id": "2108271552991252810",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2108271552991252810",
+   "posted": "2026-10-09T00:31:22+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Anthropic puts Claude Dashboards and Claude Motion in beta, turning connected data into live dashboards and ideas into animated explainers."
+  },
+  {
+   "id": "2108262812489531498",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2108262812489531498",
+   "posted": "2026-10-08T23:56:38+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "OpenAI rolls out Ultrafast for GPT-6.1 Sol in the API, Codex and ChatGPT Work, offering near-Astra intelligence at up to 8x the speed of Sol Standard."
+  },
   {
    "id": "2107894997538525580",
    "handle": "OpenAI",
@@ -30,36 +60,6 @@
    "topic": "Open models",
    "kind": "Official",
    "summary": "Liquid AI releases Open d1, two open-weight multimodal models: d1-3B (text and vision) and d1-omni-600M (text with image or audio), for real-time decisions from data centers to edge devices."
-  },
-  {
-   "id": "2107573382229188645",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2107573382229188645",
-   "posted": "2026-10-07T02:17:05+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI opens the Decisions API in public beta to all developers, letting apps pick a model, tool or action in near real time, up to 10x faster than GPT-6 Luna through the Responses API."
-  },
-  {
-   "id": "2107546569654636883",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2107546569654636883",
-   "posted": "2026-10-07T00:30:33+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Anthropic expands its Cyber Verification Program so verified security professionals can use Claude Mythos 5.1, Opus 5.5 and Sonnet 5.5 with safeguards built for defensive work."
-  },
-  {
-   "id": "2107457414387622310",
-   "handle": "MistralAI",
-   "name": "Mistral AI",
-   "url": "https://x.com/MistralAI/status/2107457414387622310",
-   "posted": "2026-10-06T18:36:16+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Mistral introduces Mistral Large 4, nicknamed Le Chonk: 1T parameters, natively multimodal, 49B active, which it calls the best open-weights model from the US or Europe on aggregated benchmarks."
   }
  ]
 }

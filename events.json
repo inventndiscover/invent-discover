@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-09T08:04:03+05:30",
+ "REFRESHED": "2026-10-10T07:58:33+05:30",
  "EVENTS_RAW": [
   {
    "id": "evm-capital-hackathon",
@@ -883,27 +883,11 @@
     "category": 70
    },
    "hint": "2026-10-17"
-  },
-  {
-   "qid": "q-gujral",
-   "title": "Satish Gujral: The Modernist Returns (NGMA)",
-   "cat": "Art",
-   "area": "Fort",
-   "src": "Time Out Mumbai",
-   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
-   "access": "open",
-   "why": "Exhibition 9 Oct to 20 Nov, free, seen only in a Time Out roundup; museum page not found.",
-   "conf": {
-    "date": 85,
-    "place": 90,
-    "category": 90
-   },
-   "hint": "2026-10-09"
   }
  ],
  "RUNS": [
   {
-   "src": "Luma, Meetup, AllEvents, Hidden Events listings",
+   "src": "Luma, Meetup, AllEvents, Hidden Events listing pages",
    "what": "Listing pages",
    "found": 0,
    "pub": 0,
@@ -913,24 +897,24 @@
    "note": "Fetch permission was not granted for these listing pages in this unattended run; skipped"
   },
   {
-   "src": "Web search + Luma/StartupGrants pages",
-   "what": "Re-checked Mumbai Meets AI 06, StartupLive, Enterprise AI Summit",
+   "src": "Web search + StartupGrants India / Luma event pages",
+   "what": "Re-checked Mumbai Meets AI 06, StartupLive Mumbai'26, Enterprise AI Summit",
    "found": 3,
    "pub": 3,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Dates unchanged. MMA06 is full with a waitlist"
+   "note": "Dates unchanged. Mumbai Meets AI 06 is full with a waitlist"
   },
   {
-   "src": "Time Out Mumbai October roundup",
-   "what": "Roundup",
-   "found": 4,
+   "src": "Web searches (AI, design/UX, XR, hackathon, climate, startup)",
+   "what": "New candidates",
+   "found": 6,
    "pub": 0,
-   "review": 2,
-   "dup": 1,
-   "skip": 1,
-   "note": "IFP already published; GamingCon and NGMA exhibition queued; Meeplecon skipped as unrelated"
+   "review": 0,
+   "dup": 0,
+   "skip": 6,
+   "note": "Skipped: Design Samvaad (Gurugram, past), AI Engineers Day (May, closed), Mumbai Tech Week (May), DevSparks Mumbai (28 Nov, outside 45-day window). Other events in the file could not be re-opened, so they keep last run's verified details"
   }
  ],
  "COMMUNITIES": [
