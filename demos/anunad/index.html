@@ -45,8 +45,11 @@
   #swBayan{ background:var(--bayan); }
 
   /* ---- custom rounded colour picker popover ---- */
-  .picker[hidden]{ display:none !important; }
+  .scrim[hidden], .picker[hidden]{ display:none !important; }
+  .scrim{ position:fixed; inset:0; z-index:19; background:rgba(5,6,8,.45);
+    backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); }
   .picker{ position:fixed; z-index:20; width:232px; padding:14px;
+    left:50%; top:50%; transform:translate(-50%,-50%);
     background:var(--panel); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     border:1px solid var(--line); border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,.6);
     display:flex; flex-direction:column; gap:12px; }
@@ -66,8 +69,11 @@
   .done{ padding:8px 12px; border-radius:999px; background:var(--dayan); color:#201206; font-weight:600;
     border:none; cursor:pointer; white-space:nowrap; }
   .done .rom{ color:#5a3f1a; }
+  /* soft overlay behind the title so it stays readable over the bright bloom */
+  .title-veil{ position:fixed; top:0; left:0; right:0; height:170px; z-index:3; pointer-events:none;
+    background:linear-gradient(to bottom, rgba(10,11,9,.82) 0%, rgba(10,11,9,.55) 45%, rgba(10,11,9,0) 100%); }
   .title{ position:fixed; top:calc(18px + env(safe-area-inset-top,0px)); left:0; right:0;
-    text-align:center; pointer-events:none; }
+    text-align:center; pointer-events:none; z-index:4; }
   .title h1{ margin:0; font-family:"Noto Sans Devanagari","Fraunces",Georgia,serif; font-weight:600;
     font-size:clamp(22px,3.6vw,34px); letter-spacing:.01em; line-height:1.3;
     color:var(--skin); text-shadow:0 2px 20px rgba(0,0,0,.6); }
@@ -131,6 +137,7 @@
 <body>
 <canvas id="stage"></canvas>
 
+<div class="title-veil"></div>
 <div class="title">
   <h1>अनुनाद <span class="rom">(Anunād · Resonance)</span></h1>
   <p>वास्तविक तबला बोल, ध्वनि के रूप में चित्रित <span class="rom">· real tabla bols, drawn as they sound</span></p>
@@ -157,13 +164,14 @@ var b=document.getElementById('noticeGo');b.addEventListener('click',function(){
     <button data-pal="Violet" title="Rātri — night (violet)">रात्रि</button>
     <button data-pal="Mono" title="Mono — white &amp; grey">श्वेत</button>
   </div>
-  <label class="ctl"><span class="dv">दायाँ</span> <span class="rom">(Dāyān)</span>
-    <button class="swatch" id="swDayan" aria-label="Choose dayan colour"></button></label>
-  <label class="ctl"><span class="dv">बायाँ</span> <span class="rom">(Bāyān)</span>
-    <button class="swatch" id="swBayan" aria-label="Choose bayan colour"></button></label>
+  <span class="ctl"><span class="dv">दायाँ</span> <span class="rom">(Dāyān)</span>
+    <button type="button" class="swatch" id="swDayan" aria-label="Choose dayan colour"></button></span>
+  <span class="ctl"><span class="dv">बायाँ</span> <span class="rom">(Bāyān)</span>
+    <button type="button" class="swatch" id="swBayan" aria-label="Choose bayan colour"></button></span>
 </div>
 
 <!-- custom rounded colour picker (replaces the OS popup) -->
+<div class="scrim" id="scrim" hidden></div>
 <div class="picker" id="picker" hidden>
   <div class="sv" id="sv"><div class="sv-cursor" id="svCursor"></div></div>
   <div class="hue" id="hue"><div class="hue-cursor" id="hueCursor"></div></div>
@@ -631,7 +639,7 @@ applyColors();
    replacing the OS colour dialog, so it matches the rounded look.
    Writes straight back to dayanRGB / bayanRGB → visuals recolour.
    ============================================================ */
-const picker=document.getElementById("picker"), svBox=document.getElementById("sv"),
+const picker=document.getElementById("picker"), scrim=document.getElementById("scrim"), svBox=document.getElementById("sv"),
       svCur=document.getElementById("svCursor"), hueBox=document.getElementById("hue"),
       hueCur=document.getElementById("hueCursor"), prev=document.getElementById("prev"),
       hexin=document.getElementById("hexin"), swDayan=document.getElementById("swDayan"),
@@ -668,25 +676,15 @@ function openPicker(target, anchor){
   pickTarget=target;
   const cur = target==="dayan"?dayanRGB:bayanRGB;
   hsv=rgb2hsv(cur[0],cur[1],cur[2]);
+  scrim.hidden=false;
   picker.hidden=false;
-  const pw=232, ph=250;
-  if(innerWidth > 560){
-    // DESKTOP: controls live on the RIGHT, so open the picker on the LEFT,
-    // below the bol readout, where there's free space.
-    picker.style.left="16px";
-    picker.style.top=Math.max(16, innerHeight - ph - 24)+"px";
-  } else {
-    // PHONE: sit it centred, just above the control dock.
-    picker.style.left=Math.max(8,(innerWidth - pw)/2)+"px";
-    picker.style.top=Math.max(12, innerHeight - ph - 200)+"px";
-  }
-  renderPicker();
+  renderPicker();   // positioning is handled purely in CSS (centered)
 }
-swDayan.addEventListener("click", e=>{ e.stopPropagation(); openPicker("dayan", swDayan); });
-swBayan.addEventListener("click", e=>{ e.stopPropagation(); openPicker("bayan", swBayan); });
-document.getElementById("pickerDone").addEventListener("click", ()=> picker.hidden=true);
-// click outside closes it
-document.addEventListener("click", e=>{ if(!picker.hidden && !picker.contains(e.target)) picker.hidden=true; });
+function closePicker(){ picker.hidden=true; scrim.hidden=true; }
+swDayan.addEventListener("click", e=>{ e.stopPropagation(); e.preventDefault(); openPicker("dayan", swDayan); });
+swBayan.addEventListener("click", e=>{ e.stopPropagation(); e.preventDefault(); openPicker("bayan", swBayan); });
+document.getElementById("pickerDone").addEventListener("click", closePicker);
+scrim.addEventListener("click", closePicker);
 
 // --- drag interactions on the SV square and hue strip ---
 function dragSV(e){
@@ -713,6 +711,12 @@ hexin.addEventListener("input", ()=>{
     const rgb=hexToRgb(v[0]==="#"?v:"#"+v); hsv=rgb2hsv(rgb[0],rgb[1],rgb[2]); renderPicker();
   }
 });
+</script>
+<script>
+/* The dock uses a CSS transform, which would trap "position:fixed" children inside it.
+   Move the colour picker and its backdrop to the page itself so they cover and centre on the whole screen. */
+document.body.appendChild(document.getElementById("scrim"));
+document.body.appendChild(document.getElementById("picker"));
 </script>
 </body>
 </html>
