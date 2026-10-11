@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-10T07:58:33+05:30",
+ "REFRESHED": "2026-10-11T08:10:00+05:30",
  "EVENTS_RAW": [
   {
    "id": "evm-capital-hackathon",
@@ -29,133 +29,6 @@
    "org": "EVM Capital",
    "access": "approval",
    "desc": "A 24-hour hackathon for 50 to 60 builders that judges teams on real user traction rather than slides. The winning team gets an investor screening with Venture Catalysts, plus a ₹1 lakh prize pool."
-  },
-  {
-   "id": "frontier-d2c-ai-summit",
-   "title": "Frontier D2C AI Summit, 2nd edition",
-   "cat": "AI",
-   "tags": [
-    "D2C",
-    "Bootcamps",
-    "Panels"
-   ],
-   "area": "Andheri East",
-   "venue": "Novotel Mumbai International Airport",
-   "start": "2026-10-10T09:00",
-   "end": "21:00",
-   "fmt": "Offline",
-   "price": 2999,
-   "priceNote": "From ₹2,999 (early bird) to ₹19,999",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "eChai",
-   "url": "https://echai.ventures/events/frontier-d2c-ai-summit-2nd-edition-oct-10-2026",
-   "org": "D2C Insider",
-   "access": "open",
-   "desc": "A full-day summit for consumer-brand founders and operators that mixes hands-on AI bootcamps with panels and keynotes. Registration is on D2C Insider's site."
-  },
-  {
-   "id": "devday-exchange-mumbai",
-   "title": "DevDay Exchange Community: Mumbai",
-   "cat": "AI",
-   "tags": [
-    "OpenAI",
-    "Codex",
-    "Developers"
-   ],
-   "area": "BKC",
-   "venue": "Shared after approval",
-   "start": "2026-10-10T10:30",
-   "end": null,
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · approval required",
-   "aud": [
-    "Developer"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/1fpwe04g",
-   "org": "DevDay Exchange community",
-   "access": "approval",
-   "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits."
-  },
-  {
-   "id": "global-startups-club-oct10",
-   "title": "Global Startups Club: Startup Networking Mumbai",
-   "cat": "Startup",
-   "tags": [
-    "Networking",
-    "Speed dating",
-    "Pitch"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue not stated",
-   "start": "2026-10-10T10:30",
-   "end": "13:30",
-   "fmt": "Offline",
-   "price": 475,
-   "priceNote": "₹475 · tickets on AllEvents",
-   "aud": [
-    "Founder"
-   ],
-   "src": "StartupGrants India",
-   "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-13",
-   "org": "Global Startups Club",
-   "access": "open",
-   "desc": "A networking morning for founders and aspiring entrepreneurs with business speed dating and 30-second pitches."
-  },
-  {
-   "id": "mumbai-meets-ai-06",
-   "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
-   "cat": "AI",
-   "tags": [
-    "Talk",
-    "Fireside chat"
-   ],
-   "area": "Bhandup West",
-   "venue": "Exact venue emailed to selected attendees",
-   "start": "2026-10-10T11:00",
-   "end": "14:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · approval required · currently full, waitlist open",
-   "aud": [
-    "Developer",
-    "Founder"
-   ],
-   "src": "Luma",
-   "also": "Meetup",
-   "url": "https://luma.com/t7ifye5x",
-   "org": "Mumbai Meets AI",
-   "access": "approval",
-   "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup."
-  },
-  {
-   "id": "we-founders-collab-oct10",
-   "title": "Entrepreneurs Meetup by We Founders Collab",
-   "cat": "Startup",
-   "tags": [
-    "Networking",
-    "Pitch",
-    "Workshop"
-   ],
-   "area": "Mumbai",
-   "venue": "DevX",
-   "start": "2026-10-10T14:00",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": 475,
-   "priceNote": "₹475 · tickets on District",
-   "aud": [
-    "Founder"
-   ],
-   "src": "StartupGrants India",
-   "url": "https://www.startupgrantsindia.com/events/entrepreneurs-meetup-by-we-founders-collab-mumbai-1",
-   "org": "We Founders Collab",
-   "access": "open",
-   "desc": "A three-hour meetup for founders and aspiring entrepreneurs mixing short talks, workshops, elevator pitches with feedback and open networking."
   },
   {
    "id": "shayari-showdown",
@@ -698,22 +571,6 @@
    }
   },
   {
-   "qid": "q-codex-agents",
-   "title": "Build AI Agents With Codex: Mumbai edition",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/jxa0hd16",
-   "access": "open",
-   "why": "Event page would not open; Hidden Events lists it for 10 Oct, 11:00 Mumbai time.",
-   "conf": {
-    "date": 60,
-    "place": 40,
-    "category": 95
-   },
-   "hint": "2026-10-10"
-  },
-  {
    "qid": "q-ethglobal",
    "title": "ETHGlobal Mumbai hackathon",
    "cat": "Tech",
@@ -728,22 +585,6 @@
     "category": 90
    },
    "hint": "2026-11-06"
-  },
-  {
-   "qid": "q-vibeathon",
-   "title": "Vibeathon 2026 (Devnovate)",
-   "cat": "Tech",
-   "area": "Navi Mumbai",
-   "src": "HackathonRadar",
-   "url": "https://devnovate.co/event/vibeathon-2026-3",
-   "access": "open",
-   "why": "Date 10 Oct seen only on an aggregator listing; the organiser page would not open.",
-   "conf": {
-    "date": 70,
-    "place": 80,
-    "category": 85
-   },
-   "hint": "2026-10-10"
   },
   {
    "qid": "q-allin1-ai",
@@ -791,22 +632,6 @@
    }
   },
   {
-   "qid": "q-claude-build",
-   "title": "Mumbai | Claude Opus 5.5 x Sonnet 5.5 Build Day",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/claude-build",
-   "access": "approval",
-   "why": "Page would not open; Hidden Events lists it for the afternoon of 10 Oct.",
-   "conf": {
-    "date": 55,
-    "place": 30,
-    "category": 95
-   },
-   "hint": "2026-10-10"
-  },
-  {
    "qid": "q-ai-at-work",
    "title": "AI at Work: Copilot, Apps, & Agents",
    "cat": "AI",
@@ -825,11 +650,11 @@
    "qid": "q-structuring-ai",
    "title": "Structuring the AI Way (OpenArrow)",
    "cat": "AI",
-   "area": "Mumbai",
+   "area": "Gulmohar Road",
    "src": "Luma",
    "url": "https://luma.com/c6v1qjx0",
    "access": "approval",
-   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; address only after approval.",
+   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; 5 spots left, address only after approval.",
    "conf": {
     "date": 70,
     "place": 30,
@@ -883,38 +708,79 @@
     "category": 70
    },
    "hint": "2026-10-17"
+  },
+  {
+   "qid": "q-near-happy",
+   "title": "NEAR x Quantus Happy Hour @ Devcon Mumbai",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/xuofsg0p",
+   "access": "approval",
+   "why": "No date or address on the page; Devcon side event, host approval needed.",
+   "conf": {
+    "date": 0,
+    "place": 20,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-gujral-ngma",
+   "title": "The Modernist Returns: Satish Gujral (NGMA Fort)",
+   "cat": "Art",
+   "area": "Fort",
+   "src": "Time Out Mumbai",
+   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
+   "access": "open",
+   "why": "Dates (9 Oct to 20 Nov, free) seen only in a Time Out roundup; gallery page not opened.",
+   "conf": {
+    "date": 85,
+    "place": 90,
+    "category": 85
+   },
+   "hint": "2026-10-09"
   }
  ],
  "RUNS": [
   {
    "src": "Luma, Meetup, AllEvents, Hidden Events listing pages",
    "what": "Listing pages",
-   "found": 0,
+   "found": 10,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Fetch permission was not granted for these listing pages in this unattended run; skipped"
+   "note": "Only luma.com/mumbai could be opened (no dates shown). Hidden Events, AllEvents, Luma discover pages and Meetup were refused in this unattended run; skipped"
   },
   {
-   "src": "Web search + StartupGrants India / Luma event pages",
-   "what": "Re-checked Mumbai Meets AI 06, StartupLive Mumbai'26, Enterprise AI Summit",
-   "found": 3,
-   "pub": 3,
+   "src": "Luma event pages + StartupGrants India + official sites",
+   "what": "Re-checked upcoming published events",
+   "found": 8,
+   "pub": 8,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Dates unchanged. Mumbai Meets AI 06 is full with a waitlist"
+   "note": "IBM Think 13 Oct, Code to Capital 23 Oct, Health Tech mixer 29 Oct, India Blockchain Week 1-2 Nov, Devcon 3-6 Nov, Earthshot 16-17 Nov, StartupLive 20-21 Nov unchanged. Others keep last verified details"
   },
   {
-   "src": "Web searches (AI, design/UX, XR, hackathon, climate, startup)",
-   "what": "New candidates",
+   "src": "Luma new candidates",
+   "what": "Agent Builders Meet, Durable DevOps, NEAR Happy Hour, Structuring the AI Way, Cypherpunk, Solana Summit",
    "found": 6,
    "pub": 0,
-   "review": 0,
+   "review": 2,
    "dup": 0,
-   "skip": 6,
-   "note": "Skipped: Design Samvaad (Gurugram, past), AI Engineers Day (May, closed), Mumbai Tech Week (May), DevSparks Mumbai (28 Nov, outside 45-day window). Other events in the file could not be re-opened, so they keep last run's verified details"
+   "skip": 2,
+   "note": "Agent Builders Meet (registration closed) and Durable DevOps (sold out) skipped; NEAR Happy Hour added to queue; others still show no date"
+  },
+  {
+   "src": "Time Out Mumbai roundup",
+   "what": "October events roundup",
+   "found": 3,
+   "pub": 0,
+   "review": 1,
+   "dup": 0,
+   "skip": 2,
+   "note": "Satish Gujral exhibition queued; GamingCon stays queued; Meeplecon and Kintsugi workshop skipped as off-audience. Removed past events: frontier-d2c-ai-summit, devday-exchange-mumbai, global-startups-club-oct10, mumbai-meets-ai-06, we-founders-collab-oct10"
   }
  ],
  "COMMUNITIES": [
