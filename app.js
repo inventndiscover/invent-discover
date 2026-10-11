@@ -39,7 +39,7 @@ const {REFRESHED,EVENTS_RAW,QUEUE_RAW,RUNS,COMMUNITIES} = window.__DATA;
 const CAT = {
   AI:{c:"#FFB23F"}, Design:{c:"#FF6B5B"}, UX:{c:"#4DA3FF"}, XR:{c:"#9B7BFF"},
   Startup:{c:"#3DDC97"}, Tech:{c:"#6FA8FF"}, Art:{c:"#FF5FA2"}, Culture:{c:"#36D1C4"},
-  Education:{c:"#E3B77A"}, Climate:{c:"#6BD66B"}, Hardware:{c:"#6FA8FF"}, Games:{c:"#FF5FA2"}, Civic:{c:"#3DDC97"}
+  Education:{c:"#E3B77A"}, Climate:{c:"#6BD66B"}, Hardware:{c:"#6FA8FF"}, Games:{c:"#FF5FA2"}, Civic:{c:"#3DDC97"}, Sound:{c:"#F0A94E"}
 };
 const PATS = ["pat-dots","pat-lines","pat-check","pat-grid"];
 
@@ -55,6 +55,10 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"anunad",name:"Anunād (अनुनाद)",line:"Real tabla bols, drawn as they sound",cat:"Sound",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Web Audio","Canvas 2D"],
+  gif:"media/anunad.gif",img:"media/anunad-cover.jpg",sheetImg:"media/anunad-chakra.jpg",url:"demos/anunad/",cta:"Play Anunād",
+  needs:"Turn your sound on and press ▶ Vādan to start. Pick a taal and a layakari (how many bols per beat), then switch between the six visuals and the colour palettes while it plays. Works on a laptop or phone in a recent Chrome, Edge or Safari.",
+  desc:"An audio-reactive tabla visualizer. Real tabla bols, played and recorded by Mohit, sound out Keherwa, Dadra, Teentaal or Jhaptaal while the screen listens and responds to every stroke: ripples for Nāda, bursting particles for Sṛishti, a spectrum for Varṇa, a turning wheel for Chakra, a flowing wave for Taraṅga and a living grid for Yantra. Change the layakari from Ekgun up to Barahgun (twelve bols per beat), choose a palette, and colour the dāyān and bāyān strokes yourself. Everything runs in one web page, with nothing to download."},
  {id:"arashiyama-bamboo-grove",name:"Arashiyama Bamboo Grove",line:"A walk through Kyoto's bamboo forest, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/arashiyama-bamboo-grove.gif",img:"media/arashiyama-bamboo-grove-cover.jpg",sheetImg:"media/arashiyama-bamboo-grove-path.jpg",url:"demos/arashiyama-bamboo-grove/",
   vr:"inventndiscover.com/demos/arashiyama-bamboo-grove",
@@ -477,7 +481,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Arashiyama Bamboo Grove, a walk through Kyoto's bamboo forest. Also live: Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Anunād, real tabla bols drawn as they sound. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
@@ -791,7 +795,7 @@ function demoSheet(id){
     <div><div class="label">${d.kind==="tutorial"?"Origami tutorial":real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
     <p style="margin:0;font-size:16px">${esc(d.desc)}</p>
     <div class="facts"><div><span class="label">Stage</span><b>${esc(d.status)}</b></div><div><span class="label">Made by</span><b>${esc(d.makers.join(", "))}</b></div><div style="grid-column:1/-1"><span class="label">Built with</span><b>${esc(d.tools.join(" · "))}</b></div></div>
-    ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">Open the simulation ↗</a></div>${d.vr?`<div class="note"><b>Experience it in VR.</b> Put on your Meta Quest, open the Meta Quest browser, go to <b style="overflow-wrap:anywhere">${esc(d.vr)}</b> and tap <b>Enter VR</b>.</div>`:""}${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
+    ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">${d.cta||"Open the simulation"} ↗</a></div>${d.vr?`<div class="note"><b>Experience it in VR.</b> Put on your Meta Quest, open the Meta Quest browser, go to <b style="overflow-wrap:anywhere">${esc(d.vr)}</b> and tap <b>Enter VR</b>.</div>`:""}${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
     <div class="note"><b>Example.</b> This shows the format of a demo page. Real demos open the maker's live link or video.</div>`}
   </div>`,d.name);
 }
