@@ -55,6 +55,11 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"anunad-xr",name:"Anunād XR",line:"Stand inside the sound of the tabla, in your browser or in VR",cat:"XR",also:["Sound"],status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio"],
+  gif:"media/anunad-xr.gif",img:"media/anunad-xr-cover.jpg",sheetImg:"media/anunad-xr-varna.jpg",url:"demos/anunad-xr/",cta:"Enter Anunād XR",
+  vr:"inventndiscover.com/demos/anunad-xr",
+  needs:"Turn your sound on. On a laptop or phone: press ▶ Vādan, drag to look around, and switch visuals with the buttons (or keys 1 to 6). In VR on Meta Quest: trigger plays or stops, grip or thumbstick left and right change the visual, thumbstick up and down changes the layakari, A or X changes the taal, B or Y changes the palette.",
+  desc:"The VR companion to Anunād. You stand in a dark, open space while real tabla bols, played and recorded by Mohit, sound out the taal, and the light answers every stroke around you: rings ripple out and pass through you (Nāda), particles burst in every direction (Sṛishti), a ring of spectrum bars stands around you (Varṇa), petalled wheels turn ahead and overhead (Chakra), bands of light carry the waveform at eye level (Taraṅga) and a lattice wall ripples with each stroke (Yantra). Choose the taal, the layakari and a palette. You stay in one place, which keeps it comfortable in a headset. Everything runs in one web page, with nothing to download."},
  {id:"anunad",name:"Anunād (अनुनाद)",line:"Real tabla bols, drawn as they sound",cat:"Sound",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Web Audio","Canvas 2D"],
   gif:"media/anunad.gif",img:"media/anunad-cover.jpg",sheetImg:"media/anunad-chakra.jpg",url:"demos/anunad/",cta:"Play Anunād",
   needs:"Turn your sound on and press ▶ Vādan to start. Pick a taal and a layakari (how many bols per beat), then switch between the six visuals and the colour palettes while it plays. Works on a laptop or phone in a recent Chrome, Edge or Safari.",
@@ -250,7 +255,7 @@ function eventCard(e){
 }
 function demoCard(d){
   const mxHTML=matrix([
-    {k:"Category",v:esc(d.cat),cls:"cat"},
+    {k:"Category",v:esc([d.cat,...(d.also||[])].join(" · ")),cls:"cat"},
     {k:"Stage",v:esc(d.status),cls:d.status==="Live"?"free":"paid"},
     {k:"Built with",v:esc(d.tools.join(" · ")),cls:"when small",span:1}
   ],CAT[d.cat].c,d.id);
@@ -473,15 +478,15 @@ function viewDiscover(){
 
 function viewInvent(){
   const inv=DEMOS.filter(d=>d.kind!=="tutorial");
-  const cats=["all",...new Set(inv.map(d=>d.cat))];
-  const list=inv.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat)&&(state.demoStatus==="all"||d.status===state.demoStatus));
+  const cats=["all",...new Set(inv.flatMap(d=>[d.cat,...(d.also||[])]))];  // "also": extra categories a demo is filed under
+  const list=inv.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat||(d.also||[]).includes(state.demoCat))&&(state.demoStatus==="all"||d.status===state.demoStatus));
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:70% 55%">${photoCredit("skyline")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Invent</span></div><h1 class="mega">Invent</h1><p>A gallery of things people in Mumbai are building: student projects, prototypes and early products. Every demo links to something you can try or watch.</p></div>
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Anunād, real tabla bols drawn as they sound. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Anunād and Anunād XR, real tabla bols drawn as they sound, on screen and in VR. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
@@ -792,7 +797,7 @@ function demoSheet(id){
   const top=d.video?`<video class="demo-video" src="${d.video}" poster="${d.poster||""}" controls playsinline preload="metadata"></video>`:d.sheetImg?`<img class="demo-video" src="${d.sheetImg}" alt="${esc(d.name)}">`:cover(d.name.split(" ")[0],CAT[d.cat].c,d.id+"x",{tag:d.cat,stamp:d.status});
   openSheet(`${top}
   <div class="sheet-body">
-    <div><div class="label">${d.kind==="tutorial"?"Origami tutorial":real?esc(d.cat)+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
+    <div><div class="label">${d.kind==="tutorial"?"Origami tutorial":real?esc([d.cat,...(d.also||[])].join(" · "))+" demo":"Example demo"}</div><h2>${esc(d.name)}</h2><p style="margin:6px 0 0;color:var(--ink2);font-size:17px">${esc(d.line)}</p></div>
     <p style="margin:0;font-size:16px">${esc(d.desc)}</p>
     <div class="facts"><div><span class="label">Stage</span><b>${esc(d.status)}</b></div><div><span class="label">Made by</span><b>${esc(d.makers.join(", "))}</b></div><div style="grid-column:1/-1"><span class="label">Built with</span><b>${esc(d.tools.join(" · "))}</b></div></div>
     ${real?(d.url?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn taxi" href="${d.url}" target="_blank" rel="noopener">${d.cta||"Open the simulation"} ↗</a></div>${d.vr?`<div class="note"><b>Experience it in VR.</b> Put on your Meta Quest, open the Meta Quest browser, go to <b style="overflow-wrap:anywhere">${esc(d.vr)}</b> and tap <b>Enter VR</b>.</div>`:""}${d.needs?`<div class="note">${esc(d.needs)}</div>`:""}`:d.video?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="${d.video}" download>Download the video</a></div>`:""):`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn taxi" disabled>Try the demo ↗</button><button class="btn ghost" disabled>Watch video</button></div>
