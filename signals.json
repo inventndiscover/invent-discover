@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-10-11T07:18:54+05:30",
+ "REFRESHED": "2026-10-12T07:18:15+05:30",
  "SIGNALS": [
+  {
+   "id": "2108624138369929725",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2108624138369929725",
+   "posted": "2026-10-09T23:52:25+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Codex adds composer predictions in beta for Pro users: it suggests your next message based on the conversation and how you usually write."
+  },
   {
    "id": "2108271559928389679",
    "handle": "claudeai",
@@ -30,6 +40,16 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "OpenAI rolls out Ultrafast for GPT-6.1 Sol in the API, Codex and ChatGPT Work, offering near-Astra intelligence at up to 8x the speed of Sol Standard."
+  },
+  {
+   "id": "2108257472553386059",
+   "handle": "sundarpichai",
+   "name": "Sundar Pichai",
+   "url": "https://x.com/sundarpichai/status/2108257472553386059",
+   "posted": "2026-10-08T23:35:25+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "At Gemini at Work, Google Cloud introduces a new Gemini agent: one universal work agent with business context for questions, knowledge work and more."
   },
   {
    "id": "2108224572663414796",
@@ -70,16 +90,6 @@
    "topic": "Open models",
    "kind": "Official",
    "summary": "Liquid AI releases Open d1, two open-weight multimodal models: d1-3B (text and vision) and d1-omni-600M (text with image or audio), for real-time decisions from data centers to edge devices."
-  },
-  {
-   "id": "2107457414387622310",
-   "handle": "MistralAI",
-   "name": "Mistral AI",
-   "url": "https://x.com/MistralAI/status/2107457414387622310",
-   "posted": "2026-10-06T18:36:16+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Mistral previews Mistral Large 4, a natively multimodal model with 1T parameters (49B active), which it calls the best open-weights model from the US or Europe on aggregated benchmarks."
   }
  ]
 }

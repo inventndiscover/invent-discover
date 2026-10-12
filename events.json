@@ -1,59 +1,6 @@
 {
- "REFRESHED": "2026-10-11T08:10:00+05:30",
+ "REFRESHED": "2026-10-12T07:55:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "evm-capital-hackathon",
-   "title": "EVM Capital Hackathon: Mumbai edition",
-   "cat": "Startup",
-   "tags": [
-    "Hackathon",
-    "EVM",
-    "24 hours"
-   ],
-   "area": "Andheri East",
-   "venue": "Venture Catalysts++, Times Square, Marol",
-   "start": "2026-10-10",
-   "endDate": "2026-10-11",
-   "end": null,
-   "timeNote": "Saturday morning start, Sunday afternoon demos",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · approval required",
-   "aud": [
-    "Developer",
-    "Founder",
-    "Student"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/0z07eni5",
-   "org": "EVM Capital",
-   "access": "approval",
-   "desc": "A 24-hour hackathon for 50 to 60 builders that judges teams on real user traction rather than slides. The winning team gets an investor screening with Venture Catalysts, plus a ₹1 lakh prize pool."
-  },
-  {
-   "id": "shayari-showdown",
-   "title": "The Great Shayari Showdown: human poets vs AI",
-   "cat": "Culture",
-   "tags": [
-    "Poetry",
-    "AI"
-   ],
-   "area": "Jogeshwari West",
-   "venue": "Vaibhav Palace, New Link Road",
-   "start": "2026-10-11T10:00",
-   "end": "12:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free",
-   "aud": [
-    "Open to All"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/the-great-shayari-showdown-human-poets-vs-ai-genz-tickets/80003235633928",
-   "org": "Coffee Tables",
-   "access": "open",
-   "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner."
-  },
   {
    "id": "ibm-think-mumbai",
    "title": "IBM Think Mumbai 2026",
@@ -103,6 +50,36 @@
    "org": "Titan Capital",
    "access": "approval",
    "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval."
+  },
+  {
+   "id": "gamingcon-bharat-2026",
+   "title": "GamingCon Bharat 2026",
+   "cat": "Tech",
+   "tags": [
+    "Gaming",
+    "Esports",
+    "Game dev",
+    "Board games"
+   ],
+   "area": "Goregaon",
+   "venue": "Bombay Exhibition Centre (NESCO), Hall 3",
+   "start": "2026-10-17T11:00",
+   "end": null,
+   "endDate": "2026-10-18",
+   "fmt": "In person",
+   "price": 249,
+   "priceNote": "Ticket listed at ₹249 on District; required from age 4",
+   "aud": [
+    "Developer",
+    "Student",
+    "Open to All"
+   ],
+   "src": "District",
+   "also": "Time Out Mumbai",
+   "url": "https://www.district.in/events/gamingcon-bharat-2026-buy-tickets",
+   "org": "IDEX Events",
+   "access": "open",
+   "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers."
   },
   {
    "id": "code-to-capital",
@@ -548,7 +525,7 @@
    "src": "Luma",
    "url": "https://luma.com/5lxd2x7o",
    "access": "approval",
-   "why": "No date on the page last run; page still would not open this run.",
+   "why": "No date on the page last run; page could not be opened again this run.",
    "conf": {
     "date": 0,
     "place": 97,
@@ -694,22 +671,6 @@
    "hint": "2026-11-06"
   },
   {
-   "qid": "q-gamingcon",
-   "title": "GamingCon Bharat 2026",
-   "cat": "Tech",
-   "area": "Goregaon",
-   "src": "Time Out Mumbai",
-   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
-   "access": "open",
-   "why": "Dates (17-18 Oct, Bombay Exhibition Centre) seen only in a Time Out roundup; organiser page not found.",
-   "conf": {
-    "date": 85,
-    "place": 90,
-    "category": 70
-   },
-   "hint": "2026-10-17"
-  },
-  {
    "qid": "q-near-happy",
    "title": "NEAR x Quantus Happy Hour @ Devcon Mumbai",
    "cat": "Tech",
@@ -739,48 +700,78 @@
     "category": 85
    },
    "hint": "2026-10-09"
+  },
+  {
+   "qid": "q-durable-devops",
+   "title": "Durable DevOps Tech Meetup (Merge & Rise × Temporal)",
+   "cat": "Tech",
+   "area": "Andheri East",
+   "src": "Luma",
+   "url": "https://luma.com/uvc7v42g",
+   "access": "open",
+   "why": "Page shows a 6 PM start and open registration but no date.",
+   "conf": {
+    "date": 0,
+    "place": 85,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-agent-builders",
+   "title": "Agent Builders Meet Mumbai (UiPath workshop)",
+   "cat": "AI",
+   "area": "Andheri East",
+   "src": "Luma",
+   "url": "https://luma.com/sogt7uq2",
+   "access": "open",
+   "why": "No date on the page and registration is currently closed.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 90
+   }
   }
  ],
  "RUNS": [
   {
-   "src": "Luma, Meetup, AllEvents, Hidden Events listing pages",
-   "what": "Listing pages",
-   "found": 10,
-   "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Only luma.com/mumbai could be opened (no dates shown). Hidden Events, AllEvents, Luma discover pages and Meetup were refused in this unattended run; skipped"
-  },
-  {
-   "src": "Luma event pages + StartupGrants India + official sites",
-   "what": "Re-checked upcoming published events",
-   "found": 8,
-   "pub": 8,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "IBM Think 13 Oct, Code to Capital 23 Oct, Health Tech mixer 29 Oct, India Blockchain Week 1-2 Nov, Devcon 3-6 Nov, Earthshot 16-17 Nov, StartupLive 20-21 Nov unchanged. Others keep last verified details"
-  },
-  {
-   "src": "Luma new candidates",
-   "what": "Agent Builders Meet, Durable DevOps, NEAR Happy Hour, Structuring the AI Way, Cypherpunk, Solana Summit",
+   "src": "Luma Mumbai listing + event pages",
+   "what": "Listing and candidate pages",
    "found": 6,
    "pub": 0,
    "review": 2,
    "dup": 0,
-   "skip": 2,
-   "note": "Agent Builders Meet (registration closed) and Durable DevOps (sold out) skipped; NEAR Happy Hour added to queue; others still show no date"
+   "skip": 3,
+   "note": "Listing shows no dates. Skipped: DevDay Exchange (10 Oct, past), Mumbai Meets AI 06 (10 Oct, past, full), Design Samvaad (Gurugram). New undated: Durable DevOps, Agent Builders."
   },
   {
-   "src": "Time Out Mumbai roundup",
-   "what": "October events roundup",
-   "found": 3,
-   "pub": 0,
-   "review": 1,
+   "src": "District / organiser press release",
+   "what": "GamingCon Bharat dates",
+   "found": 1,
+   "pub": 1,
+   "review": 0,
+   "dup": 1,
+   "skip": 0,
+   "note": "17-18 Oct confirmed on the ticketing page and organiser press release; moved from queue to published."
+  },
+  {
+   "src": "Existing published events",
+   "what": "Date rollover",
+   "found": 14,
+   "pub": 14,
+   "review": 0,
    "dup": 0,
    "skip": 2,
-   "note": "Satish Gujral exhibition queued; GamingCon stays queued; Meeplecon and Kintsugi workshop skipped as off-audience. Removed past events: frontier-d2c-ai-summit, devday-exchange-mumbai, global-startups-club-oct10, mumbai-meets-ai-06, we-founders-collab-oct10"
+   "note": "Removed finished: evm-capital-hackathon, shayari-showdown. Others not re-opened (Luma and IBM pages refused in this run); last verified details kept. No cancellations seen."
+  },
+  {
+   "src": "Meetup, AllEvents, Hidden Events, Luma discover, gujralfoundation.org",
+   "what": "Listing pages",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Unreachable (permission request unanswered in unattended run); skipped."
   }
  ],
  "COMMUNITIES": [

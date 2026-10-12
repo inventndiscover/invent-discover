@@ -356,6 +356,37 @@
   "desc": "A full-day summit for consumer-brand founders and operators that mixes hands-on AI bootcamps with panels and keynotes. Registration is on D2C Insider's site.",
   "firstSeen": "2026-09-29"
  },
+ "gamingcon-bharat-2026": {
+  "id": "gamingcon-bharat-2026",
+  "title": "GamingCon Bharat 2026",
+  "cat": "Tech",
+  "tags": [
+   "Gaming",
+   "Esports",
+   "Game dev",
+   "Board games"
+  ],
+  "area": "Goregaon",
+  "venue": "Bombay Exhibition Centre (NESCO), Hall 3",
+  "start": "2026-10-17T11:00",
+  "end": null,
+  "endDate": "2026-10-18",
+  "fmt": "In person",
+  "price": 249,
+  "priceNote": "Ticket listed at ₹249 on District; required from age 4",
+  "aud": [
+   "Developer",
+   "Student",
+   "Open to All"
+  ],
+  "src": "District",
+  "also": "Time Out Mumbai",
+  "url": "https://www.district.in/events/gamingcon-bharat-2026-buy-tickets",
+  "org": "IDEX Events",
+  "access": "open",
+  "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers.",
+  "firstSeen": "2026-10-12"
+ },
  "global-startups-club-oct10": {
   "id": "global-startups-club-oct10",
   "title": "Global Startups Club: Startup Networking Mumbai",
