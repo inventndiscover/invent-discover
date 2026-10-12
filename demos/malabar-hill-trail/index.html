@@ -117,7 +117,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 <p><b>1. Digital creation.</b> This experience is a digital creation, a representation inspired by the Malabar Hill nature trail in Mumbai. It is not a real place, and it is not a surveyed or accurate map. The route, landmarks, buildings and sounds are illustrative and must not be treated as real.</p>
 <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
 <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
-<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 · in the headset, press X for a performance readout</p></div></div>
+<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 (b) · in the headset, press X for a performance readout</p></div></div>
 <script>
 /* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open. */
 window.__gate=!/[?&]test/.test(location.search);
@@ -820,8 +820,8 @@ void main(){
 }`);
 
 // ---------------------------------------------------------------- ocean surface mesh (camera-centred rings)
-const water = (()=>{
-  const SEG=384, Q=1+2*Math.PI/SEG, R0=0.35, RMAX=300e3;
+function makeWater(SEG){
+  const Q=1+2*Math.PI/SEG, R0=0.35, RMAX=300e3;
   const rings=[]; for(let r=R0; r<RMAX; r*=Q) rings.push(r); rings.push(RMAX);
   const nr=rings.length;
   const pos=new Float32Array((1+nr*SEG)*2);
@@ -838,7 +838,8 @@ const water = (()=>{
   const ib=gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,idx,gl.STATIC_DRAW);
   gl.bindVertexArray(null);
   return {vao, count:k, q:Q-1};
-})();
+}
+const water=makeWater(384);   // the headset builds its own lighter sea (128 around) when VR starts
 
 const G_WATERCOMMON = `
 uniform sampler2DArray uDisp, uDeriv, uVar; uniform vec3 uLen;
@@ -3127,9 +3128,9 @@ const XRL=[
 ];
 // Which headset is this? The Quest browser names it in its user-agent string, e.g. "... Quest 2) ..." or "... Quest 3) ...".
 // A Quest 2 has roughly half the graphics power of a Quest 3, so it starts lower down the ladder above.
-const BUILD='12 Oct 2026';
+const BUILD='12 Oct 2026 (b)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
-const XR_START = HEADSET==='Quest 2' ? 4 : HEADSET==='Quest' ? 3 : 2;
+const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 3 : 2;
 let Q=QD;
 function updateLand(){
   E.wetT=clamp(.3+S.rain*.95,0,1); if(E.wet===undefined) E.wet=E.wetT;
@@ -3303,7 +3304,17 @@ function xrAdapt(dt){
   if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
   else A.good=0;
 }
+// Headset-only lighter meshes, built the first time VR starts:
+//  - the sea: 128 segments around instead of 384 (about 70k triangles instead of 650k, per eye)
+//  - the far ground: the two outer rings at half the detail (the 2 m grid under the boardwalk stays as it is)
+let waterXR=null, terrainXR=null;
+function buildXRMeshes(){
+  if(waterXR) return;
+  waterXR=makeWater(128);
+  terrainXR=[ terrainGrid(FINE_HALF, 2, 0, 16), terrainGrid(1024, 16, FINE_HALF, 64), terrainGrid(4096, 64, 1024, 0) ];
+}
 async function startXR(session){
+  buildXRMeshes();
   xr.session=session; xrApplyLevel(XR_START); xr.oceanAcc=0; xr.ad={acc:0, n:0, good:0, bad:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
   const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor: HEADSET==='Quest 2' ? .8 : .9});
   session.updateRenderState({baseLayer:layer, depthNear:.1, depthFar:1e5});
@@ -3682,7 +3693,7 @@ function renderView(v){
   fullscreen();
   gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE);
   landU(P_ground.use()).tex('uHM',hmTex).tex('uAtlas',atlasTex).tex('uContact',contTex);
-  terrain.forEach((tr,i)=>{ P_ground.f('uCanopyOn', i>0?1:0); gl.bindVertexArray(tr.vao); gl.drawElements(gl.TRIANGLES,tr.count,gl.UNSIGNED_INT,0); });
+  (v.xr && terrainXR ? terrainXR : terrain).forEach((tr,i)=>{ P_ground.f('uCanopyOn', i>0?1:0); gl.bindVertexArray(tr.vao); gl.drawElements(gl.TRIANGLES,tr.count,gl.UNSIGNED_INT,0); });
   // the city: lit rooms from dusk on
   { const lit=1-smooth(-.05,.12,E.sun[1]); landU(P_bldg.use()).f('uNightLit',lit).f('uE0lit',.0009*E.pre*SUN_E/20);
     gl.bindVertexArray(cityGeo.vao); gl.drawElementsInstanced(gl.TRIANGLES,cityGeo.count,gl.UNSIGNED_SHORT,0,cityGeo.n); }
@@ -3711,10 +3722,10 @@ function renderView(v){
     .tex('uRip',ripTex[ripCur]).f('uRipRect',ripOrigin[0],ripOrigin[1],RIP_SIZE).tex('uWake',wkTex[wkCur]).f('uWakeRect',wkOrigin[0],wkOrigin[1],WK_SIZE)
     .f('uBoatPos',0,-100,0).f('uBoatFwd',1,0).f('uBoatSpd',0).f('uWakeAmp',0);
   const uwU=(P)=>P.f('uSigA',...E.sigA).f('uSigS',...E.sigS).f('uKd',...E.kd).f('uE0sun',...E.e0sun).f('uE0sky',...E.e0sky);
-  common(wUniforms(uwU(cloudU(P_water.use())))).m('uVPr',VPr).m('uInvVPr',invVPr).f('uQ',water.q).tex('uFoam',foamTex).f('uUnder',0)
+  common(wUniforms(uwU(cloudU(P_water.use())))).m('uVPr',VPr).m('uInvVPr',invVPr).f('uQ',(v.xr&&waterXR?waterXR:water).q).tex('uFoam',foamTex).f('uUnder',0)
     .f('uWindDir',WIND[0],WIND[1]).f('uWindU',sp.U).tex('uShadow',shadowTex).m('uShadowVP',VPr).f('uShadowOn',0).f('uFoamAmt',smooth(2.2,3.6,S.sea)).f('uHs',Math.max(seaHs,.2)).f('uFoamBias',sp.activeBias)
     .tex('uRefl',reflTex).f('uRes',W,H).f('uReflOn',0).tex('uOpaque',opTex).tex('uOpDepth',opDepth).f('uOpOn',v.xr?0:1);
-  gl.bindVertexArray(water.vao); gl.drawElements(gl.TRIANGLES, water.count, gl.UNSIGNED_INT, 0);
+  { const wm=v.xr&&waterXR?waterXR:water; gl.bindVertexArray(wm.vao); gl.drawElements(gl.TRIANGLES, wm.count, gl.UNSIGNED_INT, 0); }
   // resolve
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msF); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, resolveF);
   gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST);
