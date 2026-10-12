@@ -117,6 +117,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
     <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
     <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 · in the headset, press X for a performance readout</p>
   </div>
 </div>
 <div id="err"></div>
@@ -1307,7 +1308,7 @@ const bladeG = makeVAO([
 const canTex = texture(CAN_N, CAN_N, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, {data:buildCanopy()});
 
 // caption texture for the headset (drawn on a 2D canvas when the text changes)
-const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=200; const labCtx=labCv.getContext('2d');
+const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=384; const labCtx=labCv.getContext('2d');
 const labTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,labTex);
 gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -1354,7 +1355,7 @@ const hazeK = () => .003 + .02*S.mist*S.mist;
 const fogCol = () => fogColor();
 
 function renderView(v){
-  ensureTargets(v.w, v.h, Q.msaa);
+  ensureTargets(v.w, v.h, QQ.msaa);
   const pos=v.pos, view=M.lookDir(v.fwd, v.up, [0,0,0]);
   const VPr=M.mul(v.proj, view), invVPr=M.inv(VPr);
 
@@ -1392,24 +1393,24 @@ function renderView(v){
   target(scene2F, W, H);
   P_mist.use().tex('uScene',sceneTex).tex('uDepth',depthTex).tex('uCan',canTex).tex('uNoise',noiseTex,gl.TEXTURE_3D)
     .m('uInvVPr',invVPr).f('uCam',...pos).f('uKeyDir',...E.key).f('uKeyCol',...E.keyCol).f('uAmb',...E.e0sky)
-    .f('uDens',S.mist).f('uLight',S.light).f('uTime',simT).f('uFrame',frame%1024).f('uHc',HC)
-    .f('uCanOrg',-HALF_EXT,-HALF_EXT).f('uCanSize',2*HALF_EXT).f('uWindDir',WIND[0],WIND[1]).i('uSteps',Q.mistSteps);
+    .f('uDens',S.mist).f('uLight',S.light).f('uTime',simT).f('uFrame',v.xr?0:frame%1024).f('uHc',HC)
+    .f('uCanOrg',-HALF_EXT,-HALF_EXT).f('uCanSize',2*HALF_EXT).f('uWindDir',WIND[0],WIND[1]).i('uSteps',QQ.mistSteps);
   fullscreen();
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER, scene2F); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, sceneColF);
   gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST);
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
 
   // 5. exposure, measured once per frame (the first eye)
-  if (v.eye===0){
+  if (v.eye===0 && (!v.xr || frame%3===0)){
     gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.generateMipmap(gl.TEXTURE_2D);
     const lod=Math.max(0, Math.floor(Math.log2(Math.max(W,H)))-4);
     target(lumF[1-lumCur],1,1);
     P_lum.use().tex('uSrc',sceneTex).tex('uPrev',lumTex[lumCur]).f('uLod',lod).f('uPreLog',Math.log2(E.pre))
-      .f('uRate', TEST ? 1 : 1-Math.exp(-(v.dt||1/60)*1.6)); fullscreen(); lumCur=1-lumCur;
+      .f('uRate', TEST ? 1 : 1-Math.exp(-(v.dt||1/60)*(v.xr?3:1)*1.6)); fullscreen(); lumCur=1-lumCur;
   }
 
   // 6. bloom
-  if (Q.bloom){
+  if (QQ.bloom){
     let sw=W, sh=H, s2=sceneTex;
     for (let i=0; i<bloomF.length; i++){ const t=bloomTex[i]; target(bloomF[i], t.w, t.h); P_down.use().tex('uSrc',s2).f('uTexel',1/sw,1/sh).f('uFirst',i===0?1:0); fullscreen(); s2=t; sw=t.w; sh=t.h; }
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
@@ -1421,34 +1422,73 @@ function renderView(v){
   gl.bindFramebuffer(gl.FRAMEBUFFER, v.fb); gl.viewport(v.vp[0],v.vp[1],v.vp[2],v.vp[3]);
   const vig = v.xr ? clamp((xr.speed||0)/2.5,0,1)*.5 : 0;
   const fade = v.xr ? (xr.fade||0) : (cam.fade||0);
-  P_tone.use().tex('uScene',sceneTex).tex('uBloom',Q.bloom?bloomTex[0]:sceneTex).tex('uLum',lumTex[lumCur])
-    .f('uExpBias',.15).f('uBloomAmt',Q.bloom?.03:0).f('uFrame',frame).f('uNightDesat',E.nightDesat).f('uPre',E.pre)
+  P_tone.use().tex('uScene',sceneTex).tex('uBloom',QQ.bloom?bloomTex[0]:sceneTex).tex('uLum',lumTex[lumCur])
+    .f('uExpBias',.15).f('uBloomAmt',QQ.bloom?.03:0).f('uFrame',frame).f('uNightDesat',E.nightDesat).f('uPre',E.pre)
     .f('uRes',W,H).f('uVig',vig).f('uFade',fade);
   fullscreen();
+  if (v.xr) drawControllers(VPr, pos);
   if (v.xr || forceLabel) drawVRLabel(VPr, pos);
 }
 
 // the caption card in the headset
 let forceLabel=false;
 const vrLab={t:0, pos:null, alpha:0};
-function vrLabel(title, sub){
-  labCtx.clearRect(0,0,1024,200);
-  labCtx.fillStyle='rgba(10,12,13,.62)'; labCtx.fillRect(0,0,1024,200);
-  labCtx.fillStyle='#eef0ee'; labCtx.font='500 64px "IBM Plex Mono", monospace'; labCtx.textBaseline='top';
-  labCtx.fillText(title, 40, 36);
-  labCtx.fillStyle='rgba(238,240,238,.6)'; labCtx.font='400 36px "IBM Plex Mono", monospace';
-  labCtx.fillText(sub, 40, 128);
+// Text is laid out to FIT: the title shrinks if long; instructions split at ' · ' onto their own lines and wrap.
+// The panel is 0.84 m wide at 1.6 m (about 30 degrees), inside the sharp centre of the Quest lenses.
+const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
+function vrLabel(title, sub, keep){
+  const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
+  const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  const T=String(title||''); let tp=52;
+  const tw=()=>{ setF(500,tp); return c.measureText(T).width; };
+  while (tw()>LAB_TXT && tp>30) tp-=2;
+  const fs=34; setF(400,fs); const lines=[];
+  for (const item of String(sub||'').split(/\s*·\s*/).filter(Boolean)){
+    let line='';
+    for (const w of item.split(' ')){ const tryL=line?line+' '+w:w; if (c.measureText(tryL).width>LAB_TXT && line){ lines.push(line); line=w; } else line=tryL; }
+    if (line) lines.push(line);
+  }
+  for (let i=0;i<lines.length;i++) lines[i]=lines[i][0].toUpperCase()+lines[i].slice(1);
+  const L=lines.slice(0,5), lh=46, titleH=tp+12, gap=L.length?16:0;
+  const boxH=Math.min(LAB_H-8, 40+titleH+gap+L.length*lh+34), y0=(LAB_H-boxH)/2;
+  c.fillStyle='rgba(10,12,13,.72)'; c.beginPath(); if (c.roundRect) c.roundRect(4,y0,LAB_W-8,boxH,22); else c.rect(4,y0,LAB_W-8,boxH); c.fill();
+  c.strokeStyle='rgba(238,240,238,.2)'; c.lineWidth=2; c.stroke();
+  c.fillStyle='#eef0ee'; tw(); c.fillText(T, LAB_PAD, y0+40+titleH/2);
+  c.fillStyle='rgba(238,240,238,.78)'; setF(400,fs);
+  L.forEach((l,i)=>c.fillText(l, LAB_PAD, y0+40+titleH+gap+lh*i+lh/2));
   gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
-  vrLab.t=3.5;
+  if (keep && vrLab.pos){ vrLab.t=Math.max(vrLab.t,1.5); return; }
+  vrLab.t=3+1.1*L.length; vrLab.pos=null;
 }
 function drawVRLabel(VPr, pos){
-  const a=vrLab.t>0?1:0; if(!vrLab.pos) return;
+  const a=vrLab.t>0?1:0; if (!vrLab.pos) return;
   vrLab.alpha += (a-vrLab.alpha)*.2;
   if (vrLab.alpha<.01) return;
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  const f=fwdOf(cam.yaw,0), R=V.norm(V.cross(f,[0,1,0])), U=[0,1,0];
-  P_label.use().tex('uTex',labTex).m('uVPr',VPr).f('uC',...vrLab.pos).f('uR',...R).f('uU',...U).f('uSz',.9,.18).f('uCam',...pos).f('uA',vrLab.alpha);
+  const to=V.norm(V.sub(vrLab.face||pos, vrLab.pos)), R=V.norm(V.cross([0,1,0],to)), U=[0,1,0];
+  P_label.use().tex('uTex',labTex).m('uVPr',VPr).f('uC',...vrLab.pos).f('uR',...R).f('uU',...U).f('uSz',.42,.42*LAB_H/LAB_W).f('uCam',...pos).f('uA',vrLab.alpha);
   gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,6);
+  gl.disable(gl.BLEND);
+}
+// controllers: a dark handle and a short fading beam showing exactly where each one points
+const P_ray=program(`
+uniform mat4 uVPr; uniform vec3 uCam, uA, uB; uniform float uW0, uW1;
+out float vT; out float vS;
+void main(){ int v=gl_VertexID; float t=(v==1||v==2||v==4)?1.:0., s=(v==2||v==4||v==5)?1.:-1.;
+  vec3 a=uA-uCam, b=uB-uCam, p=mix(a,b,t), d=normalize(b-a); vec3 side=cross(d, normalize(p)); side=length(side)>1e-4?normalize(side):vec3(1,0,0);
+  vT=t; vS=s; gl_Position=uVPr*vec4(p+side*s*mix(uW0,uW1,t),1.); }`, `
+uniform vec3 uCol; uniform float uAlpha, uFadeLen; in float vT; in float vS; out vec4 o;
+void main(){ float edge=1.-smoothstep(.55,1.,abs(vS)); float a=uAlpha*edge*mix(1.,pow(1.-vT,1.6),uFadeLen); o=vec4(uCol*a,a); }`);
+function drawControllers(VPr, pos){
+  if (!xr.rays || !xr.rays.length) return;
+  const R=v=>yawRot(xr.rigYaw,v);
+  gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.bindVertexArray(emptyVAO);
+  P_ray.use().m('uVPr',VPr).f('uCam',...pos);
+  for (const r of xr.rays){
+    const o=V.add(xr.rigPos,R(r.p)), d=R(r.d);
+    P_ray.f('uA',...V.add(o,V.mul(d,-.12))).f('uB',...o).f('uW0',.016).f('uW1',.012).f('uCol',.09,.1,.1).f('uAlpha',.92).f('uFadeLen',0); gl.drawArrays(gl.TRIANGLES,0,6);
+    P_ray.f('uA',...o).f('uB',...V.add(o,V.mul(d,1.6))).f('uW0',.0035).f('uW1',.0015).f('uCol',.93,.95,.93).f('uAlpha',r.side<0?.8:.5).f('uFadeLen',1); gl.drawArrays(gl.TRIANGLES,0,6);
+  }
   gl.disable(gl.BLEND);
 }
 
@@ -1523,6 +1563,12 @@ const S = { sea:0, tod:10.2, cloud:.22, rain:0, mist:.35, light:.7, wind:.5, sea
 const cam = { pos:[0,50,0], yaw:0, pitch:0, fov:62*Math.PI/180, mode:'tour', tourT:0, speed:10, s:3.5, u:0, hint:undefined, bob:0, stepDist:0, moved:0, fade:0, vel:[0,0,0] };
 const keys = new Set();
 const Q = {msaa:4, bloom:true, mistSteps:22}, QX = {msaa:2, bloom:false, mistSteps:12};
+// headset quality levels: s = fraction of the headset's pixel size the grove is drawn at. The page measures its own
+// frame rate in the headset and steps down a level when frames are being missed (missed frames = judder/'glitch').
+const XRL=[ {s:1.00, mistSteps:14}, {s:.88, mistSteps:12}, {s:.77, mistSteps:12}, {s:.67, mistSteps:10}, {s:.58, mistSteps:9}, {s:.50, mistSteps:8} ];
+const BUILD='12 Oct 2026';
+const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
+const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 2 : 1;
 let QQ = Q;
 let simT=20, frame=0, gust=.3;
 let lastNow=performance.now(), fpsAcc=0, fpsN=0, dynAcc=0, dynN=0;
@@ -1737,16 +1783,27 @@ bVR.onclick=async()=>{
   try{ await gl.makeXRCompatible(); const session=await navigator.xr.requestSession('immersive-vr',{optionalFeatures:['local-floor']}); startXR(session); }
   catch(e){ say('Could not start VR: '+(e.message||e)); }
 };
+function xrApplyLevel(l){ xr.level=l; QQ=Object.assign({}, QX, XRL[l]); xr.scale=XRL[l].s; }
+function xrAdapt(dt){
+  const A=xr.ad; if(A.hold>0){ A.hold-=dt; return; }
+  A.acc+=dt; A.n++; if(A.acc<1.2) return;
+  const avg=A.acc/A.n; A.acc=0; A.n=0; xr.fps=Math.round(1/avg);
+  const tgt=1/(xr.session.frameRate||72);
+  if(avg>tgt*1.18 && xr.level<XRL.length-1 && ++A.bad>=2){ A.bad=0; if(A.lastUp) A.ceil=xr.level+1; xrApplyLevel(xr.level+1); A.good=0; A.hold=1.5; A.lastUp=false; }
+  else if(avg<=tgt*1.18) A.bad=0;
+  if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
+  else A.good=0;
+}
 async function startXR(session){
-  xr.session=session; QQ=QX;
-  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor:.85});
-  if ('fixedFoveation' in layer) layer.fixedFoveation=.6;
-  session.updateRenderState({baseLayer:layer, depthNear:.05, depthFar:1e4});
+  xr.session=session; xrApplyLevel(XR_START); xr.ad={acc:0, n:0, good:0, bad:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
+  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor: HEADSET==='Quest 2' ? .8 : .9});
+  session.updateRenderState({baseLayer:layer, depthNear:.1, depthFar:1e4});
+  try{ if(session.updateTargetFrameRate && session.supportedFrameRates && Array.from(session.supportedFrameRates).includes(72)) session.updateTargetFrameRate(72).catch(()=>{}); }catch(e){}
   xr.layer=layer; xr.ref=await session.requestReferenceSpace('local');
+  if (xr.ref.addEventListener) xr.ref.addEventListener('reset',()=>{ xr.rigInit=false; xr.head0=null; });
   xr.rigInit=false; xr.rigYaw=cam.yaw;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · B: next mode':'Left stick walks · right stick turns · B: next mode');
-  vrLab.t=9; vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode');
+  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode');
   audioStart();
   session.addEventListener('end', ()=>{ xr.session=null; QQ=Q; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; W=H=0; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -1757,42 +1814,54 @@ function onXRFrame(t, xf){
   const session=xf.session; session.requestAnimationFrame(onXRFrame);
   const dt=xr.lastT ? clamp((t-xr.lastT)/1000,0,.1) : 1/72; xr.lastT=t;
   const pose=xf.getViewerPose(xr.ref); if (!pose) return;
+  frame++; xrAdapt(dt);
   const hp=pose.transform.position, hq=pose.transform.orientation;
   const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w];
-  const gazeLocal=qRot(hQ,[0,0,-1]);
-  let gaze=yawRot(xr.rigYaw,gazeLocal);
-  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false;
+  const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aimL=null, aimR=null; xr.rays=[];
   for (const src of session.inputSources){
+    const side=src.handedness==='left'?-1:1;
     const gp=src.gamepad; if (gp){
       const ax=gp.axes.length>=4 ? [gp.axes[2],gp.axes[3]] : [gp.axes[0]||0, gp.axes[1]||0];
       const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
-      if (src.handedness==='left'){ mv=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; }
+      if (side<0){ mv=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) xBtn=true; }
       else { turn=ax[0]; lift=-ax[1]; if (btn(0)) fast=true; if (btn(5)) bBtn=true; }
     }
+    // where each controller points: drawn as a short beam; the left one steers movement
+    if (src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if (rp){ const p=rp.transform.position, q=rp.transform.orientation;
+      const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if (side<0) aimL=d; else aimR=d; } }
   }
+  // X: performance readout
+  if (xBtn && !xr.xLatch){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
+  if (xr.perfT>0){ xr.perfT-=dt; if (simT-xr.perfLast>1){ xr.perfLast=simT;
+      vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+Math.round(session.frameRate||72)+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · Build '+BUILD, true); } }
   // B: next mode (walk -> fly -> tour)
   if (bBtn && !xr.bLatch){ const next={walk:'fly', fly:'tour', tour:'walk'}[cam.mode]; vrSetMode(next); }
   xr.bLatch=bBtn;
   const dz=v=>Math.abs(v)<.15?0:v;
   if (cam.mode!=='tour'){
-    if (Math.abs(turn)>.7 && !xr.snapLatch){ xr.snapLatch=true; const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); xr.rigYaw+=Math.sign(turn)*Math.PI/6; xr.rigPos=V.sub(head,yawRot(xr.rigYaw,headLocal)); gaze=yawRot(xr.rigYaw,gazeLocal); }
+    if (Math.abs(turn)>.7 && !xr.snapLatch){ xr.snapLatch=true; const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); xr.rigYaw+=Math.sign(turn)*Math.PI/6; xr.rigPos=V.sub(head,yawRot(xr.rigYaw,headLocal)); xr.fade=Math.max(xr.fade||0,.35); }
     if (Math.abs(turn)<.3) xr.snapLatch=false;
   }
-  const flat=V.norm([gaze[0],0,gaze[2]]), right=V.norm(V.cross(flat,[0,1,0]));
-  let speed=0;
+  // movement follows where the LEFT controller points (then the right one, then your gaze)
+  const aim=yawRot(xr.rigYaw, aimL||aimR||gazeLocal);
+  let flat=[aim[0],0,aim[2]]; if (Math.hypot(flat[0],flat[2])<.15){ const g=yawRot(xr.rigYaw,gazeLocal); flat=[g[0],0,g[2]]; }
+  flat=V.norm(flat); const right=V.norm(V.cross(flat,[0,1,0]));
+  const rig0=xr.rigPos.slice();
   if (cam.mode==='walk'){
-    if (!xr.rigInit){ const e=cam.pos; xr.rigPos=V.sub(e, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
+    if (!xr.rigInit){ xr.hy0=headLocal[1]; xr.rigPos=V.sub(cam.pos, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
     const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
     cam.pos=head; const before=head.slice();
     walkStep(dt, V.add(V.mul(flat,-dz(mv[1])),V.mul(right,dz(mv[0]))), fast, true);
-    xr.rigPos=V.add(xr.rigPos, V.sub(cam.pos,before));
-    speed=Math.hypot(cam.vel[0],cam.vel[2]);
+    // keep the sideways correction (stay on the path), but take HEIGHT from the path only, so crouching,
+    // leaning and nodding still move your view (before, every head movement up or down was cancelled out)
+    xr.rigPos[0]+=cam.pos[0]-before[0]; xr.rigPos[2]+=cam.pos[2]-before[2];
+    xr.rigPos[1]=cam.pos[1]-xr.hy0;
   } else if (cam.mode==='fly'){
-    const head0=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
-    let move=V.add(V.mul(gaze,-dz(mv[1])),V.mul(right,dz(mv[0]))); move[1]+=dz(lift);
+    let move=V.add(V.mul(aim,-dz(mv[1])),V.mul(right,dz(mv[0]))); move[1]+=dz(lift);
     const sp=(fast?18:4);
     xr.flyV=V.lerp(xr.flyV||[0,0,0], V.mul(move,sp), Math.min(1,dt*4));
-    xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt)); speed=V.len(xr.flyV);
+    xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt));
     const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); const fl=groundH(head[0],head[2])+.6; if (head[1]<fl) xr.rigPos[1]+=fl-head[1];
   } else {
     cam.tourT+=dt;
@@ -1800,18 +1869,19 @@ function onXRFrame(t, xf){
     else {
       const r=tourPose(cam.tourT);
       if (cam.tourCut){ cam.tourCut=false; xr.fade=1; const td=V.sub(r.t,r.p); xr.rigYaw=Math.atan2(td[2],td[0])-Math.atan2(gazeLocal[2],gazeLocal[0]); xr.head0=headLocal.slice(); vrLabel(r.cap,'B: next mode'); }
-      xr.rigPos=V.sub(r.p, yawRot(xr.rigYaw, xr.head0||headLocal));
+      if (!xr.head0) xr.head0=headLocal.slice();
+      xr.rigPos=V.sub(r.p, yawRot(xr.rigYaw, xr.head0));
     }
   }
+  { const v=V.len(V.sub(xr.rigPos,rig0))/Math.max(dt,1e-3); xr.speed+=((v>40?0:Math.min(v,8))-xr.speed)*Math.min(1,dt*6); }
   xr.fade=Math.max(0,(xr.fade||0)-dt*2.2);
-  gaze=yawRot(xr.rigYaw,gazeLocal);
+  const gaze=yawRot(xr.rigYaw,gazeLocal);
   const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
   cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
-  xr.speed=speed;
-  if (vrLab.t>0){ vrLab.t-=dt; const want=V.add(head, V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.5),[0,-.18,0]));
-    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; }
+  if (vrLab.t>0){ vrLab.t-=dt; const want=V.add(head, V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
+    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; vrLab.face=head; }
   simulate(dt);
-  drawMap(false);
+  if (frame%14===0) drawMap(false);
   const layer=xr.layer;
   pose.views.forEach((view,i)=>{
     const vp=layer.getViewport(view);
@@ -1819,7 +1889,7 @@ function onXRFrame(t, xf){
     const RR=v=>yawRot(xr.rigYaw,v);
     const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z]));
     renderView({pos:eye, fwd:RR(qRot(vq,[0,0,-1])), up:RR(qRot(vq,[0,1,0])), proj:view.projectionMatrix,
-      w:Math.round(vp.width), h:Math.round(vp.height), fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, fovY:2*Math.atan(1/view.projectionMatrix[5]), dt});
+      w:Math.max(2,Math.round(vp.width*xr.scale)), h:Math.max(2,Math.round(vp.height*xr.scale)), fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, fovY:2*Math.atan(1/view.projectionMatrix[5]), dt});
   });
 }
 function vrSetMode(m){
@@ -1828,8 +1898,8 @@ function vrSetMode(m){
     // face along the path
     const n=pathNear(cam.pos[0],cam.pos[2]), tt=pathAt(n.s).t, g=xr.gazeLocal||[0,0,-1];
     xr.rigYaw=Math.atan2(tt[2],tt[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks · right stick turns · B: next mode');
-  } else if (m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you look · right stick up/down'); }
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode');
+  } else if (m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
   else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
 }
 
@@ -1875,7 +1945,7 @@ window.grove = {
   tour(t){ setMode('tour'); cam.tourT=t; },
   sim(n,dt){ for (let i=0;i<n;i++){ updateDesktopCamera(dt); simulate(dt); } gl.finish(); },
   step(n,dt){ for (let i=0;i<n;i++) desktopFrame(dt); gl.finish(); },
-  keys,
+  keys, vrLabel, labCanvas:labCv,
   get simT(){ return simT; }
 };
 window.groveReady = true;

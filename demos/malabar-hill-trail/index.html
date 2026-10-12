@@ -117,7 +117,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 <p><b>1. Digital creation.</b> This experience is a digital creation, a representation inspired by the Malabar Hill nature trail in Mumbai. It is not a real place, and it is not a surveyed or accurate map. The route, landmarks, buildings and sounds are illustrative and must not be treated as real.</p>
 <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
 <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
-<button id="noticeGo" type="button">I understand, begin</button></div></div>
+<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 · in the headset, press X for a performance readout</p></div></div>
 <script>
 /* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open. */
 window.__gate=!/[?&]test/.test(location.search);
@@ -3123,7 +3123,13 @@ const XRL=[
   {s:.77,  mistSteps:12, maxD:330, gcR:16},
   {s:.67,  mistSteps:10, maxD:280, gcR:14},
   {s:.58,  mistSteps:9,  maxD:240, gcR:12},
+  {s:.50,  mistSteps:8,  maxD:200, gcR:10},
 ];
+// Which headset is this? The Quest browser names it in its user-agent string, e.g. "... Quest 2) ..." or "... Quest 3) ...".
+// A Quest 2 has roughly half the graphics power of a Quest 3, so it starts lower down the ladder above.
+const BUILD='12 Oct 2026';
+const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
+const XR_START = HEADSET==='Quest 2' ? 4 : HEADSET==='Quest' ? 3 : 2;
 let Q=QD;
 function updateLand(){
   E.wetT=clamp(.3+S.rain*.95,0,1); if(E.wet===undefined) E.wet=E.wetT;
@@ -3292,13 +3298,14 @@ function xrAdapt(dt){
   A.acc+=dt; A.n++; if(A.acc<1.2) return;
   const avg=A.acc/A.n; A.acc=0; A.n=0; xr.fps=Math.round(1/avg);
   const tgt=1/(xr.session.frameRate||72);
-  if(avg>tgt*1.18 && xr.level<XRL.length-1){ if(A.lastUp) A.ceil=xr.level+1; xrApplyLevel(xr.level+1); A.good=0; A.hold=1.5; A.lastUp=false; }
-  else if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
+  if(avg>tgt*1.18 && xr.level<XRL.length-1 && ++A.bad>=2){ A.bad=0; if(A.lastUp) A.ceil=xr.level+1; xrApplyLevel(xr.level+1); A.good=0; A.hold=1.5; A.lastUp=false; }
+  else if(avg<=tgt*1.18) A.bad=0;
+  if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
   else A.good=0;
 }
 async function startXR(session){
-  xr.session=session; xrApplyLevel(2); xr.ad={acc:0, n:0, good:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
-  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor:.9});
+  xr.session=session; xrApplyLevel(XR_START); xr.oceanAcc=0; xr.ad={acc:0, n:0, good:0, bad:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
+  const layer=new XRWebGLLayer(session, gl, {antialias:false, depth:false, framebufferScaleFactor: HEADSET==='Quest 2' ? .8 : .9});
   session.updateRenderState({baseLayer:layer, depthNear:.1, depthFar:1e5});
   // ask for 72 Hz (the most time per frame the Quest allows); fewer missed frames = no judder
   try{ if(session.updateTargetFrameRate && session.supportedFrameRates && Array.from(session.supportedFrameRates).includes(72)) session.updateTargetFrameRate(72).catch(()=>{}); }catch(e){}
@@ -3337,6 +3344,12 @@ function onXRFrame(t, xf){
     if(src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if(rp){ const p=rp.transform.position, q=rp.transform.orientation;
       const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if(side<0) aimL=d; else aimR=d; } }
   }
+  // X (left controller): show a performance readout -- headset, frame rate, quality level, build
+  { let x=false; for(const src of session.inputSources){ const gp=src.gamepad; if(gp && src.handedness==='left' && gp.buttons[4] && gp.buttons[4].pressed) x=true; }
+    if(x && !xr.xLatch){ xr.perfT=8; xr.perfLast=0; } xr.xLatch=x; }
+  if(xr.perfT>0){ xr.perfT-=dt; if(simT-(xr.perfLast||0)>1){ xr.perfLast=simT;
+      const hz=Math.round(xr.session.frameRate||72);
+      vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+hz+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · Build '+BUILD, true); } }
   // B or Y: next mode (walk -> fly -> tour)
   if(bBtn && !xr.bLatch){ const next={walk:'fly', fly:'tour', tour:'walk'}[cam.mode]; vrSetMode(next); }
   xr.bLatch=bBtn;
@@ -3423,7 +3436,7 @@ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParame
 // instructions are split at each ' · ' and word-wrapped onto their own lines (before, one long line was simply
 // cut off at the panel's edge). The panel is kept narrow so all of it sits in the sharp centre of the lenses.
 const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
-function vrLabel(title, sub){
+function vrLabel(title, sub, keep){
   const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
   const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
   // title: shrink until it fits on one line
@@ -3449,6 +3462,7 @@ function vrLabel(title, sub){
   L.forEach((l,i)=>c.fillText(l, LAB_PAD, y0+40+titleH+gap+lh*i+lh/2));
   gl.bindTexture(gl.TEXTURE_2D,labTex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  if(keep && vrLab.pos){ vrLab.t=Math.max(vrLab.t,1.5); return; }   // live readout: refresh the text, leave it where it is
   vrLab.t=3+1.1*L.length; vrLab.pos=null;   // longer messages stay up longer
 }
 const P_label=program(`
@@ -3534,7 +3548,7 @@ const MAP = (() => {
   return {N, toPx, base, view, vc, last:-1};
 })();
 function drawMap(force){
-  const M_=MAP; if(!force && frame-M_.last<5) return; M_.last=frame;
+  const M_=MAP; if(!force && frame-M_.last<(xr.session?14:5)) return; M_.last=frame;
   const c=M_.vc, N=M_.N; c.drawImage(M_.base,0,0);
   const p=cam.pos; const [px,py]=M_.toPx(p[0],p[2]); const f=fwdOf(cam.yaw,0); const a=Math.atan2(f[2],f[0]);
   // view cone, then you
@@ -3542,6 +3556,7 @@ function drawMap(force){
   c.fillStyle=g; c.beginPath(); c.moveTo(px,py); c.arc(px,py,46,a-.5,a+.5); c.closePath(); c.fill();
   c.fillStyle='#0a0c0d'; c.beginPath(); c.arc(px,py,6.5,0,6.283); c.fill(); c.fillStyle='#eef0ee'; c.beginPath(); c.arc(px,py,4.5,0,6.283); c.fill();
   const n=nearestOnPath(p[0],p[2]); const on=n.dist<4 && cam.mode!=='fly';
+  if(xr.session){ uploadWristMap(); return; }
   document.getElementById('mapWhere').innerHTML = cam.mode==='tour' ? 'Tour' : on ? 'On the trail' : cam.mode==='fly' ? 'Flying · '+Math.round(p[1])+' m up' : 'Near the trail';
   document.getElementById('mapDist').innerHTML = on||cam.mode==='tour' ? `<b>${Math.round(n.s)}</b> / ${Math.round(PATH_LEN)} m` : '';
   if(xr.session) uploadWristMap();
@@ -3570,7 +3585,9 @@ function simulate(dt){
   dt=clamp(dt,0,.1); simT+=dt; frame++;
   const sp=seaParams(S.sea);
   windOff[0]+=WIND[0]*(6+sp.U*.6)*dt; windOff[1]+=WIND[1]*(6+sp.U*.6)*dt;
-  simulateOcean(simT, dt);
+  // the sea is far away and only seen near the viewpoint: in the headset its waves update every 3rd frame (24 a second)
+  if(xr.session){ xr.oceanAcc+=dt; if(frame%3===0){ simulateOcean(simT, xr.oceanAcc); xr.oceanAcc=0; } }
+  else simulateOcean(simT, dt);
   E.wet+= (E.wetT-E.wet)*Math.min(1,dt*(E.wetT>E.wet?.25:.03));   // gets wet quickly, dries slowly
   const gust=.6+.4*Math.sin(simT*.31)*Math.sin(simT*.17);
   const end=pathAt(PATH_LEN); const seaNear=clamp(1-(Math.hypot(cam.pos[0]-end.x,cam.pos[2]-end.z)-10)/180,0,1)*.7+clamp((60-cam.pos[1])/60,0,1)*.1;
@@ -3602,10 +3619,14 @@ function prepareFrame(viewPos){
     fullscreen();
   }
   fog=V.add(fogColor(), [flashI*.0022, flashI*.0024, flashI*.003]);
+  // the sky's light (with its clouds) changes slowly: in the headset redraw it every 4th frame, or at once for lightning
+  if(!xr.session || frame%4===0 || flashI>1 || !E.envOnce){ E.envOnce=true;
   target(envF, ENV_W, ENV_H);
   cloudU(P_env.use()).f('uTime',simT).f('uCam',...viewPos).f('uKeyDir',...E.key).f('uKeyCol',...E.keyColClouds).tex('uSkyLUT',skyTex).f('uFlash',...bolt.pos,flashI).f('uFogCol',...fog).f('uRainVeil',E.rainVeil).f('uOvercast',E.overcast);
   fullscreen();
-  gl.bindTexture(gl.TEXTURE_2D, envTex); gl.generateMipmap(gl.TEXTURE_2D);
+  gl.bindTexture(gl.TEXTURE_2D, envTex); gl.generateMipmap(gl.TEXTURE_2D); }
+  // at the lower headset quality levels the sun's shadow map is redrawn every other frame
+  if(xr.session && xr.level>=3 && (frame&1) && shOn) return;
   // sun shadow map: an orthographic view from the sun over the square of forest around you, snapped to its
   // texels so the shadows don't crawl as you move
   shOn=0;
@@ -3731,10 +3752,10 @@ function renderView(v){
     gl.disable(gl.BLEND); gl.depthMask(true); gl.disable(gl.DEPTH_TEST);
   }
   // exposure metering (first eye only; both eyes share it)
-  if(v.eye===0){
+  if(v.eye===0 && (!v.xr || frame%3===0)){   // headset: every 3rd frame is plenty (exposure changes slowly)
     gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.generateMipmap(gl.TEXTURE_2D);
     const lod=Math.max(0, Math.floor(Math.log2(Math.max(W,H)))-4);
-    target(lumF[1-lumCur],1,1); P_lum.use().tex('uSrc',sceneTex).tex('uPrev',lumTex[lumCur]).f('uLod',lod).f('uPreLog',Math.log2(E.pre)).f('uRate', TEST?1:1-Math.exp(-(v.dt||1/60)*1.6)); fullscreen(); lumCur=1-lumCur;
+    target(lumF[1-lumCur],1,1); P_lum.use().tex('uSrc',sceneTex).tex('uPrev',lumTex[lumCur]).f('uLod',lod).f('uPreLog',Math.log2(E.pre)).f('uRate', TEST?1:1-Math.exp(-(v.dt||1/60)*(v.xr?3:1)*1.6)); fullscreen(); lumCur=1-lumCur;
   }
   if(Q.bloom){
     let sw=W, sh=H, s2=sceneTex;
