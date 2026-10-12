@@ -117,7 +117,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
     <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
     <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
-    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 · in the headset, press X for a performance readout</p>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 (b) · in the headset, press X for a performance readout</p>
   </div>
 </div>
 <div id="err"></div>
@@ -870,6 +870,16 @@ const BLADES = (() => {
   return out;
 })();
 
+// The grove is split into 12 m squares, and the stalks are sorted so each square's stalks sit next to each other
+// in memory. Then each frame we can draw only the squares that are near you AND in front of you, as a few
+// contiguous runs, instead of all 33,000 stalks every frame (most of them behind you or deep in the mist).
+const CELL=12, CX0=-85, CZ0=-170, NCX=Math.ceil(170/CELL), NCZ=Math.ceil(340/CELL);
+const cellOf=c=>Math.min(NCZ-1,Math.max(0,Math.floor((c.z-CZ0)/CELL)))*NCX + Math.min(NCX-1,Math.max(0,Math.floor((c.x-CX0)/CELL)));
+GROVE.sort((a,b)=>cellOf(a)-cellOf(b));
+const CELLS=(()=>{ const out=[]; let cur=-1;
+  GROVE.forEach((c,i)=>{ const id=cellOf(c); if(id!==cur){ cur=id; out.push({id, start:i, n:0, y:0}); } const C=out[out.length-1]; C.n++; C.y+=c.y; });
+  for(const C of out){ C.y=C.y/C.n+10; C.cx=CX0+(C.id%NCX+.5)*CELL; C.cz=CZ0+(Math.floor(C.id/NCX)+.5)*CELL; }
+  return out; })();
 const ALL_CULMS = GROVE;
 
 // leaves: two clusters of three near the top of each tree culm
@@ -1092,11 +1102,12 @@ void main(){
 const VS_STALK = `${UNI_VS}
 ${BEND_GLSL}
 layout(location=0) in vec3 aTp; layout(location=1) in vec4 aSB; layout(location=2) in vec4 aLR; layout(location=3) in vec4 aMisc;
+uniform float uFar;
 out vec3 vP, vN; out float vV, vNode, vCol;
 void main(){
   float v=aTp.y, H=aSB.w;
   vec2 bd=bend(v, aSB.xz, aLR.xy, aLR.z);
-  float r=aLR.w*(1.-.7*v);
+  float r=aLR.w*(1.-.7*v)*(1.-smoothstep(uFar-25.,uFar,length(aSB.xz-uCam.xz)));
   vec3 P=vec3(aSB.x+bd.x, aSB.y+v*H, aSB.z+bd.y)+vec3(aTp.x*r,0.,aTp.z*r);
   vN=vec3(aTp.x,0.,aTp.z); vP=P; vV=v*H; vNode=aMisc.x; vCol=aMisc.y;
   gl_Position=uVPr*vec4(P-uCam,1.);
@@ -1124,15 +1135,17 @@ void main(){
 const VS_LEAF = `${UNI_VS}
 ${BEND_GLSL}
 layout(location=0) in vec2 aUW; layout(location=1) in vec4 aSB; layout(location=2) in vec4 aLR; layout(location=3) in vec4 aDir; layout(location=4) in vec4 aLP;
+uniform float uFar;
 out vec3 vP, vN; out vec2 vUV; out float vShade;
 void main(){
-  float v=aLR.w, H=aSB.w, len=aDir.w;
+  float fk=1.-smoothstep(uFar-25.,uFar,length(aSB.xz-uCam.xz));
+  float v=aLR.w, H=aSB.w, len=aDir.w*fk;
   vec2 bd=bend(v, aSB.xz, aLR.xy, aLR.z);
   vec3 axis=vec3(aSB.x+bd.x, aSB.y+v*H, aSB.z+bd.y);
   vec3 dir=normalize(aDir.xyz);
   vec3 side=normalize(cross(dir,vec3(0.,1.,0.))+vec3(1e-4,0.,1e-3));
   float u=aUW.x, w=aUW.y;
-  float hw=.034*pow(sin(3.14159*clamp(u,0.,1.)),.6)*(1.-.3*u);
+  float hw=.034*pow(sin(3.14159*clamp(u,0.,1.)),.6)*(1.-.3*u)*fk;
   float fl=sin(uTime*(3.+2.*fract(aLP.x*9.))+aLP.x*40.)*(.01+.02*uGust)*u;
   vec3 P=axis+dir*(u*len)+side*(w*hw+fl)-vec3(0.,.3*u*u*len,0.)+vec3(uWindDir.x,0.,uWindDir.y)*(uGust*u*len*.22);
   vN=normalize(cross(dir,side)); vP=P; vUV=vec2(u,w); vShade=aLP.y;
@@ -1261,7 +1274,7 @@ function makeVAO(attrs, indices, instances=0){
   }
   const ib=gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
   gl.bindVertexArray(null);
-  return {vao, count:indices.length, n:instances};
+  return {vao, count:indices.length, n:instances, attrs, bufs};
 }
 
 const GROUND_M = buildGroundMesh();
@@ -1335,6 +1348,36 @@ function ensureTargets(w, h, samples){
   for (let i=0; i<6; i++){ bw=Math.max(1,bw>>1); bh=Math.max(1,bh>>1); const t=texture(bw,bh,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{}); bloomTex.push(t); bloomF.push(framebuffer([t])); }
 }
 
+// which squares of the grove to draw: near enough (within far metres of the head) and inside at least one eye's view.
+// Neighbouring visible squares merge into runs: [first stalk, number of stalks].
+function frustumPlanes(m){ const P=[]; const r=i=>[m[i],m[4+i],m[8+i],m[12+i]]; const r3=r(3);
+  for (const [k,sg] of [[0,1],[0,-1],[1,1],[1,-1],[2,1]]){ const a=r(k); const p=[r3[0]+sg*a[0],r3[1]+sg*a[1],r3[2]+sg*a[2],r3[3]+sg*a[3]]; const l=Math.hypot(p[0],p[1],p[2])||1; P.push(p.map(x=>x/l)); } return P; }
+function groveVisible(head, planes, far, bladeR){
+  const runs=[]; const R=13;     // a square's bounding sphere: 12 m square, 10 m up the stalks, plus lean
+  for (const C of CELLS){
+    const dx=C.cx-head[0], dy=C.y-head[1], dz=C.cz-head[2];
+    if (Math.hypot(dx,dz) > far+R) continue;
+    let seen=false;
+    for (const pl of planes){ const x=dx-pl.o[0], y=dy-pl.o[1], z=dz-pl.o[2]; let ok=true;
+      for (const p of pl.P){ if (p[0]*x+p[1]*y+p[2]*z+p[3] < -R){ ok=false; break; } } if (ok){ seen=true; break; } }
+    if (!seen) continue;
+    const last=runs[runs.length-1]; if (last && last[0]+last[1]===C.start) last[1]+=C.n; else runs.push([C.start, C.n]);
+  }
+  // grass: the blades were made walking along the path, 40 per 25 cm, so a stretch of path is one run
+  const s=pathNear(head[0],head[2]).s, k0=Math.max(0,Math.floor((s-bladeR)/.25))*40, k1=Math.min(BLADES.length, Math.ceil((s+bladeR)/.25)*40);
+  return {runs, far, blades: k1>k0 ? [[k0,k1-k0]] : []};
+}
+// draw some runs of an instanced mesh: point its per-instance attributes at the start of each run, then draw
+function drawRuns(G, runs, per){
+  gl.bindVertexArray(G.vao);
+  const inst=G.attrs.filter(a=>a.div);
+  for (const [start,n] of runs){
+    for (const a of inst){ gl.bindBuffer(gl.ARRAY_BUFFER, G.bufs.get(a.data)); gl.vertexAttribPointer(a.loc, a.size, gl.FLOAT, false, a.stride, (a.offset||0)+start*per*a.stride); }
+    gl.drawElementsInstanced(gl.TRIANGLES, G.count, gl.UNSIGNED_INT, 0, n*per);
+  }
+  gl.bindVertexArray(null);
+}
+
 // the sky's look-up table, redrawn whenever the time of day changes
 function renderSky(){
   target(skyF, SKY_W, SKY_H);
@@ -1377,9 +1420,10 @@ function renderView(v){
   sceneU(P_ground.use(), pos, VPr); gl.bindVertexArray(groundG.vao); gl.drawElements(gl.TRIANGLES, groundG.count, gl.UNSIGNED_INT, 0);
   sceneU(P_path.use(), pos, VPr);   gl.bindVertexArray(pathG.vao);   gl.drawElements(gl.TRIANGLES, pathG.count, gl.UNSIGNED_INT, 0);
   sceneU(P_wood.use(), pos, VPr);   gl.bindVertexArray(fenceG.vao);  gl.drawElements(gl.TRIANGLES, fenceG.count, gl.UNSIGNED_INT, 0);
-  sceneU(P_stalk.use(), pos, VPr);  gl.bindVertexArray(culmG.vao);   gl.drawElementsInstanced(gl.TRIANGLES, culmG.count, gl.UNSIGNED_INT, 0, culmG.n);
-  sceneU(P_leaf.use(), pos, VPr);   gl.bindVertexArray(leafG.vao);   gl.drawElementsInstanced(gl.TRIANGLES, leafG.count, gl.UNSIGNED_INT, 0, leafG.n);
-  sceneU(P_blade.use(), pos, VPr);  gl.bindVertexArray(bladeG.vao);  gl.drawElementsInstanced(gl.TRIANGLES, bladeG.count, gl.UNSIGNED_INT, 0, bladeG.n);
+  const vis = v.vis || groveVisible(pos, [{P:frustumPlanes(VPr), o:[0,0,0]}], 1e6, 1e6);
+  sceneU(P_stalk.use(), pos, VPr).f('uFar',vis.far);  drawRuns(culmG, vis.runs, 1);
+  sceneU(P_leaf.use(), pos, VPr).f('uFar',vis.far);   drawRuns(leafG, vis.runs, LEAVES_PER);
+  sceneU(P_blade.use(), pos, VPr);  drawRuns(bladeG, vis.blades, 1);
   gl.bindVertexArray(null);
 
   // 3. resolve the multisampled image into a texture the mist pass can read
@@ -1565,10 +1609,10 @@ const keys = new Set();
 const Q = {msaa:4, bloom:true, mistSteps:22}, QX = {msaa:2, bloom:false, mistSteps:12};
 // headset quality levels: s = fraction of the headset's pixel size the grove is drawn at. The page measures its own
 // frame rate in the headset and steps down a level when frames are being missed (missed frames = judder/'glitch').
-const XRL=[ {s:1.00, mistSteps:14}, {s:.88, mistSteps:12}, {s:.77, mistSteps:12}, {s:.67, mistSteps:10}, {s:.58, mistSteps:9}, {s:.50, mistSteps:8} ];
-const BUILD='12 Oct 2026';
+const XRL=[ {s:1.00, mistSteps:14, far:150}, {s:.88, mistSteps:12, far:130}, {s:.77, mistSteps:12, far:115}, {s:.67, mistSteps:10, far:100}, {s:.58, mistSteps:9, far:85}, {s:.50, mistSteps:8, far:70} ];
+const BUILD='12 Oct 2026 (b)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
-const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 2 : 1;
+const XR_START = HEADSET==='Quest 2' ? 2 : HEADSET==='Quest' ? 2 : 1;
 let QQ = Q;
 let simT=20, frame=0, gust=.3;
 let lastNow=performance.now(), fpsAcc=0, fpsN=0, dynAcc=0, dynN=0;
@@ -1882,14 +1926,15 @@ function onXRFrame(t, xf){
     vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; vrLab.face=head; }
   simulate(dt);
   if (frame%14===0) drawMap(false);
-  const layer=xr.layer;
-  pose.views.forEach((view,i)=>{
-    const vp=layer.getViewport(view);
-    const p=view.transform.position, q=view.transform.orientation; const vq=[q.x,q.y,q.z,q.w];
-    const RR=v=>yawRot(xr.rigYaw,v);
-    const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z]));
-    renderView({pos:eye, fwd:RR(qRot(vq,[0,0,-1])), up:RR(qRot(vq,[0,1,0])), proj:view.projectionMatrix,
-      w:Math.max(2,Math.round(vp.width*xr.scale)), h:Math.max(2,Math.round(vp.height*xr.scale)), fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, fovY:2*Math.atan(1/view.projectionMatrix[5]), dt});
+  const layer=xr.layer, RR=v=>yawRot(xr.rigYaw,v);
+  const eyes=pose.views.map(view=>{ const vp=layer.getViewport(view); const p=view.transform.position, q=view.transform.orientation; const vq=[q.x,q.y,q.z,q.w];
+    const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z])), fwd=RR(qRot(vq,[0,0,-1])), up=RR(qRot(vq,[0,1,0]));
+    return {view, vp, eye, fwd, up, VPr:M.mul(view.projectionMatrix, M.lookDir(fwd,up,[0,0,0]))}; });
+  // choose the visible part of the grove ONCE for both eyes (so both eyes always see the same stalks)
+  const vis=groveVisible(head, eyes.map(e=>({P:frustumPlanes(e.VPr), o:V.sub(e.eye,head)})), XRL[xr.level].far, 45);
+  eyes.forEach((e,i)=>{ const vp=e.vp;
+    renderView({pos:e.eye, fwd:e.fwd, up:e.up, proj:e.view.projectionMatrix, vis,
+      w:Math.max(2,Math.round(vp.width*xr.scale)), h:Math.max(2,Math.round(vp.height*xr.scale)), fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, fovY:2*Math.atan(1/e.view.projectionMatrix[5]), dt});
   });
 }
 function vrSetMode(m){
@@ -1945,7 +1990,7 @@ window.grove = {
   tour(t){ setMode('tour'); cam.tourT=t; },
   sim(n,dt){ for (let i=0;i<n;i++){ updateDesktopCamera(dt); simulate(dt); } gl.finish(); },
   step(n,dt){ for (let i=0;i<n;i++) desktopFrame(dt); gl.finish(); },
-  keys, vrLabel, labCanvas:labCv,
+  keys, vrLabel, labCanvas:labCv, CELLS, BLADES, groveVisible, frustumPlanes,
   get simT(){ return simT; }
 };
 window.groveReady = true;
