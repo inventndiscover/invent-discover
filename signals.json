@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-12T07:18:15+05:30",
+ "REFRESHED": "2026-10-13T07:19:45+05:30",
  "SIGNALS": [
+  {
+   "id": "2109697083519447118",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2109697083519447118",
+   "posted": "2026-10-12T22:55:55+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Artificial Analysis scores Muse Wonder 52 and Muse Wonder Full 56 on its Intelligence Index v4.3 at max effort, up from 48 for Muse Spark 1.3, released six weeks earlier."
+  },
+  {
+   "id": "2109694064115540147",
+   "handle": "MetaforDevs",
+   "name": "Meta for Developers",
+   "url": "https://x.com/MetaforDevs/status/2109694064115540147",
+   "posted": "2026-10-12T22:43:55+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Muse Wonder is live in Muse Code and the Meta Model API, while Muse Wonder Full launches only for Muse Code subscribers. It combines coding, long-running agents and computer use."
+  },
+  {
+   "id": "2109691148943999167",
+   "handle": "AIatMeta",
+   "name": "AI at Meta",
+   "url": "https://x.com/AIatMeta/status/2109691148943999167",
+   "posted": "2026-10-12T22:32:20+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Meta introduces Muse Wonder and Muse Wonder Full, its most capable models yet, aimed at personal and professional agentic tasks; Muse Wonder is available now through the Meta Model API."
+  },
   {
    "id": "2108624138369929725",
    "handle": "OpenAIDevs",
@@ -20,26 +50,6 @@
    "topic": "Design",
    "kind": "Official",
    "summary": "Claude Docs, Slides and Design leave beta and become available on every plan including Free, with shared editing between a team and Claude."
-  },
-  {
-   "id": "2108271552991252810",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2108271552991252810",
-   "posted": "2026-10-09T00:31:22+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Anthropic puts Claude Dashboards and Claude Motion in beta, turning connected data into live dashboards and ideas into animated explainers."
-  },
-  {
-   "id": "2108262812489531498",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2108262812489531498",
-   "posted": "2026-10-08T23:56:38+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "OpenAI rolls out Ultrafast for GPT-6.1 Sol in the API, Codex and ChatGPT Work, offering near-Astra intelligence at up to 8x the speed of Sol Standard."
   },
   {
    "id": "2108257472553386059",
@@ -72,24 +82,14 @@
    "summary": "OpenAI says GPT-6 and Intelligent UI are rolling out in ChatGPT for everyone, giving more visual, interactive answers and on-the-spot tools for tasks."
   },
   {
-   "id": "2107894039626277339",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2107894039626277339",
-   "posted": "2026-10-07T23:31:16+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Anthropic introduces Claude Haiku 5.5, its cheapest and fastest small model, which it says costs about 75% less to run than Haiku 4.5."
-  },
-  {
-   "id": "2107878924831379676",
-   "handle": "liquidai",
-   "name": "Liquid AI",
-   "url": "https://x.com/liquidai/status/2107878924831379676",
-   "posted": "2026-10-07T22:31:12+05:30",
+   "id": "2107476357261185073",
+   "handle": "TheRundownAI",
+   "name": "The Rundown AI",
+   "url": "https://x.com/TheRundownAI/status/2107476357261185073",
+   "posted": "2026-10-06T19:51:33+05:30",
    "topic": "Open models",
-   "kind": "Official",
-   "summary": "Liquid AI releases Open d1, two open-weight multimodal models: d1-3B (text and vision) and d1-omni-600M (text with image or audio), for real-time decisions from data centers to edge devices."
+   "kind": "Report",
+   "summary": "Mistral Large 4, nicknamed Le Chonk, is a 1T-parameter model that Mistral calls the strongest open model in the West; the post cites a 61.7% real-world coding score on DeepSWE."
   }
  ]
 }
