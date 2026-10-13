@@ -55,21 +55,21 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
- {id:"anunad-xr",name:"Anunād XR",line:"Stand inside the sound of the tabla, in your browser or in VR",cat:"XR",also:["Sound"],status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio"],
+ {id:"anunad-xr",added:"2026-10-11",name:"Anunād XR",line:"Stand inside the sound of the tabla, in your browser or in VR",cat:"XR",also:["Sound"],status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio"],
   gif:"media/anunad-xr.gif",img:"media/anunad-xr-cover.jpg",sheetImg:"media/anunad-xr-varna.jpg",url:"demos/anunad-xr/",cta:"Enter Anunād XR",
   vr:"inventndiscover.com/demos/anunad-xr",
   needs:"Turn your sound on. On a laptop or phone: press ▶ Vādan, drag to look around, and switch visuals with the buttons (or keys 1 to 6). In VR on Meta Quest: trigger plays or stops, grip or thumbstick left and right change the visual, thumbstick up and down changes the layakari, A or X changes the taal, B or Y changes the palette.",
   desc:"The VR companion to Anunād. You stand in a dark, open space while real tabla bols, played and recorded by Mohit, sound out the taal, and the light answers every stroke around you: rings ripple out and pass through you (Nāda), particles burst in every direction (Sṛishti), a ring of spectrum bars stands around you (Varṇa), petalled wheels turn ahead and overhead (Chakra), bands of light carry the waveform at eye level (Taraṅga) and a lattice wall ripples with each stroke (Yantra). Choose the taal, the layakari and a palette. You stay in one place, which keeps it comfortable in a headset. Everything runs in one web page, with nothing to download."},
- {id:"anunad",name:"Anunād (अनुनाद)",line:"Real tabla bols, drawn as they sound",cat:"Sound",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Web Audio","Canvas 2D"],
+ {id:"anunad",added:"2026-10-11",name:"Anunād (अनुनाद)",line:"Real tabla bols, drawn as they sound",cat:"Sound",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Web Audio","Canvas 2D"],
   gif:"media/anunad.gif",img:"media/anunad-cover.jpg",sheetImg:"media/anunad-chakra.jpg",url:"demos/anunad/",cta:"Play Anunād",
   needs:"Turn your sound on and press ▶ Vādan to start. Pick a taal and a layakari (how many bols per beat), then switch between the six visuals and the colour palettes while it plays. Works on a laptop or phone in a recent Chrome, Edge or Safari.",
   desc:"An audio-reactive tabla visualizer. Real tabla bols, played and recorded by Mohit, sound out Keherwa, Dadra, Teentaal or Jhaptaal while the screen listens and responds to every stroke: ripples for Nāda, bursting particles for Sṛishti, a spectrum for Varṇa, a turning wheel for Chakra, a flowing wave for Taraṅga and a living grid for Yantra. Change the layakari from Ekgun up to Barahgun (twelve bols per beat), choose a palette, and colour the dāyān and bāyān strokes yourself. Everything runs in one web page, with nothing to download."},
- {id:"arashiyama-bamboo-grove",name:"Arashiyama Bamboo Grove",line:"A walk through Kyoto's bamboo forest, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
+ {id:"arashiyama-bamboo-grove",added:"2026-10-08",name:"Arashiyama Bamboo Grove",line:"A walk through Kyoto's bamboo forest, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/arashiyama-bamboo-grove.gif",img:"media/arashiyama-bamboo-grove-cover.jpg",sheetImg:"media/arashiyama-bamboo-grove-path.jpg",url:"demos/arashiyama-bamboo-grove/",
   vr:"inventndiscover.com/demos/arashiyama-bamboo-grove",
   needs:"On a laptop: drag to look, W A S D to walk, Shift to walk briskly, F to fly above the canopy (Q and E change height), M for sound, T to replay the tour, H to hide the controls. On a phone: drag to look, two-finger drag to move. Best in a recent Chrome, Edge or Safari.",
   desc:"A gravel path runs between low wooden fences through the tall madake (timber) bamboo of Arashiyama in Kyoto. Wind sways the culms, mist hangs between them and shafts of light break through the canopy. Slide the time of day, mist, light, wind and season. It starts with a slow cinematic tour, then you walk or fly above the canopy. A small map shows the route. Everything is generated in one web page, with nothing to download."},
- {id:"malabar-hill-trail",name:"Malabar Hill Trail",line:"A monsoon forest walk above Mumbai, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
+ {id:"malabar-hill-trail",added:"2026-10-06",name:"Malabar Hill Trail",line:"A monsoon forest walk above Mumbai, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/malabar-hill-trail.gif",img:"media/malabar-hill-trail-cover.jpg",sheetImg:"media/malabar-hill-trail-skyline.jpg",url:"demos/malabar-hill-trail/",
   vr:"inventndiscover.com/demos/malabar-hill-trail",
   needs:"On a laptop: drag to look, W A S D to walk, Shift to walk briskly, F to fly above the trees, M for sound, T to replay the tour. On a phone: drag to look, two-finger drag to move. Best in a recent Chrome, Edge or Safari.",
@@ -84,13 +84,13 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/market-walkthrough-low-poly",
   needs:"On a laptop: click to enter, walk with W A S D, look with the mouse, scroll to zoom, press T to change the time of day. Walk up to a display to lift and turn a product. Works best in a recent Chrome, Edge or Safari.",
   desc:"A low-poly shopping plaza you can walk around: a watch store, three boutiques and a restaurant, with traffic on the avenue, birds overhead, a city skyline on one side and mountains on the other. Slide from dawn to night and watch the city lights come on. In VR, pick up a product with the trigger to look at it up close."},
- {id:"paper-butterfly",name:"Paper Butterfly",line:"A neon, step-by-step origami butterfly with split lower wings",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+ {id:"paper-butterfly",added:"2026-10-12",name:"Paper Butterfly",line:"A neon, step-by-step origami butterfly with split lower wings",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-butterfly.gif",video:"media/paper-butterfly-tutorial.mp4",poster:"media/paper-butterfly-poster.jpg",
   desc:"Eighteen folds turn one square sheet into a butterfly: crease, cupboard fold, squash both ends into a hexagon, swing two flaps down, narrow the lower wings, then pinch a pleat at the centre so the wings split. No glue, no cuts. A two-minute animated tutorial made with AI, the fifth in the origami series, traced from real folding photos."},
- {id:"3d-rocket",name:"3D Rocket",line:"A neon, step-by-step origami rocket that stands up on four legs",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+ {id:"3d-rocket",added:"2026-10-05",name:"3D Rocket",line:"A neon, step-by-step origami rocket that stands up on four legs",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/3d-rocket.gif",video:"media/3d-rocket-tutorial.mp4",poster:"media/3d-rocket-poster.jpg",
   desc:"Eighteen folds turn one square sheet into a 3D rocket: crease, collapse, narrow the body, then fold out four legs so it stands on its own, ready for launch. No glue, no cuts. A two-minute animated tutorial made with AI, the fourth in the origami series."},
- {id:"flapping-bird",name:"Flapping Bird",line:"A neon, step-by-step origami bird whose wings really flap",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
+ {id:"flapping-bird",added:"2026-10-05",name:"Flapping Bird",line:"A neon, step-by-step origami bird whose wings really flap",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/flapping-bird.gif",video:"media/flapping-bird-tutorial.mp4",poster:"media/flapping-bird-poster.jpg",
   desc:"Twelve steps turn one square sheet into a classic flapping bird, drawn as glowing line art. Hold the base of the neck, gently pull the tail, and the wings flap. About ten minutes, no glue. The third animated tutorial in the series, made with AI."},
  {id:"paper-heart",name:"Paper Heart",line:"A neon, step-by-step origami heart tutorial",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
@@ -276,7 +276,7 @@ function articleRow(a){
   const d=new Date(a.date);
   return `<a class="rowitem" href="${a.url}" target="_blank" rel="noopener">
     ${cover(a.tag,ART_CAT[a.tag]||"#C7A36F",a.url,{})}
-    <div><div class="label">${esc(a.tag)} · ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}</div><h3>${esc(a.title)}</h3></div>
+    <div><div class="label">${esc(a.tag)} · ${d.getDate()} ${ARR_MON[d.getMonth()]} ${d.getFullYear()}</div><h3>${esc(a.title)}</h3></div>
     <span class="arrow">Read on the blog ↗</span></a>`;
 }
 function commCard(c){
@@ -289,6 +289,66 @@ function commCard(c){
     ${next?`<dt>Next</dt><dd><a href="#discover" data-open-event="${next.id}">${esc(next.title)}</a> · ${rel(next.day)}</dd>`:""}</dl>
     <div style="margin-top:auto"><a class="btn ghost small" href="${c.url}" target="_blank" rel="noopener">Visit their page ↗</a></div>
   </article>`;
+}
+
+/* ---------- JUST ARRIVED: a Mumbai-station style board of what's new ----------
+   Every demo, tool and tutorial carries an "added" date. The board picks the newest
+   item of each type (tool, origami, VR, interview) from the last NEW_DAYS days,
+   newest first. Nothing to switch off by hand: old items simply drop off. */
+const NEW_DAYS=30;
+// Interviews live on the blog. For now they are listed here; later the 3-hourly refresh can read the blog's feed.
+const INTERVIEWS=[
+ {id:"iv-carlo",name:"Carlo Edoardo Ferraris",board:"CARLO FERRARIS",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/02/23/ai-agents-in-design-part-3-carlo-edoardo-ferraris-on-ai-that-fits-human-nature/"},
+ {id:"iv-patrick",name:"Patrick Henz",board:"PATRICK HENZ",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/02/05/ai-agents-in-design-part-2-patrick-henz-on-ethics-governance-and-keeping-humans-in-charge/"},
+ {id:"iv-kumar",name:"Kumar Gaurav",board:"KUMAR GAURAV",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/01/31/ai-agents-in-design-part-1-kumar-gaurav-on-designing-for-intent/"}
+];
+const ARR_TYPES=[["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["interview","INTERVIEW","#FF7BB8"]];
+function arrivals(){
+  const now=Date.now(), fresh=x=>x.added&&(now-Date.parse(x.added))/864e5<=NEW_DAYS;
+  const pool=[
+    ...TOOLS.filter(fresh).map(t=>({type:"tool",title:t.name,added:t.added,href:t.url})),
+    ...DEMOS.filter(d=>d.kind==="tutorial"&&fresh(d)).map(d=>({type:"origami",title:d.name,added:d.added,open:d.id})),
+    ...DEMOS.filter(d=>d.kind!=="tutorial"&&(d.cat==="XR"||(d.also||[]).includes("XR"))&&fresh(d)).map(d=>({type:"vr",title:d.name,added:d.added,open:d.id})),
+    ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
+  ];
+  // newest of each type, then the rows newest first
+  const best={}; for(const it of pool){ if(!best[it.type]||it.added>best[it.type].added) best[it.type]=it; }
+  return Object.values(best).sort((a,b)=>b.added.localeCompare(a.added));
+}
+const ARR_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function arrivalsHTML(){
+  const rows=arrivals(); if(!rows.length) return "";
+  const W=15; // characters on the flap display (longest name today: PAPER BUTTERFLY)
+  return `<div class="arrivals" role="region" aria-label="Just arrived on Invent + Discover">
+    <div class="arr-head"><b>JUST ARRIVED</b><span class="arr-live"><i></i>NEW</span></div>
+    ${rows.map((it,i)=>{
+      const T=ARR_TYPES.find(t=>t[0]===it.type), txt=it.title.toUpperCase().slice(0,W).padEnd(W," "), d=new Date(it.added);
+      const attrs=it.open?`href="#" data-open-demo="${it.open}"`:`href="${it.href}"${it.ext?' target="_blank" rel="noopener"':""}`;
+      return `<a class="arr-row" ${attrs} style="--c:${T[2]};--i:${i}" aria-label="New ${T[1].toLowerCase()}: ${esc(it.title)}">
+        <span class="arr-pf">P${i+1}</span><span class="arr-type">${T[1]}</span>
+        <span class="flap" data-final="${esc(txt)}" aria-hidden="true">${[...txt].map(ch=>`<span>${ch===" "?"&nbsp;":esc(ch)}</span>`).join("")}</span>
+        <span class="arr-date">${String(d.getDate()).padStart(2,"0")} ${ARR_MON[d.getMonth()]}</span></a>`;
+    }).join("")}
+    <div class="arr-foot">New on the site in the last ${NEW_DAYS} days · tap a row</div>
+  </div>`;
+}
+// The flip: every character tumbles through random letters, then settles; rows and letters start a little apart.
+function flipArrivals(){
+  const box=document.querySelector(".arrivals"); if(!box) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const POOL="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  box.querySelectorAll(".flap").forEach((f,row)=>{
+    const fin=[...f.dataset.final], cells=[...f.children];
+    cells.forEach(c=>c.innerHTML="&nbsp;");             // start every tile blank, then flip in
+    cells.forEach((c,k)=>{
+      if(fin[k]===" ") return;
+      let n=5+Math.floor(Math.random()*6)+k;           // how many flips before it lands
+      const step=()=>{ c.classList.remove("flip"); void c.offsetWidth; c.classList.add("flip");
+        if(--n<=0){ c.textContent=fin[k]; return; }
+        c.textContent=POOL[Math.floor(Math.random()*POOL.length)]; setTimeout(step,55); };
+      setTimeout(step,250+row*180+k*22);
+    });
+  });
 }
 
 let boardOpen=false;
@@ -393,7 +453,7 @@ function viewHome(){
         </form>
         <div class="examples">${["free AI events this weekend","hackathons for students","events in Andheri","climate volunteering"].map(x=>`<button class="chip" data-example="${x}">${x}</button>`).join("")}</div>
       </div>
-      ${boardHTML()}
+      <div class="hero-side">${boardHTML()}${arrivalsHTML()}</div>
     </div>
   </div></section>
 
@@ -617,18 +677,18 @@ function viewLearn(){
 
 /* Tools: hand-made framework tools, each a standalone page under /toolkit/. */
 const TOOLS=[
- {id:"crazy-8s",name:"Crazy 8s",line:"Sketch eight ideas in eight minutes, one per frame, then caption them and save the sheet.",url:"/toolkit/crazy-8s/",
+ {id:"crazy-8s",added:"2026-10-13",name:"Crazy 8s",line:"Sketch eight ideas in eight minutes, one per frame, then caption them and save the sheet.",url:"/toolkit/crazy-8s/",
   credit:"The Design Sprint, created by Jake Knapp at Google",time:"8 minutes · nothing uploaded",letters:["1","2","3","4","5","6","7","8"],
   colors:["#A58BFF","#8B7BFF","#5A8CFF","#3D9BFF","#2FD1C5","#46D69A","#FF7BB8","#EC4899"],hub:"minutes",cta:"Start sketching"},
- {id:"scamper",name:"SCAMPER",line:"Seven questions that turn something you already know into new ideas.",url:"/toolkit/scamper/",
+ {id:"scamper",added:"2026-10-01",name:"SCAMPER",line:"Seven questions that turn something you already know into new ideas.",url:"/toolkit/scamper/",
   credit:"Bob Eberle (1971), from Alex Osborn's questions in Applied Imagination (1953)",time:"15–30 minutes",letters:["S","C","A","M","P","E","R"],
   colors:["#A58BFF","#7B8CFF","#3D9BFF","#2FD1C5","#46D69A","#FFB23F","#FF7B8A"],hub:"questions"},
- {id:"pshe",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",
+ {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
   colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
- {id:"stakeholder-map",name:"Power / Interest",line:"Map everyone your project affects by power and interest, and know who to manage closely, keep satisfied, keep informed or monitor.",url:"/toolkit/stakeholder-map/",
+ {id:"stakeholder-map",added:"2026-10-03",name:"Power / Interest",line:"Map everyone your project affects by power and interest, and know who to manage closely, keep satisfied, keep informed or monitor.",url:"/toolkit/stakeholder-map/",
   credit:"Aubrey Mendelow (1981), popularised by Gerry Johnson and Kevan Scholes",time:"10–20 minutes",visual:"grid",tag:"Projects & people",cta:"Start mapping"},
- {id:"glb-studio",name:"GLB → Three.js Studio",line:"Open a .glb, .gltf, .fbx, .obj or .stl model, see what makes it heavy, and get Three.js code, a shareable web page or a clean .glb.",url:"/toolkit/glb-studio/",
+ {id:"glb-studio",added:"2026-10-03",name:"GLB → Three.js Studio",line:"Open a .glb, .gltf, .fbx, .obj or .stl model, see what makes it heavy, and get Three.js code, a shareable web page or a clean .glb.",url:"/toolkit/glb-studio/",
   credit:"Built on three.js by Ricardo Cabello (mrdoob) and contributors",time:"2–5 minutes · nothing uploaded",visual:"cube",tag:"3D & XR",cta:"Open the studio"}
 ];
 function viewTools(){
@@ -965,6 +1025,7 @@ function render(){
   const c=$("#savedCount");c.hidden=saved.size===0;c.textContent=saved.size;
   tick();
   startNecklace();
+  flipArrivals();
 }
 // Count each section as its own page in GoatCounter (the private desk is never counted)
 function countView(v){try{if(window.goatcounter&&window.goatcounter.count&&v!==DESK)window.goatcounter.count({path:"/#"+v,title:v})}catch(e){}}

@@ -467,6 +467,33 @@ footer{margin-top:110px;border-top:1px solid var(--hair);padding-block:40px 52px
 
 /* ---------- accent options (compare in the page) ---------- */
 
+/* ---------- just arrived: split-flap board of what's new ---------- */
+.hero-side{display:flex;flex-direction:column;gap:14px;align-self:start;min-width:0}
+/* the left column keeps its place when the Next up list opens (otherwise both columns re-centre and the title jumps) */
+.hero-grid:has(.hero-side){align-items:start}
+.hero-grid:has(.hero-side)>div:first-child{padding-top:24px}
+.arrivals{background:rgba(8,9,13,.74);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--hair2);border-radius:var(--r);padding:14px 12px 10px;box-shadow:0 40px 80px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.06)}
+.arr-head{display:flex;justify-content:space-between;align-items:center;padding:2px 6px 10px;border-bottom:1px solid var(--hair);margin-bottom:6px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink3)}
+.arr-head b{font-weight:500;color:var(--ink)}
+.arr-live{display:inline-flex;align-items:center;gap:7px;color:#FF7BB8}
+.arr-live i{width:7px;height:7px;border-radius:50%;background:#FF7BB8;box-shadow:0 0 10px #FF7BB8;animation:arrPulse 1.6s ease-in-out infinite}
+@keyframes arrPulse{50%{opacity:.35;box-shadow:0 0 2px #FF7BB8}}
+.arr-row{display:grid;grid-template-columns:22px 78px minmax(0,1fr) 46px;gap:9px;align-items:center;padding:7px 6px;border-radius:10px;text-decoration:none;color:var(--ink);transition:background .2s;animation:rise .5s both;animation-delay:calc(var(--i)*80ms)}
+.arr-row:hover,.arr-row:focus-visible{background:rgba(255,255,255,.05)}
+.arr-pf{font-family:var(--mono);font-size:10px;color:var(--ink3)}
+.arr-type{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-align:center;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:999px;padding:3px 6px;line-height:1.4;text-shadow:0 0 10px var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.flap{display:flex;gap:2px;min-width:0;overflow:hidden}
+.flap span{position:relative;flex:0 0 auto;display:inline-grid;place-items:center;width:13px;height:22px;border-radius:3px;font:500 12px/1 var(--mono);color:#F4F5F7;
+  background:linear-gradient(#171a23 0 50%,#11131a 50% 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 1px 0 rgba(0,0,0,.6)}
+.flap span::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.65)}
+.flap span.flip{animation:flapIn .09s ease-out}
+@keyframes flapIn{from{transform:perspective(60px) rotateX(-75deg);filter:brightness(1.6)}}
+.arr-row:hover .flap span{color:#fff;text-shadow:0 0 8px var(--c)}
+.arr-date{font-family:var(--mono);font-size:11px;color:var(--amber);text-align:right;white-space:nowrap}
+.arr-foot{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:8px 6px 0}
+@media (max-width:480px){.arr-row{grid-template-columns:70px minmax(0,1fr) 42px;gap:7px}.arr-pf{display:none}.flap{gap:1px}.flap span{width:11px;height:19px;font-size:10px}.arr-type{font-size:9px;padding:2px 4px}}
+@media (prefers-reduced-motion:reduce){.arr-live i,.arr-row,.flap span.flip{animation:none}}
+
 /* ---------- next-up dropdown ---------- */
 .board{padding:0;overflow:hidden;align-self:start}
 .board-toggle{display:flex;flex-direction:column;gap:10px;width:100%;border:0;background:none;text-align:left;padding:16px 18px;border-radius:var(--r)}
