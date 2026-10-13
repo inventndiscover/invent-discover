@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-12T07:55:00+05:30",
+ "REFRESHED": "2026-10-13T08:13:33+05:30",
  "EVENTS_RAW": [
   {
    "id": "ibm-think-mumbai",
@@ -709,7 +709,7 @@
    "src": "Luma",
    "url": "https://luma.com/uvc7v42g",
    "access": "open",
-   "why": "Page shows a 6 PM start and open registration but no date.",
+   "why": "Page shows a 6 PM start at Bhim Nagar, Andheri East, open registration, but no date.",
    "conf": {
     "date": 0,
     "place": 85,
@@ -730,48 +730,118 @@
     "place": 95,
     "category": 90
    }
+  },
+  {
+   "qid": "q-swift-assemble",
+   "title": "Swift Mumbai Assemble!",
+   "cat": "Tech",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/ryn305b9",
+   "access": "approval",
+   "why": "Listed on Luma Mumbai at ATLAS SkillTech University, BKC; date could not be read.",
+   "conf": {
+    "date": 0,
+    "place": 85,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-gemma4",
+   "title": "Hands-on Workshop: On-device AI with Gemma 4",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/w8n2jaa4",
+   "access": "approval",
+   "why": "Free, invite-only 10:30-13:00 workshop with Google for Developers; no date on the page and venue shown only after approval.",
+   "conf": {
+    "date": 0,
+    "place": 20,
+    "category": 92
+   }
+  },
+  {
+   "qid": "q-agentic-commerce",
+   "title": "Agentic Commerce: How the best consumer brands put AI to work",
+   "cat": "AI",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/203soxl1",
+   "access": "approval",
+   "why": "12:30-16:00 at the META office, ONE BKC; only consumer-brand founders and CXOs approved; no date on the page.",
+   "conf": {
+    "date": 0,
+    "place": 90,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-monad-blitz",
+   "title": "Monad Blitz Mumbai: Devcon Edition",
+   "cat": "Tech",
+   "area": "Sag Baug",
+   "src": "Luma",
+   "url": "https://luma.com/qk93a446",
+   "access": "approval",
+   "why": "Developer blitz listed on Luma Mumbai; date not visible and page not opened.",
+   "conf": {
+    "date": 0,
+    "place": 60,
+    "category": 80
+   }
   }
  ],
  "RUNS": [
   {
-   "src": "Luma Mumbai listing + event pages",
-   "what": "Listing and candidate pages",
-   "found": 6,
+   "src": "Luma Mumbai",
+   "what": "luma.com/mumbai listing and 9 event pages",
+   "found": 11,
    "pub": 0,
-   "review": 2,
+   "review": 4,
    "dup": 0,
-   "skip": 3,
-   "note": "Listing shows no dates. Skipped: DevDay Exchange (10 Oct, past), Mumbai Meets AI 06 (10 Oct, past, full), Design Samvaad (Gurugram). New undated: Durable DevOps, Agent Builders."
-  },
-  {
-   "src": "District / organiser press release",
-   "what": "GamingCon Bharat dates",
-   "found": 1,
-   "pub": 1,
-   "review": 0,
-   "dup": 1,
    "skip": 0,
-   "note": "17-18 Oct confirmed on the ticketing page and organiser press release; moved from queue to published."
+   "note": "Listing shows no dates; 4 new undated events queued. Several pages blocked by a permission prompt."
   },
   {
-   "src": "Existing published events",
-   "what": "Date rollover",
-   "found": 14,
-   "pub": 14,
-   "review": 0,
-   "dup": 0,
-   "skip": 2,
-   "note": "Removed finished: evm-capital-hackathon, shayari-showdown. Others not re-opened (Luma and IBM pages refused in this run); last verified details kept. No cancellations seen."
-  },
-  {
-   "src": "Meetup, AllEvents, Hidden Events, Luma discover, gujralfoundation.org",
-   "what": "Listing pages",
+   "src": "Luma discover (AI/Tech/Arts)",
+   "what": "discover pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable (permission request unanswered in unattended run); skipped."
+   "note": "Not reachable this run (fetch permission not granted)."
+  },
+  {
+   "src": "Meetup / AllEvents / hiddenevents",
+   "what": "Mumbai Meets AI, AllEvents tech and startup",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Not reachable this run. Mumbai Meets AI 06 (10 Oct) is already past."
+  },
+  {
+   "src": "StartupGrants India",
+   "what": "Forward Deploy Enterprise AI Summit, Design Samvaad",
+   "found": 2,
+   "pub": 0,
+   "review": 0,
+   "dup": 1,
+   "skip": 1,
+   "note": "Forward Deploy summit (26 Oct, Jio World Convention Centre) matches the existing Enterprise AI Summit entry; Design Samvaad is in Gurugram, skipped."
+  },
+  {
+   "src": "Existing events",
+   "what": "re-check of published list",
+   "found": 14,
+   "pub": 14,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "StartupLive Mumbai (20-21 Nov, IIT Bombay) re-confirmed; the rest kept as-is because their pages could not be opened this run. Removed past: none."
   }
  ],
  "COMMUNITIES": [
