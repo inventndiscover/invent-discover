@@ -603,9 +603,13 @@ function exportSheet() {
   const M = 142;                            // 12 mm margin all round
   const gap = 60, cols = 4;
   const cellW = Math.floor((PAGE_W - 2 * M - (cols - 1) * gap) / cols);   // ≈ 761 px ≈ 64 mm wide
-  const cellH = Math.round(cellW * H / W);                                 // keeps the 4:3 shape of each frame
-  const capH = 150, headH = 300;
-  const scale = cellW / W;                  // paper (800 wide) → printed cell
+  const capH = 120, headH = 260, footH = 90;
+  // Boxes grow to use all the height between the header and the footer.
+  // Example: (2480 - 142 - 260 - 90 - 142 - 60 gap - 2 × 120 captions) ÷ 2 rows ≈ 773 px ≈ 65 mm tall
+  const cellH = Math.floor((PAGE_H - 2 * M - headH - footH - gap - 2 * capH) / 2);
+  // Each sketch is 800 x 600; fit it inside the taller box and centre it
+  const scale = Math.min(cellW / W, cellH / H);
+  const offX = (cellW - W * scale) / 2, offY = (cellH - H * scale) / 2;
   const out = document.createElement('canvas');
   out.width = PAGE_W; out.height = PAGE_H;
   const ctx = out.getContext('2d');
@@ -628,8 +632,7 @@ function exportSheet() {
 
   // The 8 frames, 4 across and 2 down
   const top = M + headH;
-  const gridH = 2 * (cellH + capH) + gap;
-  const y0 = top + Math.max(0, (PAGE_H - M - 80 - top - gridH) / 2);   // centre the grid in the space left
+  const y0 = top;
   for (let i = 0; i < FRAME_COUNT; i++) {
     const col = i % 4, row = Math.floor(i / 4);     // e.g. frame 6 (i=5) → col 1, row 1
     const x = M + col * (cellW + gap);
@@ -638,7 +641,7 @@ function exportSheet() {
     // the sketch, clipped to its frame so nothing spills over
     ctx.save();
     ctx.beginPath(); ctx.rect(x, y, cellW, cellH); ctx.clip();
-    ctx.translate(x, y); ctx.scale(scale, scale);
+    ctx.translate(x + offX, y + offY); ctx.scale(scale, scale);
     for (const s of state.frames[i].strokes) {
       const erased = s.color === CANVAS_BG;          // eraser strokes become white paper
       const ink = erased ? '#FFFFFF' : (PRINT_INK[s.color.toUpperCase()] || INK);
@@ -664,10 +667,10 @@ function exportSheet() {
     const cap = state.frames[i].caption;
     if (cap) {
       ctx.fillStyle = INK; ctx.font = '400 42px "Geist", sans-serif';
-      ctx.fillText(fitText(ctx, cap, cellW), x, y + cellH + 70);
+      ctx.fillText(fitText(ctx, cap, cellW), x, y + cellH + 62);
     } else {
       ctx.strokeStyle = LINE; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(x, y + cellH + 90); ctx.lineTo(x + cellW, y + cellH + 90); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, y + cellH + 80); ctx.lineTo(x + cellW, y + cellH + 80); ctx.stroke();
     }
   }
 

@@ -703,7 +703,7 @@ function viewTools(){
         <span class="tq b" style="--c:#3D9BFF">Monitor</span><span class="tq r b" style="--c:#2FD1C5">Keep<br>informed</span>
         ${[["#FF7B8A",78,22,0],["#A58BFF",26,30,1],["#2FD1C5",80,72,2],["#3D9BFF",30,78,3],["#FF7B8A",62,38,4]].map(([c,x,y,i])=>`<i style="--c:${c};left:${x}%;top:${y}%;--i:${i}"></i>`).join("")}
         <em class="ax ay">Power</em><em class="ax axx">Interest</em>
-      </div>`:t.shape?`<div class="tool-tiles ${t.shape}" aria-hidden="true"><div class="board">
+      </div>`:t.shape?`<div class="tool-tiles ${t.shape}" aria-hidden="true"><div class="tt-board">
         ${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--i:${i};--dur:${Math.max(7,t.letters.length)}s"><span>${l}</span></b>`).join("")}</div>
         <span class="hub"><strong style="background-image:linear-gradient(135deg,${t.colors.join(",")})">${t.letters.length}</strong>${t.hub}</span>
       </div>`:`<div class="tool-wheel" aria-hidden="true" style="--n:${t.letters.length}">

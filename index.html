@@ -128,15 +128,15 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 /* Crazy 8s (4 x 2 frames) and PSHE (diamond): same tiles and light-up as the wheel, laid out in a grid */
 .tool-tiles{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 .tool-tiles::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
-.tool-tiles .board{position:relative;display:grid;gap:6px}
+.tool-tiles .tt-board{position:relative;display:grid;gap:6px}  /* own class name: .board is already used by the events list */
 .tool-tiles b{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;font-size:20px;font-weight:700;color:var(--c);
   background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
   animation:id-lit var(--dur,7s) ease-in-out infinite,id-ink var(--dur,7s) step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
 .tool-tiles .hub{display:flex;align-items:baseline;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .tool-tiles .hub strong{font-family:var(--sans);font-size:26px;letter-spacing:-.04em;font-weight:700;line-height:1;-webkit-background-clip:text;background-clip:text;color:transparent}
-.tool-tiles.frames .board{grid-template-columns:repeat(4,42px)}
+.tool-tiles.frames .tt-board{grid-template-columns:repeat(4,42px)}
 .tool-tiles.diamond{gap:10px}
-.tool-tiles.diamond .board{grid-template-columns:repeat(2,46px);gap:8px;transform:rotate(45deg);margin:22px 0}
+.tool-tiles.diamond .tt-board{grid-template-columns:repeat(2,46px);gap:8px;transform:rotate(45deg);margin:22px 0}
 .tool-tiles.diamond b{width:46px;height:46px}
 .tool-tiles.diamond b span{transform:rotate(-45deg)}
 @media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-grid i,.tool-cube .cube{animation:none}}
