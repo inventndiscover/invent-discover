@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crazy 8s sketching tool · Invent + Discover</title>
+<meta name="description" content="Sketch 8 ideas in 8 minutes. A free Crazy 8s timer and sketch pad from the Design Sprint, in your browser. Nothing is uploaded.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/crazy-8s/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Crazy 8s sketching tool · Invent + Discover">
+<meta property="og:description" content="Eight ideas, eight minutes. A free Crazy 8s timer and sketch pad, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/crazy-8s/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Crazy 8s sketching tool","url":"https://inventndiscover.com/toolkit/crazy-8s/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  "Tokens" = named colours we reuse everywhere. Change one here
+  and the whole page updates. Example: change --violet to #22D3EE
+  and every violet glow turns cyan.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;           /* site background (near-black)      */
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --blue: #3B82F6;
+    --pink: #EC4899;
+    --canvas-bg: #0B0D14;    /* inside of each sketch frame       */
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    /* Faint grid (two thin line gradients) + soft coloured glows */
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 64px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 40px 0 20px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill {
+    display: inline-block; margin: 18px 0 10px; padding: 5px 12px;
+    border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD;
+    box-shadow: 0 0 18px rgba(139,92,246,0.25);
+  }
+  h1 {
+    margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25);
+  }
+  .lede { color: var(--muted); max-width: 640px; font-size: 17px; line-height: 1.55; }
+  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .credit a, .about a { color: #C4B5FD; }
+  .about { margin-top: 36px; }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  .sitefoot a:hover { color: var(--text); }
+
+  /* ---------- Cards / panels ---------- */
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px;
+    backdrop-filter: blur(6px);
+  }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text], select {
+    width: 100%; background: rgba(0,0,0,0.35); color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; font: inherit; font-size: 16px;
+  }
+  input[type=text]:focus, select:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+
+  .setup { display: grid; grid-template-columns: 1fr 160px; gap: 14px; align-items: end; }
+  @media (max-width: 640px) { .setup { grid-template-columns: 1fr; } }
+
+  /* ---------- Sticky control bar (timer stays visible) ---------- */
+  .bar {
+    position: sticky; top: 0; z-index: 10; margin: 16px 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+    background: rgba(5,6,10,0.85); backdrop-filter: blur(10px);
+  }
+  .ring { width: 64px; height: 64px; flex: none; }
+  .ring circle { fill: none; stroke-width: 6; }
+  .ring .track { stroke: rgba(255,255,255,0.08); }
+  .ring .fill {
+    stroke: var(--violet); stroke-linecap: round;
+    transform: rotate(-90deg); transform-origin: 50% 50%;
+    filter: drop-shadow(0 0 6px rgba(139,92,246,0.8));
+    transition: stroke-dashoffset 0.25s linear, stroke 0.3s;
+  }
+  .ring.urgent .fill { stroke: var(--pink); filter: drop-shadow(0 0 6px rgba(236,72,153,0.9)); }
+  .time { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .frame-label { color: var(--muted); font-size: 14px; }
+  .spacer { flex: 1; }
+
+  button {
+    font: inherit; font-size: 15px; color: var(--text); cursor: pointer;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 16px;
+  }
+  button:hover { border-color: rgba(255,255,255,0.25); }
+  button.primary {
+    background: linear-gradient(135deg, var(--violet), var(--pink)); border: none;
+    box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700;
+  }
+
+  /* ---------- Pen tools ---------- */
+  .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .swatch {
+    width: 30px; height: 30px; border-radius: 50%; padding: 0;
+    border: 2px solid transparent;
+  }
+  .swatch.on { border-color: #fff; box-shadow: 0 0 12px currentColor; }
+  .tool-btn.on { border-color: var(--violet); box-shadow: 0 0 12px rgba(139,92,246,0.5); }
+  .divider { width: 1px; height: 26px; background: var(--line); }
+
+  /* ---------- The 8 frames ---------- */
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .frame {
+    position: relative; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 8px; background: var(--panel); transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .frame.active {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 1px var(--violet), 0 0 28px rgba(139,92,246,0.45);
+  }
+  .running .frame:not(.active) { opacity: 0.4; }
+  .num {
+    position: absolute; top: 14px; left: 14px; z-index: 2; pointer-events: none;
+    font-size: 12px; font-weight: 700; color: #C4B5FD;
+    background: rgba(5,6,10,0.7); border: 1px solid rgba(139,92,246,0.4);
+    border-radius: 999px; padding: 2px 9px;
+  }
+  canvas {
+    display: block; width: 100%; aspect-ratio: 4 / 3;
+    background: var(--canvas-bg); border-radius: 10px;
+    touch-action: none;     /* stops the page scrolling while you draw on a phone */
+    cursor: crosshair;
+  }
+  .frame input[type=text] { margin-top: 8px; padding: 8px 10px; font-size: 14px; }
+
+  /* ---------- Done banner ---------- */
+  .done {
+    display: none; margin: 16px 0; text-align: center;
+    border-color: rgba(236,72,153,0.5); box-shadow: 0 0 30px rgba(236,72,153,0.2);
+  }
+  .done.show { display: block; }
+  .done h2 { margin: 4px 0 6px; }
+  .done p { color: var(--muted); margin: 0 0 14px; }
+
+  /* ---------- How-to + credits ---------- */
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; }
+  @media (max-width: 760px) { .how { grid-template-columns: 1fr; } }
+  .how h3 { margin: 0 0 6px; font-size: 17px; }
+  .how p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 15px; }
+  .step { color: var(--pink); font-weight: 700; font-size: 13px; letter-spacing: 0.1em; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  footer a { color: #C4B5FD; }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  Think of it as the skeleton. JavaScript (Part 3) brings it to
+  life by finding elements via their id, e.g. id="startBtn".
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · CRAZY 8s</span>
+    <h1>Crazy 8s</h1>
+    <p class="lede">Eight ideas, eight minutes. Write your challenge, press start, and sketch one rough idea per frame before the timer moves on. Speed beats polish: the point is to get past your first obvious idea.</p>
+    <p class="credit">Crazy 8s is a core method of the Design Sprint, created by Jake Knapp at Google. <a href="#where">Where it comes from</a></p>
+  </header>
+
+  <div class="card setup">
+    <div>
+      <label for="challenge">Your challenge</label>
+      <input type="text" id="challenge" placeholder="How might we make Mumbai locals easier for first-time riders?">
+    </div>
+    <div>
+      <label for="secs">Time per frame</label>
+      <select id="secs">
+        <option value="30">30 seconds</option>
+        <option value="60" selected>1 minute</option>
+        <option value="90">90 seconds</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card bar" id="bar">
+    <svg class="ring" id="ring" viewBox="0 0 64 64" aria-hidden="true">
+      <circle class="track" cx="32" cy="32" r="27"></circle>
+      <circle class="fill" id="ringFill" cx="32" cy="32" r="27"></circle>
+    </svg>
+    <div>
+      <div class="time" id="time">1:00</div>
+      <div class="frame-label" id="frameLabel">Frame 1 of 8 · ready</div>
+    </div>
+    <div class="spacer"></div>
+    <button class="primary" id="startBtn">Start</button>
+    <button id="nextBtn" title="Jump to the next frame">Next frame</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <div class="tools" id="tools">
+    <button class="swatch on" data-color="#FFFFFF" style="background:#FFFFFF;color:#FFFFFF" aria-label="White pen"></button>
+    <button class="swatch" data-color="#A78BFA" style="background:#A78BFA;color:#A78BFA" aria-label="Violet pen"></button>
+    <button class="swatch" data-color="#60A5FA" style="background:#60A5FA;color:#60A5FA" aria-label="Blue pen"></button>
+    <button class="swatch" data-color="#F472B6" style="background:#F472B6;color:#F472B6" aria-label="Pink pen"></button>
+    <span class="divider"></span>
+    <button class="tool-btn" id="sizeBtn">Pen: thin</button>
+    <button class="tool-btn" id="eraserBtn">Eraser</button>
+    <button class="tool-btn" id="undoBtn">Undo</button>
+    <button class="tool-btn" id="soundBtn">Sound: on</button>
+    <span class="spacer"></span>
+    <button id="exportBtn">Save as image</button>
+  </div>
+
+  <div class="card done" id="done">
+    <h2>Time's up — 8 ideas down.</h2>
+    <p>Add a short caption under each sketch, then save the sheet. Next step: vote for the strongest ideas.</p>
+    <button class="primary" id="exportBtn2">Save as image</button>
+  </div>
+
+  <!-- The 8 frames are created by JavaScript, so this starts empty -->
+  <div class="grid" id="grid" style="margin-top:16px"></div>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1</div><h3>Frame the problem</h3><p>Write one clear challenge. "How might we…" questions work well. Want ideas first? Try <a href="/toolkit/scamper/" style="color:#C4B5FD">SCAMPER</a> before this.</p></div>
+    <div class="card"><div class="step">STEP 2</div><h3>Sketch fast</h3><p>One idea per frame. Stick figures, arrows and boxes are fine. When the frame moves on, so do you.</p></div>
+    <div class="card"><div class="step">STEP 3</div><h3>Caption and share</h3><p>Give each sketch a few words, save the sheet as an image, and compare it with your team's.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <h2>Where Crazy 8s comes from</h2>
+    <p><b>Crazy 8s</b> is one of the core methods of the <b>Design Sprint</b>, a five-day process for answering big product questions through sketching, prototyping and testing with real users. The Design Sprint was created by <b>Jake Knapp</b> at <b>Google</b>, and grew out of Google Ventures' work with startups between 2010 and 2012. It became known worldwide through the 2016 book <i>Sprint</i> by Jake Knapp, John Zeratsky and Braden Kowitz.</p>
+    <p>In a sprint, Crazy 8s comes on the sketching day: after everyone has gathered notes and rough ideas, each person folds a sheet of paper into eight panels and sketches eight variations in eight minutes, one minute each. The time pressure is the point. It pushes you past your first, most obvious idea before you settle on one to develop. No single inventor of the exercise itself is on record; it spread through Google's design teams and the sprint, and Google now teaches it in its free <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Design Sprint Kit</a>.</p>
+    <p>The timer, sketch pad and sheet export on this page are made by Invent + Discover, adapted so you can run Crazy 8s on a laptop, tablet or phone. Your sketches stay in your browser; nothing is uploaded.</p>
+  </section>
+
+  <footer class="sitefoot">
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+// ---------- 3a. Settings ----------
+// Every canvas draws on a fixed 800 x 600 "paper", whatever size it
+// appears on screen. That way a sketch looks the same on phone and laptop.
+const FRAME_COUNT = 8;
+const W = 800, H = 600;
+const CANVAS_BG = '#0B0D14';
+const PEN_SIZES = [{ name: 'thin', px: 6 }, { name: 'thick', px: 14 }];
+
+// ---------- 3b. State: one object that remembers everything ----------
+// Example: after two lines in frame 1, state.frames[0].strokes has 2 items.
+// We store the DRAWING AS DATA (lists of points), not just pixels.
+// That is what makes Undo and the export possible.
+const state = {
+  frames: [],            // one entry per frame: { strokes: [], caption: '' }
+  active: 0,             // which frame is being drawn (0 = first)
+  running: false,        // is the timer ticking?
+  finished: false,       // have all 8 frames been used?
+  secsPerFrame: 60,
+  remainingMs: 60000,    // time left in the current frame
+  endAt: 0,              // the clock time when the current frame ends
+  color: '#FFFFFF',
+  sizeIndex: 0,
+  erasing: false,
+  sound: true
+};
+
+// Helper: $('#time') is a shortcut for document.querySelector('#time')
+const $ = (sel) => document.querySelector(sel);
+const canvases = [];   // the 8 <canvas> elements
+const captions = [];   // the 8 caption <input> elements
+
+// ---------- 3c. Build the 8 frames ----------
+function buildFrames() {
+  const grid = $('#grid');
+  for (let i = 0; i < FRAME_COUNT; i++) {
+    state.frames.push({ strokes: [], caption: '' });
+
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.innerHTML =
+      `<span class="num">${i + 1}</span>` +
+      `<canvas width="${W}" height="${H}" aria-label="Sketch frame ${i + 1}"></canvas>` +
+      `<input type="text" placeholder="Caption for idea ${i + 1}">`;
+    grid.appendChild(frame);
+
+    const canvas = frame.querySelector('canvas');
+    const caption = frame.querySelector('input');
+    canvases.push(canvas);
+    captions.push(caption);
+
+    caption.addEventListener('input', () => { state.frames[i].caption = caption.value; });
+    attachDrawing(canvas, i);
+    redraw(i);
+  }
+}
+
+// ---------- 3d. Drawing with mouse, finger or pen ----------
+// "Pointer events" cover all three input types with one set of code.
+function attachDrawing(canvas, i) {
+  let current = null;   // the stroke being drawn right now
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (state.running && i !== state.active) return;  // only the timed frame while running
+    if (!state.running) setActive(i);                  // when paused, tap any frame to pick it
+    canvas.setPointerCapture(e.pointerId);             // keep tracking even if the finger slides off
+    const size = PEN_SIZES[state.sizeIndex].px;
+    current = {
+      color: state.erasing ? CANVAS_BG : state.color,  // the eraser is just a pen in background colour
+      size: state.erasing ? size * 4 : size,
+      points: [toPaper(canvas, e)]
+    };
+    state.frames[i].strokes.push(current);
+    redraw(i);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!current) return;
+    current.points.push(toPaper(canvas, e));
+    drawLastSegment(i, current);   // draw only the newest bit — much faster than redrawing everything
+  });
+
+  const stop = () => { current = null; };
+  canvas.addEventListener('pointerup', stop);
+  canvas.addEventListener('pointercancel', stop);
+}
+
+// Converts a screen position into a position on the 800x600 paper.
+// Example: canvas shown 400px wide, click at x = 100 → 100 × (800 / 400) = 200 on paper.
+function toPaper(canvas, e) {
+  const r = canvas.getBoundingClientRect();
+  return [(e.clientX - r.left) * (W / r.width), (e.clientY - r.top) * (H / r.height)];
+}
+
+function styleStroke(ctx, s) {
+  ctx.strokeStyle = s.color;
+  ctx.fillStyle = s.color;
+  ctx.lineWidth = s.size;
+  ctx.lineCap = 'round';    // round ends = smoother, hand-drawn look
+  ctx.lineJoin = 'round';
+}
+
+function drawLastSegment(i, s) {
+  const ctx = canvases[i].getContext('2d');
+  const p = s.points, n = p.length;
+  if (n < 2) return;
+  styleStroke(ctx, s);
+  ctx.beginPath();
+  ctx.moveTo(p[n - 2][0], p[n - 2][1]);
+  ctx.lineTo(p[n - 1][0], p[n - 1][1]);
+  ctx.stroke();
+}
+
+// Redraw a whole frame from its stored strokes (used after Undo, Reset, etc.)
+function redraw(i) {
+  const ctx = canvases[i].getContext('2d');
+  ctx.fillStyle = CANVAS_BG;
+  ctx.fillRect(0, 0, W, H);
+  for (const s of state.frames[i].strokes) {
+    styleStroke(ctx, s);
+    if (s.points.length === 1) {            // a single tap = a dot
+      ctx.beginPath();
+      ctx.arc(s.points[0][0], s.points[0][1], s.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(s.points[0][0], s.points[0][1]);
+      for (const [x, y] of s.points.slice(1)) ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+  }
+}
+
+// ---------- 3e. Which frame is active ----------
+function setActive(i) {
+  state.active = i;
+  document.querySelectorAll('.frame').forEach((f, k) => f.classList.toggle('active', k === i));
+  updateDisplay();
+}
+
+// ---------- 3f. The timer ----------
+// We don't count "1 second, 2 seconds…" — browsers can delay timers.
+// Instead we remember WHEN the frame ends (endAt) and check the clock.
+// Example: frame starts at 10:00:00 with 60 s → endAt = 10:01:00.
+// At 10:00:45 we show 0:15, even if a few ticks were missed.
+let tickTimer = null;
+
+function start() {
+  if (state.finished) return;
+  unlockAudio();
+  state.running = true;
+  state.endAt = Date.now() + state.remainingMs;
+  tickTimer = setInterval(tick, 200);   // check 5 times a second
+  document.body.classList.add('running');
+  $('#startBtn').textContent = 'Pause';
+  setActive(state.active);
+  if (state.erasing) toggleEraser();
+}
+
+function pause() {
+  state.running = false;
+  state.remainingMs = Math.max(0, state.endAt - Date.now());
+  clearInterval(tickTimer);
+  document.body.classList.remove('running');
+  $('#startBtn').textContent = 'Resume';
+  updateDisplay();
+}
+
+function tick() {
+  state.remainingMs = state.endAt - Date.now();
+  if (state.remainingMs <= 0) nextFrame();
+  else updateDisplay();
+}
+
+function nextFrame() {
+  if (state.finished) return;
+  if (state.active < FRAME_COUNT - 1) {
+    beep(880, 0.15);
+    state.remainingMs = state.secsPerFrame * 1000;
+    state.endAt = Date.now() + state.remainingMs;
+    setActive(state.active + 1);
+    canvases[state.active].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  } else {
+    finish();
+  }
+}
+
+function finish() {
+  clearInterval(tickTimer);
+  state.running = false;
+  state.finished = true;
+  state.remainingMs = 0;
+  document.body.classList.remove('running');
+  beep(660, 0.25); setTimeout(() => beep(990, 0.35), 260);
+  $('#startBtn').textContent = 'Done';
+  $('#done').classList.add('show');
+  $('#done').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  updateDisplay();
+}
+
+function reset() {
+  const hasWork = state.frames.some(f => f.strokes.length || f.caption);
+  if (hasWork && !confirm('Clear all 8 frames and start again?')) return;
+  clearInterval(tickTimer);
+  Object.assign(state, { running: false, finished: false, endAt: 0, remainingMs: state.secsPerFrame * 1000 });
+  state.frames.forEach((f, i) => { f.strokes = []; f.caption = ''; captions[i].value = ''; redraw(i); });
+  document.body.classList.remove('running');
+  $('#done').classList.remove('show');
+  $('#startBtn').textContent = 'Start';
+  setActive(0);
+}
+
+// ---------- 3g. Updating the timer display and ring ----------
+const RING_LEN = 2 * Math.PI * 27;   // circumference of the ring (r = 27)
+$('#ringFill').style.strokeDasharray = RING_LEN;
+
+function updateDisplay() {
+  const ms = Math.max(0, state.remainingMs);
+  const secs = Math.ceil(ms / 1000);
+  $('#time').textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
+
+  const status = state.finished ? 'all done' : state.running ? 'sketch!' : 'paused';
+  $('#frameLabel').textContent = `Frame ${state.active + 1} of ${FRAME_COUNT} · ` +
+    (state.finished ? status : (state.endAt || state.running ? status : 'ready'));
+
+  // The ring empties as time runs out: offset 0 = full ring, RING_LEN = empty
+  const fraction = ms / (state.secsPerFrame * 1000);
+  $('#ringFill').style.strokeDashoffset = RING_LEN * (1 - fraction);
+  $('#ring').classList.toggle('urgent', state.running && ms < 10000);  // pink in the last 10 s
+}
+
+// ---------- 3h. Sound (a short beep made in code, no audio file) ----------
+let audioCtx = null;
+function unlockAudio() {
+  // Browsers only allow sound after a click, so we create it on Start
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+}
+function beep(freq, dur) {
+  if (!state.sound || !audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.02);   // quick fade in
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur); // fade out
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + dur + 0.05);
+}
+
+// ---------- 3i. Pen tools ----------
+document.querySelectorAll('.swatch').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.swatch').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    state.color = btn.dataset.color;
+    if (state.erasing) toggleEraser();
+  });
+});
+function toggleEraser() {
+  state.erasing = !state.erasing;
+  $('#eraserBtn').classList.toggle('on', state.erasing);
+}
+$('#eraserBtn').addEventListener('click', toggleEraser);
+$('#sizeBtn').addEventListener('click', () => {
+  state.sizeIndex = (state.sizeIndex + 1) % PEN_SIZES.length;
+  $('#sizeBtn').textContent = 'Pen: ' + PEN_SIZES[state.sizeIndex].name;
+});
+function undo() {
+  state.frames[state.active].strokes.pop();
+  redraw(state.active);
+}
+$('#undoBtn').addEventListener('click', undo);
+$('#soundBtn').addEventListener('click', () => {
+  state.sound = !state.sound;
+  $('#soundBtn').textContent = 'Sound: ' + (state.sound ? 'on' : 'off');
+});
+
+// ---------- 3j. Buttons and keyboard ----------
+$('#startBtn').addEventListener('click', () => state.running ? pause() : start());
+$('#nextBtn').addEventListener('click', () => {
+  if (!state.running && !state.finished && state.active < FRAME_COUNT - 1) {
+    state.remainingMs = state.secsPerFrame * 1000;   // paused: just move to the next frame
+    setActive(state.active + 1);
+  } else nextFrame();
+});
+$('#resetBtn').addEventListener('click', reset);
+$('#secs').addEventListener('change', (e) => {
+  state.secsPerFrame = Number(e.target.value);
+  if (!state.running) { state.remainingMs = state.secsPerFrame * 1000; updateDisplay(); }
+});
+
+document.addEventListener('keydown', (e) => {
+  const typing = ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName);
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !typing) { e.preventDefault(); undo(); }
+  if (e.key === ' ' && !typing) { e.preventDefault(); $('#startBtn').click(); }
+});
+
+// Warn before closing the tab if there are sketches
+window.addEventListener('beforeunload', (e) => {
+  if (state.frames.some(f => f.strokes.length)) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// ---------- 3k. Save all 8 frames as one PNG image ----------
+// We make a big invisible canvas, paint the title + all 8 sketches onto it,
+// then turn it into a downloadable file.
+function exportSheet() {
+  const cellW = 400, cellH = 300, capH = 52, gap = 24, headH = 130, footH = 50;
+  const out = document.createElement('canvas');
+  out.width = gap + 4 * (cellW + gap);
+  out.height = headH + 2 * (cellH + capH + gap) + footH;
+  const ctx = out.getContext('2d');
+
+  // Background + faint grid
+  ctx.fillStyle = '#05060A'; ctx.fillRect(0, 0, out.width, out.height);
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+  for (let x = 0; x < out.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, out.height); ctx.stroke(); }
+  for (let y = 0; y < out.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(out.width, y); ctx.stroke(); }
+
+  // Title and challenge
+  ctx.fillStyle = '#EDEEF5'; ctx.font = '700 44px "Geist", sans-serif';
+  ctx.shadowColor = 'rgba(139,92,246,0.8)'; ctx.shadowBlur = 20;
+  ctx.fillText('Crazy 8s', gap, 62);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 22px "Geist", sans-serif';
+  ctx.fillText(fitText(ctx, $('#challenge').value || 'Untitled challenge', out.width - gap * 2), gap, 102);
+
+  // The 8 frames, 4 across and 2 down
+  for (let i = 0; i < FRAME_COUNT; i++) {
+    const col = i % 4, row = Math.floor(i / 4);     // e.g. frame 6 (i=5) → col 1, row 1
+    const x = gap + col * (cellW + gap);
+    const y = headH + row * (cellH + capH + gap);
+    ctx.drawImage(canvases[i], x, y, cellW, cellH);
+    ctx.strokeStyle = 'rgba(139,92,246,0.7)'; ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, cellW, cellH);
+    ctx.fillStyle = '#C4B5FD'; ctx.font = '700 18px "Geist", sans-serif';
+    ctx.fillText(String(i + 1), x + 12, y + 26);
+    ctx.fillStyle = '#EDEEF5'; ctx.font = '400 18px "Geist", sans-serif';
+    ctx.fillText(fitText(ctx, state.frames[i].caption || '—', cellW), x, y + cellH + 32);
+  }
+
+  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 16px "Geist", sans-serif';
+  ctx.fillText('Made with the Crazy 8s tool · inventndiscover.com', gap, out.height - 20);
+
+  const link = document.createElement('a');
+  link.download = 'crazy-8s.png';
+  link.href = out.toDataURL('image/png');
+  link.click();
+}
+
+// Shortens text with "…" so it fits a given width
+function fitText(ctx, text, maxW) {
+  if (ctx.measureText(text).width <= maxW) return text;
+  while (text.length && ctx.measureText(text + '…').width > maxW) text = text.slice(0, -1);
+  return text + '…';
+}
+
+$('#exportBtn').addEventListener('click', exportSheet);
+$('#exportBtn2').addEventListener('click', exportSheet);
+
+// ---------- 3l. Go! ----------
+buildFrames();
+setActive(0);
+</script>
+</body>
+</html>
