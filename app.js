@@ -677,13 +677,13 @@ function viewLearn(){
 
 /* Tools: hand-made framework tools, each a standalone page under /toolkit/. */
 const TOOLS=[
- {id:"crazy-8s",added:"2026-10-13",name:"Crazy 8s",line:"Sketch eight ideas in eight minutes, one per frame, then caption them and save the sheet.",url:"/toolkit/crazy-8s/",
+ {id:"crazy-8s",added:"2026-10-13",name:"Crazy 8s",line:"Sketch eight ideas in eight minutes, one per frame, then caption them and save the sheet.",url:"/toolkit/crazy-8s/",shape:"frames",
   credit:"The Design Sprint, created by Jake Knapp at Google",time:"8 minutes · nothing uploaded",letters:["1","2","3","4","5","6","7","8"],
   colors:["#A58BFF","#8B7BFF","#5A8CFF","#3D9BFF","#2FD1C5","#46D69A","#FF7BB8","#EC4899"],hub:"minutes",cta:"Start sketching"},
  {id:"scamper",added:"2026-10-01",name:"SCAMPER",line:"Seven questions that turn something you already know into new ideas.",url:"/toolkit/scamper/",
   credit:"Bob Eberle (1971), from Alex Osborn's questions in Applied Imagination (1953)",time:"15–30 minutes",letters:["S","C","A","M","P","E","R"],
   colors:["#A58BFF","#7B8CFF","#3D9BFF","#2FD1C5","#46D69A","#FFB23F","#FF7B8A"],hub:"questions"},
- {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",
+ {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",shape:"diamond",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
   colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
  {id:"stakeholder-map",added:"2026-10-03",name:"Power / Interest",line:"Map everyone your project affects by power and interest, and know who to manage closely, keep satisfied, keep informed or monitor.",url:"/toolkit/stakeholder-map/",
@@ -703,6 +703,9 @@ function viewTools(){
         <span class="tq b" style="--c:#3D9BFF">Monitor</span><span class="tq r b" style="--c:#2FD1C5">Keep<br>informed</span>
         ${[["#FF7B8A",78,22,0],["#A58BFF",26,30,1],["#2FD1C5",80,72,2],["#3D9BFF",30,78,3],["#FF7B8A",62,38,4]].map(([c,x,y,i])=>`<i style="--c:${c};left:${x}%;top:${y}%;--i:${i}"></i>`).join("")}
         <em class="ax ay">Power</em><em class="ax axx">Interest</em>
+      </div>`:t.shape?`<div class="tool-tiles ${t.shape}" aria-hidden="true"><div class="board">
+        ${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--i:${i};--dur:${Math.max(7,t.letters.length)}s"><span>${l}</span></b>`).join("")}</div>
+        <span class="hub"><strong style="background-image:linear-gradient(135deg,${t.colors.join(",")})">${t.letters.length}</strong>${t.hub}</span>
       </div>`:`<div class="tool-wheel" aria-hidden="true" style="--n:${t.letters.length}">
         <i class="ring"></i>
         ${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--a:${(360/t.letters.length*i-90).toFixed(2)}deg;--i:${i}">${l}</b>`).join("")}

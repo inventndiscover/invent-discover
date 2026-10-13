@@ -247,13 +247,13 @@
     <button class="tool-btn" id="undoBtn">Undo</button>
     <button class="tool-btn" id="soundBtn">Sound: on</button>
     <span class="spacer"></span>
-    <button id="exportBtn">Save as image</button>
+    <button id="exportBtn" title="White A4 sheet, ready to print">Save A4 sheet</button>
   </div>
 
   <div class="card done" id="done">
     <h2>Time's up — 8 ideas down.</h2>
-    <p>Add a short caption under each sketch, then save the sheet. Next step: vote for the strongest ideas.</p>
-    <button class="primary" id="exportBtn2">Save as image</button>
+    <p>Add a short caption under each sketch, then save the sheet as a white A4 page you can print. Next step: vote for the strongest ideas.</p>
+    <button class="primary" id="exportBtn2" title="White A4 sheet, ready to print">Save A4 sheet</button>
   </div>
 
   <!-- The 8 frames are created by JavaScript, so this starts empty -->
@@ -262,7 +262,7 @@
   <section class="how">
     <div class="card"><div class="step">STEP 1</div><h3>Frame the problem</h3><p>Write one clear challenge. "How might we…" questions work well. Want ideas first? Try <a href="/toolkit/scamper/" style="color:#C4B5FD">SCAMPER</a> before this.</p></div>
     <div class="card"><div class="step">STEP 2</div><h3>Sketch fast</h3><p>One idea per frame. Stick figures, arrows and boxes are fine. When the frame moves on, so do you.</p></div>
-    <div class="card"><div class="step">STEP 3</div><h3>Caption and share</h3><p>Give each sketch a few words, save the sheet as an image, and compare it with your team's.</p></div>
+    <div class="card"><div class="step">STEP 3</div><h3>Caption and share</h3><p>Give each sketch a few words, save the sheet as a printable A4 page, and compare it with your team's.</p></div>
   </section>
 
   <section class="card about" id="where">
@@ -585,49 +585,97 @@ window.addEventListener('beforeunload', (e) => {
   if (state.frames.some(f => f.strokes.length)) { e.preventDefault(); e.returnValue = ''; }
 });
 
-// ---------- 3k. Save all 8 frames as one PNG image ----------
-// We make a big invisible canvas, paint the title + all 8 sketches onto it,
-// then turn it into a downloadable file.
+// ---------- 3k. Save all 8 frames as one printable A4 sheet ----------
+// The screen stays dark, but the saved sheet is white A4 (landscape) so it
+// prints cleanly on a black-and-white printer.
+// A4 is 297 x 210 mm. At 300 dots per inch that is 3508 x 2480 pixels.
+// We don't copy the dark frames; we REDRAW every stroke from state.frames
+// onto white paper, swapping each pen colour for a dark "ink" version.
+// Example: a white line on screen → near-black line on paper.
+const PRINT_INK = {
+  '#FFFFFF': '#111111',   // white pen  → black
+  '#A78BFA': '#5B21B6',   // violet pen → deep violet (prints as dark grey)
+  '#60A5FA': '#1D4ED8',   // blue pen   → deep blue
+  '#F472B6': '#BE185D'    // pink pen   → deep pink
+};
 function exportSheet() {
-  const cellW = 400, cellH = 300, capH = 52, gap = 24, headH = 130, footH = 50;
+  const PAGE_W = 3508, PAGE_H = 2480;       // A4 landscape at 300 dpi
+  const M = 142;                            // 12 mm margin all round
+  const gap = 60, cols = 4;
+  const cellW = Math.floor((PAGE_W - 2 * M - (cols - 1) * gap) / cols);   // ≈ 761 px ≈ 64 mm wide
+  const cellH = Math.round(cellW * H / W);                                 // keeps the 4:3 shape of each frame
+  const capH = 150, headH = 300;
+  const scale = cellW / W;                  // paper (800 wide) → printed cell
   const out = document.createElement('canvas');
-  out.width = gap + 4 * (cellW + gap);
-  out.height = headH + 2 * (cellH + capH + gap) + footH;
+  out.width = PAGE_W; out.height = PAGE_H;
   const ctx = out.getContext('2d');
+  const INK = '#111111', SOFT = '#6B6B6B', LINE = '#B5B5B5';
 
-  // Background + faint grid
-  ctx.fillStyle = '#05060A'; ctx.fillRect(0, 0, out.width, out.height);
-  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
-  for (let x = 0; x < out.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, out.height); ctx.stroke(); }
-  for (let y = 0; y < out.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(out.width, y); ctx.stroke(); }
+  // White paper
+  ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, PAGE_W, PAGE_H);
 
-  // Title and challenge
-  ctx.fillStyle = '#EDEEF5'; ctx.font = '700 44px "Geist", sans-serif';
-  ctx.shadowColor = 'rgba(139,92,246,0.8)'; ctx.shadowBlur = 20;
-  ctx.fillText('Crazy 8s', gap, 62);
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 22px "Geist", sans-serif';
-  ctx.fillText(fitText(ctx, $('#challenge').value || 'Untitled challenge', out.width - gap * 2), gap, 102);
+  // Title and challenge (left), name and date lines to fill in by hand (right)
+  ctx.fillStyle = INK; ctx.font = '700 96px "Geist", sans-serif';
+  ctx.fillText('Crazy 8s', M, M + 80);
+  ctx.fillStyle = SOFT; ctx.font = '400 48px "Geist", sans-serif';
+  ctx.fillText(fitText(ctx, $('#challenge').value || 'Untitled challenge', PAGE_W - 2 * M - 1000), M, M + 160);
+  ctx.font = '400 40px "Geist", sans-serif'; ctx.strokeStyle = LINE; ctx.lineWidth = 3;
+  [['Name', M + 70], ['Date', M + 160]].forEach(([label, y]) => {
+    const x = PAGE_W - M - 900;
+    ctx.fillText(label, x, y);
+    ctx.beginPath(); ctx.moveTo(x + 130, y + 8); ctx.lineTo(PAGE_W - M, y + 8); ctx.stroke();
+  });
 
   // The 8 frames, 4 across and 2 down
+  const top = M + headH;
+  const gridH = 2 * (cellH + capH) + gap;
+  const y0 = top + Math.max(0, (PAGE_H - M - 80 - top - gridH) / 2);   // centre the grid in the space left
   for (let i = 0; i < FRAME_COUNT; i++) {
     const col = i % 4, row = Math.floor(i / 4);     // e.g. frame 6 (i=5) → col 1, row 1
-    const x = gap + col * (cellW + gap);
-    const y = headH + row * (cellH + capH + gap);
-    ctx.drawImage(canvases[i], x, y, cellW, cellH);
-    ctx.strokeStyle = 'rgba(139,92,246,0.7)'; ctx.lineWidth = 2;
+    const x = M + col * (cellW + gap);
+    const y = y0 + row * (cellH + capH + gap);
+
+    // the sketch, clipped to its frame so nothing spills over
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x, y, cellW, cellH); ctx.clip();
+    ctx.translate(x, y); ctx.scale(scale, scale);
+    for (const s of state.frames[i].strokes) {
+      const erased = s.color === CANVAS_BG;          // eraser strokes become white paper
+      const ink = erased ? '#FFFFFF' : (PRINT_INK[s.color.toUpperCase()] || INK);
+      const size = erased ? s.size : s.size * 1.4;   // a bit bolder so it shows on paper
+      styleStroke(ctx, { color: ink, size });
+      if (s.points.length === 1) {
+        ctx.beginPath(); ctx.arc(s.points[0][0], s.points[0][1], size / 2, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.moveTo(s.points[0][0], s.points[0][1]);
+        for (const [px, py] of s.points.slice(1)) ctx.lineTo(px, py);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // frame border and number
+    ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.lineJoin = 'miter';
     ctx.strokeRect(x, y, cellW, cellH);
-    ctx.fillStyle = '#C4B5FD'; ctx.font = '700 18px "Geist", sans-serif';
-    ctx.fillText(String(i + 1), x + 12, y + 26);
-    ctx.fillStyle = '#EDEEF5'; ctx.font = '400 18px "Geist", sans-serif';
-    ctx.fillText(fitText(ctx, state.frames[i].caption || '—', cellW), x, y + cellH + 32);
+    ctx.fillStyle = INK; ctx.font = '700 44px "Geist", sans-serif';
+    ctx.fillText(String(i + 1), x + 24, y + 60);
+
+    // caption, or an empty line to write one by hand
+    const cap = state.frames[i].caption;
+    if (cap) {
+      ctx.fillStyle = INK; ctx.font = '400 42px "Geist", sans-serif';
+      ctx.fillText(fitText(ctx, cap, cellW), x, y + cellH + 70);
+    } else {
+      ctx.strokeStyle = LINE; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(x, y + cellH + 90); ctx.lineTo(x + cellW, y + cellH + 90); ctx.stroke();
+    }
   }
 
-  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 16px "Geist", sans-serif';
-  ctx.fillText('Made with the Crazy 8s tool · inventndiscover.com', gap, out.height - 20);
+  ctx.fillStyle = SOFT; ctx.font = '400 34px "Geist", sans-serif';
+  ctx.fillText('Made with the Crazy 8s tool · inventndiscover.com', M, PAGE_H - M + 20);
 
   const link = document.createElement('a');
-  link.download = 'crazy-8s.png';
+  link.download = 'crazy-8s-a4.png';
   link.href = out.toDataURL('image/png');
   link.click();
 }
