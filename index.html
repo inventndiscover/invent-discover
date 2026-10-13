@@ -139,6 +139,11 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-tiles.diamond .tt-board{grid-template-columns:repeat(2,46px);gap:8px;transform:rotate(45deg);margin:22px 0}
 .tool-tiles.diamond b{width:46px;height:46px}
 .tool-tiles.diamond b span{transform:rotate(-45deg)}
+/* clockwise from the top: P, S, H, E. Before the 45° turn the grid cells are
+   top-left → top, top-right → right, bottom-right → bottom, bottom-left → left,
+   so tile 3 (H) goes bottom-right and tile 4 (E) bottom-left */
+.tool-tiles.diamond b:nth-child(3){grid-area:2/2}
+.tool-tiles.diamond b:nth-child(4){grid-area:2/1}
 @media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-grid i,.tool-cube .cube{animation:none}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
