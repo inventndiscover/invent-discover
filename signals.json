@@ -1,6 +1,46 @@
 {
- "REFRESHED": "2026-10-13T07:19:45+05:30",
+ "REFRESHED": "2026-10-14T07:19:34+05:30",
  "SIGNALS": [
+  {
+   "id": "2110042429801840924",
+   "handle": "DeItaone",
+   "name": "*Walter Bloomberg",
+   "url": "https://x.com/DeItaone/status/2110042429801840924",
+   "posted": "2026-10-13T21:48:12+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Reported: Nvidia CEO Jensen Huang says the company will announce $2 billion in new European AI investments next week, on top of $8 billion invested over the past year."
+  },
+  {
+   "id": "2110041305925484716",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2110041305925484716",
+   "posted": "2026-10-13T21:43:44+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Gemini 4 Argon is available to AI Ultra and Pro subscribers in the Gemini app and AI Mode in Search, and to developers and enterprises through the Gemini API, with an introductory price."
+  },
+  {
+   "id": "2110039274922131792",
+   "handle": "GoogleDeepMind",
+   "name": "Google DeepMind",
+   "url": "https://x.com/GoogleDeepMind/status/2110039274922131792",
+   "posted": "2026-10-13T21:35:40+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google DeepMind says Gemini 4 Argon is now globally available, aimed at hard problems across coding, enterprise workflows and cyber defense."
+  },
+  {
+   "id": "2110038940841545827",
+   "handle": "OfficialLoganK",
+   "name": "Logan Kilpatrick",
+   "url": "https://x.com/OfficialLoganK/status/2110038940841545827",
+   "posted": "2026-10-13T21:34:20+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Logan Kilpatrick says Gemini 4 Argon is rolling out globally in the Gemini API, to Pro and Ultra in the Gemini app, and to Ultra subscribers in Antigravity; over 100,000 Googlers tested it."
+  },
   {
    "id": "2109697083519447118",
    "handle": "ArtificialAnlys",
@@ -32,36 +72,6 @@
    "summary": "Meta introduces Muse Wonder and Muse Wonder Full, its most capable models yet, aimed at personal and professional agentic tasks; Muse Wonder is available now through the Meta Model API."
   },
   {
-   "id": "2108624138369929725",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2108624138369929725",
-   "posted": "2026-10-09T23:52:25+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Codex adds composer predictions in beta for Pro users: it suggests your next message based on the conversation and how you usually write."
-  },
-  {
-   "id": "2108271559928389679",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2108271559928389679",
-   "posted": "2026-10-09T00:31:24+05:30",
-   "topic": "Design",
-   "kind": "Official",
-   "summary": "Claude Docs, Slides and Design leave beta and become available on every plan including Free, with shared editing between a team and Claude."
-  },
-  {
-   "id": "2108257472553386059",
-   "handle": "sundarpichai",
-   "name": "Sundar Pichai",
-   "url": "https://x.com/sundarpichai/status/2108257472553386059",
-   "posted": "2026-10-08T23:35:25+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "At Gemini at Work, Google Cloud introduces a new Gemini agent: one universal work agent with business context for questions, knowledge work and more."
-  },
-  {
    "id": "2108224572663414796",
    "handle": "DoT_India",
    "name": "DoT India",
@@ -70,26 +80,6 @@
    "topic": "India",
    "kind": "Official",
    "summary": "India's Department of Telecommunications says ITU's AI for Good initiative will be inaugurated in New Delhi on 9 October as part of IMC 2026."
-  },
-  {
-   "id": "2107894997538525580",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2107894997538525580",
-   "posted": "2026-10-07T23:35:04+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI says GPT-6 and Intelligent UI are rolling out in ChatGPT for everyone, giving more visual, interactive answers and on-the-spot tools for tasks."
-  },
-  {
-   "id": "2107476357261185073",
-   "handle": "TheRundownAI",
-   "name": "The Rundown AI",
-   "url": "https://x.com/TheRundownAI/status/2107476357261185073",
-   "posted": "2026-10-06T19:51:33+05:30",
-   "topic": "Open models",
-   "kind": "Report",
-   "summary": "Mistral Large 4, nicknamed Le Chonk, is a 1T-parameter model that Mistral calls the strongest open model in the West; the post cites a 61.7% real-world coding score on DeepSWE."
   }
  ]
 }
