@@ -1,0 +1,2589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Origami Jungle · Invent + Discover</title>
+<link rel="canonical" href="https://inventndiscover.com/demos/origami-jungle/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Origami Jungle: a paper-craft forest trek, in your browser or VR">
+<meta property="og:description" content="Trek down a folded-paper hill forest inspired by Arunachal Pradesh, cross a living root bridge and climb to the falls: tigers, elephants, red pandas, gibbons, hornbills and more. Real-time, nothing to download, WebXR VR.">
+<meta property="og:url" content="https://inventndiscover.com/demos/origami-jungle/">
+<meta property="og:image" content="https://inventndiscover.com/media/origami-jungle-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0d0c">
+<meta name="description" content="A real-time guided trek through a hill forest folded from paper, inspired by Arunachal Pradesh: down through tree ferns, bamboo and rhododendrons to a river, across a living root bridge and up to a waterfall, with a tiger, elephants, mithun, red panda, gibbons, hornbills, frogs, owls, butterflies and dragonflies. WebXR VR for Meta Quest.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: full-bleed WebGL canvas; one compact instrument card pinned bottom-left (same family as Arashiyama). */
+:root{
+  --ink:#f3efe6; --dim:rgba(243,239,230,.62); --faint:rgba(243,239,230,.22); --hair:rgba(243,239,230,.14);
+  --glass:rgba(18,22,20,.48); --ground:#0b0d0c;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%;margin:0;background:var(--ground);overflow:hidden;color:var(--ink)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;outline:none}
+#c:active{cursor:grabbing}
+#ui{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  width:min(262px,calc(100vw - 28px));box-sizing:border-box;padding:10px 12px 9px;
+  background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(.7);backdrop-filter:blur(14px) saturate(.7);
+  border:1px solid var(--hair);border-radius:6px;font:400 10.5px/1.35 var(--mono);letter-spacing:.02em;
+  display:grid;gap:7px;user-select:none;transition:opacity .3s}
+#ui.hidden{opacity:0;pointer-events:none}
+.head{display:flex;justify-content:space-between;align-items:baseline}
+.brand{font-weight:500;letter-spacing:.22em;text-transform:uppercase;font-size:10px}
+#fps{color:var(--dim);font-variant-numeric:tabular-nums}
+.ctl{display:grid;grid-template-columns:44px 1fr 58px;align-items:center;gap:8px}
+.k{color:var(--dim);text-transform:uppercase;letter-spacing:.14em;font-size:9.5px}
+.v{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--faint)}
+input[type=range]::-moz-range-track{height:1px;background:var(--faint)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:var(--ink);margin-top:-4px;border:0}
+input[type=range]::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:var(--ink);border:0}
+input[type=range]:focus-visible{outline:1px solid var(--dim);outline-offset:2px}
+.btns{display:flex;gap:5px;flex-wrap:wrap}
+.seg{display:flex}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:3px 0 0 3px;margin-left:0}
+.seg button:last-child{border-radius:0 3px 3px 0}
+button{font:inherit;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;
+  border:1px solid var(--hair);border-radius:3px;padding:4px 7px;cursor:pointer}
+button:hover{color:var(--ink);border-color:var(--faint)}
+button[aria-pressed=true]{color:var(--ground);background:var(--ink);border-color:var(--ink)}
+button.dim{opacity:.55}
+button:focus-visible{outline:1px solid var(--ink);outline-offset:1px}
+.hint{color:var(--dim);font-size:9px;line-height:1.5;border-top:1px solid var(--hair);padding-top:6px;display:grid}
+#msg{color:var(--ink);font-size:9.5px;line-height:1.45;border-left:1px solid var(--faint);padding-left:7px}
+.hr{display:flex;gap:8px;align-items:center}
+button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
+#show{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));display:none;background:var(--glass)}
+#cap{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));font:400 10px var(--mono);
+  letter-spacing:.24em;text-transform:uppercase;color:var(--ink);text-shadow:0 1px 6px rgba(0,0,0,.45);pointer-events:none;transition:opacity .8s;white-space:nowrap}
+#err{position:fixed;inset:0;display:none;place-items:center;padding:24px;font:400 13px/1.6 var(--mono);color:var(--ink);text-align:center}
+[hidden]{display:none!important}
+/* notice: shown on opening and from the Notice button; the tour waits until it is acknowledged */
+#notice{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;box-sizing:border-box;background:rgba(11,13,12,.84);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font:400 12px/1.6 var(--mono);color:var(--ink)}
+#notice[hidden]{display:none}
+#notice .card{max-width:500px;max-height:90vh;overflow:auto;box-sizing:border-box;padding:20px 22px;background:var(--glass);border:1px solid var(--hair);border-radius:6px}
+#notice h2{margin:0 0 10px;font:500 11px var(--mono);letter-spacing:.22em;text-transform:uppercase}
+#notice p{margin:0 0 10px;color:var(--dim)}
+#notice b{color:var(--ink);font-weight:500}
+#notice .ok{margin-top:6px}
+@media (max-width:560px){#cap{display:none}}
+@media (prefers-reduced-motion:reduce){#ui{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="c" tabindex="0" aria-label="Real-time view of a jungle folded from paper"></canvas>
+<div id="ui" role="group" aria-label="Jungle controls">
+  <div class="head"><span class="brand">Origami Jungle</span><span class="hr"><span id="fps">— fps</span><button id="bHide" class="x" aria-label="Hide controls (H)">×</button></span></div>
+  <div class="btns">
+    <div class="seg" role="group" aria-label="Mode">
+      <button id="mTour" aria-pressed="true">Tour</button><button id="mWalk" aria-pressed="false">Walk</button><button id="mFly" aria-pressed="false">Fly</button>
+    </div>
+  </div>
+  <label class="ctl" for="tod"><span class="k">Time</span><input id="tod" type="range" min="0" max="24" step="0.05" value="7.4"><span class="v" id="todV">07:24</span></label>
+  <label class="ctl" for="mist"><span class="k">Fog</span><input id="mist" type="range" min="0" max="1" step="0.01" value="0.3"><span class="v" id="mistV">light</span></label>
+  <div class="btns">
+    <button id="bSound" aria-pressed="true">Sound</button>
+    <button id="bVR" aria-pressed="false">Enter VR</button>
+    <button id="bNotice" aria-pressed="false">Notice</button>
+  </div>
+  <div id="msg" role="status" hidden></div>
+  <div class="hint" id="hint"><span>Any key or drag takes over</span><span>T replays the tour · H hides this</span></div>
+</div>
+<button id="show">Controls</button>
+<div id="cap"></div>
+<div id="notice" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+  <div class="card">
+    <h2 id="noticeTitle">Notice before you begin</h2>
+    <p><b>1. Digital creation.</b> This experience is a digital creation: an imagined hill forest, inspired by the forests of Arunachal Pradesh, made to look as if it were folded from paper. It is not a real place, and it is not a map. The route, animals, plants and sounds are illustrative and must not be treated as real.</p>
+    <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
+    <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
+    <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 15 Oct 2026 (f) · in the headset, press X for a performance readout</p>
+  </div>
+</div>
+<div id="err"></div>
+<script>
+'use strict';
+(() => {
+// ================================================================ CORE: WebGL setup, small helpers, vector maths
+// Everything here is plumbing shared by the rest of the page (taken from the Malabar / Arashiyama engine and trimmed).
+// Example: program(vs, fs) turns two GPU shader texts into one drawable "material"; .f('uTime', 3.2) sets a value on it.
+const TEST = /[?&]test/.test(location.search);
+const canvas = document.getElementById('c');
+// antialias:true -> the browser smooths the paper edges for us (cheap on the Quest's tiled GPU)
+const gl = canvas.getContext('webgl2', {antialias:true, alpha:false, depth:true, stencil:false, preserveDrawingBuffer:TEST, powerPreference:'high-performance', xrCompatible:true});
+function fail(msg){ const e=document.getElementById('err'); e.style.display='grid'; e.textContent=msg; document.getElementById('ui').style.display='none'; throw new Error(msg); }
+if(!gl) fail('This jungle needs WebGL 2, which this browser or device does not provide.');
+// Safety net. If the graphics card gives up (the 3D view "crashes" and turns blank, usually because a frame was too heavy
+// for it), say so on screen and reload once in a lighter mode. Any other error is also shown, rather than failing silently.
+// Example: a laptop's built-in graphics with many browser tabs open may need the lighter mode.
+const LITE = /[?&]lite/.test(location.search) || (()=>{ try{ return sessionStorage.getItem('ojLite')==='1'; }catch(e){ return false; } })();
+function notice(msg){ let n=document.getElementById('glmsg'); if(!n){ n=document.createElement('div'); n.id='glmsg';
+  n.style.cssText='position:fixed;left:50%;top:18px;transform:translateX(-50%);max-width:min(560px,90vw);z-index:60;padding:10px 14px;border-radius:6px;background:rgba(18,22,20,.86);color:#f3efe6;font:400 12px/1.5 "IBM Plex Mono",monospace;text-align:center';
+  document.body.appendChild(n); } n.textContent=msg; }
+canvas.addEventListener('webglcontextlost', e=>{ e.preventDefault();
+  if (!LITE){ notice('Your graphics card dropped the 3D view (it was working too hard). Reloading a lighter version…');
+    try{ sessionStorage.setItem('ojLite','1'); }catch(err){}
+    setTimeout(()=>{ try{ const u=new URL(location.href); if (u.protocol.startsWith('http')||u.protocol==='file:'){ u.searchParams.set('lite','1'); location.replace(u.href); } else location.reload(); }catch(err){ location.reload(); } }, 1600); }
+  else notice('Your graphics card dropped the 3D view even in the lighter version. Please close other tabs and reload, or open the page directly in Chrome rather than inside a preview window.');
+});
+window.addEventListener('error', e=>{ if (!TEST) notice('Something went wrong: '+(e.message||e.error||'unknown error')); });
+
+function compile(type, src){
+  const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)){
+    const log = gl.getShaderInfoLog(s);
+    console.error(log + '\n' + src.split('\n').map((l,i)=>(i+1)+': '+l).join('\n'));
+    throw new Error('Shader compile failed: '+log);
+  }
+  return s;
+}
+const HDR = `#version 300 es
+precision highp float; precision highp int;
+#define PI 3.14159265359
+`;
+function program(vs, fs){
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(gl.VERTEX_SHADER, HDR+vs));
+  gl.attachShader(p, compile(gl.FRAGMENT_SHADER, HDR+'#define FRAG\n'+fs));
+  gl.linkProgram(p);
+  if(!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error('Link failed: '+gl.getProgramInfoLog(p));
+  const u = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for(let i=0;i<n;i++){ const info = gl.getActiveUniform(p,i); const name = info.name.replace(/\[0\]$/,''); u[name] = gl.getUniformLocation(p, info.name); }
+  let unit = 0;
+  return {p, u, use(){ gl.useProgram(p); unit = 0; return this; },
+    tex(name, t){ if(u[name]===undefined) return this; gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(u[name], unit); unit++; return this; },
+    f(name, ...v){ const l=u[name]; if(l===undefined) return this; ({1:gl.uniform1f,2:gl.uniform2f,3:gl.uniform3f,4:gl.uniform4f})[v.length].call(gl,l,...v); return this; },
+    fv(name, kind, arr){ const l=u[name]; if(l===undefined) return this; gl['uniform'+kind+'fv'](l, arr); return this; },
+    i(name, v){ const l=u[name]; if(l!==undefined) gl.uniform1i(l, v); return this; },
+    m(name, m){ const l=u[name]; if(l!==undefined) gl.uniformMatrix4fv(l, false, m); return this; },
+    ms(name, arr){ const l=u[name]; if(l!==undefined) gl.uniformMatrix4fv(l, false, arr); return this; }};
+}
+const emptyVAO = gl.createVertexArray();
+
+// ---------------------------------------------------------------- maths
+const V = {
+  add:(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], mul:(a,s)=>[a[0]*s,a[1]*s,a[2]*s],
+  dot:(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross:(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],
+  len:a=>Math.hypot(a[0],a[1],a[2]), norm:a=>{const l=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/l,a[1]/l,a[2]/l];},
+  lerp:(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]
+};
+const M = {
+  persp(fovy, asp, n, f){ const t=1/Math.tan(fovy/2); return new Float32Array([t/asp,0,0,0, 0,t,0,0, 0,0,(f+n)/(n-f),-1, 0,0,2*f*n/(n-f),0]); },
+  lookDir(fwd, up, eye){ const z=V.norm(V.mul(fwd,-1)); const x=V.norm(V.cross(up,z)); const y=V.cross(z,x);
+    return new Float32Array([x[0],y[0],z[0],0, x[1],y[1],z[1],0, x[2],y[2],z[2],0, -V.dot(x,eye),-V.dot(y,eye),-V.dot(z,eye),1]); },
+  mul(a,b){ const o=new Float32Array(16); for(let c=0;c<4;c++) for(let r=0;r<4;r++){ let s=0; for(let k=0;k<4;k++) s+=a[k*4+r]*b[c*4+k]; o[c*4+r]=s; } return o; },
+  inv(m){ const a=m, o=new Float32Array(16);
+    const a00=a[0],a01=a[1],a02=a[2],a03=a[3],a10=a[4],a11=a[5],a12=a[6],a13=a[7],a20=a[8],a21=a[9],a22=a[10],a23=a[11],a30=a[12],a31=a[13],a32=a[14],a33=a[15];
+    const b00=a00*a11-a01*a10,b01=a00*a12-a02*a10,b02=a00*a13-a03*a10,b03=a01*a12-a02*a11,b04=a01*a13-a03*a11,b05=a02*a13-a03*a12,b06=a20*a31-a21*a30,b07=a20*a32-a22*a30,b08=a20*a33-a23*a30,b09=a21*a32-a22*a31,b10=a21*a33-a23*a31,b11=a22*a33-a23*a32;
+    let d=b00*b11-b01*b10+b02*b09+b03*b08-b04*b07+b05*b06; d=1/d;
+    o[0]=(a11*b11-a12*b10+a13*b09)*d;o[1]=(a02*b10-a01*b11-a03*b09)*d;o[2]=(a31*b05-a32*b04+a33*b03)*d;o[3]=(a22*b04-a21*b05-a23*b03)*d;
+    o[4]=(a12*b08-a10*b11-a13*b07)*d;o[5]=(a00*b11-a02*b08+a03*b07)*d;o[6]=(a32*b02-a30*b05-a33*b01)*d;o[7]=(a20*b05-a22*b02+a23*b01)*d;
+    o[8]=(a10*b10-a11*b08+a13*b06)*d;o[9]=(a01*b08-a00*b10-a03*b06)*d;o[10]=(a30*b04-a31*b02+a33*b00)*d;o[11]=(a21*b02-a20*b04-a23*b00)*d;
+    o[12]=(a11*b07-a10*b09-a12*b06)*d;o[13]=(a00*b09-a01*b07+a02*b06)*d;o[14]=(a31*b01-a30*b03-a32*b00)*d;o[15]=(a20*b03-a21*b01+a22*b00)*d; return o; },
+  // small 4x4 builders used to pose animal parts (column-major, like WebGL)
+  I(){ return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]); },
+  T(x,y,z){ const m=M.I(); m[12]=x; m[13]=y; m[14]=z; return m; },
+  RX(a){ const c=Math.cos(a), s=Math.sin(a); return new Float32Array([1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1]); },
+  RY(a){ const c=Math.cos(a), s=Math.sin(a); return new Float32Array([c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1]); },
+  RZ(a){ const c=Math.cos(a), s=Math.sin(a); return new Float32Array([c,s,0,0, -s,c,0,0, 0,0,1,0, 0,0,0,1]); },
+  S(k){ return new Float32Array([k,0,0,0, 0,k,0,0, 0,0,k,0, 0,0,0,1]); },
+  chain(...ms){ return ms.reduce((a,b)=>M.mul(a,b)); },
+  // rotate about a pivot point: move pivot to origin, rotate, move back
+  about(p, R){ return M.chain(M.T(p[0],p[1],p[2]), R, M.T(-p[0],-p[1],-p[2])); },
+  apply(m, p){ return [m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12], m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13], m[2]*p[0]+m[6]*p[1]+m[10]*p[2]+m[14]]; }
+};
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x)), mix=(a,b,t)=>a+(b-a)*t, smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
+function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// sRGB hex -> linear RGB triple (shaders light in linear and convert back at the end)
+const hex = h => { const n=parseInt(h.replace('#',''),16); return [(n>>16)/255,(n>>8&255)/255,(n&255)/255].map(c=>Math.pow(c,2.2)); };
+const FSQ_VS = `out vec2 vUv; void main(){ vec2 p=vec2(float((gl_VertexID<<1)&2), float(gl_VertexID&2)); vUv=p; gl_Position=vec4(p*2.-1.,0.,1.); }`;
+
+// ================================================================ THE WORLD LAYOUT
+// A jungle valley that faces the sunrise (straight ahead is -z, "north"). A paper path winds 230 m from the south,
+// meets a river, crosses it on a small folded bridge and ends at a clearing below a cliff with a waterfall.
+// Example: groundH(0, 40) answers "how high is the ground at x=0 m, z=40 m?" - everything that stands on the ground
+// (plants, animals, you) asks this.
+
+const EYE = 1.6;                                   // eye height above the path, metres
+const WIND = [Math.cos(2.1), Math.sin(2.1)];       // breeze direction in the ground plane
+
+// Catmull-Rom: a smooth curve through control points (used for the path and the river)
+function catmull(p0, p1, p2, p3, t){ const t2=t*t, t3=t2*t; return [0,1].map(k => .5*((2*p1[k]) + (-p0[k]+p2[k])*t + (2*p0[k]-5*p1[k]+4*p2[k]-p3[k])*t2 + (-p0[k]+3*p1[k]-3*p2[k]+p3[k])*t3)); }
+// resample a smooth curve through pts every 'step' metres -> [{x,z,s,t:[tangent],side:[normal]}]
+function polyline(pts, step){
+  const raw=[];
+  for (let i=0;i<pts.length-1;i++){ const p0=pts[Math.max(i-1,0)], p1=pts[i], p2=pts[i+1], p3=pts[Math.min(i+2,pts.length-1)]; for (let k=0;k<120;k++) raw.push(catmull(p0,p1,p2,p3,k/120)); }
+  raw.push(pts[pts.length-1]);
+  const out=[{x:raw[0][0], z:raw[0][1], s:0}]; let acc=0, prev=raw[0], need=step;
+  for (let i=1;i<raw.length;i++){ const q=raw[i], d=Math.hypot(q[0]-prev[0], q[1]-prev[1]);
+    while (acc+d>=need){ const f=(need-acc)/d; out.push({x:prev[0]+(q[0]-prev[0])*f, z:prev[1]+(q[1]-prev[1])*f, s:need}); need+=step; }
+    acc+=d; prev=q; }
+  const n=out.length;
+  for (let i=0;i<n;i++){ const a=out[Math.max(i-1,0)], b=out[Math.min(i+1,n-1)]; const t=V.norm([b.x-a.x,0,b.z-a.z]); out[i].t=t; out[i].side=[-t[2],0,t[0]]; }
+  return out;
+}
+// nearest point on a resampled line: index, distance, signed sideways offset
+function nearestOn(L, x, z, coarse=3){
+  let best=1e18, bi=0; const n=L.length;
+  for (let i=0;i<n;i+=coarse){ const p=L[i], d=(p.x-x)**2+(p.z-z)**2; if (d<best){ best=d; bi=i; } }
+  for (let i=Math.max(0,bi-coarse);i<Math.min(n,bi+coarse+1);i++){ const p=L[i], d=(p.x-x)**2+(p.z-z)**2; if (d<best){ best=d; bi=i; } }
+  const p=L[bi]; return {i:bi, p, d:Math.sqrt(best), u:(x-p.x)*p.side[0]+(z-p.z)*p.side[2]};
+}
+
+// ---------------------------------------------------------------- the river comes first: a stream high on the plateau, the falls, then the river in the valley
+const UPPER = polyline([[-34,-175],[-20,-135],[-11,-106],[-5.5,-92],[-4,-85.2]], 1);
+const LOWER = polyline([[-4,-75],[-2.5,-63],[0,-49],[2.5,-35],[5.5,-21],[12,-7],[25,5],[45,13],[78,17],[125,15],[175,9]], 1);
+const riverHalfW = (L, s) => L===UPPER ? 2.3 + .3*Math.sin(s*.2) : (s<5 ? 8.5 - .6*s : 5.2 + .6*Math.sin(s*.07) + Math.min(1.5, s/120));
+const UP_LEN=UPPER[UPPER.length-1].s, FALL_H=9;
+UPPER.forEach(p=>{ p.y=FALL_H+.035*(UP_LEN-p.s); p.w=riverHalfW(UPPER,p.s); });    // the stream runs down to the lip of the falls
+LOWER.forEach(p=>{ p.y=-.012*p.s; p.w=riverHalfW(LOWER,p.s); });                   // the river falls gently downstream
+const POOL_Y = LOWER[0].y, LIP = [UPPER[UPPER.length-1].x, FALL_H, UPPER[UPPER.length-1].z];
+// how close is (x,z) to water, measured from the water's edge (negative = in the water)
+function riverNear(x, z){
+  const a=nearestOn(LOWER,x,z,4), b=nearestOn(UPPER,x,z,4);
+  const ea=a.d-a.p.w, eb=b.d-b.p.w;
+  return ea<eb ? {edge:ea, p:a.p, L:LOWER, d:a.d} : {edge:eb, p:b.p, L:UPPER, d:b.d};
+}
+
+// ---------------------------------------------------------------- the trail (its line on the map; heights come after the land)
+// it starts high on the valley side, winds DOWN through the forest to the river, crosses the living root bridge over a
+// small rocky gorge, then climbs UP the far side to a lookout near the falls
+const ROUTE = [[-6,99],[-3,84],[-9,68],[-4,52],[-12,36],[-9,20],[-15,4],[-11,-12],[-9,-24],[2,-30],[13,-34],[23,-39],[31,-47],[37,-55],[45,-61],[54,-65],[63,-67]];
+const PATH = polyline(ROUTE, .25);
+const PATH_LEN = PATH[PATH.length-1].s;
+const halfW = s => 1.05 + .12*Math.sin(s*.13);         // half the trail's width (m)
+const BRIDGE = (() => { let a=1e9, b=-1e9; for (const p of PATH){ const r=nearestOn(LOWER,p.x,p.z,4); if (r.d < r.p.w+2.6){ a=Math.min(a,p.s); b=Math.max(b,p.s); } }
+  const s0=a-1.2, s1=b+1.2, m=PATH[Math.round((s0+s1)/2/.25)]; return {s0, s1, c:[m.x, m.z]}; })();
+
+// ---------------------------------------------------------------- the land: a valley that rises on both sides of the water
+function baseH(x, z){
+  const a=nearestOn(LOWER,x,z,4), b=nearestOn(UPPER,x,z,4);
+  const wd=4+.5*Math.abs(x-LIP[0]), w=smooth(-wd,wd,a.d-b.d);                                  // which water this ground belongs to (makes the step of the falls)
+  const level=mix(a.p.y, b.p.y, w), d=mix(a.d-a.p.w, b.d-b.p.w, w);
+  let h = level + .6 + 26*smooth(0,150,d)*(.55+.45*smooth(0,150,d));         // the valley sides
+  h += (2.2*Math.sin(x*.05+.6)*Math.cos(z*.043+.2) + 1.3*Math.sin(x*.11-z*.07+1.1) + .4*Math.sin(x*.31)*Math.sin(z*.27))*smooth(4,30,d);   // spurs and hollows
+  const g=1-smooth(9,24,Math.hypot(x-BRIDGE.c[0], z-BRIDGE.c[1]));
+  h += g*3.2*smooth(-.3,2.2,d);                                  // a small rocky gorge where the root bridge crosses
+  h += 8*smooth(90,200,Math.abs(x)) + 6*smooth(120,220,z);
+  return h;
+}
+function carve(x, z){
+  const r=riverNear(x,z), w=r.p.w;
+  return {k:1-smooth(w*.55, w+1.1, r.d), r};
+}
+
+(() => {
+  // the trail's height follows the land, smoothed so it climbs and descends evenly; over the gorge it hangs as a root bridge
+  const raw=PATH.map(p=>baseH(p.x,p.z)), n=PATH.length;
+  for (let i=0;i<n;i++){ let s=0,w=0; for (let k=-60;k<=60;k++){ const j=clamp(i+k,0,n-1), ww=1-Math.abs(k)/61; s+=raw[j]*ww; w+=ww; } PATH[i].y=s/w; }
+  // the bridge deck sits level with the top of its banks; the trail eases up or down to meet it
+  const bh=s=>{ const p=PATH[Math.round(s/.25)]; return baseH(p.x,p.z); };
+  const YB=Math.max(bh(BRIDGE.s0), bh(BRIDGE.s1))+.08;
+  for (const p of PATH){
+    if (p.s>BRIDGE.s0 && p.s<BRIDGE.s1){ const u=(p.s-BRIDGE.s0)/(BRIDGE.s1-BRIDGE.s0); p.y=YB-.35*Math.sin(Math.PI*u); }
+    else if (p.s<=BRIDGE.s0) p.y=mix(p.y, YB, smooth(BRIDGE.s0-14, BRIDGE.s0, p.s));
+    else p.y=mix(p.y, YB, 1-smooth(BRIDGE.s1, BRIDGE.s1+14, p.s));
+  }
+})();
+function pathAt(s){
+  const f=clamp(s/.25,0,PATH.length-1.001), i=Math.floor(f), u=f-i, a=PATH[i], b=PATH[i+1];
+  return {x:mix(a.x,b.x,u), y:mix(a.y,b.y,u), z:mix(a.z,b.z,u), t:V.norm(V.lerp(a.t,b.t,u)), side:V.norm(V.lerp(a.side,b.side,u)), s};
+}
+function pathNear(x, z){
+  const r=nearestOn(PATH,x,z,8), p=r.p;
+  const along=clamp((x-p.x)*p.t[0]+(z-p.z)*p.t[2], -.25, .25);
+  return {s:clamp(p.s+along,0,PATH_LEN), u:r.u, y:p.y, d:r.d};
+}
+const onBridge = s => s>BRIDGE.s0+.6 && s<BRIDGE.s1-.6;
+const pathGrade = s => (pathAt(Math.min(s+.5,PATH_LEN)).y-pathAt(Math.max(s-.5,0)).y);
+
+// ---------------------------------------------------------------- every visit is a little different
+// The seed below changes on every page load, so the tiger's beach, the clearings where animals rest, the logs, perches
+// and boughs all land in new places. Example: on one visit the red panda is near the start, on the next by the bridge.
+const VISIT_SEED = TEST ? (+(/[?&]seed=(\d+)/.exec(location.search)||[0,7])[1]) : (Date.now() % 2147483647);
+const vrand = mulberry(VISIT_SEED);
+
+// the elephants cross at a shallow ford; the tiger drinks from a small flat beach somewhere in view of the bridge
+const ELE_LOOP = {cx:-1.5, cz:-56, ax:12.5, az:4.6};
+const BEACH = (() => {
+  const ci=nearestOn(LOWER,BRIDGE.c[0],BRIDGE.c[1],1).i, cand=[];
+  for (let i=Math.max(6,ci-22); i<Math.min(LOWER.length-1,ci+20); i++){ const d=Math.abs(i-ci);
+    if (d<9) continue; const p=LOWER[i]; if (Math.hypot((p.x-ELE_LOOP.cx)/ELE_LOOP.ax,(p.z-ELE_LOOP.cz)/ELE_LOOP.az)<1.5) continue;
+    for (const sd of [-1,1]) cand.push([i,sd]); }
+  const [i,sd]=cand[Math.floor(vrand()*cand.length)], p=LOWER[i], o=sd*(p.w-.4);
+  return {x:p.x+p.side[0]*o, z:p.z+p.side[2]*o, y:p.y+.13, dir:V.mul(p.side,-sd)};
+})();
+const TIGER_AT=[BEACH.x-BEACH.dir[0]*2.5, BEACH.z-BEACH.dir[2]*2.5];
+
+// clearings beside the hidden route where animals rest and graze, placed at random every visit
+const GLADES = (() => { const out=[]; let tries=0;
+  while (out.length<52 && tries++<4000){
+    const s=6+vrand()*(PATH_LEN-10); if (s>BRIDGE.s0-6 && s<BRIDGE.s1+4) continue;
+    const p=pathAt(s), sd=vrand()<.5?-1:1, off=2.6+vrand()*7, x=p.x+p.side[0]*sd*off, z=p.z+p.side[2]*sd*off;
+    if (riverNear(x,z).edge<2 || out.some(g=>Math.hypot(g.x-x,g.z-z)<6)) continue;
+    out.push({x, z, s, r:2.1+vrand()*.8, used:false});
+  } return out; })();
+
+function groundH(x, z){
+  const b=baseH(x,z), c=carve(x,z);
+  const ford=1-smooth(.85,1.3,Math.hypot((x-ELE_LOOP.cx)/ELE_LOOP.ax,(z-ELE_LOOP.cz)/ELE_LOOP.az));
+  let h=b - c.k*(b-c.r.p.y+1.1-.75*ford);                       // the channel bed sits about a metre under the water
+  const bd=Math.hypot(x-BEACH.x,z-BEACH.z); if (bd<4.5) h=mix(h, Math.max(BEACH.y, Math.min(h, BEACH.y+.25*(bd-1.2))), 1-smooth(2.2,4.5,bd));
+  const n=pathNear(x,z);                                         // the hidden route is eased into the slope so the tour glides smoothly
+  if (!onBridge(n.s)){ const k=1-smooth(.6, 3.2, n.d); h=mix(h, n.y-.02, k*.85); }
+  return h;
+}
+const eyeAt = (s, u=0) => { const p=pathAt(s); return [p.x+p.side[0]*u, p.y+EYE, p.z+p.side[2]*u]; };
+
+// where plants may not grow. low = ferns, grass and flowers, which may grow right up to the hidden route;
+// tall plants keep a little further off so the tour never passes through a trunk
+function clearance(x, z, low){
+  const n=pathNear(x,z), r=riverNear(x,z);
+  let c=Math.min(n.d-(low?.45:1.5), r.edge+.4);
+  if (onBridge(n.s) || n.s<1) c=Math.min(c, n.d-1.6);
+  c=Math.min(c, Math.hypot(x-TIGER_AT[0], z-TIGER_AT[1])-3.2, Math.hypot(x-BEACH.x, z-BEACH.z)-2.4);
+  const ex=(x-ELE_LOOP.cx)/(ELE_LOOP.ax), ez=(z-ELE_LOOP.cz)/(ELE_LOOP.az);
+  c=Math.min(c, (Math.abs(Math.hypot(ex,ez)-1))*ELE_LOOP.az-2.8);
+  for (const g of GLADES) c=Math.min(c, Math.hypot(x-g.x,z-g.z)-(low?g.r*.55:g.r));
+  return c;
+}
+
+// ================================================================ FOLDED PAPER: how every plant, rock, cloud and mountain is made
+// Nothing here uses a picture or a texture. Each object is a handful of flat triangles, arranged the way you would fold
+// paper: a leaf is a long strip with a raised centre crease (a "mountain fold"), so its two halves catch the light
+// differently and you see the fold. Example: leaf(F, base, direction, {len:1.4, wid:.4, fold:.3}) adds one folded leaf.
+// The GPU later gives every triangle ONE flat colour (no smoothing), which is what makes it read as paper.
+//
+// Materials (the 'mat' number stored on every corner) decide the colour family in the shaders:
+const MAT = { leaf:0, trunk:1, petal:2, centre:3, stem:4, rock:5, reed:6, cloud:7, mountain:8, path:9, splash:10, farwood:11, bridge:12, coconut:13,
+  root:15, slab:16, pave:22, snow:23, bamboo:17, rhodo:18, ginger:19, fernTrunk:20, moss:21 };
+
+class Fold {
+  constructor(){ this.P=[]; this.A=[]; this.I=[]; }
+  // one corner: position, material, sway weight (or bone number for animals), and (u,v) position on its leaf
+  v(p, mat, w, u=0, vv=0){ this.P.push(p[0],p[1],p[2]); this.A.push(mat,w,u,vv); return this.P.length/3-1; }
+  tri(a,b,c){ this.I.push(a,b,c); }
+  quad(a,b,c,d){ this.I.push(a,b,c, a,c,d); }
+  out(){ return {P:new Float32Array(this.P), A:new Float32Array(this.A), I:new Uint32Array(this.I)}; }
+  get tris(){ return this.I.length/3; }
+}
+
+// a folded leaf (also used for petals, fronds, reeds and splashes)
+// o: base point; dir: initial direction; len/wid: size; droop: how much it arcs down (radians, negative curls up);
+// fold: crease depth; serr: 0..1 saw-tooth edge (palm fronds, ferns); w0/w1: sway weight at base/tip
+function leaf(F, o, dir, q){
+  const segs=q.segs||5, len=q.len, wid=q.wid, droop=q.droop||0, fold=q.fold==null?.25:q.fold, serr=q.serr||0, mat=q.mat==null?MAT.leaf:q.mat;
+  const w0=q.w0==null?.5:q.w0, w1=q.w1==null?1:q.w1;
+  dir=V.norm(dir);
+  let side=V.cross(dir,[0,1,0]); side = V.len(side)<1e-3 ? [1,0,0] : V.norm(side);
+  const L=[], S=[], R=[]; let c=o.slice();
+  for (let i=0;i<=segs;i++){
+    const u=i/segs, th=droop*u;
+    // the direction tips downward about the leaf's side axis as we go out along it
+    const d=V.norm(V.add(V.mul(dir,Math.cos(th)), V.mul(V.cross(side,dir),-Math.sin(th))));
+    const n=V.norm(V.cross(side,d));
+    let hw=wid*.5*Math.pow(Math.sin(Math.PI*Math.min(1,u*.93+.07)),.7)*(q.taper?mix(1,.35,u):1);
+    if (serr && i%2===1 && i<segs) hw*=1-serr;
+    if (i===segs) hw=0;
+    const dn=V.mul(n,-fold*hw), w=mix(w0,w1,u);
+    L.push(F.v(V.add(V.add(c,V.mul(side,-hw)),dn), mat, w, u, -1));
+    S.push(F.v(c, mat, w, u, 0));
+    R.push(F.v(V.add(V.add(c,V.mul(side,hw)),dn), mat, w, u, 1));
+    if (i<segs) c=V.add(c,V.mul(d,len/segs));
+  }
+  for (let i=0;i<segs;i++){
+    F.tri(L[i],S[i],S[i+1]); F.tri(L[i],S[i+1],L[i+1]);
+    F.tri(S[i],R[i],R[i+1]); F.tri(S[i],R[i+1],S[i+1]);
+  }
+  return c;   // the tip
+}
+
+// a faceted tube through rings {c:[x,y,z], rx, ry}; 'sides' corners round. Used for trunks, stems and animal bodies.
+function tube(F, rings, sides, mat, w, a0=Math.PI/2, caps=true){
+  const n=rings.length, idx=[];
+  for (let i=0;i<n;i++){
+    const a=rings[Math.max(i-1,0)].c, b=rings[Math.min(i+1,n-1)].c, d=V.norm(V.sub(b,a));
+    const ref=Math.abs(d[1])>.9?[1,0,0]:[0,1,0];
+    const sd=V.norm(V.cross(d,ref)), up=V.cross(sd,d), r=rings[i], row=[];
+    const ww = r.w==null ? w : r.w;
+    for (let k=0;k<sides;k++){ const ang=a0+2*Math.PI*k/sides; row.push(F.v(V.add(r.c, V.add(V.mul(sd,Math.cos(ang)*r.rx), V.mul(up,Math.sin(ang)*r.ry))), r.mat==null?mat:r.mat, ww, i/(n-1), k%2)); }
+    idx.push(row);
+  }
+  for (let i=0;i<n-1;i++) for (let k=0;k<sides;k++){ const k2=(k+1)%sides; F.quad(idx[i][k], idx[i+1][k], idx[i+1][k2], idx[i][k2]); }
+  if (caps) for (const [i,ri] of [[0,rings[0]],[n-1,rings[n-1]]]){
+    if (ri.rx<1e-3) continue;
+    const c=F.v(ri.c, ri.mat==null?mat:ri.mat, ri.w==null?w:ri.w);
+    for (let k=0;k<sides;k++) F.tri(c, idx[i][k], idx[i][(k+1)%sides]);
+  }
+}
+// a box from a centre and three half-axes
+function box(F, c, X, Y, Z, mat, w){
+  const P=(sx,sy,sz)=>V.add(c,V.add(V.mul(X,sx),V.add(V.mul(Y,sy),V.mul(Z,sz))));
+  const q=(a,b,cc,d)=>F.quad(F.v(a,mat,w),F.v(b,mat,w),F.v(cc,mat,w),F.v(d,mat,w));
+  q(P(-1,1,-1),P(-1,1,1),P(1,1,1),P(1,1,-1)); q(P(-1,-1,1),P(-1,-1,-1),P(1,-1,-1),P(1,-1,1));
+  q(P(-1,-1,1),P(1,-1,1),P(1,1,1),P(-1,1,1)); q(P(1,-1,-1),P(-1,-1,-1),P(-1,1,-1),P(1,1,-1));
+  q(P(1,-1,1),P(1,-1,-1),P(1,1,-1),P(1,1,1)); q(P(-1,-1,-1),P(-1,-1,1),P(-1,1,1),P(-1,1,-1));
+}
+// a crumpled paper lump: an icosahedron with its corners pushed in and out (rocks, clouds, coconuts)
+const ICO = (() => { const t=(1+Math.sqrt(5))/2;
+  const v=[[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]].map(V.norm);
+  const f=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];
+  return {v,f}; })();
+function lump(F, c, s, jit, rnd, mat, w, flatBottom){
+  const id=ICO.v.map(p=>{ const k=1+(rnd()*2-1)*jit; let q=[c[0]+p[0]*s[0]*k, c[1]+p[1]*s[1]*k, c[2]+p[2]*s[2]*k]; if (flatBottom!=null) q[1]=Math.max(q[1], c[1]+flatBottom*s[1]); return F.v(q,mat,w); });
+  for (const f of ICO.f) F.tri(id[f[0]],id[f[1]],id[f[2]]);
+}
+
+// ---------------------------------------------------------------- the plant and scenery templates (built once)
+// Each template is made at "natural" size; every copy in the jungle gets its own turn, size and colour.
+function makePalm(seed){
+  const F=new Fold(), r=mulberry(seed), H=8, lean=.8+r()*.8;
+  const at=y=>[lean*(y/H)**2, y, .3*lean*(y/H)**3];
+  // trunk: stacked paper cones, each a little wider at the top, like a folded ring
+  for (let i=0;i<9;i++){
+    const y0=i*H/9, y1=(i+1)*H/9+.08, r0=.24-.1*i/9, w=(y0/H)**2*.55;
+    tube(F,[{c:at(y0),rx:r0*.82,ry:r0*.82,w},{c:at(y1),rx:r0*1.12,ry:r0*1.12,w:(y1/H)**2*.55}],5,MAT.trunk,0,i*.6,false);
+  }
+  const top=at(H+.1), nf=9+(r()*3|0);
+  for (let k=0;k<nf;k++){
+    const az=k/nf*Math.PI*2+r()*.4, el=.35+r()*.45;
+    leaf(F, top, [Math.cos(az)*Math.cos(el), Math.sin(el), Math.sin(az)*Math.cos(el)],
+      {len:3.4+r()*1.1, wid:.95, segs:7, droop:1.6+r()*.7, fold:.24, serr:.5, w0:.55, w1:1.25});
+  }
+  for (let k=0;k<3;k++){ const az=r()*6.28; leaf(F, top, [Math.cos(az)*.4,1,Math.sin(az)*.4], {len:2.1, wid:.6, segs:5, droop:.7, fold:.3, serr:.45, w0:.55, w1:1}); }
+  for (let k=0;k<3;k++){ const az=k*2.1+r(); lump(F, V.add(top,[Math.cos(az)*.22,-.35,Math.sin(az)*.22]), [.16,.16,.16], .15, r, MAT.coconut, .55, null); }
+  return F;
+}
+function makeTree(seed, H=10.5, leafK=1){
+  const F=new Fold(), r=mulberry(seed);
+  const bend=[r()*.8-.4, r()*.8-.4], at=y=>[bend[0]*(y/H)**2*2, y, bend[1]*(y/H)**2*2];
+  tube(F, [[0,.8],[.05,.5],[.24,.4],[.48,.33],[.71,.27],[1,.2]].map(([f,rr])=>({c:at(f*H),rx:rr*leafK,ry:rr*leafK,w:f*f*.3})), 7, MAT.trunk, 0, r()*3);
+  // buttress fins at the base
+  for (let k=0;k<4;k++){ const a=k*Math.PI/2+r()*.5, d=[Math.cos(a),0,Math.sin(a)];
+    F.tri(F.v(V.add(V.mul(d,.3*leafK),[0,2.2*leafK,0]),MAT.trunk,0), F.v(V.add(V.mul(d,1.3*leafK),[0,0,0]),MAT.trunk,0), F.v(V.add(V.mul(d,.2),[0,0,0]),MAT.trunk,0)); }
+  const ends=[];
+  const nb=3+(r()*2|0);
+  for (let k=0;k<nb;k++){
+    const y=H*(.52+.11*k)+r()*.6, az=k/nb*6.28+r()*.8, el=.45+r()*.35, L=(2.6+r()*1.2)*leafK;
+    const o=at(y), d=[Math.cos(az)*Math.cos(el), Math.sin(el), Math.sin(az)*Math.cos(el)], e=V.add(o,V.mul(d,L));
+    tube(F, [{c:o,rx:.16,ry:.16,w:(y/H)**2*.3},{c:e,rx:.07,ry:.07,w:.6}], 4, MAT.trunk, 0, 0);
+    ends.push(e);
+  }
+  ends.push(at(H));
+  for (const e of ends){
+    const nl=8+(r()*3|0);
+    for (let k=0;k<nl;k++){ const az=r()*6.28, el=-.1+r()*1.1;
+      leaf(F, V.add(e,[(r()-.5)*.5,(r()-.5)*.4,(r()-.5)*.5]), [Math.cos(az)*Math.cos(el), Math.sin(el), Math.sin(az)*Math.cos(el)],
+        {len:(1.3+r()*.6)*leafK, wid:.72*leafK, segs:4, droop:.9, fold:.26, w0:.6, w1:1.05}); }
+  }
+  // hanging vines: thin zig-zag paper ribbons
+  for (let k=0;k<3;k++){
+    const e=ends[k%ends.length], L=3+r()*3.5, n=9; let prev=null;
+    for (let i=0;i<=n;i++){ const y=e[1]-L*i/n, zx=(i%2?.12:-.12);
+      const a=F.v([e[0]+zx, y, e[2]-.05], MAT.stem, .6+.5*i/n), b=F.v([e[0]+zx, y, e[2]+.05], MAT.stem, .6+.5*i/n);
+      if (prev) F.quad(prev[0],prev[1],b,a); prev=[a,b]; }
+  }
+  return F;
+}
+function makeBanana(seed){
+  const F=new Fold(), r=mulberry(seed), n=5+(r()*2|0);
+  for (let k=0;k<n;k++){ const az=k/n*6.28+r()*.5, h=1+r()*.8, o=[Math.cos(az)*.12,0,Math.sin(az)*.12], top=[Math.cos(az)*.45,h,Math.sin(az)*.45];
+    tube(F,[{c:o,rx:.06,ry:.06,w:0},{c:top,rx:.04,ry:.04,w:.5}],3,MAT.stem,0,0,false);
+    leaf(F, top, [Math.cos(az)*.6, .9, Math.sin(az)*.6], {len:1.7+r()*.5, wid:.85, segs:6, droop:1.4+r()*.4, fold:.16, serr:r()<.4?.25:0, w0:.5, w1:1.1}); }
+  return F;
+}
+function makeFern(seed, broad){
+  const F=new Fold(), r=mulberry(seed), n=broad?6:7;
+  for (let k=0;k<n;k++){ const az=k/n*6.28+r()*.4, el=.75+r()*.45;
+    leaf(F, [Math.cos(az)*.05,0,Math.sin(az)*.05], [Math.cos(az)*Math.cos(el), Math.sin(el), Math.sin(az)*Math.cos(el)],
+      broad ? {len:.8+r()*.3, wid:.5, segs:4, droop:1.4, fold:.3, w0:.1, w1:.9}
+            : {len:1.1+r()*.4, wid:.36, segs:4, droop:2, fold:.3, serr:.5, w0:.1, w1:1}); }
+  return F;
+}
+function makeFlowers(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<4;k++){ const az=k*1.57+r(); leaf(F,[0,0,0],[Math.cos(az),.9,Math.sin(az)],{len:.45+r()*.2, wid:.15, segs:3, droop:1.2, fold:.3, w0:0, w1:.6}); }
+  for (let k=0;k<3;k++){
+    const az=k*2.1+r(), h=.45+r()*.45, base=[Math.cos(az)*.08,0,Math.sin(az)*.08], top=[Math.cos(az)*.22,h,Math.sin(az)*.22];
+    tube(F,[{c:base,rx:.012,ry:.012,w:0},{c:top,rx:.01,ry:.01,w:.7}],3,MAT.stem,0,0,false);
+    const np=6, rot=r()*6;
+    for (let p=0;p<np;p++){ const a=rot+p/np*6.28; leaf(F, top, [Math.cos(a), .75, Math.sin(a)], {len:.17+r()*.03, wid:.1, segs:2, droop:-.5, fold:.35, mat:MAT.petal, w0:.7, w1:.8}); }
+    tube(F,[{c:V.add(top,[0,-.01,0]),rx:.03,ry:.03,w:.7},{c:V.add(top,[0,.06,0]),rx:0,ry:0,w:.7}],4,MAT.centre,0,0,true);
+  }
+  return F;
+}
+function makeReeds(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<8;k++){ const az=r()*6.28, el=1.2+r()*.3; leaf(F,[Math.cos(az)*.1,0,Math.sin(az)*.1],[Math.cos(az)*Math.cos(el),Math.sin(el),Math.sin(az)*Math.cos(el)],{len:1.1+r()*.6, wid:.07, segs:3, droop:.5, fold:.2, mat:MAT.stem, w0:0, w1:1}); }
+  for (let k=0;k<3;k++){ const x=(r()-.5)*.3, z=(r()-.5)*.3, h=1.3+r()*.5;
+    tube(F,[{c:[x,0,z],rx:.012,ry:.012,w:0},{c:[x+.05,h,z],rx:.012,ry:.012,w:.8}],3,MAT.stem,0,0,false);
+    tube(F,[{c:[x+.05,h,z],rx:.04,ry:.04,w:.8},{c:[x+.055,h+.24,z],rx:.04,ry:.04,w:.9},{c:[x+.06,h+.36,z],rx:0,ry:0,w:.9}],5,MAT.reed,0); }
+  return F;
+}
+// tree fern: a slim shaggy trunk and a crown of long lacy fronds - typical of the wet hill forests of Arunachal
+function makeTreeFern(seed){
+  const F=new Fold(), r=mulberry(seed), H=3.2+r()*1.6, lean=[r()*.6-.3, r()*.6-.3], at=y=>[lean[0]*(y/H)**2, y, lean[1]*(y/H)**2];
+  for (let i=0;i<5;i++){ const y0=i*H/5, y1=(i+1)*H/5+.05; tube(F,[{c:at(y0),rx:.13,ry:.13,w:(y0/H)**2*.4},{c:at(y1),rx:.17,ry:.17,w:(y1/H)**2*.4}],5,MAT.fernTrunk,0,i*.7,false); }
+  const top=at(H), n=11;
+  for (let k=0;k<n;k++){ const az=k/n*6.28+r()*.3, el=.25+r()*.5;
+    leaf(F, top, [Math.cos(az)*Math.cos(el), Math.sin(el), Math.sin(az)*Math.cos(el)], {len:2.2+r()*.7, wid:.62, segs:6, droop:1.9, fold:.3, serr:.6, w0:.5, w1:1.2}); }
+  for (let k=0;k<3;k++){ const az=r()*6.28; leaf(F, top, [Math.cos(az)*.25,1,Math.sin(az)*.25], {len:.9, wid:.25, segs:3, droop:-1.6, fold:.3, serr:.5, w0:.5, w1:.8}); }  // curled fiddleheads
+  return F;
+}
+// bamboo clump: tall jointed culms leaning out, with sprays of narrow paper leaves near the top
+function makeBamboo(seed){
+  const F=new Fold(), r=mulberry(seed), n=6;
+  for (let k=0;k<n;k++){
+    const az=r()*6.28, rr=r()*.5, base=[Math.cos(az)*rr,0,Math.sin(az)*rr], H=7+r()*4, lean=.12+r()*.18;
+    const at=f=>[base[0]+Math.cos(az)*lean*H*f*f, H*f, base[2]+Math.sin(az)*lean*H*f*f];
+    tube(F,[0,.33,.66,1].map((f,i)=>({c:at(f),rx:.065*(1-.4*f),ry:.065*(1-.4*f),w:f*f*.9})),5,MAT.bamboo,0,k,false);
+    for (let j=0;j<5;j++){ const f=.55+j*.1, o=at(f), a2=az+(r()-.5)*2.5;
+      for (let q=0;q<2;q++) leaf(F, o, [Math.cos(a2+q*.5), -.1+r()*.4, Math.sin(a2+q*.5)], {len:.55+r()*.2, wid:.11, segs:2, droop:.5, fold:.2, w0:.8, w1:1.1}); }
+  }
+  return F;
+}
+// rhododendron: a woody shrub with leathery leaf rosettes and red-pink flower trusses
+function makeRhodo(seed){
+  const F=new Fold(), r=mulberry(seed), nb=5;
+  for (let k=0;k<nb;k++){
+    const az=k/nb*6.28+r()*.6, h=1.1+r()*1.1, e=[Math.cos(az)*(.4+r()*.5), h, Math.sin(az)*(.4+r()*.5)];
+    tube(F,[{c:[0,0,0],rx:.05,ry:.05,w:0},{c:e,rx:.025,ry:.025,w:.6}],4,MAT.trunk,0,0,false);
+    for (let q=0;q<5;q++){ const a=q/5*6.28; leaf(F, e, [Math.cos(a), -.15, Math.sin(a)], {len:.4, wid:.15, segs:2, droop:.4, fold:.3, w0:.6, w1:.8}); }
+    for (let q=0;q<3;q++){ const a=q/3*6.28+r(), c=V.add(e,[Math.cos(a)*.07,.08,Math.sin(a)*.07]);
+      for (let p=0;p<5;p++){ const b=p/5*6.28; leaf(F, c, [Math.cos(b)*.8+Math.cos(a)*.5, .7, Math.sin(b)*.8+Math.sin(a)*.5], {len:.13, wid:.09, segs:1, droop:-.3, fold:.3, mat:MAT.rhodo, w0:.7, w1:.8}); } }
+  }
+  return F;
+}
+// wild ginger: tall leafy stems with long alternate leaves and a red flower spike
+function makeGinger(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<5;k++){
+    const az=r()*6.28, h=1.3+r()*.9, b=[Math.cos(az)*.15,0,Math.sin(az)*.15], t=[Math.cos(az)*.4,h,Math.sin(az)*.4];
+    tube(F,[{c:b,rx:.02,ry:.02,w:0},{c:t,rx:.015,ry:.015,w:.7}],3,MAT.stem,0,0,false);
+    for (let j=0;j<5;j++){ const f=.35+j*.13, o=V.lerp(b,t,f), a=az+(j%2?1.6:-1.6); leaf(F,o,[Math.cos(a),.35,Math.sin(a)],{len:.55+r()*.2, wid:.16, segs:2, droop:1, fold:.25, w0:.3+f*.5, w1:.9}); }
+    if (k<2) tube(F,[{c:t,rx:.04,ry:.04,w:.7},{c:V.add(t,[0,.18,0]),rx:.035,ry:.035,w:.7},{c:V.add(t,[0,.3,0]),rx:0,ry:0,w:.7}],5,MAT.ginger,0);
+  }
+  return F;
+}
+// a tuft of grass: a few narrow paper blades
+function makeGrass(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<6;k++){ const az=r()*6.28, el=1.05+r()*.35; leaf(F,[Math.cos(az)*.05,0,Math.sin(az)*.05],[Math.cos(az)*Math.cos(el),Math.sin(el),Math.sin(az)*Math.cos(el)],{len:.35+r()*.3, wid:.06, segs:1, droop:.4, fold:.25, mat:MAT.stem, w0:0, w1:1.2}); }
+  return F;
+}
+// a mossy fallen log
+function makeLog(seed){
+  const F=new Fold(), r=mulberry(seed), L=3+r()*2.5;
+  tube(F,[0,.25,.5,.75,1].map(f=>({c:[(f-.5)*L, .22+.05*Math.sin(f*7), .1*Math.sin(f*5)], rx:.24-.05*f, ry:.22-.04*f})), 6, MAT.trunk, 0, .3);
+  for (let i=0;i<5;i++) lump(F,[(r()-.5)*L*.8,.38,(r()-.5)*.15],[.35,.1,.22],.3,r,MAT.moss,0,-.5);
+  return F;
+}
+function makeRock(seed){ const F=new Fold(), r=mulberry(seed); lump(F,[0,.25,0],[1,.75,1],.28,r,MAT.rock,0,-.45); if (r()<.6) lump(F,[.7,.15,.3],[.55,.45,.5],.3,r,MAT.rock,0,-.4); return F; }
+function makeSplash(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<7;k++){ const az=k/7*6.28+r()*.5; leaf(F,[Math.cos(az)*.1,0,Math.sin(az)*.1],[Math.cos(az)*.5,1,Math.sin(az)*.5],{len:.45+r()*.5, wid:.32, segs:2, droop:-.3, fold:.35, mat:MAT.splash, w0:.2, w1:1}); }
+  return F;
+}
+// a cloud: a few thin sheets of crumpled white paper, each a disc whose corners are pushed up and down a little
+function makeCloud(seed){
+  const F=new Fold(), r=mulberry(seed);
+  for (let k=0;k<4;k++){
+    const cx=(r()-.5)*12, cy=k*.9+r()*.5, cz=(r()-.5)*5, R=5+r()*5*(1-Math.abs(cx)/10), ex=1.3+r()*.5;
+    const rings=[[0,1],[.45,7],[.8,11],[1,15]], ids=[];
+    for (const [f,n] of rings){ const row=[]; for (let i=0;i<n;i++){ const a=i/n*6.283+r()*.25, rr=R*f*(f<1?1:.85+r()*.3);
+        row.push(F.v([cx+Math.cos(a)*rr*ex, cy+(r()-.5)*R*.16*(1-f*.4)+(f<.9?R*.06*(1-f):0), cz+Math.sin(a)*rr*.7], MAT.cloud, 0, f, 0)); }
+      ids.push(row); }
+    for (let i=0;i<rings.length-1;i++){ const A=ids[i], B=ids[i+1];
+      for (let j=0;j<B.length;j++){ const b0=B[j], b1=B[(j+1)%B.length], a0=A[Math.floor(j*A.length/B.length)], a1=A[Math.floor((j+1)*A.length/B.length)%A.length];
+        F.tri(a0,b0,b1); if (a0!==a1) F.tri(a0,b1,a1); } }
+  }
+  return F;
+}
+
+// ---------------------------------------------------------------- one-off scenery: mountains, far forest, bridge, path, bird perches
+function makeScenery(){
+  const F=new Fold(), r=mulberry(1234);
+  // ---- the backdrop, made like a paper theatre: rows of mountains cut from lavender card, each row paler and further
+  // away, with white paper snow caps glued along the high peaks; nearer, a dark green card cut into a line of tree-tops.
+  // Example: the furthest row stands 520 m away and its peaks reach 240 m; a cap covers any peak above its snowline.
+  const card=(R, a0, a1, step, top, bot, mat, row, rowOff=0)=>{
+    let prev=null;
+    for (let a=a0; a<=a1+1e-6; a+=step){
+      const x=Math.sin(a)*R, z=-Math.cos(a)*R-20, t=top(a), b=bot(a, x, z);
+      const pt=[F.v([x,Math.max(t,b),z],mat,0,1,row), F.v([x,b,z],mat,0,0,row)];
+      if (prev) F.quad(prev[1],pt[1],pt[0],prev[0]); prev=pt;
+    }
+  };
+  const ridge=(a0,a1,h0,h1,seed)=>{ const q=mulberry(seed), P=[]; let a=a0; while (a<a1+.1){ P.push([a, mix(h0,h1,q()*q()*.6+q()*.4)]); a+=.035+q()*.07; P.push([a, mix(h0,h1,.15+q()*.3)]); a+=.03+q()*.05; }
+    return ang=>{ let i=0; while (i<P.length-2 && P[i+1][0]<ang) i++; const [x0,y0]=P[i], [x1,y1]=P[i+1]; return mix(y0,y1,clamp((ang-x0)/(x1-x0),0,1)); }; };
+  // Each row is a closed ring all the way round the valley, so no card ever ends in a cut edge. The ridge line is joined
+  // back onto its own start, and an "envelope" makes the peaks tallest ahead (towards the falls) and gentler behind,
+  // where they dip into saddles instead of stopping. Example: the far row's peaks reach 240 m ahead but about 140 m behind.
+  const TAU=Math.PI*2;
+  const ring=(h0,h1,seed,back)=>{ const raw=ridge(0,TAU,h0,h1,seed), v0=raw(0);
+    return a=>{ a=((a%TAU)+TAU)%TAU; const seam=smooth(TAU-.25,TAU,a);           // blend the last stretch into the first peak
+      const env=mix(back,1,.5+.5*Math.cos(a)); return mix(raw(a),v0,seam)*env; }; };
+  const rows=[[520,140,240,2,11,.58],[400,90,165,1,12,.62],[300,50,104,0,13,.6]];
+  for (const [R,h0,h1,row,seed,back] of rows){
+    const top=ring(h0,h1,seed,back), snow=h0+(h1-h0)*(row===0?.42:.28);
+    card(R, 0, TAU, .012, top, ()=>-14, MAT.mountain, row);
+    // snow caps: a white strip just in front, following the ridge down to a zig-zag snowline
+    card(R-2.5, 0, TAU, .012, top, (a)=>{ const t=top(a); return t>snow ? Math.max(snow-4, t-(12+.45*(t-snow))*(1+.35*Math.sin(a*97))) : t; }, MAT.snow, row);
+  }
+  // the far tree line: one card all the way round, its top cut into rounded crowns
+  { const q=mulberry(55), bumps=[]; for (let a=0;a<6.3;a+=.04+q()*.04) bumps.push([a, .02+q()*.03, 9+q()*12]);
+    const top=a=>{ let h=6; for (const [c,w,bh] of bumps){ const d=Math.abs(((a-c+9.42)%6.283)-3.14); if (d<w) h=Math.max(h, bh*Math.sqrt(1-(d/w)**2)); } return h; };
+    for (const [R,off] of [[205,0],[188,.017]]) card(R, 0, 6.283, .006, a=>{ const x=Math.sin(a)*R, z=-Math.cos(a)*R-20; return baseH(x,z)-2+top(a+off); }, (a,x,z)=>baseH(x,z)-4, MAT.farwood, 0); }
+  // ---- the living root bridge (after the bridges of the Khasi and Jaintia hills): the aerial roots of two old rubber
+  // figs, trained across the gorge for generations. A packed stone walkway rests on a mat of roots; tangled root walls rise
+  // on both sides into thick twisted handrails; mossy limbs arch overhead and thin roots hang down from them.
+  const sb0=BRIDGE.s0, sb1=BRIDGE.s1, rr=mulberry(4321);
+  const deckY=s=>{ const p=pathAt(clamp(s,0,PATH_LEN)); return s<sb0 ? p.y-.12-(sb0-s)*.5 : s>sb1 ? p.y-.12-(s-sb1)*.5 : p.y-.12; };
+  const at=(s,u,dy)=>{ const p=pathAt(clamp(s,0,PATH_LEN)); return [p.x+p.side[0]*u, deckY(s)+dy, p.z+p.side[2]*u]; };
+  const root=(pts,r0,r1,sides=5)=>tube(F, pts.map((c,i)=>({c, rx:mix(r0,r1,i/(pts.length-1)), ry:mix(r0,r1,i/(pts.length-1))*.85})), sides, MAT.root, 0, rr()*6, false);
+  // the root mat under the walkway
+  for (let k=0;k<14;k++){ const u=(k/13-.5)*1.75, ph=rr()*6, rad=.05+rr()*.05, pts=[];
+    for (let s=sb0-3; s<=sb1+3; s+=.6) pts.push(at(s, u+.07*Math.sin(s*1.1+ph), -.06-.05*Math.abs(u)+.03*Math.sin(s*1.9+ph)));
+    root(pts, rad, rad*.8); }
+  for (let s=sb0-.5; s<=sb1+.5; s+=.55) root([at(s,-.95,-.2),at(s+.3,0,-.3),at(s+.6,.95,-.2)], .035, .035, 4);
+  // the walkway: irregular flat stones laid edge to edge
+  for (let s=sb0-1.6; s<=sb1+1.6; s+=.34){ const n=2+(rr()*2|0); let u=-.62;
+    for (let i=0;i<n;i++){ const w=(1.24/n)*(.8+rr()*.35), p=pathAt(clamp(s,0,PATH_LEN)), c=at(s+(rr()-.5)*.08, u+w/2, .03+rr()*.015);
+      const rot=(rr()-.5)*.5, X=V.add(V.mul(p.side,Math.cos(rot)*w*.47), V.mul(p.t,Math.sin(rot)*w*.47)), Z=V.add(V.mul(p.t,Math.cos(rot)*.15), V.mul(p.side,-Math.sin(rot)*.15));
+      box(F, c, X, [0,.03,0], Z, MAT.pave, 0); u+=w; } }
+  // tangled root walls and twisted handrails on both sides
+  for (const sd of [-1,1]){
+    const rail=(s,dy=0)=>{ const p=at(s, sd*(1.0+.9*(smooth(sb0+1,sb0-3.4,s)*(sd<0?1:0)+smooth(sb1-1,sb1+3.4,s)*(sd>0?1:0))), 1.0+dy), lift=2.2*(smooth(sb0+1,sb0-3.4,s)*(sd<0?1:-.3)+smooth(sb1-1,sb1+3.4,s)*(sd>0?1:-.3)); return [p[0],p[1]+lift,p[2]]; };
+    for (let q=0;q<5;q++){ const pts=[]; for (let s=sb0-3.4; s<=sb1+3.4; s+=.4){ const c=rail(s), a=s*1.9+q*1.26; pts.push([c[0]+Math.cos(a)*.07*sd, c[1]+Math.sin(a)*.07, c[2]]); } root(pts,.04,.035,4); }
+    for (const h of [.42,.68]){ const pts=[]; for (let s=sb0-1; s<=sb1+1; s+=.6) pts.push(at(s, sd*(.98+.04*Math.sin(s*3)), h+.06*Math.sin(s*2.3+h*9))); root(pts,.03,.03,4); }
+    for (let s=sb0-1.2; s<=sb1+1.2; s+=.42){
+      const dir=rr()<.5?-1:1, len=.6+rr()*1.1, top=rail(s+dir*len, -.05);
+      root([at(s, sd*.88, -.04), V.lerp(at(s,sd*.95,.5),top,.5).map((v,i)=>v+(i===1?0:(rr()-.5)*.08)), top], .035, .022, 4);
+      if (rr()<.45) root([at(s+.2, sd*.9, -.04), rail(s+.2,-.05)], .028, .02, 3);
+    }
+  }
+  // the two fig trees: trunks of fused roots, wide crowns, limbs arching over the bridge with hanging roots
+  const SOLID=[];   // [x, z, radius] of every fixed trunk in the scenery, for the walking collision
+  const FIGS=[[sb0-3.4,-1],[sb1+3.4,1]].map(([s,sd])=>{ const p=pathAt(clamp(s,0,PATH_LEN)), o=sd*2.6, x=p.x+p.side[0]*o, z=p.z+p.side[2]*o; return [x, groundH(x,z), z, sd]; });
+  FIGS.forEach(([x,y,z,sd],fi)=>{ SOLID.push([x,z,1.15]);
+    for (let k=0;k<9;k++){ const a=k/9*6.28, b=[x+Math.cos(a)*1.5, y-.3, z+Math.sin(a)*1.5];
+      root([b,[x+Math.cos(a+.6)*.7,y+3,z+Math.sin(a+.6)*.7],[x+Math.cos(a+1.1)*.45,y+7,z+Math.sin(a+1.1)*.45],[x+Math.cos(a+1.4)*.7,y+11,z+Math.sin(a+1.4)*.7]], .26, .1, 5); }
+    // the root tangle where the tree feeds the bridge
+    const sEnd = fi===0 ? sb0 : sb1, dirS = fi===0 ? 1 : -1;
+    for (let k=0;k<26;k++){ const tgt=at(sEnd+dirS*(rr()*2.6-.4), sd*(.85+rr()*.35), -.15+rr()*.55), src=[x+(rr()-.5)*1.4, y+.4+rr()*1.8, z+(rr()-.5)*1.4];
+      root([src, V.add(V.lerp(src,tgt,.5),[(rr()-.5)*.4,.3+rr()*.4,(rr()-.5)*.4]), tgt], .07+rr()*.06, .04, 5); }
+    for (let k=0;k<7;k++){ const a=k/7*6.28+rr(), e=[x+Math.cos(a)*(3.5+rr()*1.5), y+10.5+rr()*2, z+Math.sin(a)*(3.5+rr()*1.5)];
+      root([[x,y+8+k*.3,z],V.lerp([x,y+8+k*.3,z],e,.5).map((v,i)=>i===1?v+.6:v),e],.17,.07,5);
+      for (let q=0;q<9;q++){ const b=rr()*6.28, el=rr()*.9; leaf(F, V.add(e,[(rr()-.5)*.7,(rr()-.5)*.4,(rr()-.5)*.7]), [Math.cos(b)*Math.cos(el),Math.sin(el),Math.sin(b)*Math.cos(el)], {len:1+rr()*.4, wid:.55, segs:3, droop:.7, fold:.2, w0:0, w1:0}); } }
+    // two great limbs reach across over the walkway, mossy, trailing thin roots
+    for (let k=0;k<2;k++){
+      const s0=fi===0? sb0+2+k*4 : sb1-2-k*4, far=at(s0+dirS*3, -sd*(2.8+rr()), 0), start=[x,y+6+k*1.5,z];
+      const mid=V.lerp(start,far,.5); mid[1]=Math.max(start[1],deckY(s0))+2.5+rr();
+      const pts=[]; for (let f=0;f<=1.001;f+=.125){ const a=V.lerp(V.lerp(start,mid,f),V.lerp(mid,[far[0],deckY(s0)+3+rr(),far[2]],f),f); pts.push(a); }
+      root(pts,.24,.1,6);
+      for (let f=.15;f<.95;f+=.18){ const c=V.lerp(pts[Math.floor(f*8)],pts[Math.min(8,Math.floor(f*8)+1)],.5); lump(F,V.add(c,[0,.18,0]),[.35,.12,.3],.35,rr,MAT.moss,0,-.6);
+        const L=1.2+rr()*2.2, d=[c[0]+(rr()-.5)*.3, c[1]-L, c[2]+(rr()-.5)*.3]; root([c,V.lerp(c,d,.5),d],.025,.008,3); }
+    }
+    for (let q=0;q<6;q++) lump(F,[x+(rr()-.5)*2,y+.3+rr()*4,z+(rr()-.5)*2],[.4,.25,.4],.35,rr,MAT.moss,0,null);
+  });
+  // the gibbons' boughs: two long branches across the hidden route, between pairs of tall trunks (new places each visit)
+  const GIB=[];
+  for (const [a0,a1] of [[18,110],[160,PATH_LEN-10]]){
+    const gs=a0+vrand()*(a1-a0), gp=pathAt(gs);
+    const A=[gp.x-gp.side[0]*4.2, 0, gp.z-gp.side[2]*4.2], B=[gp.x+gp.side[0]*4.6, 0, gp.z+gp.side[2]*4.6]; A[1]=groundH(A[0],A[2]); B[1]=groundH(B[0],B[2]);
+    for (const T of [A,B]) SOLID.push([T[0],T[2],.42]);
+    for (const T of [A,B]) tube(F,[{c:T,rx:.38,ry:.38},{c:V.add(T,[0,6,0]),rx:.3,ry:.3},{c:V.add(T,[0,13,0]),rx:.18,ry:.18}],7,MAT.trunk,0,0);
+    const h=gp.y+5.4, pts=[]; for (let f=0;f<=1.001;f+=.125) pts.push({c:[mix(A[0],B[0],f), h-.6*Math.sin(Math.PI*f), mix(A[2],B[2],f)], rx:.11, ry:.11}); tube(F,pts,5,MAT.trunk,0,0);
+    for (const f of [.3,.62]) GIB.push({p:[mix(A[0],B[0],f), h-.6*Math.sin(Math.PI*f)-.08, mix(A[2],B[2],f)], s:gs, yaw:Math.atan2(-gp.t[2],gp.t[0])});
+    for (const T of [A,B]) for (let q=0;q<10;q++){ const b=rr()*6.28, e=V.add(T,[Math.cos(b)*2.5,12+rr()*2,Math.sin(b)*2.5]); leaf(F,e,[Math.cos(b),.3,Math.sin(b)],{len:1.6, wid:.75, segs:3, droop:.8, fold:.25, w0:0, w1:0}); }
+  }
+  // mossy logs in some of the clearings (red pandas like to sit on them)
+  const LOGS=[];
+  for (const g of GLADES.filter((_,i)=>i%5===2)){ g.used='log'; const p=pathAt(g.s), y=groundH(g.x,g.z);
+    tube(F,[-1,-.5,0,.5,1].map(f=>{ const x=g.x+p.t[0]*f*2, z=g.z+p.t[2]*f*2; return {c:[x, Math.min(groundH(x,z),y+.3)+.2, z], rx:.3, ry:.28}; }),6,MAT.trunk,0,.3);
+    for (let i=0;i<3;i++){ const x=g.x+p.t[0]*(i-1)*1.1, z=g.z+p.t[2]*(i-1)*1.1; lump(F,[x, Math.min(groundH(x,z),y+.3)+.45, z],[.4,.1,.3],.3,rr,MAT.moss,0,-.5); }
+    LOGS.push({top:[g.x, y+.5, g.z], dir:p.t, s:g.s}); }
+  // bird perches: bare paper branches at random places beside the route, where hornbills, macaws and toucans sit
+  const PERCH=[];
+  for (let i=0;i<6;i++){
+    const s=10+(i+vrand()*.8)*(PATH_LEN-24)/6, side=vrand()<.5?-1:1, h=2.9+vrand()*1.2;
+    if (s>BRIDGE.s0-4 && s<BRIDGE.s1+4) continue;
+    const p=pathAt(s), off=side*3.4, b=[p.x+p.side[0]*off, 0, p.z+p.side[2]*off]; b[1]=groundH(b[0],b[2]);
+    const top=[b[0],b[1]+h,b[2]];
+    tube(F,[{c:b,rx:.14,ry:.14},{c:top,rx:.08,ry:.08}],5,MAT.trunk,0); SOLID.push([b[0],b[2],.16]);
+    const toward=V.norm([-p.side[0]*side,0,-p.side[2]*side]);
+    for (const k of [-1,1]){ const d=V.norm(V.add(V.mul(toward,.6),V.add(V.mul(p.t,k*.8),[0,.25,0]))), e=V.add([top[0],top[1]-.4,top[2]],V.mul(d,1.1));
+      tube(F,[{c:[top[0],top[1]-.4,top[2]],rx:.06,ry:.06},{c:e,rx:.035,ry:.035}],4,MAT.trunk,0);
+      PERCH.push({p:[e[0]-d[0]*.25, e[1]+.06, e[2]-d[2]*.25], yaw:Math.atan2(toward[2],toward[0]), s}); }
+  }
+  return {F, PERCH, GIB, LOGS, SOLID};
+}
+
+// ================================================================ ORIGAMI ANIMALS
+// The animals are folded, not modelled. Every part is a few flat panels of paper:
+//  - the BODY is a "tent": a sheet folded over a sharp ridge along the back, with flat sides and an open underside
+//    (look underneath and you see the white inside of the paper);
+//  - the HEAD and NECK are "diamond" folds that taper to a point at the nose;
+//  - LEGS and TAILS are narrow strips with a V-fold down their length; a trunk or a snake is PLEATED like an accordion;
+//  - EARS, TUSKS and WINGS are single flat flaps.
+// Each panel carries its own corner coordinates, so the shader can draw a fine crease line along every fold and edge.
+// Each part is fixed to a BONE, a hinge it turns around (example: the tiger's head turns about its neck at x=.6, y=.95).
+// Local axes: +x is the way the animal faces, +y is up, +z is its right side. Sizes are in metres.
+
+// one flat panel (four corners) or flap (three corners). 'inside' is a point inside the animal: the coloured side of
+// the paper always faces away from it, so the white side shows only on the inside or underside.
+function pQuad(F, a,b,c,d, mat, bone, inside){
+  if (inside){ const n=V.cross(V.sub(b,a),V.sub(c,a)), m=V.mul(V.add(V.add(a,b),V.add(c,d)),.25); if (V.dot(n,V.sub(m,inside))<0){ const t=b; b=d; d=t; } }
+  F.quad(F.v(a,mat,bone,0,0),F.v(b,mat,bone,1,0),F.v(c,mat,bone,1,1),F.v(d,mat,bone,0,1));
+}
+function pTri(F, a,b,c, mat, bone, inside){
+  if (inside){ const n=V.cross(V.sub(b,a),V.sub(c,a)), m=V.mul(V.add(V.add(a,b),c),1/3); if (V.dot(n,V.sub(m,inside))<0){ const t=b; b=c; c=t; } }
+  F.tri(F.v(a,mat,bone,2,0),F.v(b,mat,bone,3,0),F.v(c,mat,bone,2,1));
+}
+// a cross-section frame at each ring of a fold: along the part, 'up' toward a hint direction, 'side' across
+function frames(cs, upHint){ return cs.map((c,i)=>{ const a=cs[Math.max(i-1,0)], b=cs[Math.min(i+1,cs.length-1)], d=V.norm(V.sub(b,a));
+  const up=V.norm(V.sub(upHint, V.mul(d, V.dot(upHint,d)))); return {d, up, side:V.cross(d,up)}; }); }
+// tent fold: rings {c, w, h}; ridge on top, flat sides flaring slightly, open underneath
+function pTent(F, rings, mat, bone, upHint=[0,1,0]){
+  const fr=frames(rings.map(r=>r.c), upHint);
+  const P=rings.map((r,i)=>{ const f=fr[i], at=(sx,sy)=>V.add(r.c, V.add(V.mul(f.side,sx*r.w), V.mul(f.up,sy*r.h)));
+    return [at(-1.12,-1), at(-.78,.38), at(0,1.12), at(.78,.38), at(1.12,-1)]; });
+  for (let i=0;i<rings.length-1;i++){ const ins=V.lerp(rings[i].c, rings[i+1].c, .5); ins[1]-=.01;
+    for (let k=0;k<4;k++) pQuad(F, P[i][k], P[i+1][k], P[i+1][k+1], P[i][k+1], typeof mat==='function'?mat(i):mat, bone, V.add(ins, V.mul(fr[i].up, -rings[i].h*.6))); }
+  for (const [i,dir] of [[0,1],[rings.length-1,-1]]){ const r=P[i], ins=V.add(rings[i].c, V.mul(fr[i].d, dir*.05));
+    if (rings[i].w<1e-3) continue; pTri(F, r[0],r[1],r[2], typeof mat==='function'?mat(i):mat, bone, ins); pTri(F, r[2],r[3],r[4], typeof mat==='function'?mat(i):mat, bone, ins); pTri(F, r[0],r[2],r[4], typeof mat==='function'?mat(i):mat, bone, ins); }
+}
+// diamond fold: rings {c, w, h}; four flat faces, closed at both ends (heads, necks, bodies of small animals)
+function pDiamond(F, rings, mat, bone, upHint=[0,1,0]){
+  const fr=frames(rings.map(r=>r.c), upHint);
+  const P=rings.map((r,i)=>{ const f=fr[i], at=(sx,sy)=>V.add(r.c, V.add(V.mul(f.side,sx*r.w), V.mul(f.up,sy*r.h))); return [at(0,1), at(1,0), at(0,-1), at(-1,0)]; });
+  for (let i=0;i<rings.length-1;i++){ const ins=V.lerp(rings[i].c, rings[i+1].c, .5), m=typeof mat==='function'?mat(i):mat;
+    for (let k=0;k<4;k++){ const k2=(k+1)%4; if (rings[i+1].w<1e-3) pTri(F, P[i][k], P[i][k2], P[i+1][0], m, bone, ins); else pQuad(F, P[i][k], P[i+1][k], P[i+1][k2], P[i][k2], m, bone, ins); } }
+  for (const [i,dir] of [[0,1],[rings.length-1,-1]]){ if (rings[i].w<1e-3) continue; const r=P[i], ins=V.add(rings[i].c, V.mul(fr[i].d, dir*.05)), m=typeof mat==='function'?mat(Math.max(0,i-1)):mat;
+    pTri(F, r[0],r[1],r[2], m, bone, ins); pTri(F, r[2],r[3],r[0], m, bone, ins); }
+}
+// a narrow strip with a V-fold down its length (legs, tails, arms); 'out' is the way the fold bulges.
+// pleat>0 adds accordion pleats across it (trunks, snakes)
+function pStrip(F, pts, widths, mat, bone, out, fold=.35, pleat=0){
+  // folded double, like real origami legs: a flattened diamond, coloured on both sides, creased down the middle
+  const fr=frames(pts, out);
+  const S=pts.map((c,i)=>{ const w=widths[i], f=fr[i], pc=V.add(c, V.mul(f.up, pleat*w*(i%2?1:-1)));
+    return [V.add(pc,V.mul(f.side,-w)), V.add(pc,V.mul(f.up,w*fold)), V.add(pc,V.mul(f.side,w)), V.add(pc,V.mul(f.up,-w*fold*.55))]; });
+  for (let i=0;i<pts.length-1;i++){ const ins=V.lerp(pts[i],pts[i+1],.5);
+    for (let k=0;k<4;k++){ const k2=(k+1)%4; if (widths[i+1]<1e-4) pTri(F, S[i][k], S[i][k2], S[i+1][1], mat, bone, ins); else pQuad(F, S[i][k], S[i+1][k], S[i+1][k2], S[i][k2], mat, bone, ins); } }
+  if (widths[0]>1e-4){ const ins=V.add(pts[0], V.mul(fr[0].d,.02)); pTri(F,S[0][0],S[0][1],S[0][2],mat,bone,ins); pTri(F,S[0][2],S[0][3],S[0][0],mat,bone,ins); }
+}
+const R3=(x,y,z)=>[x,y,z];
+
+function makeTiger(){
+  const F=new Fold(), body=[0,.75,0];
+  pTent(F, [[-.86,.83,.12,.14],[-.62,.85,.24,.27],[-.2,.81,.25,.28],[.22,.85,.26,.3],[.55,.9,.24,.3],[.7,.93,.15,.2]].map(([x,y,w,h])=>({c:[x,y,0],w,h})), 0, 0);
+  // head: a diamond fold tapering to the nose; the last fold of the muzzle is white
+  pDiamond(F, [[.58,.97,.13,.15],[.8,1.0,.19,.18],[.98,.97,.16,.15],[1.12,.91,.09,.08],[1.21,.88,0,0]].map(([x,y,w,h])=>({c:[x,y,0],w,h})), i=>i>=2?1:0, 1);
+  for (const sg of [-1,1]){
+    pTri(F, R3(.76,1.09,sg*.07), R3(.84,1.25,sg*.13), R3(.9,1.1,sg*.15), 0, 1, [.8,1,0]);                              // ear
+    pTri(F, R3(.95,1.03,sg*.125), R3(1.01,1.005,sg*.115), R3(.95,1.0,sg*.14), 2, 1, [.9,1,0]);                       // eye
+    pTri(F, R3(.88,.95,sg*.19), R3(1.0,.86,sg*.15), R3(.8,.84,sg*.16), 1, 1, [.9,.92,0]);                            // white cheek flap
+    pStrip(F, [R3(.45,.82,sg*.16),R3(.47,.44,sg*.17),R3(.5,.07,sg*.17),R3(.62,.02,sg*.17)], [.09,.06,.055,.035], 0, sg<0?2:3, [0,0,sg]);
+    pStrip(F, [R3(-.6,.82,sg*.16),R3(-.72,.44,sg*.17),R3(-.62,.07,sg*.17),R3(-.5,.02,sg*.17)], [.11,.06,.055,.035], 0, sg<0?4:5, [0,0,sg]);
+  }
+  pStrip(F, [R3(-.82,.86,0),R3(-1.05,.76,0),R3(-1.24,.7,0)], [.05,.04,.035], 0, 6, [0,1,0], .5);
+  pStrip(F, [R3(-1.24,.7,0),R3(-1.5,.72,0),R3(-1.7,.82,0),R3(-1.82,.93,0)], [.035,.032,.028,0], 0, 7, [0,1,0], .5);
+  return { F, bones:[
+    {p:[0,.85,0], parent:-1}, {p:[.6,.95,0], parent:0},
+    {p:[.45,.8,-.16], parent:0}, {p:[.45,.8,.16], parent:0}, {p:[-.6,.8,-.16], parent:0}, {p:[-.6,.8,.16], parent:0},
+    {p:[-.8,.86,0], parent:0}, {p:[-1.24,.7,0], parent:6} ],
+    pal:['#e8792a','#f4efe4','#1d1a17','#e8792a'], stripes:1 };
+}
+
+function makeElephant(){
+  const F=new Fold();
+  pTent(F, [[-1.58,2.2,.42,.48],[-1.28,2.32,.84,.86],[-.6,2.38,.98,.92],[.2,2.44,.98,.94],[.85,2.45,.86,.9],[1.22,2.42,.62,.76]].map(([x,y,w,h])=>({c:[x,y,0],w,h})), 0, 0);
+  pDiamond(F, [[1.08,2.66,.48,.6],[1.42,2.86,.58,.7],[1.82,2.78,.5,.62],[2.06,2.45,.38,.46],[2.13,2.12,.28,.3]].map(([x,y,w,h])=>({c:[x,y,0],w,h})), 0, 1);
+  // the trunk: three hinged pieces of an accordion-pleated strip
+  const tr=(a,b,w0,w1,n)=>{ const P=[], W=[]; for (let i=0;i<=n;i++){ const f=i/n; P.push(V.lerp(a,b,f)); W.push(mix(w0,w1,f)); } return [P,W]; };
+  { const [P,W]=tr([2.1,2.15,0],[2.24,1.55,0],.26,.21,3); pStrip(F,P,W,0,2,[1,0,0],.4,.12); }
+  { const [P,W]=tr([2.24,1.55,0],[2.3,.95,0],.21,.16,3); pStrip(F,P,W,0,3,[1,0,0],.4,.12); }
+  { const [P,W]=tr([2.3,.95,0],[2.45,.35,0],.16,.1,3); P.push([2.55,.28,0]); W.push(.07); pStrip(F,P,W,0,4,[1,0,0],.4,.12); }
+  for (const sg of [-1,1]){
+    pStrip(F, [R3(2.02,2.0,sg*.27),R3(2.42,1.68,sg*.36),R3(2.7,1.86,sg*.38)], [.06,.045,0], 1, 1, [0,1,0], .4);   // tusk
+    pTri(F, R3(1.76,2.92,sg*.52), R3(1.86,2.86,sg*.5), R3(1.74,2.84,sg*.53), 2, 1, [1.6,2.8,0]);                 // eye
+    const b=sg<0?5:6, ins=[1.5,2.6,0], A=R3(1.4,3.3,sg*.5), B=R3(1.62,2.05,sg*.58), C=R3(.9,2.7,sg*.62), O1=R3(.7,3.5,sg*.66), O2=R3(.2,2.75,sg*.7), O3=R3(.6,1.75,sg*.66);
+    pTri(F,A,O1,C,0,b,ins); pTri(F,O1,O2,C,0,b,ins); pTri(F,O2,O3,C,0,b,ins); pTri(F,O3,B,C,0,b,ins); pTri(F,B,A,C,0,b,ins);   // big folded ear
+    pStrip(F, [R3(.75,1.95,sg*.5),R3(.78,1.0,sg*.52),R3(.8,.06,sg*.52),R3(.8,0,sg*.52)], [.3,.25,.28,.29], 0, sg<0?7:8, [0,0,sg], .45);
+    pStrip(F, [R3(-1.0,1.95,sg*.5),R3(-1.04,1.0,sg*.52),R3(-1.0,.06,sg*.52),R3(-1.0,0,sg*.52)], [.32,.25,.28,.29], 0, sg<0?9:10, [0,0,sg], .45);
+  }
+  pStrip(F, [R3(-1.55,2.3,0),R3(-1.78,1.7,0),R3(-1.84,1.3,0),R3(-1.86,1.12,0)], [.05,.035,.03,0], 0, 11, [-1,0,0], .5);
+  return { F, bones:[
+    {p:[0,2.3,0],parent:-1}, {p:[1.15,2.7,0],parent:0}, {p:[2.1,2.15,0],parent:1}, {p:[2.24,1.55,0],parent:2}, {p:[2.3,.95,0],parent:3},
+    {p:[1.5,2.7,-.55],parent:1}, {p:[1.5,2.7,.55],parent:1},
+    {p:[.75,1.95,-.5],parent:0}, {p:[.75,1.95,.5],parent:0}, {p:[-1,1.95,-.5],parent:0}, {p:[-1,1.95,.5],parent:0}, {p:[-1.55,2.3,0],parent:0} ],
+    pal:['#a3a09b','#f4efe4','#86827d','#a3a09b'], stripes:0 };
+}
+
+// birds (flying, gliding or perched) share one template; the GPU flaps the wings. part: 0 body, 1 inner wing, 2 outer wing, 3 beak
+function makeBird(){
+  const F=new Fold(), T=(rings,mat,part,sides=4)=>tube(F, rings.map(([x,y,rz,ry])=>({c:[x,y,0],rx:rz,ry})), sides, mat, part);
+  T([[-.3,0,.03,.03],[-.12,0,.075,.085],[.12,.01,.07,.08],[.24,.04,.045,.05]], 0, 0);
+  T([[.22,.05,.05,.055],[.32,.08,.055,.055],[.4,.07,.03,.03]], 4, 0);
+  T([[.4,.07,.03,.025],[.5,.05,0,0]], 3, 3);
+  F.tri(F.v([-.26,.0,0],1,0),F.v([-.56,.02,-.13],1,0),F.v([-.6,.02,0],2,0));
+  F.tri(F.v([-.26,.0,0],1,0),F.v([-.6,.02,0],2,0),F.v([-.56,.02,.13],1,0));
+  for (const sg of [-1,1]){
+    const a=F.v([.12,.03,sg*.06],1,1), b=F.v([-.12,.03,sg*.06],1,1), c=F.v([-.17,.045,sg*.44],1,1), d=F.v([.07,.045,sg*.45],1,1), m=F.v([-.02,.065,sg*.25],1,1);
+    F.tri(a,b,m); F.tri(b,c,m); F.tri(c,d,m); F.tri(d,a,m);
+    const e=F.v([.07,.045,sg*.45],2,2), f=F.v([-.17,.045,sg*.44],2,2), g=F.v([-.16,.04,sg*.92],2,2), h=F.v([.0,.05,sg*.7],2,2);
+    F.tri(e,f,h); F.tri(f,g,h);
+  }
+  return F;
+}
+
+function makeButterfly(){
+  const F=new Fold();
+  tube(F,[{c:[-.035,0,0],rx:.006,ry:.006},{c:[.04,0,0],rx:.008,ry:.008}],4,3,0);
+  for (const sg of [-1,1]){
+    F.tri(F.v([.025,0,sg*.006],0,1),F.v([.06,.004,sg*.06],0,1),F.v([-.005,.002,sg*.07],0,1));
+    F.tri(F.v([.06,.004,sg*.06],2,1),F.v([.075,.006,sg*.085],2,1),F.v([.03,.005,sg*.09],2,1));
+    F.tri(F.v([.06,.004,sg*.06],2,1),F.v([.03,.005,sg*.09],2,1),F.v([-.005,.002,sg*.07],0,1));
+    F.tri(F.v([.0,0,sg*.006],1,1),F.v([-.01,.002,sg*.065],1,1),F.v([-.055,.003,sg*.045],1,1));
+  }
+  return F;
+}
+
+function makeDragonfly(){
+  const F=new Fold();
+  tube(F,[{c:[-.07,0,0],rx:.004,ry:.004},{c:[.02,0,0],rx:.008,ry:.008},{c:[.035,0,0],rx:.009,ry:.009}],4,3,0);
+  for (const sg of [-1,1]) for (const [x,w,m] of [[.012,.055,0],[-.004,.05,1]]){
+    F.tri(F.v([x,.002,sg*.004],m,1),F.v([x+.008,.003,sg*w],m,1),F.v([x-.008,.003,sg*w*.95],2,1)); }
+  return F;
+}
+
+// ---------------------------------------------------------------- more Arunachal animals
+// One builder folds any four-legged animal from a few numbers. Example: the mithun (Arunachal's state animal, a big
+// forest bison) is long:2.3, high:1.65, wide:.46 with curved horns; the barking deer is the same recipe at a third the size.
+function makeQuad(o){
+  const F=new Fold(), L=o.len, H=o.high, W=o.wide;
+  const by=H-W*.4, bx0=-L/2, bx1=L/2;
+  const ring=(x,y,w,h)=>({c:[x,y,0],w,h});
+  if (o.flat) pDiamond(F, [ring(bx0-.04,by,W*.45,W*.4),ring(bx0+L*.15,by+.01,W,W*.7),ring(0,by,W*1.02,W*.7),ring(bx1-L*.15,by+o.hump,W*.95,W*.72),ring(bx1,by+o.hump*.6,W*.6,W*.55)], 0, 0);
+  else pTent(F, [ring(bx0-.04,by,W*.5,W*.55),ring(bx0+L*.15,by+.02,W,W*1.02),ring(0,by,W*1.02,W),ring(bx1-L*.15,by+o.hump,W*.95,W*1.05),ring(bx1,by+o.hump*.6,W*.6,W*.75)], 0, 0);
+  const nk=[bx1+.02, by+o.hump*.6+W*.25], hd=[nk[0]+o.neck, nk[1]+o.headUp];
+  pDiamond(F, [ring(nk[0]-W*.15,nk[1],W*.42,W*.5), ring(hd[0],hd[1],o.head*.55,o.head*.62), ring(hd[0]+o.head*.9,hd[1]-o.head*.25,o.head*.45,o.head*.45), ring(hd[0]+o.head*1.55,hd[1]-o.head*.45,o.head*.3,o.head*.32), ring(hd[0]+o.head*1.85,hd[1]-o.head*.5,0,0)],
+    i=>i>=3?(o.noseMat==null?2:o.noseMat):0, 1);
+  for (const sg of [-1,1]){
+    pTri(F, R3(hd[0]+o.head*.7,hd[1]+o.head*.18,sg*o.head*.5), R3(hd[0]+o.head*.82,hd[1]+o.head*.12,sg*o.head*.49), R3(hd[0]+o.head*.68,hd[1]+o.head*.08,sg*o.head*.52), 2, 1, [hd[0],hd[1],0]);
+    const ea=[hd[0]-o.head*.1, hd[1]+o.head*.35, sg*o.head*.4];
+    pTri(F, ea, R3(ea[0]-o.ear*.4,ea[1]+o.ear*.9,sg*(o.head*.55+o.ear*.5)), R3(ea[0]+o.ear*.3,ea[1]+o.ear*.2,sg*(o.head*.5+o.ear*.6)), o.earMat||0, 1, [hd[0],hd[1],0]);
+    if (o.horn) pStrip(F, [R3(hd[0]-o.head*.05,hd[1]+o.head*.45,sg*o.head*.45), R3(hd[0]-o.head*.15,hd[1]+o.head*.6,sg*(o.head*.45+o.horn*.6)), R3(hd[0]+o.head*.05,hd[1]+o.head*.6+o.horn*.5,sg*(o.head*.4+o.horn*.75))], [.05,.035,0], 3, 1, [0,1,0], .5);
+    const lr=o.leg, fx=bx1-L*.14, rx=bx0+L*.16, ly=by-W*.3;
+    pStrip(F, [R3(fx,ly,sg*W*.55),R3(fx+.02,ly*.5,sg*W*.57),R3(fx+.04,.05,sg*W*.57),R3(fx+.07,0,sg*W*.57)], [lr*1.4,lr,lr*.85,lr*.6], o.legMat||0, sg<0?2:3, [0,0,sg], .4);
+    pStrip(F, [R3(rx,ly,sg*W*.55),R3(rx-.06,ly*.5,sg*W*.57),R3(rx-.02,.05,sg*W*.57),R3(rx+.02,0,sg*W*.57)], [lr*1.7,lr,lr*.85,lr*.6], o.legMat||0, sg<0?4:5, [0,0,sg], .4);
+  }
+  const tl=o.tail, ty=by+W*.2;
+  pStrip(F, [R3(bx0,ty,0),R3(bx0-tl*.5,ty-tl*o.tailDrop*.5,0)], [o.tailW,o.tailW*.9], o.tailMat||0, 6, [0,1,0], .5);
+  pStrip(F, [R3(bx0-tl*.5,ty-tl*o.tailDrop*.5,0),R3(bx0-tl,ty-tl*o.tailDrop,0),R3(bx0-tl*1.1,ty-tl*o.tailDrop*1.05,0)], [o.tailW*.9,o.tailW*.7,0], o.tailMat||0, 7, [0,1,0], .5);
+  return { F, pal:o.pal, stripes:o.stripes||0, bones:[
+    {p:[0,by,0],parent:-1}, {p:[nk[0],nk[1],0],parent:0},
+    {p:[bx1-L*.14,by-W*.3,-W*.55],parent:0},{p:[bx1-L*.14,by-W*.3,W*.55],parent:0},{p:[bx0+L*.16,by-W*.3,-W*.55],parent:0},{p:[bx0+L*.16,by-W*.3,W*.55],parent:0},
+    {p:[bx0,ty,0],parent:0}, {p:[bx0-tl*.5,ty-tl*o.tailDrop*.5,0],parent:6} ] };
+}
+const MITHUN = () => makeQuad({len:2.3, high:1.65, wide:.46, hump:.16, neck:.32, headUp:-.05, head:.36, ear:.16, horn:.36, leg:.075, tail:.75, tailW:.04, tailDrop:.9, legMat:1,
+  pal:['#2b2522','#f1ece2','#1a1715','#d9cfb8']});
+const DEER = () => makeQuad({len:.95, high:.62, wide:.17, hump:.04, neck:.22, headUp:.18, head:.15, ear:.1, horn:.07, leg:.026, tail:.1, tailW:.03, tailDrop:.2,
+  pal:['#b0683a','#f2ebe0','#2a211b','#7a5338']});
+const PANDA = () => makeQuad({len:.62, high:.34, wide:.15, hump:.02, neck:.08, headUp:.03, head:.13, ear:.07, leg:.035, tail:.48, tailW:.065, tailDrop:-.1, legMat:2, earMat:1, noseMat:1, stripes:3,
+  pal:['#c2522a','#f4efe6','#2a1c16','#c2522a']});
+const LIZARD = () => makeQuad({len:.75, high:.14, wide:.11, hump:0, neck:.1, headUp:0, head:.11, ear:.01, leg:.025, tail:.95, tailW:.05, tailDrop:.05, flat:true, stripes:4,
+  pal:['#5d5a3f','#c9bf8f','#26241b','#5d5a3f']});
+
+// hoolock gibbon: hangs by one long arm from a bough and swings (origin = the hand on the bough)
+function makeGibbon(){
+  const F=new Fold();
+  pDiamond(F, [[0,-.78,0,.07],[0,-.58,0,.15],[0,-.3,0,.14],[0,-.08,0,.09]].map(([x,y,z,w])=>({c:[x,y,z],w,h:w*.8})), 0, 0, [1,0,0]);
+  pDiamond(F, [[0,-.04,0,.09],[.02,.08,0,.11],[.03,.2,0,.08],[.04,.25,0,0]].map(([x,y,z,w])=>({c:[x,y,z],w,h:w*.85})), 0, 1, [1,0,0]);
+  pTri(F, R3(.1,.1,-.06), R3(.115,.13,0), R3(.1,.1,.06), 1, 1, [0,.1,0]);                                         // pale brow
+  pStrip(F, [R3(0,-.12,.08),R3(0,-.35,.25),R3(0,-.52,.42)], [.045,.035,.03], 0, 2, [1,0,0], .4);
+  pStrip(F, [R3(0,-.12,-.08),R3(0,.2,-.1),R3(0,.62,-.12),R3(0,.75,-.12)], [.045,.035,.03,.02], 0, 3, [1,0,0], .4);
+  for (const sg of [-1,1]) pStrip(F, [R3(0,-.7,sg*.07),R3(.12,-.85,sg*.1),R3(.18,-1.0,sg*.08)], [.05,.04,.03], 0, sg>0?4:5, [1,0,0], .4);
+  return {F, bones:[{p:[0,.75,-.12],parent:-1},{p:[0,-.02,0],parent:0},{p:[0,-.12,.08],parent:0},{p:[0,-.12,-.08],parent:0},{p:[0,-.7,.07],parent:0},{p:[0,-.7,-.07],parent:0}]};
+}
+// python: an accordion-pleated paper strip with a ridge along its back, in 12 hinged pieces that pass a wave down it
+function makeSnake(){
+  const F=new Fold(), N=12, L=3.2, R=.075, bones=[];
+  for (let b=0;b<N;b++){ const x0=L/2-b*L/N, x1=x0-L/N, w=x=>R*(x>L/2-.2?.8:1)*(1-.75*Math.max(0,(L/2-x)/L-.6)/.4);
+    const P=[], W=[]; for (let i=0;i<=2;i++){ const x=mix(x0,x1,i/2); P.push([x,.06,0]); W.push(b===N-1&&i===2?0:w(x)); }
+    pStrip(F, P, W, 0, b, [0,1,0], .55, .1);
+    bones.push({p:[x0,0,0],parent:b-1}); }
+  pDiamond(F, [{c:[L/2-.02,.07,0],w:R*.95,h:R*.55},{c:[L/2+.1,.075,0],w:R*.85,h:R*.5},{c:[L/2+.2,.06,0],w:0,h:0}], 0, 0);   // wedge head
+  for (const sg of [-1,1]) pTri(F, R3(L/2+.07,.105,sg*.05), R3(L/2+.1,.1,sg*.05), R3(L/2+.07,.095,sg*.06), 2, 0, [L/2,.07,0]);
+  return {F, bones, pal:['#7a6a3c','#c9b98a','#3a2e1a','#7a6a3c'], stripes:2};
+}
+// frog: the classic folded jumping frog - a short tent of a body, a wedge head, folded back legs
+function makeFrog(){
+  const F=new Fold();
+  pTent(F, [{c:[-.07,.03,0],w:.035,h:.02},{c:[-.02,.04,0],w:.05,h:.03},{c:[.04,.045,0],w:.045,h:.028}], 0, 0);
+  pDiamond(F, [{c:[.04,.05,0],w:.04,h:.025},{c:[.075,.045,0],w:.025,h:.016},{c:[.095,.04,0],w:0,h:0}], 0, 0);
+  pTri(F, R3(-.01,.02,-.035), R3(.06,.03,0), R3(-.01,.02,.035), 1, 1, [0,.04,0]);                                  // pale throat (it puffs)
+  for (const sg of [-1,1]){ pTri(F, R3(.05,.075,sg*.02), R3(.06,.07,sg*.03), R3(.045,.068,sg*.032), 2, 0, [.04,.05,0]);
+    pStrip(F, [R3(-.04,.03,sg*.03),R3(-.01,.015,sg*.075),R3(-.075,.005,sg*.065),R3(-.1,.003,sg*.07)], [.018,.014,.012,.01], 0, 0, [0,1,0], .4);
+    pStrip(F, [R3(.04,.03,sg*.03),R3(.065,.005,sg*.045)], [.01,.008], 0, 0, [0,1,0], .4); }
+  return {F, bones:[{p:[0,0,0],parent:-1},{p:[0,0,0],parent:0}], pal:['#4f8a3a','#e6e2b0','#141414','#4f8a3a'], stripes:0};
+}
+// owl: a folded body and a diamond head that swivels, big yellow eyes that blink, ear tufts, folded wings
+function makeOwl(){
+  const F=new Fold();
+  pDiamond(F, [[0,.02,0,.05],[0,.12,0,.12],[0,.25,0,.13],[0,.36,0,.09]].map(([x,y,z,w])=>({c:[x,y,z],w,h:w*1.1})), 0, 0, [1,0,0]);
+  pDiamond(F, [[0,.34,0,.09],[0,.42,0,.13],[0,.52,0,.11],[0,.57,0,0]].map(([x,y,z,w])=>({c:[x,y,z],w,h:w*.9})), 0, 1, [1,0,0]);
+  for (const sg of [-1,1]){
+    const e=[.1,.45,sg*.05], ring=[]; for (let k=0;k<8;k++){ const a=k/8*6.283; ring.push([e[0], e[1]+Math.sin(a)*.033, e[2]+Math.cos(a)*.033]); }
+    for (let k=0;k<8;k++) pTri(F, [e[0]+.006,e[1],e[2]], ring[k], ring[(k+1)%8], 1, 2, [0,.45,sg*.05]);
+    pTri(F, R3(e[0]+.008,e[1]+.012,e[2]), R3(e[0]+.008,e[1]-.012,e[2]-.01), R3(e[0]+.008,e[1]-.012,e[2]+.01), 2, 2, [0,.45,sg*.05]);   // pupil
+    pTri(F, R3(.04,.52,sg*.06), R3(.01,.63,sg*.08), R3(-.03,.52,sg*.08), 3, 1, [0,.45,0]);                                         // ear tuft
+    pTri(F, R3(.05,.32,sg*.12), R3(-.06,.06,sg*.12), R3(-.09,.3,sg*.1), 3, 0, [0,.2,0]);                                           // folded wing
+  }
+  pTri(F, R3(.13,.43,0), R3(.16,.4,0), R3(.13,.39,.01), 1, 1, [0,.42,0]);                                                          // beak
+  return {F, bones:[{p:[0,0,0],parent:-1},{p:[0,.36,0],parent:0},{p:[.1,.45,0],parent:1}], pal:['#8a6844','#ffd23a','#141210','#5e4430']};
+}
+
+// ================================================================ SHADERS (small programs that run on the graphics chip)
+// The paper look comes from three cheap tricks, all here:
+//  1. FLAT FACETS: each pixel works out the tilt of the triangle it belongs to (from how its position changes to the
+//     neighbouring pixel) and is lit by that, so every fold is one even tone - no smooth shading, no textures.
+//  2. SOFT STUDIO LIGHT: a warm low sun ahead, a cool fill light from behind you, and a sky/ground glow, so the
+//     scene stays bright and pastel like a lit paper diorama. Thin paper (leaves, petals) glows when the sun is behind it.
+//  3. MIST: colours fade toward the sky colour with distance, and a low valley mist hangs near the ground.
+// Example: a leaf facing the sun gets "paper green x warm sunlight"; the other half of the same fold, tilted away,
+// gets mostly the cooler fill light - that difference is the crease you see.
+
+const G_COMMON = `
+uniform mat4 uVPr; uniform vec3 uCam, uHead; uniform float uTime, uGust; uniform vec2 uWind;
+uniform vec3 uSunDir, uSunCol, uFillDir, uFillCol, uAmbTop, uAmbBot, uSkyTop, uSkyHor, uSkyGlow, uMistCol;
+uniform float uFogK, uMist, uExpo, uNight, uFog; uniform vec3 uSunPos, uMoonPos;
+vec3 skyCol(vec3 d){
+  float h=d.y;
+  vec3 c=mix(uSkyHor, uSkyTop, pow(smoothstep(-.03,.62,h),.75));
+  float mu=max(dot(d,uSunDir),0.), hz=1.-smoothstep(0.,.45,abs(h));
+  c+=uSkyGlow*(pow(mu,5.)*.5*(.35+.65*hz) + pow(mu,48.)*.7);
+  if(h<0.) c=mix(c, uSkyHor*.92, smoothstep(0.,-.25,h));
+  return c;
+}
+vec3 fogIt(vec3 c, vec3 rel, float k){
+  float d=length(rel); vec3 dir=rel/max(d,1e-4);
+  vec3 fc=mix(skyCol(normalize(vec3(dir.x, .02+.3*max(dir.y,0.), dir.z))), uMistCol, uFog*.85);
+  k=mix(k,1.,uFog*uFog);                                               // in thick fog even the mountains and clouds fade away
+  c=mix(c, fc, (1.-exp(-d*uFogK*k)));
+  float hy=rel.y+uCam.y;
+  float m=uMist*(1.-exp(-d*.014))*exp(-max(hy+1.,0.)/5.5);
+  return mix(c, mix(fc,uMistCol,.55), clamp(m*k,0.,.8));
+}
+vec3 tone(vec3 c){ c=mix(c, vec3(0.), bvec3(isnan(c.r)||isinf(c.r), isnan(c.g)||isinf(c.g), isnan(c.b)||isinf(c.b))); c*=uExpo; c=c/(1.+.16*c)*1.12; float l=dot(c,vec3(.2126,.7152,.0722)); c=max(mix(vec3(l),c,.97-.5*uNight),0.); c*=mix(vec3(1.),vec3(.8,.9,1.25),uNight); return pow(clamp(c,0.,1.), vec3(1./2.2)); }
+#ifdef FRAG
+vec3 flatN(vec3 rel){ vec3 N=normalize(cross(dFdx(rel), dFdy(rel))); return dot(N,rel)>0. ? -N : N; }
+// paper: every flat facet gets its own slightly different tone (like separate folds catching light), and up close a
+// faint fibre grain shows. The grain is fixed to the world (never changes frame to frame) and fades out with distance.
+float h31(vec3 p){ p=fract(p*.1031); p+=dot(p,p.zyx+31.32); return fract((p.x+p.y)*p.z); }
+float vnoise(vec3 p){ vec3 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+  return mix(mix(mix(h31(i),h31(i+vec3(1,0,0)),f.x),mix(h31(i+vec3(0,1,0)),h31(i+vec3(1,1,0)),f.x),f.y),
+             mix(mix(h31(i+vec3(0,0,1)),h31(i+vec3(1,0,1)),f.x),mix(h31(i+vec3(0,1,1)),h31(i+vec3(1,1,1)),f.x),f.y),f.z); }
+uniform sampler2D uPaper;
+vec3 gPaperN;
+// paper: the fibre texture is laid flat on each facet (projected onto the plane the facet mostly faces), at two sizes: fine
+// fibres for up close and soft mottling that still shows a few metres away. It returns how bright the paper is there,
+// and leaves the slightly bumped normal in gPaperN so the light catches the paper's tooth.
+float paperAlb(vec3 N, vec3 p){
+  vec3 a=abs(N); vec2 uv; vec3 T,B;
+  if (a.x>a.y && a.x>a.z){ uv=p.zy; T=vec3(0,0,1); B=vec3(0,1,0); }
+  else if (a.y>a.z){ uv=p.xz; T=vec3(1,0,0); B=vec3(0,0,1); }
+  else { uv=p.xy; T=vec3(1,0,0); B=vec3(0,1,0); }
+  vec4 t1=texture(uPaper, uv*1.7), t2=texture(uPaper, uv*.23+.37);
+  gPaperN=normalize(N+(T*(t1.g-.5)+B*(t1.b-.5))*.9);
+  float fac=h31(floor(N*6.+.5)+17.)-.5;
+  return .96+.3*(t1.r-.5)+.24*(t2.r-.5)+.03*fac;
+}
+// origami paper is coloured on one side and white on the other: the back of a leaf, petal or flap shows the white side
+vec3 paperBack(vec3 alb){ return gl_FrontFacing ? alb : mix(alb, vec3(.93,.91,.86), .6); }
+// a fold along the edge of a facet on a folded tube (trunks, roots, bamboo): a thin darker line
+float tubeCrease(float e){ float lw=fwidth(e)*1.4; return 1.-.22*(1.-smoothstep(0.,lw,min(e,1.-e))); }
+// crease lines on a folded leaf: a light line along the centre fold, a thin darker line at the cut edge
+float creases(float v){ float lw=fwidth(v)*1.3; return 1.+.13*(1.-smoothstep(0.,lw,abs(v))) - .2*smoothstep(1.-lw*1.6,1.,abs(v)); }
+#endif
+vec3 paper(vec3 alb, vec3 N, float trans){
+  float s=dot(N,uSunDir);
+  vec3 sun=uSunCol*clamp(s*.8+.2,0.,1.);
+  vec3 fill=uFillCol*max(dot(N,uFillDir),0.);
+  vec3 amb=mix(uAmbBot, uAmbTop, N.y*.5+.5);
+  return alb*(sun+fill+amb) + alb*uSunCol*trans*max(-s,0.)*.6;
+}
+vec3 srgb(vec3 c){ return pow(c, vec3(2.2)); }
+`;
+
+// ---------------------------------------------------------------- plants, rocks, clouds, mountains, bridge, path (instanced)
+const VS_PLANT = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aA; layout(location=2) in vec4 aI0; layout(location=3) in vec4 aI1;
+uniform float uFar, uThin, uDrift;
+out vec3 vR, vL; out vec2 vUV; flat out vec4 vInfo;   // material, colour choice, pattern, height fraction
+void main(){
+  float c=cos(aI0.w), s=sin(aI0.w), sc=aI1.x, ph=fract(aI1.w), w=aA.y;
+  vec3 p=aP*vec3(1.,aI1.y,1.)*sc;
+  p=vec3(c*p.x-s*p.z, p.y, s*p.x+c*p.z);
+  // the breeze: the whole plant leans (more toward the top), and leaf tips flutter
+  float g=uGust*(.55+.45*sin(uTime*.9+ph*6.28+dot(aI0.xz,vec2(.05,.03))));
+  p.xz+=uWind*g*w*.12*sc;
+  p.y+=sin(uTime*(2.2+ph*1.6)+aA.z*4.+ph*30.)*.035*w*sc*(.3+uGust);
+  // far away: plants shrink to nothing before the drawing distance, and are thinned out (decided from the
+  // centre of the head, so both eyes always agree)
+  vL=p+aI0.xyz*.37;
+  float d=length(aI0.xz-uHead.xz);
+  float keep=1.-smoothstep(uFar*.82, uFar, d);
+  if (ph > mix(1., uThin, smoothstep(uFar*.3, uFar*.75, d))) keep=0.;
+  vec3 base=aI0.xyz;
+  if (uDrift>0.){ base.x=mod(base.x+uDrift*uTime+520.,1040.)-520.; keep*=smoothstep(520.,440.,abs(base.x)); }   // clouds drift very slowly across the sky
+  vec3 P=base+p*keep;
+  vR=P-uCam; vUV=aA.zw;
+  vInfo=vec4(aA.x, aI1.z, floor(aI1.w*.5), aA.z);
+  gl_Position=uVPr*vec4(vR,1.);
+}`;
+const FS_PLANT = `${G_COMMON}
+in vec3 vR, vL; in vec2 vUV; flat in vec4 vInfo; out vec4 o;
+vec3 pick5(float t, vec3 a, vec3 b, vec3 c, vec3 d, vec3 e){ int i=int(clamp(t*5.,0.,4.)); return i==0?a:i==1?b:i==2?c:i==3?d:e; }
+void main(){
+  vec3 N=flatN(vR);
+  int m=int(vInfo.x+.5); float var=vInfo.y; float trans=0., fk=1.;
+  vec3 alb;
+  if (m==0){                                                             // leaves: five paper greens
+    alb=pick5(var, vec3(.184,.49,.29), vec3(.31,.6,.24), vec3(.5,.69,.29), vec3(.18,.42,.32), vec3(.61,.75,.35));
+    if (vInfo.z>.5){                                                     // some leaves are printed origami paper: chevrons
+      float f=fract(vUV.x*7.-abs(vUV.y)*1.7);
+      vec3 p2 = var>.8 ? vec3(.69,.34,.42) : alb;
+      alb = f<.5 ? p2 : mix(p2, vec3(.95,.92,.8), .38);
+    }
+    trans=.9;
+  } else if (m==1) alb=pick5(fract(var*3.7), vec3(.48,.32,.2), vec3(.55,.38,.22), vec3(.42,.29,.19), vec3(.5,.36,.24), vec3(.6,.43,.27));
+  else if (m==2){ alb=pick5(var, vec3(.91,.27,.49), vec3(.85,.19,.18), vec3(.94,.54,.14), vec3(.76,.25,.56), vec3(.96,.77,.19)); if (vInfo.z>.5) alb=vec3(.96,.94,.9); trans=.8; }
+  else if (m==3) alb=vec3(.95,.76,.19);
+  else if (m==4) alb=mix(vec3(.29,.48,.21), vec3(.42,.6,.26), var);
+  else if (m==5) alb=pick5(fract(var*2.3), vec3(.55,.52,.5), vec3(.49,.45,.41), vec3(.6,.58,.55), vec3(.52,.5,.53), vec3(.46,.43,.4));
+  else if (m==6) alb=vec3(.42,.27,.16);
+  else if (m==7){                                                        // clouds: pure white crumpled paper, creases shown only by soft shading
+    float pm=paperAlb(N, vL*.5);
+    float l=(.86+.1*clamp(dot(gPaperN,uSunDir)*.5+.5,0.,1.)+.05*N.y)*(1.-.78*uNight)*mix(1.,pm,.6);
+    o=vec4(tone(fogIt(vec3(l)/uExpo, vR, .12)),1.); return; }
+  else if (m==8){                                                        // mountain cards: lavender, paler for further rows
+    float row=vUV.y;
+    alb=mix(vec3(.47,.44,.62), vec3(.66,.63,.8), row*.5)*(.93+.07*vUV.x);
+    fk=.42+.12*row;
+  }
+  else if (m==23){ alb=vec3(.97,.96,.95); fk=.42+.12*vUV.y; }          // snow caps, white paper
+  else if (m==9){ alb=vec3(.74,.6,.43); if (abs(vUV.y)>.9) alb=vec3(.58,.46,.32); }   // the earthen trail, its folded lip darker
+  else if (m==10){ alb=vec3(.9,.96,.99); trans=.5; }
+  else if (m==11){ alb=vec3(.2,.37,.26); fk=.7; }
+  else if (m==12) alb=vec3(.71,.56,.36);
+  else if (m==15) alb=mix(vec3(.47,.4,.33), vec3(.56,.49,.4), var);      // fig roots: grey-brown
+  else if (m==16) alb=mix(vec3(.62,.6,.56), vec3(.7,.68,.63), var);      // stone slabs
+  else if (m==22) alb=pick5(h31(floor((vR+uCam)*2.8)), vec3(.62,.5,.45), vec3(.55,.45,.41), vec3(.68,.58,.5), vec3(.5,.43,.4), vec3(.6,.52,.47));   // walkway stones
+  else if (m==17) alb=mix(vec3(.55,.66,.27), vec3(.7,.72,.33), fract(var*3.1));   // bamboo culms
+  else if (m==18){ alb=pick5(var, vec3(.84,.13,.2), vec3(.93,.33,.45), vec3(.75,.1,.25), vec3(.96,.55,.62), vec3(.88,.2,.3)); trans=.8; }   // rhododendron
+  else if (m==19) alb=vec3(.86,.18,.24);
+  else if (m==20) alb=vec3(.3,.22,.16);
+  else if (m==21) alb=vec3(.32,.55,.22);
+  else alb=vec3(.36,.24,.14);
+  if (m==5 && N.y>.62) alb=mix(vec3(.33,.55,.23), vec3(.42,.62,.28), var);   // moss on the tops of rocks
+  alb*=paperAlb(N, vL); N=gPaperN;
+  if (m==0||m==2||m==10||m==18||m==4){ alb*=creases(vUV.y); alb=paperBack(alb); }
+  if (m==1||m==15||m==17||m==20) alb*=tubeCrease(vUV.y);
+  vec3 col=paper(srgb(alb), N, trans);
+  o=vec4(tone(fogIt(col, vR, fk)),1.);
+}`;
+
+// ---------------------------------------------------------------- ground: each triangle has one flat colour chosen at load
+// The ground is built like a paper landscape model: stacked sheets of green paper, one for every 1.25 m of height,
+// each cut along a wavy contour line. Each sheet's cut edge catches a thin line of light, and casts a soft shadow on
+// the sheet below. Example: a gentle slope shows broad bands; a steep bank shows many thin layers close together.
+const VS_GROUND = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aC; layout(location=2) in vec3 aN;
+out vec3 vR, vN; out vec4 vC;
+void main(){ vR=aP-uCam; vN=aN; vC=aC; gl_Position=uVPr*vec4(vR,1.); }`;
+const FS_GROUND = `${G_COMMON}
+in vec3 vR, vN; in vec4 vC; out vec4 o;
+void main(){
+  vec3 Pw=vR+uCam, N=normalize(vN);
+  float hh=(Pw.y+1.7*vnoise(Pw*vec3(.045,.0,.045))+.55*vnoise(Pw*vec3(.14,0.,.14)))/1.25;
+  float band=floor(hh), f=fract(hh), lw=fwidth(hh);
+  float hb=h31(vec3(band, band*1.7, 3.));
+  vec3 g = hb<.25 ? vec3(.38,.6,.27) : hb<.5 ? vec3(.33,.55,.25) : hb<.75 ? vec3(.44,.64,.3) : vec3(.3,.5,.26);
+  vec3 alb=mix(vC.rgb, srgb(g), vC.a);
+  float sh=smoothstep(1.-max(lw*4.,.07),1.,f), rim=1.-smoothstep(0.,max(lw*1.4,.004),f);
+  alb*=(1.-.3*sh)*(1.+.14*rim);
+  float pm=paperAlb(N, Pw);
+  o=vec4(tone(fogIt(paper(alb*pm,gPaperN,0.),vR,1.)),1.);
+}`;
+
+// ---------------------------------------------------------------- water: river, pool, stream and waterfall, as layered blue paper
+const VS_WATER = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aW;   // along, across (-1..1), kind (0 river, 1 falls), speed
+out vec3 vR; out vec4 vW;
+void main(){ vR=aP-uCam; vW=aW; gl_Position=uVPr*vec4(vR,1.); }`;
+const FS_WATER = `${G_COMMON}
+in vec3 vR; in vec4 vW; out vec4 o;
+// The river is built from stacked sheets of paper, each a few centimetres above the last: deep blue at the bottom,
+// then mid blue and pale blue toward the banks, then a white edge on top. Each raised sheet throws a thin shadow on
+// the one below. White cut-paper ripples ride a few millimetres above the deep layer and drift downstream.
+float h11(float x){ return fract(sin(x*127.1)*43758.5453); }
+float eL(int k, float s, float sd){ return k==1 ? .42+.07*sin(s*.31+sd*1.7)+.03*sin(s*1.13+sd) : k==2 ? .7+.05*sin(s*.27+sd*2.3)+.02*sin(s*.9) : .9+.025*sin(s*.43+sd*.7); }
+float ripple(float s, float v, float t, float sp){
+  float q=fract(s*.16 - t*sp*.18 + .5*sin(v*2.6+s*.05) + h11(floor(v*3.+3.))*.7);
+  float arc=fract(s*.05+v*.7+.3);
+  return step(.92-.04*sin(arc*3.14159),q)*step(.15,arc)*step(arc,.85);
+}
+const vec3 C0=vec3(.11,.36,.66), C1=vec3(.22,.52,.8), C2=vec3(.47,.73,.9), C3=vec3(.95,.97,.98);
+void main(){
+  float s=vW.x, v=vW.y, t=uTime, a=abs(v), sd=sign(v+1e-5);
+  int k=int(vW.z+.5);
+  vec3 alb; float sh=0.;
+  if (k==0){ alb=C0; sh=smoothstep(eL(1,s,sd)-.06,eL(1,s,sd),a)*.35 + ripple(s+.35,v,t,vW.w)*.3*step(a,eL(1,s,sd)-.04); }
+  else if (k==1){ alb=C1; sh=smoothstep(eL(2,s,sd)-.05,eL(2,s,sd),a)*.3; }
+  else if (k==2){ alb=C2; sh=smoothstep(eL(3,s,sd)-.04,eL(3,s,sd),a)*.3; }
+  else if (k==3) alb=C3;
+  else if (k==4){ int l=int(v+.5); alb=(l==1?C1:l==2?C2:C3)*.62; }
+  else if (k==6){ if (ripple(s,v,t,vW.w)<.5 || a>eL(1,s,sd)-.05) discard; alb=vec3(.9,.96,.99); }
+  else {
+    // the falls: strips of white and pale blue paper sliding down (the front layer shows only the white strips)
+    float kk=floor((v+1.)*9.), sp=.9+.7*h11(kk), q=fract(s*1.4 - t*sp + h11(kk+3.));
+    if (k==7){ if (q<.6) discard; alb=vec3(.97,.99,1.); }
+    else alb=mix(vec3(.45,.72,.9), vec3(.8,.92,.98), step(.45,q));
+    alb=mix(alb, vec3(.98,.99,1.), smoothstep(.8,1.,s));
+    vec3 N=flatN(vR);
+    float pm=paperAlb(N, vR+uCam);
+    o=vec4(tone(fogIt(paper(srgb(alb)*pm, gPaperN, .3), vR, 1.)),1.); return;
+  }
+  vec3 N = k==4 ? flatN(vR) : vec3(0,1,0);
+  float pm=paperAlb(N, vR+uCam);
+  vec3 col=paper(srgb(alb)*(1.-sh)*pm, gPaperN, 0.);
+  if (k<4){ vec3 V=normalize(vR), R=reflect(V,vec3(0,1,0)); col=mix(col, skyCol(R), (.06+.3*pow(1.-max(-V.y,0.),5.))*(k==3?.3:1.)); }
+  o=vec4(tone(fogIt(col, vR, 1.)),1.);
+}`;
+
+// ---------------------------------------------------------------- the animals: each corner follows its bone
+const VS_ANIMAL = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aA;
+uniform mat4 uB[12];
+out vec3 vR, vRest; out vec2 vE; flat out vec2 vInfo;
+void main(){ int b=int(aA.y+.5); vec3 P=(uB[b]*vec4(aP,1.)).xyz; vR=P-uCam; vRest=aP; vE=aA.zw; vInfo=aA.xy; gl_Position=uVPr*vec4(vR,1.); }`;
+const FS_ANIMAL = `${G_COMMON}
+in vec3 vR, vRest; in vec2 vE; flat in vec2 vInfo; out vec4 o;
+uniform vec3 uPal[4]; uniform float uStripes;
+void main(){
+  vec3 N=flatN(vR);
+  int m=int(vInfo.x+.5), b=int(vInfo.y+.5);
+  vec3 alb=uPal[m];
+  vec3 p=vRest;
+  if (uStripes>.5 && uStripes<1.5 && m==0){                              // tiger stripes, painted in the animal's own frame
+    float q = b>=2&&b<=5 ? fract(p.y*5.5+.2*sin(p.x*20.)) : fract(p.x*4.6+.35*sin(p.y*9.+abs(p.z)*6.)+.15*sin(p.z*14.));
+    float stripe=step(q,.24);
+    if (b==1) stripe=step(fract(p.x*7.+abs(p.z)*5.+.3),.22)*step(.0,p.y-.93);
+    alb=mix(alb, uPal[2], stripe);
+  } else if (uStripes>1.5 && uStripes<2.5){                              // python: dark-edged saddle blotches
+    float q=fract(p.x*3.2+.25*sin(p.x*9.)), side=abs(p.z)/.07;
+    alb = q<.38 ? (q<.06||q>.32 ? uPal[2] : uPal[0]*1.25) : (p.y<.035 ? uPal[1] : uPal[0]);
+    if (side>.8 && fract(p.x*7.)<.3) alb=uPal[2];
+  } else if (uStripes>2.5 && uStripes<3.5 && m==0){                      // red panda: ringed tail, white face marks
+    if (b>=6) alb = fract(p.x*9.)<.45 ? uPal[0]*.62 : uPal[0]*1.15;
+    if (b==1 && p.y<.27 && p.x>.4) alb=uPal[1];
+  } else if (uStripes>3.5 && m==0){                                      // monitor lizard: pale speckled bands
+    alb = fract(p.x*8.+.3*sin(p.z*30.))<.3 ? uPal[1]*.8 : uPal[0];
+  }
+  // crease lines: every panel knows its own corners, so a fine line is drawn along each fold and cut edge
+  vec2 e=vE; float tri=step(1.5,e.x); e.x-=2.*tri;
+  float d = tri>.5 ? min(min(e.x,e.y),1.-e.x-e.y) : min(min(e.x,1.-e.x),min(e.y,1.-e.y));
+  float fw=fwidth(e.x)+fwidth(e.y), line=1.-smoothstep(fw*.35, fw*1.1, d);
+  alb*=1.-.3*line;
+  float pm=paperAlb(N, vRest*1.4);
+  o=vec4(tone(fogIt(paper(paperBack(alb)*pm,gPaperN,0.),vR,1.)),1.);
+}`;
+
+// ---------------------------------------------------------------- birds: circling, gliding or perched; the wings fold at two hinges
+const VS_BIRD = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aA;
+layout(location=2) in vec4 aI0; layout(location=3) in vec4 aI1; layout(location=4) in vec4 aI2;
+// aI0: centre xyz, circle radius | aI1: angular speed, phase, size, kind | aI2: flap rate, glide share, bob, perched
+out vec3 vR, vL; flat out vec2 vInfo;
+vec2 rot(vec2 v, float a){ float c=cos(a), s=sin(a); return vec2(c*v.x-s*v.y, s*v.x+c*v.y); }
+void main(){
+  vec3 p=aP; vL=aP*3.; float part=aA.y, sg=sign(p.z+1e-6), t=uTime+aI1.y*40.;
+  float perched=aI2.w, kind=aI1.w;
+  if (part>2.5 && (kind>6.5 && kind<8.5)) p.x=.4+(p.x-.4)*2.6, p.y=.07+(p.y-.07)*2.;  // toucan and hornbill: big beaks
+  if (part>2.5 && kind>7.5 && kind<8.5 && p.y>.06) p.y+=.035;                       // the hornbill's casque
+  // flapping: a fast beat, with gliding spells for the big birds
+  float beat=sin(t*aI2.x);
+  float glide=smoothstep(aI2.y-.15, aI2.y+.15, .5+.5*sin(t*.37));
+  float f1=mix(beat*.75, -.06, glide), f2=mix(beat*.45+.1, .02, glide);
+  if (perched>.5 && part>.5 && part<2.5){ p.z*=.16; p.y+=.035; }          // perched: wings folded flat along the back
+  if (perched<.5 && part>.5 && part<2.5){
+    vec2 h1=vec2(.03, sg*.06), q=vec2(p.y, p.z);
+    vec2 h2=h1+rot(vec2(.015, sg*.385), sg*f1);
+    if (part<1.5) q=h1+rot(q-vec2(.03,sg*.06), sg*f1);
+    else q=h2+rot(q-vec2(.045,sg*.445), sg*(f1+f2));
+    p.y=q.x; p.z=q.y;
+  }
+  float bat=step(11.5,kind), awake=mix(1.-smoothstep(.35,.65,uNight), smoothstep(.35,.65,uNight), bat);
+  p*=aI1.z*awake;
+  vec3 P; float yaw, roll=0.;
+  if (perched>.5){ P=aI0.xyz; yaw=aI1.y*6.283; p.y+=.03*sin(uTime*1.3+aI1.y*9.)*step(.25*aI1.z,p.x); p.xy=rot(p.xy,.85); P.y+=.18*aI1.z; }
+  else {
+    float a=aI1.y*6.283+aI1.x*uTime, R=aI0.w;
+    P=aI0.xyz+vec3(cos(a)*R, sin(t*.4)*aI2.z+.6*beat*(1.-glide)*aI1.z*.1, sin(a)*R)+bat*vec3(sin(t*3.1),.6*sin(t*4.3),cos(t*3.7))*.9;
+    vec3 tg=vec3(-sin(a), 0., cos(a))*sign(aI1.x);
+    yaw=atan(tg.z, tg.x); roll=-.35*sign(aI1.x);
+  }
+  p.yz=rot(p.yz, roll);
+  p.xz=rot(p.xz, yaw);
+  vR=P+p-uCam; vInfo=vec2(aA.x, kind);
+  gl_Position=uVPr*vec4(vR,1.);
+}`;
+const FS_BIRD = `${G_COMMON}
+in vec3 vR, vL; flat in vec2 vInfo; out vec4 o;
+uniform vec3 uBirdPal[65];
+void main(){
+  vec3 N=flatN(vR);
+  int k=int(vInfo.y+.5), m=int(vInfo.x+.5);
+  vec3 alb=uBirdPal[k*5+m];
+  float pm=paperAlb(N, vL);
+  o=vec4(tone(fogIt(paper(paperBack(alb)*pm,gPaperN,.3),vR,1.)),1.);
+}`;
+
+// ---------------------------------------------------------------- butterflies: loops around the flowers, wings beating fast
+const VS_FLY = `${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aA; layout(location=2) in vec4 aI0; layout(location=3) in vec4 aI1;
+out vec3 vR, vL; flat out vec2 vInfo;
+vec2 rot(vec2 v, float a){ float c=cos(a), s=sin(a); return vec2(c*v.x-s*v.y, s*v.x+c*v.y); }
+void main(){
+  vL=aP*8.; float drag=aI1.w, ph=aI1.x*40., t=uTime*(.55+.25*aI1.y)*(1.+.9*drag)+ph, R=aI0.w;
+  vec3 o=vec3(sin(t)*R, (.35-.3*drag)*sin(t*1.7+ph)+.12*(1.-drag)*sin(uTime*7.+ph), sin(t*.8+1.3)*R*.8);
+  vec3 dv=vec3(cos(t)*R, 0., .8*cos(t*.8+1.3)*R*.8);
+  float yaw=atan(dv.z, dv.x);
+  vec3 p=aP;
+  if (aA.y>.5){ float sg=sign(p.z), a=-sg*mix(.25+1.05*(.5+.5*sin(uTime*(16.+aI1.y*5.)+ph)), .05+.3*sin(uTime*38.+ph), drag); vec2 q=rot(vec2(p.y,p.z), a); p.y=q.x; p.z=q.y; }
+  p*=1.7;
+  p.xz=rot(p.xz, yaw);
+  vR=aI0.xyz+o+p-uCam; vInfo=vec2(aA.x, aI1.z);
+  gl_Position=uVPr*vec4(vR,1.);
+}`;
+const FS_FLY = `${G_COMMON}
+in vec3 vR, vL; flat in vec2 vInfo; out vec4 o;
+uniform vec3 uFlyPal[36];
+void main(){ vec3 N=flatN(vR); int k=int(vInfo.y+.5), m=int(vInfo.x+.5); float pm=paperAlb(N,vL); o=vec4(tone(fogIt(paper(paperBack(uFlyPal[k*4+m])*pm,gPaperN,.7),vR,1.)),1.); }`;
+
+// ---------------------------------------------------------------- the sky behind everything: gradient, paper sun, paper rays
+const VS_SKY = `${G_COMMON}
+uniform mat4 uInvVPr; out vec3 vD;
+void main(){ vec2 p=vec2(float((gl_VertexID<<1)&2), float(gl_VertexID&2))*2.-1.; vec4 w=uInvVPr*vec4(p,1.,1.); vD=w.xyz/w.w; gl_Position=vec4(p,1.,1.); }`;
+const FS_SKY = `${G_COMMON}
+in vec3 vD; out vec4 o;
+float h11(float x){ return fract(sin(x*127.1)*43758.5453); }
+void main(){
+  vec3 d=normalize(vD);
+  vec3 c=skyCol(d);
+  float mu=dot(d,uSunPos), r=acos(clamp(mu,-1.,1.));
+  // sun rays as strips of paper fanning out from the sun (straight lines, fixed pattern - no flicker)
+  vec3 e1=normalize(cross(uSunPos, vec3(0,1,0))), e2=cross(e1,uSunPos);
+  float ang=atan(dot(d,e2), dot(d,e1))/6.2832+.5;
+  float n=26., k=floor(ang*n), f=fract(ang*n);
+  float wid=.18+.38*h11(k), on=step(.32,h11(k+7.)), off=h11(k+3.)*.3;
+  float low=mix(.42,.7,1.-smoothstep(.15,.85,uSunPos.y))*smoothstep(-.14,-.02,uSunPos.y);
+  float aaR=fwidth(f)*1.5;
+  float reach=smoothstep(.06,.11,r)*(1.-smoothstep(.5+.6*h11(k+11.), 1.35, r));
+  float rayIn=on*smoothstep(off-aaR,off+aaR,f)*(1.-smoothstep(off+wid-aaR,off+wid+aaR,f));
+  float rayEdge=on*(1.-smoothstep(0.,aaR*2.,abs(f-off-wid)));          // a thin folded edge on one side of each strip
+  vec3 rc=mix(vec3(.99,.84,.32), vec3(.96,.55,.2), h11(k+5.));          // strips from yellow to orange
+  float rk=reach*low*smoothstep(-.02,.06,d.y);
+  c=mix(c, srgb(rc)*1.1, rayIn*rk*.85);
+  c=mix(c, srgb(rc*.8)*1.05, rayEdge*rk*.4);
+  // the paper sun: three stacked orange discs, each edged with a fine line
+  float aa=fwidth(r)*1.2;
+  float d1=1.-smoothstep(.056-aa,.056+aa,r), d2=1.-smoothstep(.043-aa,.043+aa,r), d3=1.-smoothstep(.029-aa,.029+aa,r);
+  c=mix(c, srgb(vec3(.93,.42,.12))*1.25, d1);
+  c=mix(c, srgb(vec3(.97,.55,.16))*1.3, d2);
+  c=mix(c, srgb(vec3(.99,.68,.24))*1.35, d3);
+  c*=1.-.25*(1.-smoothstep(0.,aa*2.,abs(r-.043)))*d1-.25*(1.-smoothstep(0.,aa*2.,abs(r-.029)))*d2;
+  // night: paper stars (little four-pointed cut-outs on a fixed grid, so they never flicker) and the moon
+  if (uNight>.01){
+    float az=atan(d.x,d.z), el=asin(clamp(d.y,-1.,1.));
+    vec2 g=vec2(az*38., el*38.), id=floor(g), f=fract(g)-.5;
+    float hs=h11(id.x*31.7+id.y*7.13), on2=step(.86,hs)*smoothstep(.05,.25,d.y);
+    vec2 o=(vec2(h11(id.x+id.y*3.1),h11(id.y+id.x*5.7))-.5)*.5, q=abs(f-o);
+    float star=1.-smoothstep(.0,fwidth(g.x)*1.2+.01, min(q.x*.6+q.y*2.4, q.y*.6+q.x*2.4)-.12*(.6+.8*fract(hs*13.)));
+    float tw=.5+.5*sin(uTime*(.9+2.2*fract(hs*7.31))+hs*60.);              // each star twinkles slowly at its own pace
+    c=mix(c, vec3(.95,.92,.8)*1.3, star*on2*uNight*(.35+.65*tw*tw));
+    float mr=acos(clamp(dot(d,uMoonPos),-1.,1.)), ma=fwidth(mr)*1.2;
+    float md=1.-smoothstep(.048-ma,.048+ma,mr);
+    vec3 mt=normalize(cross(uMoonPos,vec3(0,1,0))), mu2=cross(mt,uMoonPos); vec2 mp=vec2(dot(d,mt),dot(d,mu2));
+    float cr=(1.-smoothstep(.009,.011,length(mp-vec2(.015,.012))))+(1.-smoothstep(.006,.008,length(mp-vec2(-.017,-.006))))+(1.-smoothstep(.005,.007,length(mp-vec2(.004,-.022))));
+    c+=vec3(.25,.3,.45)*pow(max(dot(d,uMoonPos),0.),60.)*.6*uNight;
+    c=mix(c, srgb(vec3(.96,.93,.82))*mix(1.25,1.05,clamp(cr,0.,1.)), md*smoothstep(-.03,.02,uMoonPos.y));
+  }
+  vec2 su=d.xz/(1.2+abs(d.y))*3.; c*=.94+.07*texture(uPaper,su*.6).r+.05*texture(uPaper,su*4.).r;   // the sky is a paper backdrop too
+  c=mix(c, uMistCol, smoothstep(.3,1.,uFog)*.92*(1.-.35*smoothstep(0.,.7,d.y)));   // fog veils the sky too
+  o=vec4(tone(c),1.);
+}`;
+
+// ---------------------------------------------------------------- comfort overlay: darkens the edges while moving in VR, and fades between scenes
+const P_overlay = program(FSQ_VS, `
+in vec2 vUv; out vec4 o; uniform float uVig, uFade; uniform vec2 uCtr, uAsp;
+void main(){ vec2 q=(vUv-uCtr)*uAsp; float v=uVig*smoothstep(.22,.62,length(q)); float a=1.-(1.-v)*(1.-uFade); o=vec4(0.,0.,0.,a); }`);
+
+// floating caption in the headset: a textured card that faces the viewer
+const P_label = program(`
+uniform mat4 uVPr; uniform vec3 uC, uR, uU, uCam; uniform vec2 uSz; out vec2 vT;
+const vec2 Q[6]=vec2[6](vec2(-1.,-1.),vec2(1.,-1.),vec2(1.,1.),vec2(-1.,-1.),vec2(1.,1.),vec2(-1.,1.));
+void main(){ vec2 q=Q[gl_VertexID]; vT=q*.5+.5; vec3 P=uC+uR*q.x*uSz.x+uU*q.y*uSz.y; gl_Position=uVPr*vec4(P-uCam,1.); }`,
+`uniform sampler2D uTex; uniform float uA; in vec2 vT; out vec4 o;
+void main(){ vec4 c=texture(uTex, vec2(vT.x, 1.-vT.y)); o=vec4(c.rgb*c.a*uA, c.a*uA); }`);
+
+// ---------------------------------------------------------------- fireflies: tiny glowing paper beads that drift and blink at night
+const P_glow = program(`${G_COMMON}
+layout(location=0) in vec3 aP; layout(location=1) in vec4 aI0; layout(location=2) in vec4 aI1;
+out float vB;
+void main(){
+  float t=uTime*aI1.y+aI1.x*50.;
+  vec3 o=vec3(sin(t*.7)*aI0.w+.5*sin(t*.23), .6*sin(t*.41+aI1.x*9.)+.25*sin(t*1.3), cos(t*.53)*aI0.w+.5*cos(t*.19));
+  float b=smoothstep(.55,.95,sin(uTime*(1.1+aI1.y)+aI1.z*20.))*uNight;
+  vB=b; vec3 P=aI0.xyz+o+aP*(.35+.65*b);
+  gl_Position=uVPr*vec4(P-uCam,1.);
+}`,`${G_COMMON}
+in float vB; out vec4 o;
+void main(){ o=vec4(tone(mix(vec3(.08,.1,.05), vec3(1.,.95,.4)*2.2, vB)),1.); }`);
+
+// ================================================================ BUILDING THE JUNGLE (once, at load)
+// 1. Plant: scatter copies of each template over the valley (denser near the path, never on the path or in water).
+// 2. Upload: every kind of plant is ONE shape plus a list of "copies" (position, turn, size, colour). The GPU draws all
+//    copies of a kind in one go - that is "instancing", and it is why 4,000 ferns cost about as much as a few.
+// 3. Cull: the valley is cut into 16 m squares; each frame only the squares near you and in front of you are drawn.
+// Example: a fern copy is 8 numbers: x, y, z, turn, size, height-stretch, colour choice, sway phase.
+
+// ---------------------------------------------------------------- the paper itself
+// A 512 x 512 sheet of "paper" is drawn once when the page loads: soft mottled patches, thousands of short curved fibres
+// and a fine grain. Red holds the brightness of the paper; green and blue hold how its tiny bumps tilt, so the light
+// catches the paper's tooth. It tiles seamlessly and has mipmaps, so it never shimmers at a distance.
+// Example: a leaf 50 cm long shows about one repeat of this sheet; fibres are 1 to 4 cm long.
+const paperTex = (() => {
+  const N=512, cv=document.createElement('canvas'); cv.width=cv.height=N; const c=cv.getContext('2d'), r=mulberry(77);
+  c.fillStyle='rgb(128,128,128)'; c.fillRect(0,0,N,N);
+  const wrap=(x,y,R,fn)=>{ for (const dx of [-N,0,N]) for (const dy of [-N,0,N]){ if (x+dx<-R||x+dx>N+R||y+dy<-R||y+dy>N+R) continue; fn(x+dx,y+dy); } };
+  for (let i=0;i<320;i++){ const x=r()*N, y=r()*N, R=12+r()*70, l=r()<.5?255:0;
+    wrap(x,y,R,(X,Y)=>{ const g=c.createRadialGradient(X,Y,0,X,Y,R); g.addColorStop(0,`rgba(${l},${l},${l},.06)`); g.addColorStop(1,`rgba(${l},${l},${l},0)`); c.fillStyle=g; c.fillRect(X-R,Y-R,2*R,2*R); }); }
+  c.lineCap='round';
+  for (let i=0;i<5600;i++){ const x=r()*N, y=r()*N, a=r()*6.28, L=8+r()*34, l=r()<.6?255:20, al=.05+.13*r(), bend=(r()-.5)*1.2;
+    c.strokeStyle=`rgba(${l},${l},${l},${al})`; c.lineWidth=.45+r()*1.3;
+    wrap(x,y,L,(X,Y)=>{ c.beginPath(); c.moveTo(X,Y); c.quadraticCurveTo(X+Math.cos(a+bend)*L*.5, Y+Math.sin(a+bend)*L*.5, X+Math.cos(a)*L, Y+Math.sin(a)*L); c.stroke(); }); }
+  const id=c.getImageData(0,0,N,N), d=id.data, h=new Float32Array(N*N);
+  for (let i=0;i<N*N;i++) h[i]=d[i*4]/255+(r()-.5)*.025;
+  { let m=0, v=0; for (const x of h) m+=x; m/=h.length; for (const x of h) v+=(x-m)**2; const sd=Math.sqrt(v/h.length)||1;
+    for (let i=0;i<h.length;i++) h[i]=clamp(.5+(h[i]-m)/sd*.19,0,1); }      // stretch the contrast so the paper reads clearly
+  const H=(x,y)=>h[((y+N)%N)*N+((x+N)%N)];
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++){ const i=(y*N+x)*4, gx=H(x+1,y)-H(x-1,y), gy=H(x,y+1)-H(x,y-1);
+    d[i]=clamp(H(x,y)*255,0,255); d[i+1]=clamp(128+gx*260,0,255); d[i+2]=clamp(128+gy*260,0,255); d[i+3]=255; }
+  const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,N,N,0,gl.RGBA,gl.UNSIGNED_BYTE,d);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+  const an=gl.getExtension('EXT_texture_filter_anisotropic'); if (an) gl.texParameterf(gl.TEXTURE_2D, an.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(4, gl.getParameter(an.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+  return t;
+})();
+
+const P_plant=program(VS_PLANT, FS_PLANT), P_ground=program(VS_GROUND, FS_GROUND), P_water=program(VS_WATER, FS_WATER);
+const P_animal=program(VS_ANIMAL, FS_ANIMAL), P_bird=program(VS_BIRD, FS_BIRD), P_fly=program(VS_FLY, FS_FLY), P_sky=program(VS_SKY, FS_SKY);
+
+function makeVAO(attrs, indices, instances=0){
+  const vao=gl.createVertexArray(); gl.bindVertexArray(vao);
+  const bufs=new Map();
+  for (const a of attrs){
+    let b=bufs.get(a.data);
+    if (!b){ b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,a.data,gl.STATIC_DRAW); bufs.set(a.data,b); }
+    gl.bindBuffer(gl.ARRAY_BUFFER,b);
+    gl.enableVertexAttribArray(a.loc); gl.vertexAttribPointer(a.loc, a.size, gl.FLOAT, false, a.stride||0, a.offset||0);
+    if (a.div) gl.vertexAttribDivisor(a.loc, a.div);
+  }
+  const ib=gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
+  gl.bindVertexArray(null);
+  return {vao, count:indices.length, n:instances, attrs, bufs};
+}
+let TRI_STATS={};
+
+// ---------------------------------------------------------------- 1. planting
+const FALL_BASE_Z = LIP[2]+7.4;
+// frogs sit on rocks in the stream near the bridge (new rocks each visit)
+const FROG_ROCKS = (() => { const i0=nearestOn(LOWER,BRIDGE.c[0],BRIDGE.c[1],1).i, out=[];
+  for (let k=0;k<7;k++){ const p=LOWER[clamp(i0+Math.round((vrand()-.5)*30),0,LOWER.length-1)], sd=vrand()<.5?-1:1, o=sd*p.w*(.6+vrand()*.3); out.push([p.x+p.side[0]*o, p.z+p.side[2]*o]); }
+  return out; })();
+const PLANT = (() => {
+  const rnd=mulberry(20261014), out={grass:[],palm:[],tree:[],giant:[],treefern:[],bamboo:[],banana:[],fern:[],bush:[],rhodo:[],ginger:[],flower:[],reed:[],rock:[],log:[],splash:[],cloud:[],scenery:[]};
+  const add=(kind,x,z,rot,sc,ys,v,pat,y)=>out[kind].push([x, y==null?groundH(x,z):y, z, rot, sc, ys, v, rnd()+(pat?2:0)]);
+  const X0=-150, X1=150, Z0=-195, Z1=150;
+  const LOW=new Set(['fern','bush','flower','grass','ginger']);
+  const scatter=(kind, n, tries, minClear, near, far, scale, yscale, patChance)=>{
+    let k=0;
+    for (let t=0; t<tries && k<n; t++){
+      const x=mix(X0,X1,rnd()), z=mix(Z0,Z1,rnd());
+      const dp=pathNear(x,z).d;
+      const want=far+(near-far)*(1-smooth(4,55,dp));
+      if (rnd()>want) continue;
+      if (clearance(x,z,LOW.has(kind))<minClear) continue;
+      add(kind,x,z,rnd()*6.283, scale[0]+(scale[1]-scale[0])*rnd(), yscale[0]+(yscale[1]-yscale[0])*rnd(), rnd(), rnd()<patChance); k++;
+    }
+  };
+  // an Arunachal hill forest: tall canopy trees over a dense understorey of tree ferns, bamboo, wild banana,
+  // rhododendron, ginger and ferns. Denser near the trail, where you can see it, thinner far away.
+  scatter('giant',   70, 40000, 3.0, .5, .2, [.9,1.15], [.9,1.15], .15);
+  scatter('tree',   210, 40000, 2.2, .8, .22, [.8,1.2], [.85,1.15], .25);
+  scatter('palm',    60, 30000, 1.6, .5, .05, [.6,.95], [.8,1.1], .2);
+  scatter('treefern',260, 50000, 1.1, 1, .12, [.8,1.25], [.85,1.2], .1);
+  scatter('bamboo',   80, 40000, 1.6, .7, .08, [.8,1.15], [.8,1.1], 0);
+  scatter('banana',  380, 40000, 1.0, 1, .1, [.8,1.3], [.9,1.2], .25);
+  scatter('rhodo',   260, 40000, .8, 1, .06, [.8,1.3], [.8,1.2], 0);
+  scatter('ginger',  520, 50000, .4, 1, .05, [.8,1.25], [.85,1.2], .1);
+  scatter('fern',   2100, 90000, .3, 1, .05, [.7,1.3], [.8,1.2], .12);
+  scatter('grass',  4200, 90000, .0, 1, .08, [.7,1.4], [.7,1.3], 0);     // grass tufts everywhere, right up to where you walk
+  scatter('bush',   1100, 90000, .3, 1, .05, [.7,1.4], [.8,1.2], .25);
+  scatter('log',      30, 20000, 2.0, .6, .02, [.8,1.2], [1,1], 0);
+  // flowers: mostly in drifts along the path edges, where the butterflies are
+  for (let i=0;i<PATH.length && out.flower.length<640;i+=6){
+    const p=PATH[i]; if (onBridge(p.s)) continue;
+    for (const sd of [-1,1]){ if (rnd()<.35) continue; const off=sd*(.4+rnd()*3.4), x=p.x+p.side[0]*off+(rnd()-.5), z=p.z+p.side[2]*off+(rnd()-.5);
+      if (clearance(x,z,true)<.15) continue; add('flower',x,z,rnd()*6.283,.8+rnd()*.6,.8+rnd()*.5,rnd(),rnd()<.12); }
+  }
+  scatter('flower', 260, 30000, .2, .7, .02, [.8,1.4], [.8,1.3], .1);
+  // reeds and rocks along the water
+  for (const L of [LOWER, UPPER]) for (let i=0;i<L.length;i+=2){ const p=L[i];
+    for (const sd of [-1,1]){
+      if (rnd()<.45){ const off=sd*(p.w+.1+rnd()*1.6), x=p.x+p.side[0]*off, z=p.z+p.side[2]*off; if (pathNear(x,z).d>halfW(0)+1 && Math.hypot(x-TIGER_AT[0],z-TIGER_AT[1])>2.6) add('reed',x,z,rnd()*6.283,.8+rnd()*.5,.8+rnd()*.5,rnd(),false); }
+      if (rnd()<.16){ const off=sd*(p.w-.6+rnd()*1.8), x=p.x+p.side[0]*off, z=p.z+p.side[2]*off; if (pathNear(x,z).d>halfW(0)+2.4 && clearance(x,z)>-8) add('rock',x,z,rnd()*6.283,.35+rnd()*.7,.6+rnd()*.6,rnd(),false); }
+    } }
+  for (let i=0;i<46;i++){ const a=rnd()*6.283, d=7+rnd()*8, x=-4+Math.cos(a)*d, z=-77+Math.sin(a)*d*.6; if (pathNear(x,z).d>3) add('rock',x,z,rnd()*6.283,.6+rnd()*1.3,.6+rnd()*.7,rnd(),false); }
+  for (let i=0;i<80;i++){ const x=LIP[0]-35+rnd()*70, z=mix(-77,-85,rnd()); if (pathNear(x,z).d>3 && Math.abs(x-LIP[0])>3.6) add('rock',x,z,rnd()*6.283,.8+rnd()*1.8,.6+rnd()*.8,rnd(),false); }
+  // big rocks walling the gorge under the root bridge, and frog rocks in the stream
+  for (let i=0;i<40;i++){ const a=rnd()*6.283, d=5+rnd()*10, x=BRIDGE.c[0]+Math.cos(a)*d, z=BRIDGE.c[1]+Math.sin(a)*d; const r=riverNear(x,z); if (r.edge>-1.5 && r.edge<2.5 && pathNear(x,z).d>3.4 && clearance(x,z)>-6) add('rock',x,z,rnd()*6.283,.8+rnd()*1.2,.8+rnd()*.6,rnd(),false); }
+  for (const f of FROG_ROCKS) add('rock',f[0],f[1],rnd()*6.283,.5,.7,rnd(),false, riverNear(f[0],f[1]).p.y-.25);
+  scatter('rock', 120, 20000, .6, .3, .03, [.4,1.2], [.5,1.1], 0);
+  // white paper splashes where the falls hit the pool
+  for (let i=0;i<16;i++){ const a=i/16*6.283+rnd()*.3, d=.8+rnd()*2.2; add('splash',LIP[0]+Math.cos(a)*d*1.6, FALL_BASE_Z+Math.sin(a)*d*.7, rnd()*6.283, .9+rnd()*.9, .7+rnd()*.8, rnd(), false, POOL_Y-.02); }
+  // clouds: mostly ahead, toward the sunrise
+  for (let i=0;i<26;i++){ const a=(rnd()-.5)*(i<17?2.4:6.283), d=230+rnd()*200; add('cloud', Math.sin(a)*d, -Math.cos(a)*d-20, rnd()*6.283, 1.2+rnd()*1.3, .7+rnd()*.4, rnd(), false, 70+rnd()*80); }
+  add('scenery',0,0,0,1,1,0,false,0);
+  return out;
+})();
+
+// ---------------------------------------------------------------- 2. templates and upload
+const TPL = {
+  palm:[makePalm(11)], tree:[makeTree(5), makeTree(17)], giant:[makeTree(29,19,1.45), makeTree(37,22,1.6)], treefern:[makeTreeFern(13), makeTreeFern(19)],
+  bamboo:[makeBamboo(43)], rhodo:[makeRhodo(47)], ginger:[makeGinger(53)], log:[makeLog(59)],
+  banana:[makeBanana(3)], fern:[makeFern(7,false)], bush:[makeFern(9,true)], grass:[makeGrass(3), makeGrass(8)],
+  flower:[makeFlowers(31)], reed:[makeReeds(41)], rock:[makeRock(51), makeRock(57)], splash:[makeSplash(61)], cloud:[makeCloud(71), makeCloud(73)]
+};
+const SCN = makeScenery(); TPL.scenery=[SCN.F];
+
+// ---------------------------------------------------------------- 2b. solid trunks (simple walking physics)
+// Every tree you could bump into becomes a circle on the ground: its centre and the radius of its trunk near head
+// height. The circles are filed into 4 m squares, so the walker only checks the few trunks in its own square and the
+// eight around it, not all ~700 of them. Example: a giant tree at scale 1.1 with leafK 1.45 gets radius .45*1.1*1.45 = .72 m.
+const SOLID_R = { giant:t=>.45*t[4]*1.5, tree:t=>.42*t[4], palm:t=>.2*t[4], treefern:t=>.16*t[4], bamboo:t=>.4*t[4], rock:t=>t[4]>.9 ? .55*t[4] : 0 };
+const TRUNKS = (() => { const C=4, grid=new Map(), key=(i,j)=>i*100003+j;
+  const put=(x,z,r)=>{ if (!(r>0)) return; const k=key(Math.floor(x/C),Math.floor(z/C)); let a=grid.get(k); if (!a) grid.set(k,a=[]); a.push([x,z,r]); };
+  for (const kind in SOLID_R) for (const t of PLANT[kind]) put(t[0], t[2], SOLID_R[kind](t));
+  for (const [x,z,r] of SCN.SOLID) put(x,z,r);
+  let n=0; grid.forEach(a=>n+=a.length);
+  return { n, near(x,z){ const i=Math.floor(x/C), j=Math.floor(z/C), out=[];
+    for (let di=-1;di<=1;di++) for (let dj=-1;dj<=1;dj++){ const a=grid.get(key(i+di,j+dj)); if (a) out.push(...a); } return out; } };
+})();
+// push a point (x,z) out of any trunk it is inside, keeping a body radius of `body` metres. Example: standing .2 m from
+// the centre of a .42 m trunk with a .3 m body, you are moved out to .72 m from the centre, along the line from it,
+// so walking into a tree at an angle makes you slide around it instead of stopping dead.
+function pushOutOfTrunks(x, z, body=.3){
+  for (let pass=0; pass<2; pass++){ let hit=false;
+    for (const [cx,cz,r] of TRUNKS.near(x,z)){ const dx=x-cx, dz=z-cz, d=Math.hypot(dx,dz), m=r+body;
+      if (d<m){ const ux = d>1e-4 ? dx/d : 1, uz = d>1e-4 ? dz/d : 0; x=cx+ux*m; z=cz+uz*m; hit=true; } }
+    if (!hit) break; }
+  return [x,z]; }
+
+// the culling grid: 16 m squares; within a square, copies are sorted by their random "rank" so thinning simply
+// draws the first part of each square
+const CELL=16, GX0=-160, GZ0=-200, NGX=Math.ceil(320/CELL), NGZ=Math.ceil(360/CELL);
+const cellOf=(x,z)=>clamp(Math.floor((z-GZ0)/CELL),0,NGZ-1)*NGX + clamp(Math.floor((x-GX0)/CELL),0,NGX-1);
+const CULLED = new Set(['grass','palm','tree','giant','treefern','bamboo','rhodo','ginger','log','banana','fern','bush','flower','reed','rock']);
+const GROUPS = [];
+for (const kind in TPL){
+  const variants=TPL[kind], list=PLANT[kind];
+  variants.forEach((F, vi)=>{
+    const mine=list.filter((_,i)=>i%variants.length===vi);
+    if (!mine.length) return;
+    const culled=CULLED.has(kind);
+    if (culled) mine.sort((a,b)=>(cellOf(a[0],a[2])-cellOf(b[0],b[2])) || (fract1(a[7])-fract1(b[7])));
+    const inst=new Float32Array(mine.length*8); mine.forEach((q,i)=>inst.set(q,i*8));
+    const m=F.out();
+    const G=makeVAO([{loc:0,size:3,data:m.P},{loc:1,size:4,data:m.A},
+      {loc:2,size:4,data:inst,stride:32,offset:0,div:1},{loc:3,size:4,data:inst,stride:32,offset:16,div:1}], m.I, mine.length);
+    G.kind=kind; G.culled=culled; G.tris=m.I.length/3; G.cells=[];
+    if (culled){ let cur=-1; mine.forEach((q,i)=>{ const id=cellOf(q[0],q[2]); if (id!==cur){ cur=id; G.cells.push({id,start:i,n:0,y:0}); } const C=G.cells[G.cells.length-1]; C.n++; C.y+=q[1]; });
+      for (const C of G.cells){ C.y=C.y/C.n; C.cx=GX0+(C.id%NGX+.5)*CELL; C.cz=GZ0+(Math.floor(C.id/NGX)+.5)*CELL; } }
+    GROUPS.push(G);
+  });
+}
+function fract1(x){ return x-Math.floor(x); }
+
+// ---------------------------------------------------------------- the ground: one sheet, finer near the middle, coarser toward the horizon
+const groundG = (() => {
+  const N=150, ax=u=>178*u+330*u*u*u, P=[], C=[], I=[], NR=[];
+  const r=mulberry(99);
+  const greens=[[.36,.6,.25],[.3,.53,.22],[.45,.66,.3],[.26,.48,.25],[.52,.7,.33]].map(c=>c.map(v=>Math.pow(v,2.2)));
+  const sand=[.82,.74,.55].map(v=>Math.pow(v,2.2)), wet=[.55,.56,.45].map(v=>Math.pow(v,2.2)), rock=[.55,.5,.55].map(v=>Math.pow(v,2.2));
+  const H=[];
+  for (let j=0;j<=N;j++) for (let i=0;i<=N;i++){
+    const x=ax(i/N*2-1)+(i%N&&j%N?(r()-.5)*.5:0), z=ax(j/N*2-1)*1.05-10+(i%N&&j%N?(r()-.5)*.5:0);
+    const y=groundH(x,z); H.push(y); P.push(x,y,z);
+  }
+  for (let j=0;j<=N;j++) for (let i=0;i<=N;i++){
+    const k=j*(N+1)+i, x=P[k*3], z=P[k*3+2];
+    const kr=Math.min(i+1,N)+j*(N+1), ku=i+Math.min(j+1,N)*(N+1);
+    const dx=Math.max(1e-3,Math.abs(P[kr*3]-x)), dz=Math.max(1e-3,Math.abs(P[ku*3+2]-z));
+    const slope=Math.hypot((H[kr]-H[k])/dx, (H[ku]-H[k])/dz);
+    // grass gets its colour from the paper layers in the shader (w=1); sand, wet stones and rock are fixed here
+    let c=greens[0], w=1;
+    const e=riverNear(x,z).edge;
+    if (e<1.6){ c=e<-.2?wet:sand; w=0; }
+    if (slope>.75){ c=rock; w=0; }
+    C.push(...c, w);
+    const kl=Math.max(i-1,0)+j*(N+1), kd=i+Math.max(j-1,0)*(N+1);
+    const nx=-(H[kr]-H[kl])/Math.max(1e-3,P[kr*3]-P[kl*3]), nz=-(H[ku]-H[kd])/Math.max(1e-3,P[ku*3+2]-P[kd*3+2]);
+    NR.push(...V.norm([nx,1,nz]));
+  }
+  for (let j=0;j<N;j++) for (let i=0;i<N;i++){ const a=j*(N+1)+i, b=a+1, c=a+N+1, d=c+1; if ((i+j)%2) I.push(a,c,b, b,c,d); else I.push(a,c,d, a,d,b); }
+  const G=makeVAO([{loc:0,size:3,data:new Float32Array(P)},{loc:1,size:4,data:new Float32Array(C)},{loc:2,size:3,data:new Float32Array(NR)}], new Uint32Array(I));
+  G.tris=I.length/3; return G;
+})();
+
+// ---------------------------------------------------------------- water: ribbons along the river and stream, and the falls
+// layer edges across the river (the same wavy lines the water shader uses): 1 mid blue, 2 pale blue, 3 white
+const eL=(k,s,sd)=> k===1 ? .42+.07*Math.sin(s*.31+sd*1.7)+.03*Math.sin(s*1.13+sd) : k===2 ? .7+.05*Math.sin(s*.27+sd*2.3)+.02*Math.sin(s*.9) : .9+.025*Math.sin(s*.43+sd*.7);
+const LAYER_H=.035;    // each paper layer sits 3.5 cm above the one below
+const [waterG, waterTopG] = (() => {
+  const B={P:[],W:[],I:[]}, T={P:[],W:[],I:[]};
+  const vtx=(M,p,w)=>{ M.P.push(...p); M.W.push(...w); return M.P.length/3-1; };
+  const at=(p,v,dy)=>{ const o=v/.9*p.w; return [p.x+p.side[0]*o, p.y+dy, p.z+p.side[2]*o]; };
+  const strip=(M,L,f0,f1,dy,kind,speed)=>{ let prev=null;           // a ribbon between two "across" positions given as functions of s
+    for (const p of L){ const r=[vtx(M,at(p,f0(p.s),dy),[p.s,f0(p.s),kind,speed]), vtx(M,at(p,f1(p.s),dy),[p.s,f1(p.s),kind,speed])];
+      if (prev) M.I.push(prev[0],r[0],prev[1], prev[1],r[0],r[1]); prev=r; } };
+  const wall=(M,L,f,y0,y1,layer)=>{ let prev=null;
+    for (const p of L){ const r=[vtx(M,at(p,f(p.s),y0),[p.s,layer,4,0]), vtx(M,at(p,f(p.s),y1),[p.s,layer,4,0])];
+      if (prev) M.I.push(prev[0],r[0],prev[1], prev[1],r[0],r[1]); prev=r; } };
+  for (const [L,speed] of [[LOWER,1],[UPPER,1.6]]){
+    strip(B,L,()=>-1.02,()=>1.02,0,0,speed);                          // the deep blue bottom sheet
+    for (const sd of [-1,1]) for (let k=1;k<=3;k++){
+      const fin=s=>sd*eL(k,s,sd), fout=()=>sd*1.02;
+      strip(B,L, sd<0?fout:fin, sd<0?fin:fout, k*LAYER_H, k, speed);
+      wall(B,L,fin,(k-1)*LAYER_H,k*LAYER_H,k);
+    }
+    strip(T,L,s=>-eL(1,s,-1)+.02,s=>eL(1,s,1)-.02,.012,6,speed);    // the ripple layer
+  }
+  // the pool under the falls: a disc of deep blue with lighter rings toward its rim
+  { const c=[LOWER[0].x, POOL_Y, LOWER[0].z-1.6], R=[9.6,5.8], N=36;
+    const ring=(f,dy,kind,v)=>{ const ids=[]; for (let i=0;i<=N;i++){ const a=i/N*6.283, w=f(a*3); ids.push(vtx(B,[c[0]+Math.cos(a)*R[0]*w, POOL_Y+dy, c[2]+Math.sin(a)*R[1]*w],[a*3,v==null?w:v,kind,.4])); } return ids; };
+    const ctr=vtx(B,[c[0],POOL_Y,c[2]],[0,0,0,.4]), r0=ring(()=>1.02,0,0);
+    for (let i=0;i<N;i++) B.I.push(ctr,r0[i],r0[i+1]);
+    for (let k=1;k<=3;k++){ const inn=ring(a=>eL(k,a,1),k*LAYER_H,k), out=ring(()=>1.02,k*LAYER_H,k), wl=ring(a=>eL(k,a,1),(k-1)*LAYER_H,4,k), wh=ring(a=>eL(k,a,1),k*LAYER_H,4,k);
+      for (let i=0;i<N;i++){ B.I.push(inn[i],out[i],inn[i+1], inn[i+1],out[i],out[i+1], wl[i],wh[i],wl[i+1], wl[i+1],wh[i],wh[i+1]); } } }
+  // the falls: a curved sheet from the lip to the pool, and a second sheet of white strips 6 cm in front of it
+  for (const [M,kind,dz] of [[B,5,0],[T,7,.06]]){
+    const base=M.P.length/3, rows=12, cols=8, top=LIP, bot=[LIP[0], POOL_Y, FALL_BASE_Z];
+    for (let j=0;j<=rows;j++){ const u=j/rows, y=mix(top[1]+.05,bot[1],u*u*.4+u*.6), z=mix(top[2]+.3,bot[2],Math.sqrt(u))+dz, wd=mix(2.4,3.6,u);
+      for (let k=0;k<=cols;k++){ const v=k/cols*2-1; M.P.push(top[0]+v*wd, y, z+.25*Math.sin(v*2.5+u*3)); M.W.push(u, v, kind, 1); } }
+    for (let j=0;j<rows;j++) for (let k=0;k<cols;k++){ const a=base+j*(cols+1)+k, b=a+1, c=a+cols+1, d=c+1; M.I.push(a,c,b, b,c,d); }
+  }
+  return [B,T].map(M=>{ const G=makeVAO([{loc:0,size:3,data:new Float32Array(M.P)},{loc:1,size:4,data:new Float32Array(M.W)}], new Uint32Array(M.I)); G.tris=M.I.length/3; return G; });
+})();
+
+// ---------------------------------------------------------------- the animals' meshes
+function rigVAO(R){ const m=R.F.out(); const G=makeVAO([{loc:0,size:3,data:m.P},{loc:1,size:4,data:m.A}], m.I); G.tris=m.I.length/3; return G; }
+const TIGER=makeTiger(), ELEPHANT=makeElephant(), MITH=MITHUN(), DEERM=DEER(), PANDAM=PANDA(), LIZ=LIZARD(), GIB=makeGibbon(), SNAKE=makeSnake(), FROG=makeFrog();
+const tigerG=rigVAO(TIGER), eleG=rigVAO(ELEPHANT), mithG=rigVAO(MITH), deerG=rigVAO(DEERM), pandaG=rigVAO(PANDAM), lizG=rigVAO(LIZ), gibG=rigVAO(GIB), snakeG=rigVAO(SNAKE), frogG=rigVAO(FROG);
+const palLin = pal => new Float32Array(pal.flatMap(hex));
+
+// birds: flocks circling over the valley, a soaring eagle, white cranes, macaws, and perched macaws and toucans
+const BIRD_PAL = new Float32Array([
+  ['#3f7fc4','#2f65ad','#1d4a8a','#e8b04a','#4a8fd4'],   // 0 small blue bird
+  ['#d9442f','#c23726','#8f2418','#f0c050','#e0583e'],   // 1 small red bird
+  ['#cf2a1f','#e2b83a','#2e6fc0','#efe6d4','#d93025'],   // 2 scarlet macaw
+  ['#3d86c8','#2f6db6','#23529a','#2a2a2a','#f2c14e'],   // 3 blue-and-gold macaw
+  ['#6b4429','#5a3a24','#3e2716','#f0b13a','#f3efe6'],   // 4 eagle
+  ['#f2efe8','#e8e4dc','#c9c4bb','#d9a441','#f2efe8'],   // 5 crane
+  ['#e07a2b','#c9651f','#8e4614','#f2c14e','#ea8a3b'],   // 6 small orange bird
+  ['#1d1d1f','#262628','#111113','#f08a24','#f5f1e8'],   // 7 toucan
+  ['#1b1b1d','#232325','#f3efe6','#f2c230','#e8cf6a'],   // 8 great hornbill (Arunachal's state bird): black, white wing bar, yellow casque
+  ['#4caf50','#3e9a43','#2e7d32','#d84a3a','#5cbf60'],   // 9 rose-ringed parakeet
+  ['#f6f4ee','#efece4','#d8d4ca','#e8b73a','#f6f4ee'],   // 10 egret
+  ['#1c1f26','#22252d','#14161b','#2a2a2a','#1c1f26'],   // 11 drongo
+  ['#2e2622','#3a302b','#1d1715','#2a2420','#3d332d']    // 12 fruit bat (night only)
+].flat().flatMap(hex));
+const BIRDS = (() => {
+  const r=mulberry(808), B=[];
+  const add=(c,R,w,ph,size,kind,flap,glide,bob,perch)=>B.push([...c,R, w,ph,size,kind, flap,glide,bob,perch]);
+  const flock=(cx,cz,cy,R,n,kind)=>{ const w=(r()<.5?-1:1)*(.22+r()*.1), ph=r(); for (let i=0;i<n;i++) add([cx+(r()-.5)*6, cy+(r()-.5)*5, cz+(r()-.5)*6], R+(r()-.5)*6, w*(1+(r()-.5)*.1), ph+i*.012, .55+r()*.25, kind, 13+r()*4, .25, .8, 0); };
+  flock(-10,-60,30,40,9,0); flock(20,-120,38,55,8,1); flock(-35,20,30,35,7,6); flock(30,-30,34,30,6,0);
+  flock(10,40,32,45,10,9); flock(-20,-10,28,32,8,9); flock(40,-90,30,40,6,11); flock(5,-30,8,26,5,10);
+  add([-5,26,-30],32,.11,.1,2.5,8,4.5,.65,1.2,0); add([15,30,-60],40,-.09,.6,2.6,8,4.5,.65,1.2,0);      // great hornbills gliding over the valley
+  add([0,48,-70],70,.07,0,3.2,4,4,.75,2,0);                       // the eagle soars in a wide slow circle
+  add([-20,30,-110],45,-.1,.3,2.4,5,5.5,.6,1.5,0); add([-24,32,-112],46,-.1,.33,2.2,5,5.5,.6,1.5,0);
+  add([10,12,10],22,.16,.2,1.35,2,9,.3,1,0); add([-5,14,-40],26,-.14,.6,1.35,3,9,.3,1,0); add([15,11,-10],18,.18,.8,1.3,2,9,.3,1,0);
+  // bats: out only at night, flitting in loops over the canopy and along the river
+  for (let i=0;i<26;i++){ const sp=r()*PATH_LEN, q=pathAt(sp), o=(r()-.5)*20; add([q.x+q.side[0]*o, q.y+6+r()*8, q.z+q.side[2]*o], 4+r()*9, (r()<.5?-1:1)*(.5+r()*.5), r(), .55+r()*.2, 12, 15+r()*4, 0, .8, 0); }
+  SCN.PERCH.forEach((p,i)=>{ if (i%3===2) return; const kind=[8,7,8,2,8,3,8,7,2,8][i%10]; add(p.p,0,0,((p.yaw/6.283)%1+1)%1,1.15,kind,0,0,0,1); });
+  return B;
+})();
+const birdG = (() => { const m=makeBird().out(), inst=new Float32Array(BIRDS.flat());
+  const G=makeVAO([{loc:0,size:3,data:m.P},{loc:1,size:4,data:m.A},
+    {loc:2,size:4,data:inst,stride:48,offset:0,div:1},{loc:3,size:4,data:inst,stride:48,offset:16,div:1},{loc:4,size:4,data:inst,stride:48,offset:32,div:1}], m.I, BIRDS.length);
+  G.tris=m.I.length/3; return G; })();
+
+// butterflies: each loops around a patch of flowers near the path
+const FLY_PAL = new Float32Array([
+  ['#f08a24','#e8701a','#1f1a17','#2a2420'], ['#3d8be0','#2f6fc0','#173a6a','#2a2420'], ['#f5cf3b','#efb92a','#3a2d18','#2a2420'],
+  ['#e86aa0','#d9508a','#6b2347','#2a2420'], ['#f6f2ea','#e9e2d4','#9c8f7a','#2a2420'], ['#8e5bd0','#7444b8','#2f1d55','#2a2420'],
+  ['#bfe3f2','#a9d3e8','#2e6f9c','#2f7fc0'], ['#d6efe0','#c2e3cf','#3b7a4f','#d9452f'], ['#e9e4f5','#d8d1ee','#4a3d7a','#3b9a5a']
+].flat().flatMap(hex));
+const FLIES = (() => { const r=mulberry(77), F=[], fl=PLANT.flower.filter(q=>pathNear(q[0],q[2]).d<6);
+  for (let i=0;i<110 && fl.length;i++){ const q=fl[(r()*fl.length)|0]; F.push([q[0], q[1]+.7+r()*.6, q[2], .6+r()*1.4, r(), r(), (r()*6)|0, 0]); }
+  // dragonflies: low over the water, darting faster in wider loops
+  for (let i=0;i<46;i++){ const L=r()<.8?LOWER:UPPER, p=L[(r()*Math.min(L.length,160))|0], o=(r()-.5)*p.w*1.4; F.push([p.x+p.side[0]*o, p.y+.35+r()*.5, p.z+p.side[2]*o, 1.2+r()*2.2, r(), r(), 6+((r()*3)|0), 1]); }
+  return F; })();
+const DRAGON=makeDragonfly().out();
+const flyG = (() => { const m=makeButterfly().out(), inst=new Float32Array(FLIES.filter(f=>!f[7]).flat());
+  const G=makeVAO([{loc:0,size:3,data:m.P},{loc:1,size:4,data:m.A},{loc:2,size:4,data:inst,stride:32,offset:0,div:1},{loc:3,size:4,data:inst,stride:32,offset:16,div:1}], m.I, FLIES.filter(f=>!f[7]).length);
+  G.tris=m.I.length/3; return G; })();
+const dragonG = (() => { const m=DRAGON, inst=new Float32Array(FLIES.filter(f=>f[7]).flat());
+  const G=makeVAO([{loc:0,size:3,data:m.P},{loc:1,size:4,data:m.A},{loc:2,size:4,data:inst,stride:32,offset:0,div:1},{loc:3,size:4,data:inst,stride:32,offset:16,div:1}], m.I, FLIES.filter(f=>f[7]).length);
+  G.tris=m.I.length/3; return G; })();
+
+// caption texture for the headset (drawn on a 2D canvas when the text changes)
+const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=384; const labCtx=labCv.getContext('2d');
+const labTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,labTex);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+
+// ---------------------------------------------------------------- 3. culling: which squares to draw this frame
+function frustumPlanes(m){ const P=[]; const r=i=>[m[i],m[4+i],m[8+i],m[12+i]]; const r3=r(3);
+  for (const [k,sg] of [[0,1],[0,-1],[1,1],[1,-1],[2,1]]){ const a=r(k); const p=[r3[0]+sg*a[0],r3[1]+sg*a[1],r3[2]+sg*a[2],r3[3]+sg*a[3]]; const l=Math.hypot(p[0],p[1],p[2])||1; P.push(p.map(x=>x/l)); } return P; }
+// head: centre of the head; views: one frustum per eye (offset from the head); far: drawing distance; frac: share of each square to draw
+function jungleVisible(head, views, far, frac){
+  const out=new Map(), R=17;
+  for (const G of GROUPS){
+    if (!G.culled){ out.set(G, [[0,G.n]]); continue; }
+    const runs=[];
+    for (const C of G.cells){
+      const dx=C.cx-head[0], dz=C.cz-head[2], dy=C.y+5-head[1];
+      if (Math.hypot(dx,dz) > far+R) continue;
+      let seen=false;
+      for (const v of views){ const x=dx-v.o[0], y=dy-v.o[1], z=dz-v.o[2]; let ok=true;
+        for (const p of v.P){ if (p[0]*x+p[1]*y+p[2]*z+p[3] < -R){ ok=false; break; } } if (ok){ seen=true; break; } }
+      if (!seen) continue;
+      const n=frac>=1 ? C.n : Math.max(1, Math.round(C.n*frac));
+      const last=runs[runs.length-1]; if (last && last[0]+last[1]===C.start && n===C.n) last[1]+=n; else runs.push([C.start, n]);
+    }
+    out.set(G, runs);
+  }
+  return out;
+}
+function drawRuns(G, runs){
+  gl.bindVertexArray(G.vao);
+  let tris=0;
+  if (runs.length===1 && runs[0][0]===0){ gl.drawElementsInstanced(gl.TRIANGLES, G.count, gl.UNSIGNED_INT, 0, runs[0][1]); tris=G.tris*runs[0][1]; }
+  else { const inst=G.attrs.filter(a=>a.div);
+    for (const [start,n] of runs){
+      for (const a of inst){ gl.bindBuffer(gl.ARRAY_BUFFER, G.bufs.get(a.data)); gl.vertexAttribPointer(a.loc, a.size, gl.FLOAT, false, a.stride, (a.offset||0)+start*a.stride); }
+      gl.drawElementsInstanced(gl.TRIANGLES, G.count, gl.UNSIGNED_INT, 0, n); tris+=G.tris*n;
+    }
+    for (const a of inst){ gl.bindBuffer(gl.ARRAY_BUFFER, G.bufs.get(a.data)); gl.vertexAttribPointer(a.loc, a.size, gl.FLOAT, false, a.stride, a.offset||0); }
+  }
+  gl.bindVertexArray(null);
+  return tris;
+}
+
+// fireflies: a few hundred near the route and the river
+const glowG = (() => { const r=mulberry(919), I=[];
+  for (let i=0;i<460;i++){ const s=r()*PATH_LEN, p=pathAt(s), o=(r()-.5)*24, x=p.x+p.side[0]*o, z=p.z+p.side[2]*o;
+    I.push(x, groundH(x,z)+.5+r()*2, z, 1+r()*2.5, r(), .4+r()*.6, r(), 0); }
+  const v=.03, P=new Float32Array([v,0,0,-v,0,0,0,v,0,0,-v,0,0,0,v,0,0,-v]), idx=new Uint32Array([0,2,4,2,1,4,1,3,4,3,0,4,2,0,5,1,2,5,3,1,5,0,3,5]);
+  const inst=new Float32Array(I);
+  const G=makeVAO([{loc:0,size:3,data:P},{loc:1,size:4,data:inst,stride:32,offset:0,div:1},{loc:2,size:4,data:inst,stride:32,offset:16,div:1}], idx, 460); G.tris=8; return G; })();
+
+// ================================================================ LIGHT AND DRAWING
+// Budget-friendly by design: the whole view is drawn in ONE pass straight into the screen (or each headset eye).
+// There is no bloom, no blur, no second render of the scene - paper needs none of it. Order per eye:
+//   ground -> plants, rocks, clouds, mountains -> water -> animals -> birds and butterflies -> sky (only where nothing
+//   else was drawn) -> comfort darkening and fades -> caption and controller beams.
+// Example: if a palm covers half the view, the sky program never runs for those pixels, which saves work.
+
+const E = {};          // the light for the current time of day
+// The sun follows the clock from dawn to dusk: it rises ahead of you (east, behind the high peaks), climbs over the
+// valley to the right (south) and sets behind the hills at your back (west). Example: at 08:00 it is about 28 degrees up
+// and a little to the right of the trail's first view; at 18:00 it is low behind you and the light turns orange.
+// After sunset a full moon rises in the east (it always sits opposite the sun), lights the paper forest in cool blue,
+// stars come out and fireflies blink near the ground. Example: at 20:00 the moon is about 25 degrees up ahead of you.
+function updateEnv(){
+  const ph=(S.tod-6)/12*Math.PI, el=(64*Math.sin(ph)-4)*Math.PI/180;
+  E.sunPos=V.norm([Math.sin(ph)*Math.cos(el)*.9, Math.sin(el), -Math.cos(ph)*Math.cos(el)]);
+  const mph=ph+Math.PI, mel=(58*Math.sin(mph)-4)*Math.PI/180;
+  E.moon=V.norm([Math.sin(mph)*Math.cos(mel)*.9, Math.sin(mel), -Math.cos(mph)*Math.cos(mel)]);
+  const night=1-smooth(-.2,-.03,el); E.night=night;
+  const warm=1-smooth(.06,.5,el), up=smooth(-.08,.12,el), mup=smooth(-.04,.25,mel);
+  // the key light: the sun by day, the moon by night (they swap while both are low and dim)
+  E.sun = el>-.06 ? E.sunPos : E.moon;
+  E.sunCol=V.add(V.mul(V.lerp([1,.93,.84],[1,.58,.3],warm), (.3+1.2*up)*(1-night)), V.mul([.42,.52,.9], .5*mup*night));
+  E.fillDir=V.norm([-E.sun[0]*.6-.2, .65, -E.sun[2]*.6+.3]); E.fillCol=V.lerp(V.mul(V.lerp([.95,.96,1],[.88,.86,.98],warm), .85), [.05,.07,.15], night);
+  E.ambTop=V.lerp(V.mul([.56,.64,.8],.6), [.08,.11,.22], night); E.ambBot=V.lerp(V.mul([.5,.45,.33],.36), [.03,.035,.06], night);
+  E.skyTop=V.lerp(V.lerp(hex('#9dbde3'), hex('#a9b8dc'), warm*.6), hex('#0e1736'), night);
+  E.skyHor=V.lerp(V.lerp(hex('#e3edf3'), hex('#f7d3b2'), warm), hex('#2a335e'), night);
+  E.skyGlow=V.lerp(V.mul(V.lerp([1,.95,.85],[1,.55,.25],warm), .3+.7*warm), [.12,.15,.25], night);
+  E.mistCol=V.lerp(V.lerp(hex('#eef1f2'), hex('#f3e2d4'), warm), hex('#3a4570'), night);
+  E.fog=S.mist; E.fogK=.0004+.045*Math.pow(S.mist,1.6); E.mist=.75*S.mist; E.expo=.95+.45*night;
+}
+
+function common(P, pos, head, VPr){
+  return P.use().tex('uPaper',paperTex).m('uVPr',VPr).f('uCam',...pos).f('uHead',...head).f('uTime',simT).f('uGust',gust).f('uWind',WIND[0],WIND[1])
+    .f('uSunDir',...E.sun).f('uSunCol',...E.sunCol).f('uFillDir',...E.fillDir).f('uFillCol',...E.fillCol)
+    .f('uAmbTop',...E.ambTop).f('uAmbBot',...E.ambBot).f('uSkyTop',...E.skyTop).f('uSkyHor',...E.skyHor).f('uSkyGlow',...E.skyGlow)
+    .f('uMistCol',...E.mistCol).f('uFogK',E.fogK).f('uMist',E.mist).f('uExpo',E.expo).f('uSunPos',...E.sunPos).f('uMoonPos',...E.moon).f('uNight',E.night).f('uFog',E.fog);
+}
+
+let lastTris=0;
+function renderView(v){
+  const pos=v.pos, head=v.head||pos, VPr=M.mul(v.proj, M.lookDir(v.fwd, v.up, [0,0,0]));
+  gl.bindFramebuffer(gl.FRAMEBUFFER, v.fb); gl.viewport(v.vp[0],v.vp[1],v.vp[2],v.vp[3]);
+  gl.enable(gl.SCISSOR_TEST); gl.scissor(v.vp[0],v.vp[1],v.vp[2],v.vp[3]);
+  gl.clearColor(...E.skyHor.map(c=>Math.pow(c,1/2.2)),1); gl.depthMask(true); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.disable(gl.BLEND);
+  const vis=v.vis || jungleVisible(head, [{P:frustumPlanes(VPr), o:[0,0,0]}], QQ.far, 1);
+  let tris=0;
+
+  // the ground
+  common(P_ground, pos, head, VPr); gl.bindVertexArray(groundG.vao); gl.drawElements(gl.TRIANGLES, groundG.count, gl.UNSIGNED_INT, 0); tris+=groundG.tris;
+  // plants, rocks, clouds, mountains, bridge and path
+  common(P_plant, pos, head, VPr).f('uThin', QQ.thin);
+  for (const G of GROUPS){
+    P_plant.f('uFar', G.culled ? QQ.far : 1e5).f('uDrift', G.kind==='cloud' ? .55 : 0);
+    tris+=drawRuns(G, vis.get(G));
+  }
+  // water
+  common(P_water, pos, head, VPr);
+  for (const G of [waterG, waterTopG]){ gl.bindVertexArray(G.vao); gl.drawElements(gl.TRIANGLES, G.count, gl.UNSIGNED_INT, 0); tris+=G.tris; }
+  // animals
+  common(P_animal, pos, head, VPr);
+  for (const a of ANIMALS){
+    if (!a.B || V.len(V.sub(a.pos,head)) > QQ.far+10) continue;
+    P_animal.ms('uB', a.B).fv('uPal','3',a.pal).f('uStripes',a.stripes);
+    gl.bindVertexArray(a.G.vao); gl.drawElements(gl.TRIANGLES, a.G.count, gl.UNSIGNED_INT, 0); tris+=a.G.tris;
+  }
+  common(P_bird, pos, head, VPr).fv('uBirdPal','3',BIRD_PAL); gl.bindVertexArray(birdG.vao); gl.drawElementsInstanced(gl.TRIANGLES, birdG.count, gl.UNSIGNED_INT, 0, birdG.n); tris+=birdG.tris*birdG.n;
+  common(P_fly, pos, head, VPr).fv('uFlyPal','3',FLY_PAL); for (const G of [flyG, dragonG]){ gl.bindVertexArray(G.vao); gl.drawElementsInstanced(gl.TRIANGLES, G.count, gl.UNSIGNED_INT, 0, G.n); tris+=G.tris*G.n; }
+  // fireflies (only at night)
+  if (E.night>.05){ common(P_glow, pos, head, VPr); gl.bindVertexArray(glowG.vao); gl.drawElementsInstanced(gl.TRIANGLES, glowG.count, gl.UNSIGNED_INT, 0, glowG.n); }
+  // the sky, last, only where nothing else was drawn
+  gl.depthMask(false);
+  common(P_sky, pos, head, VPr).m('uInvVPr', M.inv(VPr)); gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,3);
+  gl.depthMask(true); gl.disable(gl.DEPTH_TEST);
+  lastTris=tris;
+
+  // comfort: darken the edge of each lens while moving in VR (centred on that lens), and fade between scenes
+  const vig = v.xr ? clamp((xr.speed||0)/2.2,0,1)*.55 : 0;
+  const fade = v.xr ? (xr.fade||0) : (cam.fade||0);
+  if (vig>.01 || fade>.005){
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    const pr=v.proj, asp=v.vp[2]/v.vp[3];
+    P_overlay.use().f('uVig',vig).f('uFade',fade).f('uCtr', .5-pr[8]*.5, .5-pr[9]*.5).f('uAsp', asp>1?asp:1, asp>1?1:1/asp);
+    gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,3); gl.disable(gl.BLEND);
+  }
+  if (v.xr || forceLabel) drawVRLabel(VPr, pos);
+  if (v.xr) drawControllers(VPr, pos);
+  gl.disable(gl.SCISSOR_TEST);
+  gl.bindVertexArray(null);
+}
+
+// ================================================================ HEADSET CAPTIONS AND CONTROLLER BEAMS (same as the Arashiyama standard)
+// the caption card in the headset
+let forceLabel=false;
+const vrLab={t:0, pos:null, alpha:0};
+// Text is laid out to FIT: the title shrinks if long; instructions split at ' · ' onto their own lines and wrap.
+// The panel is 0.84 m wide at 1.6 m (about 30 degrees), inside the sharp centre of the Quest lenses.
+const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
+function vrLabel(title, sub, keep){
+  const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
+  const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  const T=String(title||''); let tp=52;
+  const tw=()=>{ setF(500,tp); return c.measureText(T).width; };
+  while (tw()>LAB_TXT && tp>30) tp-=2;
+  const fs=34; setF(400,fs); const lines=[];
+  for (const item of String(sub||'').split(/\s*·\s*/).filter(Boolean)){
+    let line='';
+    for (const w of item.split(' ')){ const tryL=line?line+' '+w:w; if (c.measureText(tryL).width>LAB_TXT && line){ lines.push(line); line=w; } else line=tryL; }
+    if (line) lines.push(line);
+  }
+  for (let i=0;i<lines.length;i++) lines[i]=lines[i][0].toUpperCase()+lines[i].slice(1);
+  const L=lines.slice(0,5), lh=46, titleH=tp+12, gap=L.length?16:0;
+  const boxH=Math.min(LAB_H-8, 40+titleH+gap+L.length*lh+34), y0=(LAB_H-boxH)/2;
+  c.fillStyle='rgba(10,12,13,.72)'; c.beginPath(); if (c.roundRect) c.roundRect(4,y0,LAB_W-8,boxH,22); else c.rect(4,y0,LAB_W-8,boxH); c.fill();
+  c.strokeStyle='rgba(238,240,238,.2)'; c.lineWidth=2; c.stroke();
+  c.fillStyle='#eef0ee'; tw(); c.fillText(T, LAB_PAD, y0+40+titleH/2);
+  c.fillStyle='rgba(238,240,238,.78)'; setF(400,fs);
+  L.forEach((l,i)=>c.fillText(l, LAB_PAD, y0+40+titleH+gap+lh*i+lh/2));
+  gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
+  if (keep && vrLab.pos){ vrLab.t=Math.max(vrLab.t,1.5); return; }
+  vrLab.t=3+1.1*L.length; vrLab.pos=null;
+}
+function drawVRLabel(VPr, pos){
+  const a=vrLab.t>0?1:0; if (!vrLab.pos) return;
+  vrLab.alpha += (a-vrLab.alpha)*.2;
+  if (vrLab.alpha<.01) return;
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  const to=V.norm(V.sub(vrLab.face||pos, vrLab.pos)), R=V.norm(V.cross([0,1,0],to)), U=[0,1,0];
+  P_label.use().tex('uTex',labTex).m('uVPr',VPr).f('uC',...vrLab.pos).f('uR',...R).f('uU',...U).f('uSz',.42,.42*LAB_H/LAB_W).f('uCam',...pos).f('uA',vrLab.alpha);
+  gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,6);
+  gl.disable(gl.BLEND);
+}
+// controllers: a dark handle and a short fading beam showing exactly where each one points
+const P_ray=program(`
+uniform mat4 uVPr; uniform vec3 uCam, uA, uB; uniform float uW0, uW1;
+out float vT; out float vS;
+void main(){ int v=gl_VertexID; float t=(v==1||v==2||v==4)?1.:0., s=(v==2||v==4||v==5)?1.:-1.;
+  vec3 a=uA-uCam, b=uB-uCam, p=mix(a,b,t), d=normalize(b-a); vec3 side=cross(d, normalize(p)); side=length(side)>1e-4?normalize(side):vec3(1,0,0);
+  vT=t; vS=s; gl_Position=uVPr*vec4(p+side*s*mix(uW0,uW1,t),1.); }`, `
+uniform vec3 uCol; uniform float uAlpha, uFadeLen; in float vT; in float vS; out vec4 o;
+void main(){ float edge=1.-smoothstep(.55,1.,abs(vS)); float a=uAlpha*edge*mix(1.,pow(1.-vT,1.6),uFadeLen); o=vec4(uCol*a,a); }`);
+function drawControllers(VPr, pos){
+  if (!xr.rays || !xr.rays.length) return;
+  const R=v=>yawRot(xr.rigYaw,v);
+  gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.bindVertexArray(emptyVAO);
+  P_ray.use().m('uVPr',VPr).f('uCam',...pos);
+  for (const r of xr.rays){
+    const o=V.add(xr.rigPos,R(r.p)), d=R(r.d);
+    P_ray.f('uA',...V.add(o,V.mul(d,-.12))).f('uB',...o).f('uW0',.016).f('uW1',.012).f('uCol',.09,.1,.1).f('uAlpha',.92).f('uFadeLen',0); gl.drawArrays(gl.TRIANGLES,0,6);
+    P_ray.f('uA',...o).f('uB',...V.add(o,V.mul(d,1.6))).f('uW0',.0035).f('uW1',.0015).f('uCol',.93,.95,.93).f('uAlpha',r.side<0?.8:.5).f('uFadeLen',1); gl.drawArrays(gl.TRIANGLES,0,6);
+  }
+  gl.disable(gl.BLEND);
+}
+
+
+// ================================================================ ANIMAL MOVEMENT
+// Every frame, each animal gets a list of bone positions (12 small 4x4 "matrices"). A bone's matrix says: "turn this
+// much around your hinge, then follow your parent bone, then put the whole animal at its spot in the jungle".
+// Example: the elephant's lowest trunk piece follows the middle piece, which follows the top piece, which follows the
+// head - so one nod of the head carries the whole trunk with it, and each piece adds its own small swing.
+
+function poseBones(R, local, world){
+  const out=new Float32Array(12*16), acc=[];
+  R.bones.forEach((b,i)=>{
+    const L=M.about(b.p, local[i]||M.I());
+    acc[i]= b.parent<0 ? L : M.mul(acc[b.parent], L);
+    out.set(M.mul(world, acc[i]), i*16);
+  });
+  return out;
+}
+const placeM = (p, yaw, pitch, sc) => M.chain(M.T(p[0],p[1],p[2]), M.RY(yaw), M.RZ(pitch), M.S(sc));
+
+// ---------------------------------------------------------------- the tiger, drinking at the river's edge
+const TIGER_POSE = (() => {
+  // stand on the beach facing the water, front paws at the water's edge
+  const dir=BEACH.dir, wy=riverNear(BEACH.x,BEACH.z).p.y;
+  const O=[BEACH.x-dir[0]*.2, 0, BEACH.z-dir[2]*.2], Bk=[O[0]-dir[0]*.6,0,O[2]-dir[2]*.6], F=[O[0]+dir[0]*.5,0,O[2]+dir[2]*.5];
+  const yF=groundH(F[0],F[2]), yB=groundH(Bk[0],Bk[2]), pitch=clamp(Math.atan2(yF-yB,1.1),-.15,.1)-.08;   // a slight crouch toward the water
+  O[1]=yB+.6*Math.sin(pitch);
+  const yaw=Math.atan2(-dir[2],dir[0]);
+  // find how far the head must dip for the nose to touch the water
+  const world=placeM(O,yaw,pitch,1); let drink=-.6;
+  for (let a=0; a>-1.4; a-=.02){ const tip=M.apply(M.mul(world, M.about([.6,.95,0],M.RZ(a))), [1.21,.88,0]); drink=a; if (tip[1]<wy+.04) break; }
+  return {O, yaw, pitch, drink, wy};
+})();
+function tigerBones(t){
+  const P=TIGER_POSE, cyc=t%16;
+  // drink for ~11 s, lift the head and look around for ~5 s
+  const up=smooth(10.5,11.7,cyc)*(1-smooth(14.8,16,cyc));
+  const lap=(1-up)*.05*Math.sin(t*7.5);
+  const look=up*.55*Math.sin((cyc-11)*1.1);
+  const L=[];
+  L[0]=M.chain(M.T(0,.004*Math.sin(t*2.2),0));
+  L[1]=M.chain(M.RY(look), M.RZ(mix(P.drink,-.12,up)+lap));
+  for (const i of [2,3,4,5]) L[i]=M.RZ(-P.pitch);
+  L[6]=M.chain(M.RY(.3*Math.sin(t*.7)), M.RZ(.1+.12*Math.sin(t*.9)));
+  L[7]=M.chain(M.RY(.45*Math.sin(t*.7-.9)), M.RZ(.25));
+  return poseBones(TIGER, L, placeM(P.O, P.yaw, P.pitch, 1));
+}
+
+// ---------------------------------------------------------------- the elephants: a mother, a baby and an aunt, wading across in a slow loop
+const ELE_SPEED=.5;
+const LOOP = (() => {
+  // arc-length table for the ellipse, so they walk at an even pace
+  const n=720, pts=[]; let acc=0, prev=null;
+  for (let i=0;i<=n;i++){ const th=-i/n*Math.PI*2, p=[ELE_LOOP.cx+ELE_LOOP.ax*Math.cos(th), ELE_LOOP.cz+ELE_LOOP.az*Math.sin(th)];
+    if (prev) acc+=Math.hypot(p[0]-prev[0],p[1]-prev[1]); pts.push({p, s:acc}); prev=p; }
+  return {pts, len:acc};
+})();
+function loopAt(d){
+  d=((d%LOOP.len)+LOOP.len)%LOOP.len;
+  const pts=LOOP.pts; let lo=0, hi=pts.length-1;
+  while (hi-lo>1){ const m=(lo+hi)>>1; if (pts[m].s<d) lo=m; else hi=m; }
+  const a=pts[lo], b=pts[hi], u=(d-a.s)/Math.max(1e-6,b.s-a.s);
+  return {p:[mix(a.p[0],b.p[0],u), mix(a.p[1],b.p[1],u)], t:V.norm([b.p[0]-a.p[0],0,b.p[1]-a.p[1]])};
+}
+// the distance round the loop at which the leader is in mid-river on the near (south) side
+const ELE_MID = (() => { let best=0, bd=1e9; for (let d=0; d<LOOP.len; d+=.2){ const q=loopAt(d); if (q.p[1]>ELE_LOOP.cz){ const r=riverNear(q.p[0],q.p[1]); if (r.d<bd){ bd=r.d; best=d; } } } return best; })();
+const HERD=[{sc:1, off:0, ph:0}, {sc:.52, off:-5.4, ph:.37}, {sc:.93, off:-11.5, ph:.71}];
+let eleD=ELE_MID-ELE_SPEED*40;
+function elephantBones(e, t){
+  const d=eleD+e.off, q=loopAt(d), sc=e.sc;
+  const fx=q.p[0]+q.t[0]*1.1*sc, fz=q.p[1]+q.t[2]*1.1*sc, bx=q.p[0]-q.t[0]*1.1*sc, bz=q.p[1]-q.t[2]*1.1*sc;
+  const hF=groundH(fx,fz), hB=groundH(bx,bz), pitch=Math.atan2(hF-hB, 2.2*sc);
+  const pos=[q.p[0], (hF+hB)/2, q.p[1]], yaw=Math.atan2(-q.t[2], q.t[0]);
+  const ph=d/(1.7*sc), tt=t+e.ph*10, s2=Math.sin(ph*Math.PI*4);
+  const L=[];
+  L[0]=M.chain(M.T(0,.035*Math.abs(s2),0), M.RX(.025*Math.sin(ph*Math.PI*2)));
+  L[1]=M.RZ(.04*s2+.03*Math.sin(tt*.4));
+  L[2]=M.chain(M.RX(.12*Math.sin(tt*.5)), M.RZ(-.05+.1*Math.sin(tt*.7)));
+  L[3]=M.RZ(.16*Math.sin(tt*.7+.6));
+  L[4]=M.RZ(.22*Math.sin(tt*.7+1.2)+.1);
+  const flap=.12+.14*Math.max(0,Math.sin(tt*1.3))**3;
+  L[5]=M.RY(-.55-flap); L[6]=M.RY(.55+flap);
+  [[7,.25],[8,.75],[9,0],[10,.5]].forEach(([b,o])=>{ L[b]=M.RZ(-pitch+.3*Math.sin(2*Math.PI*(ph+o))); });
+  L[11]=M.RX(.3*Math.sin(tt*1.1));
+  e.pos=pos;
+  return poseBones(ELEPHANT, L, placeM(pos, yaw, pitch, sc));
+}
+
+// ---------------------------------------------------------------- the wildlife director
+// Ground animals rest in the clearings (GLADES) that were scattered at random when the page loaded. Whenever you have
+// left one well behind, it quietly moves to a free clearing further ahead and "appears" there (it grows in from nothing
+// over a second, in case you happen to be looking). So you keep meeting animals, and never in quite the same places.
+// Example: a barking deer you passed at the start may turn up again grazing near the lookout.
+function standOn(x, z, yaw, len){
+  const fx=x+Math.cos(yaw)*len/2, fz=z-Math.sin(yaw)*len/2, bx=x-Math.cos(yaw)*len/2, bz=z+Math.sin(yaw)*len/2;
+  const hF=groundH(fx,fz), hB=groundH(bx,bz); return {pos:[x,(hF+hB)/2,z], pitch:Math.atan2(hF-hB,len)};
+}
+const grow = a => smooth(0,1.3,simT-a.born);
+// grazers (mithun, barking deer, wild boar): head down to the grass, then up to look around; tail swishes, a leg shifts
+function grazerPose(a, t){
+  const st=a.st, off=a.off, per=a.per, R=a.R, c=(t+off)%per, down=smooth(.5,1.6,c)*(1-smooth(per*.62,per*.62+1.1,c));
+  const L=[]; L[0]=M.T(0,.008*Math.sin(t*1.7),0);
+  L[1]=M.chain(M.RY((1-down)*.35*Math.sin((t+off)*.5)), M.RZ(-.95*down*a.dip+.06*Math.sin(t*3)*down));
+  const shift=Math.max(0,Math.sin((t+off)*.31))**8*.15;
+  L[2]=M.RZ(-st.pitch+shift); L[3]=M.RZ(-st.pitch); L[4]=M.RZ(-st.pitch); L[5]=M.RZ(-st.pitch-shift*.6);
+  L[6]=M.chain(M.RX(.25*Math.sin(t*1.3+off)), M.RZ(-.2)); L[7]=M.RX(.35*Math.sin(t*1.3+off-.6));
+  a.pos=st.pos; return poseBones(R, L, placeM(st.pos, a.yaw, st.pitch, a.sc*grow(a)));
+}
+// red panda: pads slowly back and forth along its mossy log, ringed tail swaying
+function pandaPose(a, t){
+  const T=a.log.top, d=a.log.dir, u=Math.sin(t*.16+a.off)*.9, v=Math.cos(t*.16+a.off);
+  const yaw=Math.atan2(-d[2]*Math.sign(v||1), d[0]*Math.sign(v||1)), moving=Math.abs(v)>.25, ph=t*3.2;
+  const pos=[T[0]+d[0]*u, T[1]-.05, T[2]+d[2]*u];
+  const L=[]; L[0]=M.T(0,moving?.012*Math.abs(Math.sin(ph)):0,0); L[1]=M.chain(M.RY(.4*Math.sin(t*.4)), M.RZ(.1*Math.sin(t*.7)));
+  [[2,0],[3,.5],[4,.5],[5,0]].forEach(([b,o])=>{ L[b]=M.RZ(moving?.4*Math.sin(ph+o*Math.PI*2):0); });
+  L[6]=M.chain(M.RY(.3*Math.sin(t*.9)), M.RZ(.25)); L[7]=M.RY(.4*Math.sin(t*.9-.7));
+  a.pos=pos; return poseBones(PANDAM, L, placeM(pos, yaw, 0, grow(a)));
+}
+// monitor lizard: basking; it lifts its head, turns, and its tail curls lazily
+function lizardPose(a, t){ const L=[];
+  L[0]=M.T(0,.004*Math.sin(t*2),0); L[1]=M.chain(M.RY(.5*Math.sin(t*.35+a.off)), M.RZ(.15+.12*Math.max(0,Math.sin(t*.7))));
+  for (const b of [2,3,4,5]) L[b]=M.RX((b%2?1:-1)*.5);
+  L[6]=M.RY(.35*Math.sin(t*.5)); L[7]=M.RY(.6*Math.sin(t*.5-.8));
+  return poseBones(LIZ, L, placeM(a.st.pos, a.yaw, a.st.pitch, 1.15*grow(a))); }
+// gibbons: hang by one arm from a bough and swing like a pendulum, free arm reaching
+function gibbonPose(g, k){ const ph=k*1.9, yaw=g.yaw+(k%2?Math.PI:0);
+  return t=>{ const sw=.38*Math.sin(t*1.7+ph), L=[];
+    L[0]=M.chain(M.RX(sw), M.RZ(.12*Math.sin(t*.85+ph)));
+    L[1]=M.RZ(.25*Math.sin(t*.6+ph)); L[2]=M.RX(-.6-.5*Math.sin(t*1.7+ph+.6)); L[3]=M.I();
+    L[4]=M.RZ(.3+.2*Math.sin(t*1.7+ph)); L[5]=M.RZ(.3+.2*Math.sin(t*1.7+ph+.3));
+    return poseBones(GIB, L, placeM([g.p[0], g.p[1]-.75, g.p[2]+.12], yaw, 0, 1)); }; }
+// frogs: throats puffing; every so often one hops and turns on its rock
+function frogPose(f, k){ const y0=riverNear(f[0],f[1]).p.y+.1, off=k*3.7;
+  return t=>{ const c=(t+off)%9, hop=c<.55?Math.sin(c/.55*Math.PI):0, yaw=k*1.3+Math.floor((t+off)/9)*.9;
+    const L=[M.T(0,hop*.12,0), M.about([0,.03,0], M.S(1+.25*Math.max(0,Math.sin(t*5+off))))];
+    return poseBones(FROG, L, placeM([f[0],y0,f[1]], yaw, -hop*.4, 1.7)); }; }
+
+const BOAR = makeQuad({len:1.05, high:.66, wide:.25, hump:.13, neck:.08, headUp:-.14, head:.21, ear:.08, horn:.06, leg:.036, tail:.22, tailW:.025, tailDrop:.8, belly:false, legMat:2,
+  pal:['#4a3f37','#9c8a76','#1e1915','#e9e1d0']});
+const boarG = rigVAO(BOAR);
+const DEER_PAL=palLin(DEERM.pal), MITH_PAL=palLin(MITH.pal), BOAR_PAL=palLin(BOAR.pal);
+const ROAMERS=[];
+const roam=(kind,G,R,pal,stripes,o)=>ROAMERS.push(Object.assign({kind,G,R,pal,stripes,pos:[0,-99,0],B:null,born:-99,off:vrand()*30,per:9+vrand()*6,dip:1,sc:1,len:1}, o));
+for (let i=0;i<4;i++) roam('deer',deerG,DEERM,DEER_PAL,0,{len:.95, sc:.9+vrand()*.15, cap:'A barking deer', pose:grazerPose});
+for (let i=0;i<3;i++) roam('mithun',mithG,MITH,MITH_PAL,0,{len:2.3, sc:.85+vrand()*.15, cap:'Mithun grazing', pose:grazerPose});
+for (let i=0;i<3;i++) roam('boar',boarG,BOAR,BOAR_PAL,0,{len:1.05, sc:.9+vrand()*.2, dip:1.15, cap:'Wild boar rooting', pose:grazerPose});
+for (let i=0;i<2;i++) roam('lizard',lizG,LIZ,palLin(LIZ.pal),4,{len:.75, cap:'A monitor lizard basking', pose:lizardPose});
+for (let i=0;i<Math.min(2,SCN.LOGS.length);i++) roam('panda',pandaG,PANDAM,palLin(PANDAM.pal),3,{cap:'A red panda on a mossy log', pose:pandaPose});
+
+// put an animal in a clearing (or, for a red panda, on a log)
+function placeRoamer(a, spot, born){
+  if (a.glade) a.glade.used=false; if (a.log) a.log.used=false;
+  a.born=born;
+  if (a.kind==='panda'){ a.log=spot; spot.used=a; a.glade={s:spot.s}; a.pos=spot.top.slice(); return; }
+  a.glade=spot; spot.used=a;
+  const p=pathAt(spot.s); a.yaw=Math.atan2(-(p.z-spot.z), p.x-spot.x)+(vrand()-.5)*2.4;
+  a.st=standOn(spot.x, spot.z, a.yaw, a.len*a.sc); a.pos=a.st.pos;
+}
+function freeSpots(a){ return a.kind==='panda' ? SCN.LOGS.filter(l=>!l.used) : GLADES.filter(g=>!g.used); }
+// scatter everyone at random (on load, and each time the tour starts)
+function scatterRoamers(){
+  for (const g of GLADES) if (g.used!=='log') g.used=false; for (const l of SCN.LOGS) l.used=false;
+  for (const a of ROAMERS){ a.glade=null; a.log=null; const f=freeSpots(a); if (f.length) placeRoamer(a, f[Math.floor(vrand()*f.length)], -99); }
+}
+let lastDirector=0;
+function director(head){
+  if (simT-lastDirector<.5) return; lastDirector=simT;
+  const camS=pathNear(head[0],head[2]).s;
+  for (const a of ROAMERS){
+    if (!a.glade) continue;
+    const d=Math.hypot(a.pos[0]-head[0], a.pos[2]-head[2]), behind=a.glade.s<camS-12;
+    if (!((d>38 && behind) || d>95)) continue;
+    const ahead=freeSpots(a).filter(g=>g.s>camS+18 && g.s<camS+75 && Math.hypot((g.x||g.top[0])-head[0],(g.z||g.top[2])-head[2])>22);
+    if (ahead.length){ placeRoamer(a, ahead[Math.floor(vrand()*ahead.length)], simT); break; }   // at most one move at a time
+  }
+}
+scatterRoamers();
+
+// ---------------------------------------------------------------- night creatures
+// After dark the gibbons and day birds rest; owls take the perches and tree snakes hang from the boughs.
+const OWL=makeOwl(), owlG=rigVAO(OWL);
+function owlPose(perch, k){ const off=k*5.3;
+  return t=>{ const L=[], turn=Math.sin((t+off)*.23)*1.1*smooth(.5,.95,Math.abs(Math.sin((t+off)*.23))), c=(t+off)%5.5, blink=c<.18?.12:1;
+    L[0]=M.T(0,.004*Math.sin(t*1.5),0); L[1]=M.RY(turn); L[2]=M.about([.1,.45,0], M.chain(M.T(0,0,0), new Float32Array([1,0,0,0, 0,blink,0,0, 0,0,1,0, 0,0,0,1])));
+    const q=pathAt(perch.s||0); return poseBones(OWL, L, placeM([perch.p[0], perch.p[1]-.02, perch.p[2]], Math.atan2(-(q.z-perch.p[2]), q.x-perch.p[0]), 0, 1.15)); }; }
+// a snake hanging by its tail from a branch, head down, swaying slowly; the tail stays wrapped on the branch
+const TREESNAKE_PAL = palLin(['#5cb043','#d8ec8a','#2a4a1e','#5cb043']);
+function hangPose(hang, k){ const sc=.72, L0=3.2;
+  return t=>{ const L=[]; for (let b=0;b<12;b++) L[b]=M.chain(M.RY(.38*Math.sin(b*.95+t*.7+k)*(1-b/13)), M.RX(b<3?-.22:0));
+    const world0=placeM([hang[0], hang[1]-L0/2*sc, hang[2]], k*1.7, -Math.PI/2, sc);
+    let B=poseBones(SNAKE, L, world0);
+    const tail=M.apply(B.subarray(11*16,12*16), [-L0/2, .056, 0]);
+    return poseBones(SNAKE, L, M.mul(M.T(hang[0]-tail[0], hang[1]-tail[1]+.04, hang[2]-tail[2]), world0)); }; }
+const NIGHT_PERCHES = SCN.PERCH.filter((_,i)=>i%2===0);
+const HANG_POINTS = [...SCN.GIB.map(g=>g.p), ...SCN.PERCH.filter((_,i)=>i%2===1).slice(0,3).map(p=>p.p)];
+
+const ANIMALS = [
+  {G:tigerG, pal:palLin(TIGER.pal), stripes:1, pos:TIGER_POSE.O, B:null, pose:t=>tigerBones(t)},
+  ...HERD.map(e=>({G:eleG, pal:palLin(ELEPHANT.pal), stripes:0, pos:[0,0,0], B:null, e, pose(t){ const B=elephantBones(e,t); this.pos=e.pos; return B; }})),
+  ...SCN.GIB.map((g,k)=>({when:'day', G:gibG, pal:palLin(k%2?['#cfb48a','#f3ead8','#3a2c1e','#cfb48a']:['#2b2723','#efe8da','#141210','#2b2723']), stripes:0, pos:g.p, B:null, pose:gibbonPose(g,k)})),
+  ...FROG_ROCKS.slice(0,6).map((f,k)=>({G:frogG, pal:palLin(FROG.pal), stripes:0, pos:[f[0],riverNear(f[0],f[1]).p.y,f[1]], B:null, pose:frogPose(f,k)})),
+  ...NIGHT_PERCHES.map((pp,k)=>({when:'night', G:owlG, pal:palLin(OWL.pal), stripes:0, pos:pp.p, B:null, pose:owlPose(pp,k)})),
+  ...HANG_POINTS.map((h,k)=>({when:'night', G:snakeG, pal:k%2?TREESNAKE_PAL:palLin(SNAKE.pal), stripes:k%2?0:2, pos:[h[0],h[1]-1.3,h[2]], B:null, pose:hangPose(h,k)})),
+  ...ROAMERS
+];
+function updateAnimals(dt){
+  eleD+=ELE_SPEED*dt;
+  director(cam.pos);
+  const n=E.night||0;
+  for (const a of ANIMALS){
+    if ((a.when==='day' && n>.55) || (a.when==='night' && n<.45)){ a.B=null; continue; }
+    if (a.kind) a.B = a.glade ? a.pose(a, simT) : null; else a.B=a.pose(simT); }
+}
+
+// ================================================================ SOUND (Web Audio, all made in code: no sound files to download)
+// Running water: soft filtered noise whose loudness follows how close you are to the river.
+// Waterfall: brighter noise plus a low rumble, louder and panned toward the falls as you walk up to them.
+// Birds: short whistles, trills and calls, each made from a sine tone that glides in pitch, from random directions.
+// Example: standing on the bridge the river is loud and centred; at the start of the path you only hear it faintly.
+const audio = { on:true, ctx:null, master:null, riverG:null, riverP:null, fallG:null, fallP:null, rumbleG:null, nextBird:1.5, rnd:mulberry(4242) };
+
+function noiseBuf(C, secs, brown){
+  const n=Math.floor(C.sampleRate*secs), b=C.createBuffer(1,n,C.sampleRate), d=b.getChannelData(0);
+  let last=0; for (let i=0;i<n;i++){ const w=Math.random()*2-1; if (brown){ last=(last+.02*w)/1.02; d[i]=last*3.5; } else d[i]=w; }
+  return b;
+}
+function panner(C){ return C.createStereoPanner ? C.createStereoPanner() : null; }
+function chain(nodes){ for (let i=0;i<nodes.length-1;i++) if (nodes[i]&&nodes[i+1]) nodes[i].connect(nodes[i+1]); }
+function audioStart(){
+  if (audio.ctx){ if (audio.ctx.state==='suspended') audio.ctx.resume(); return; }
+  const AC=window.AudioContext||window.webkitAudioContext; if (!AC) return;
+  const C=audio.ctx=new AC();
+  audio.master=C.createGain(); audio.master.gain.value=audio.on?.7:0; audio.master.connect(C.destination);
+  const brown=noiseBuf(C,6,true), white=noiseBuf(C,4,false);
+  // river: brown noise, gently filtered, with a slow babble
+  const rs=C.createBufferSource(); rs.buffer=brown; rs.loop=true;
+  const rf=audio.riverF=C.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=900;
+  const rb=C.createBiquadFilter(); rb.type='peaking'; rb.frequency.value=600; rb.gain.value=6; rb.Q.value=1.5;
+  audio.riverG=C.createGain(); audio.riverG.gain.value=0; audio.riverP=panner(C);
+  chain([rs,rf,rb,audio.riverG,audio.riverP||audio.master]); if (audio.riverP) audio.riverP.connect(audio.master); rs.start();
+  const lfo=C.createOscillator(); lfo.frequency.value=.31; const lg=C.createGain(); lg.gain.value=180; lfo.connect(lg); lg.connect(rb.frequency); lfo.start();
+  // waterfall: hiss plus rumble
+  const fs=C.createBufferSource(); fs.buffer=white; fs.loop=true;
+  const ff=audio.fallF=C.createBiquadFilter(); ff.type='bandpass'; ff.frequency.value=1800; ff.Q.value=.5;
+  audio.fallG=C.createGain(); audio.fallG.gain.value=0; audio.fallP=panner(C);
+  chain([fs,ff,audio.fallG,audio.fallP||audio.master]); if (audio.fallP) audio.fallP.connect(audio.master); fs.start();
+  const ms=C.createBufferSource(); ms.buffer=brown; ms.loop=true; ms.playbackRate.value=.6;
+  const mf=C.createBiquadFilter(); mf.type='lowpass'; mf.frequency.value=260;
+  audio.rumbleG=C.createGain(); audio.rumbleG.gain.value=0;
+  chain([ms,mf,audio.rumbleG,audio.fallP||audio.master]); ms.start();
+}
+function audioSetOn(on){ audio.on=on; if (audio.master) audio.master.gain.setTargetAtTime(on?.7:0, audio.ctx.currentTime, .15); }
+
+// one bird call. kind 0: rising whistle, 1: trill, 2: two-note dove, 3: parrot squawk
+function birdCall(){
+  const C=audio.ctx, r=audio.rnd, t0=C.currentTime+.03, kind=r()<.35?0:r()<.6?1:r()<.8?2:3;
+  const out=C.createGain(), pan=panner(C); out.gain.value=.05+.07*r();
+  if (pan){ pan.pan.value=r()*1.8-.9; out.connect(pan); pan.connect(audio.master); } else out.connect(audio.master);
+  const note=(t, f0, f1, dur, vol, type='sine')=>{
+    const o=C.createOscillator(), g=C.createGain(); o.type=type;
+    o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.012); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t+dur+.02);
+  };
+  if (kind===0){ const f=1800+r()*1600; note(t0,f,f*1.5,.16,1); if (r()<.6) note(t0+.22,f*1.1,f*1.7,.14,.8); }
+  else if (kind===1){ const f=3200+r()*1800, n=6+(r()*8|0); for (let i=0;i<n;i++) note(t0+i*.055, f*(1+.08*(i%2)), f*.9, .045, .7); }
+  else if (kind===2){ const f=480+r()*160; note(t0,f,f*.92,.32,1); note(t0+.42,f*.82,f*.76,.45,1); }
+  else { const f=900+r()*500; note(t0,f,f*1.4,.12,.5,'sawtooth'); note(t0+.14,f*1.3,f*.9,.1,.4,'sawtooth'); }
+}
+// night calls. kind 0: a cricket's trill, 1: an owl's two soft hoots, 2: a frog croaking near the water
+function nightCall(nearWater){
+  const C=audio.ctx, r=audio.rnd, t0=C.currentTime+.03, kind=nearWater&&r()<.4?2:r()<.8?0:1;
+  const out=C.createGain(), pan=panner(C); out.gain.value=kind===1?.07:.035+.03*r();
+  if (pan){ pan.pan.value=r()*1.8-.9; out.connect(pan); pan.connect(audio.master); } else out.connect(audio.master);
+  const note=(t,f0,f1,dur,vol,type='sine')=>{ const o=C.createOscillator(), g=C.createGain(); o.type=type;
+    o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t+dur+.02); };
+  if (kind===0){ const f=4200+r()*900; for (let k=0;k<3;k++) for (let i=0;i<5;i++) note(t0+k*.38+i*.028, f, f*.97, .02, .8); }
+  else if (kind===1){ const f=360+r()*60; note(t0,f,f*.93,.45,1); note(t0+.7,f*1.02,f*.9,.6,1); }
+  else { const f=170+r()*60; for (let i=0;i<3;i++) note(t0+i*.16, f, f*.8, .11, .7, 'sawtooth'); }
+}
+// called every frame: listener position and which way they face
+function updateAudio(dt, pos, yaw){
+  if (!audio.ctx) return;
+  const C=audio.ctx, t=C.currentTime;
+  const rightV=[Math.cos(yaw), 0, Math.sin(yaw)];                         // the listener's right-hand direction
+  const panTo=p=>{ const d=V.norm([p[0]-pos[0],0,p[2]-pos[2]]); return clamp(V.dot(d,rightV),-1,1)*.8; };
+  const rn=riverNear(pos[0],pos[2]), rd=Math.max(0,rn.edge);
+  // the river is loud at the bank and fades quickly as you walk away; far off it is also muffled (fewer high notes)
+  // Example: at the water's edge about 0.6, 10 m away about 0.2, 40 m away about 0.03
+  const near=1/(1+Math.pow(rd/7,1.7));
+  audio.riverG.gain.setTargetAtTime(.62*near+.008, t, .25);
+  audio.riverF.frequency.setTargetAtTime(380+1500*near, t, .3);
+  if (audio.riverP) audio.riverP.pan.setTargetAtTime(panTo([rn.p.x,0,rn.p.z])*(1-smooth(0,3,-rn.edge+1)), t, .3);
+  const fall=[LIP[0],POOL_Y,-79], fd=V.len(V.sub(fall,pos));
+  const fnear=1/(1+Math.pow(fd/16,1.8));
+  audio.fallG.gain.setTargetAtTime(.75*fnear, t, .25);
+  audio.rumbleG.gain.setTargetAtTime(1.1*fnear, t, .25);
+  audio.fallF.frequency.setTargetAtTime(900+1300*fnear, t, .3);
+  if (audio.fallP) audio.fallP.pan.setTargetAtTime(panTo(fall), t, .3);
+  audio.nextBird-=dt;
+  if (audio.nextBird<=0){ const n=E.night||0; if (audio.on){ if (audio.rnd()<n) nightCall(rd<12); else birdCall(); } audio.nextBird=(.5+audio.rnd()*2.6)*(n>.5?.6:1); }
+}
+
+// ================================================================ STATE, CAMERA, MODES
+const S = { tod:7.4, mist:.3, wind:.4 };   // mist = the Fog slider: 0 no fog, 1 dense fog   // the breeze is fixed at a gentle 40%
+const cam = { pos:[0,5,0], yaw:0, pitch:0, fov:64*Math.PI/180, mode:'tour', tourT:0, speed:8, s:2, u:0, bob:0, moved:0, fade:0, vel:[0,0,0] };
+const keys = new Set();
+// drawing settings: on a desktop everything is drawn to 160 m; in the headset the quality ladder below takes over
+const Q = LITE ? {far:95, thin:.6, frac:.7} : {far:140, thin:.9, frac:1};   // lighter in lite mode
+let QQ = Q;
+let simT=20, frame=0, gust=.3, renderScale=LITE?.6:.85;
+const MAX_SCALE=LITE?.75:1;
+let lastNow=performance.now(), fpsAcc=0, fpsN=0, dynAcc=0, dynN=0;
+
+function lookAtAngles(from, to){ const d=V.norm(V.sub(to,from)); return {yaw:Math.atan2(d[0],-d[2]), pitch:Math.asin(clamp(d[1],-1,1))}; }
+const fwdOf = (yaw, pitch) => [Math.sin(yaw)*Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw)*Math.cos(pitch)];
+
+function gustAt(t){ const k=S.wind; const a=.5+.3*Math.sin(t*.19)+.25*Math.sin(t*.61+1.3)+.15*Math.sin(t*1.37); return clamp(k*(.3+.7*clamp(a,0,1)),0,1); }
+function simulate(dt){ simT+=dt; gust=gustAt(simT); updateAnimals(dt); updateAudio(dt, cam.pos, cam.yaw); }
+
+// ---------------------------------------------------------------- the guided tour: a gentle trek that finds things to show you
+// There is no fixed script, because the animals are somewhere new on every visit. Instead the tour carries a list of
+// "subjects" (an animal in a clearing, the bridge, the falls...) sorted by how far along the route they are. As you
+// walk, the next subject comes up: the walk slows almost to a stop, the view turns to it and a caption names it; after a
+// few seconds the walk picks up again. Example: if a red panda's log is 40 m along this time, the tour pauses at 32 m.
+const tigerHead=()=>[TIGER_POSE.O[0], TIGER_POSE.O[1]+.6, TIGER_POSE.O[2]];
+function buildSubjects(){
+  const L=[], add=(s,cap,at,dwell=6)=>L.push({s:typeof s==='function'?s:()=>s, cap, at, dwell, kind:cap});
+  add(0,'Origami Jungle: a hill forest trek',()=>{ const e=eyeAt(0), d=E.sun[1]>-.05?E.sun:E.moon; return [e[0]+d[0]*300, e[1]+22, e[2]+d[2]*300]; },7);
+  for (const a of ROAMERS) add(()=>a.glade?a.glade.s:-99, a.cap, ()=>V.add(a.pos,[0,.4*a.sc,0]), 4.5);
+  SCN.GIB.forEach((g,k)=>{ if (k%2===0) add(g.s,'Hoolock gibbons overhead',()=>V.add(g.p,[0,-.7,0]),4.5); });
+  BIRDS.forEach(b=>{ if (b[11]>.5 && b[7]===8) add(pathNear(b[0],b[2]).s,'A great hornbill on its perch',()=>[b[0],b[1]+.3,b[2]],4); });
+  add(BRIDGE.s0-5,'The living root bridge',()=>V.add(eyeAt(BRIDGE.s1),[0,.2,0]),5);
+  add(BRIDGE.s0+2,'A tiger drinking',tigerHead,6);
+  add(BRIDGE.s0+5,'Elephants at the ford',()=>V.add(ANIMALS[1].pos,[0,1.6,0]),6);
+  add(BRIDGE.s1-3,'Frogs and dragonflies below',()=>{ const f=FROG_ROCKS[0]; return [f[0], riverNear(f[0],f[1]).p.y, f[1]]; },5);
+  add(PATH_LEN-1,'The falls and the mountains',()=>[LIP[0], LIP[1]-2, LIP[2]+2],9);
+  return L;
+}
+const TOUR = { s:0, v:0, dir:[0,0,-1], subs:[], cur:null, el:0, done:false, wait:0 };
+function tourReset(){
+  TOUR.s=0; TOUR.v=0; TOUR.subs=buildSubjects(); TOUR.cur=null; TOUR.el=0; TOUR.done=false; TOUR.wait=0; TOUR.seen=new Set(); TOUR.kinds=new Set();
+  const p=pathAt(0); TOUR.dir=V.norm([p.t[0],-.05,p.t[2]]);
+}
+function tourStep(dt){
+  const T=TOUR, p=eyeAt(T.s);
+  // the next subject: the nearest unseen one whose place on the route we are now approaching
+  if (!T.cur || T.el>=T.cur.dwell){
+    let best=null;
+    for (const q of T.subs){ const qs=q.s(); if (T.seen.has(q) || T.kinds.has(q.kind) || qs<-50) continue; if (qs<T.s-6){ T.seen.add(q); continue; } if (qs<=T.s+8 && (!best || qs<best.s())) best=q; }
+    if (best && best!==T.cur){ T.cur=best; T.el=0; T.seen.add(best); T.kinds.add(best.kind); cam.tourCut=true; }
+    else if (T.cur && T.el>=T.cur.dwell && T.cur.s()<T.s-1) T.cur=null;
+  }
+  const active=T.cur && T.el<T.cur.dwell;
+  if (T.cur) T.el+=dt;
+  // walking pace: a gentle trek, nearly stopping while something is being shown, slower on the bridge
+  let want = active ? .45 : 1.4;
+  if (onBridge(T.s)) want=Math.min(want,.7);
+  if (T.s>=PATH_LEN-.7){ want=0; if (!active) T.wait+=dt; if (T.wait>1.5) T.done=true; }
+  T.v+=(want-T.v)*Math.min(1,dt*.9);
+  T.s=Math.min(PATH_LEN-.6, T.s+T.v*dt);
+  const look = active ? V.norm(V.sub(T.cur.at(), p)) : V.norm(V.sub(V.add(eyeAt(Math.min(T.s+12,PATH_LEN)),[0,-.5,0]), p));
+  T.dir=V.norm(V.lerp(T.dir, look, 1-Math.exp(-dt*1.2)));
+  return {p, s:T.s, dir:T.dir, cap: active?T.cur.cap:'', u: active?T.el/T.cur.dwell:1};
+}
+let lastShot=-1;
+function placeWalker(s){ cam.s=s; cam.u=0; const p=pathAt(s); cam.gy=groundH(p.x,p.z); cam.pos=[p.x, cam.gy+EYE, p.z]; const a=lookAtAngles([0,0,0],p.t); cam.yaw=a.yaw; cam.pitch=-.05; }
+
+// walking: there is no path, so you roam freely over the grass. You stay on the ground, inside the valley, and out of the
+// river - the only way across the water is the living root bridge, whose deck you walk on.
+function walkStep(dt, mv, fast, xrMode){
+  const sp=fast?2.8:1.35;
+  const ml=Math.hypot(mv[0],mv[2]); const m= ml>1 ? [mv[0]/ml,0,mv[2]/ml] : mv;
+  cam.vel=V.lerp(cam.vel||[0,0,0], [m[0]*sp,0,m[2]*sp], Math.min(1,dt*6));
+  const ok=(x,z)=>{ if (Math.abs(x)>125 || z<-175 || z>135) return false; const n=pathNear(x,z);
+    if (n.d<.8 && n.s>BRIDGE.s0-1.5 && n.s<BRIDGE.s1+1.5) return true; return riverNear(x,z).edge>.35; };
+  let x=cam.pos[0], z=cam.pos[2]; const nx=x+cam.vel[0]*dt, nz=z+cam.vel[2]*dt;
+  if (ok(nx,nz)){ x=nx; z=nz; } else if (ok(nx,z)) x=nx; else if (ok(x,nz)) z=nz;
+  // trunks are solid: if this step (or, in VR, your own body leaning or stepping in the room) puts you inside a tree,
+  // you are eased back out to its surface. If that would push you into the river, you stay where you were.
+  { const [px,pz]=pushOutOfTrunks(x,z); if (ok(px,pz)){ x=px; z=pz; } else { const [qx,qz]=pushOutOfTrunks(cam.pos[0],cam.pos[2]); x=qx; z=qz; } }
+  const n=pathNear(x,z);
+  let gy = (n.d<.8 && n.s>BRIDGE.s0-1.5 && n.s<BRIDGE.s1+1.5) ? Math.max(pathAt(n.s).y, n.s>BRIDGE.s0+.5&&n.s<BRIDGE.s1-.5 ? -99 : groundH(x,z)) : groundH(x,z);
+  cam.gy = cam.gy==null ? gy : cam.gy+(gy-cam.gy)*Math.min(1,dt*7);      // eases over the paper facets
+  const moved=Math.hypot(x-cam.pos[0], z-cam.pos[2]);
+  cam.s=n.s; cam.moved=moved/Math.max(dt,1e-3);
+  if (!xrMode) cam.bob+=moved*Math.PI/.72;
+  const bob = xrMode?0 : Math.sin(cam.bob)*.016*Math.min(1,cam.moved/1.3);
+  cam.pos=[x, cam.gy+EYE+bob, z];
+}
+function keyMove(fwd){
+  const f=V.norm([fwd[0],0,fwd[2]]), right=V.norm(V.cross(f,[0,1,0])); let m=[0,0,0];
+  if (keys.has('KeyW')||keys.has('ArrowUp')) m=V.add(m,f);
+  if (keys.has('KeyS')||keys.has('ArrowDown')) m=V.sub(m,f);
+  if (keys.has('KeyD')||keys.has('ArrowRight')) m=V.add(m,right);
+  if (keys.has('KeyA')||keys.has('ArrowLeft')) m=V.sub(m,right);
+  return V.add(m, V.mul(f, touchMove));
+}
+function updateDesktopCamera(dt){
+  const capEl=document.getElementById('cap');
+  const fast=keys.has('ShiftLeft')||keys.has('ShiftRight');
+  cam.fade=Math.max(0,(cam.fade||0)-dt*1.6);
+  if (cam.mode==='tour'){
+    cam.tourT+=dt;
+    const r=tourStep(dt);
+    if (TOUR.done){ setMode('walk'); }
+    else {
+      cam.pos=r.p; cam.s=r.s; const a=lookAtAngles([0,0,0],r.dir);
+      // the view turns smoothly toward each subject
+      cam.yaw=a.yaw; cam.pitch=a.pitch; cam.fov=62*Math.PI/180;
+      if (cam.tourCut) cam.tourCut=false;
+      if (r.cap) capEl.textContent=r.cap; capEl.style.opacity=(r.cap&&r.u>.08&&r.u<.85)?1:0;
+    }
+  } else capEl.style.opacity=0;
+  if (cam.mode==='walk'){
+    walkStep(dt, keyMove(fwdOf(cam.yaw,cam.pitch)), fast, false);
+    cam.fov+=(64*Math.PI/180-cam.fov)*Math.min(1,dt*2);
+  } else if (cam.mode==='fly'){
+    const f=fwdOf(cam.yaw,cam.pitch); const sp=cam.speed*(fast?5:1);
+    const right=V.norm(V.cross(f,[0,1,0]));
+    let mv=[0,0,0];
+    if (keys.has('KeyW')||keys.has('ArrowUp')) mv=V.add(mv,f);
+    if (keys.has('KeyS')||keys.has('ArrowDown')) mv=V.sub(mv,f);
+    if (keys.has('KeyD')||keys.has('ArrowRight')) mv=V.add(mv,right);
+    if (keys.has('KeyA')||keys.has('ArrowLeft')) mv=V.sub(mv,right);
+    if (keys.has('KeyE')||keys.has('Space')) mv[1]+=1;
+    if (keys.has('KeyQ')||keys.has('KeyC')) mv[1]-=1;
+    mv=V.add(mv,V.mul(f,touchMove));
+    cam.pos=V.add(cam.pos,V.mul(mv,sp*dt));
+    cam.pos[1]=clamp(cam.pos[1], groundH(cam.pos[0],cam.pos[2])+.6, 150);
+    cam.fov+=(62*Math.PI/180-cam.fov)*Math.min(1,dt*2);
+  }
+}
+
+// ================================================================ INPUT
+let drag=null, touchMove=0, pinch=null;
+canvas.addEventListener('pointerdown', e=>{ canvas.focus(); drag={x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,id:e.pointerId}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', e=>{
+  if (!drag || drag.id!==e.pointerId) return;
+  const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag.x=e.clientX; drag.y=e.clientY;
+  if (Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)>4 && cam.mode==='tour') setMode('walk');
+  if (cam.mode!=='tour'){ cam.yaw+=dx*.0032*cam.fov; cam.pitch=clamp(cam.pitch-dy*.0032*cam.fov,-1.45,1.45); }
+});
+canvas.addEventListener('pointerup', ()=>{ drag=null; });
+canvas.addEventListener('wheel', e=>{ if (cam.mode==='fly') cam.speed=clamp(cam.speed*Math.pow(1.0015,-e.deltaY),1,120); e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchstart', e=>{ if (e.touches.length===2) pinch=e.touches[0].clientY+e.touches[1].clientY; }, {passive:true});
+canvas.addEventListener('touchmove', e=>{ if (e.touches.length===2 && pinch!==null){ const s=e.touches[0].clientY+e.touches[1].clientY; touchMove=clamp((pinch-s)*.02,-1.5,1.5); if (cam.mode==='tour') setMode('walk'); } }, {passive:true});
+canvas.addEventListener('touchend', ()=>{ pinch=null; touchMove=0; }, {passive:true});
+window.addEventListener('keydown', e=>{
+  if (e.target.tagName==='INPUT' && !e.code.startsWith('Key') && !e.code.startsWith('Shift')) return;
+  if (['KeyW','KeyA','KeyS','KeyD','KeyQ','KeyE','KeyC','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){
+    if (cam.mode==='tour' && !noticeOpen) setMode('walk');
+    if (e.target===canvas || e.target===document.body) e.preventDefault();
+  }
+  keys.add(e.code);
+  if (noticeOpen) return;
+  if (e.code==='KeyH') toggleUI();
+  if (e.code==='KeyT') setMode(cam.mode==='tour'?'walk':'tour');
+  if (e.code==='KeyF') setMode(cam.mode==='fly'?'walk':'fly');
+  if (e.code==='KeyM') setSound(!audio.on);
+});
+window.addEventListener('keyup', e=>keys.delete(e.code));
+window.addEventListener('blur', ()=>keys.clear());
+
+// ================================================================ CONTROLS
+const fmtT = h => { h=Math.min(h,23.99); const hh=Math.floor(h)%24, mm=Math.floor((h-Math.floor(h))*60); return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'); };
+const $ = id => document.getElementById(id);
+const mB = {tour:$('mTour'), walk:$('mWalk'), fly:$('mFly')};
+const bSound=$('bSound'), bVR=$('bVR'), msgEl=$('msg');
+const HINTS = {
+  tour:['Any key or drag takes over','T replays the tour · H hides this'],
+  walk:['Drag to look · WASD walk · Shift brisk','F fly · M sound · H hide'],
+  fly:['Drag look · WASD fly · Q/E height','Shift faster · F back to the path · H hide']
+};
+function setMode(m){
+  const prev=cam.mode; cam.mode=m; for (const k in mB) mB[k].setAttribute('aria-pressed', k===m);
+  if (m==='tour'){ cam.tourT=0; cam.fade=1; scatterRoamers(); tourReset(); eleD=ELE_MID-ELE_SPEED*(BRIDGE.s0/1.0+20); }   // animals scattered afresh; elephants timed to be mid-river near the bridge
+  if (m==='walk' && prev!=='walk'){
+    if (prev==='tour' || prev===undefined){ placeWalker(clamp(cam.s||2,.5,PATH_LEN-.5)); }
+    else { cam.gy=null; const y=groundH(cam.pos[0],cam.pos[2]); cam.pos=[cam.pos[0], y+EYE, cam.pos[2]]; }
+  }
+  const h=HINTS[m]; $('hint').innerHTML=`<span>${h[0]}</span><span>${h[1]}</span>`;
+}
+for (const k in mB) mB[k].onclick=()=>setMode(k);
+function setSound(on){ audioStart(); audioSetOn(on); bSound.setAttribute('aria-pressed', on); }
+bSound.onclick=()=>setSound(!audio.on);
+const firstGesture = ()=>{ if (audio.on) audioStart(); window.removeEventListener('pointerdown',firstGesture); window.removeEventListener('keydown',firstGesture); };
+window.addEventListener('pointerdown', firstGesture); window.addEventListener('keydown', firstGesture);
+const uiEl=$('ui'), showB=$('show');
+function toggleUI(){ const h=!uiEl.classList.contains('hidden'); uiEl.classList.toggle('hidden',h); showB.style.display=h?'block':'none'; }
+$('bHide').onclick=toggleUI; showB.onclick=toggleUI;
+if (matchMedia('(pointer:coarse)').matches){ HINTS.walk=['Drag to look · two-finger drag to walk','Tap Fly to rise above the trees']; HINTS.fly=['Drag to look · two-finger drag to fly','Tap Walk to return to the path']; }
+function say(t){ msgEl.textContent=t; msgEl.hidden=!t; }
+function refreshLabels(){
+  $('todV').textContent=fmtT(S.tod);
+  $('mistV').textContent=S.mist<.03?'none':S.mist<.35?'light':S.mist<.7?'misty':S.mist<.95?'thick':'dense';
+}
+function refreshEnv(){ updateEnv(); refreshLabels(); }
+$('tod').addEventListener('input', ()=>{ S.tod=+$('tod').value; refreshEnv(); });
+$('mist').addEventListener('input', ()=>{ S.mist=+$('mist').value; refreshEnv(); });
+
+// ================================================================ VR (WebXR) - the Quest 2/3 standard from Arashiyama
+// Quality ladder for the headset: s = share of the headset's full pixel size used for drawing, far = drawing distance,
+// thin = how many far plants are kept, frac = share of each 16 m square drawn. Quest 2 starts lower than Quest 3.
+const XRL=[ {s:1.00, far:130, thin:1,   frac:1},   {s:.9, far:110, thin:.85, frac:.9}, {s:.8, far:95, thin:.7, frac:.78},
+            {s:.72, far:90, thin:.6, frac:.75}, {s:.64, far:80, thin:.5, frac:.65},  {s:.56, far:70, thin:.42, frac:.55} ];
+const BUILD='15 Oct 2026 (f)';
+const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
+const XR_START = HEADSET==='Quest 2' ? 2 : HEADSET==='Quest' ? 2 : 1;
+const xr={ session:null, ref:null, layer:null, rigPos:[0,0,0], rigYaw:0, snapLatch:false, rigInit:false, lastT:0, fade:0, speed:0, scale:1, level:1 };
+async function checkVR(){
+  if (!navigator.xr){ bVR.title='This browser does not support WebXR'; return false; }
+  try{ const ok=await navigator.xr.isSessionSupported('immersive-vr'); bVR.title= ok ? 'Enter VR' : 'No VR headset found in this browser'; return ok; }
+  catch(e){ bVR.title='VR is blocked on this page'; return false; }
+}
+checkVR().then(ok=>{ bVR.classList.toggle('dim',!ok); });
+bVR.onclick=async()=>{
+  if (xr.session){ xr.session.end(); return; }
+  if (!navigator.xr){ say('This browser has no WebXR. Open the page in the Meta Quest browser.'); return; }
+  let ok=false; try{ ok=await navigator.xr.isSessionSupported('immersive-vr'); }catch(e){ say('VR is blocked on this page by its host. Open the standalone file from your own site.'); return; }
+  if (!ok){ say('No VR headset found. Open this page in the Meta Quest browser, or connect a headset with Quest Link.'); return; }
+  try{ await gl.makeXRCompatible(); const session=await navigator.xr.requestSession('immersive-vr',{optionalFeatures:['local-floor']}); startXR(session); }
+  catch(e){ say('Could not start VR: '+(e.message||e)); }
+};
+function xrApplyLevel(l){ xr.level=l; QQ=Object.assign({}, XRL[l]); xr.scale=XRL[l].s; }
+function xrAdapt(dt){
+  const A=xr.ad; if(A.hold>0){ A.hold-=dt; return; }
+  A.acc+=dt; A.n++; if(A.acc<1.2) return;
+  const avg=A.acc/A.n; A.acc=0; A.n=0; xr.fps=Math.round(1/avg);
+  const tgt=1/(xr.session.frameRate||72);
+  if(avg>tgt*1.18 && xr.level<XRL.length-1 && ++A.bad>=2){ A.bad=0; if(A.lastUp) A.ceil=xr.level+1; xrApplyLevel(xr.level+1); A.good=0; A.hold=1.5; A.lastUp=false; }
+  else if(avg<=tgt*1.18) A.bad=0;
+  if(avg<tgt*1.05){ if(++A.good>=4 && xr.level>A.ceil){ xrApplyLevel(xr.level-1); A.good=0; A.hold=1.5; A.lastUp=true; } }
+  else A.good=0;
+}
+async function startXR(session){
+  xr.session=session; xrApplyLevel(XR_START); xr.ad={acc:0, n:0, good:0, bad:0, hold:2, ceil:0, lastUp:false}; xr.speed=0;
+  // drawn straight into the headset's own image (no extra copy), with the headset's built-in edge smoothing
+  const layer=new XRWebGLLayer(session, gl, {antialias:true, depth:true, framebufferScaleFactor: HEADSET==='Quest 2' ? .8 : .9});
+  if ('fixedFoveation' in layer) layer.fixedFoveation=.5;
+  session.updateRenderState({baseLayer:layer, depthNear:.1, depthFar:2000});
+  try{ if(session.updateTargetFrameRate && session.supportedFrameRates && Array.from(session.supportedFrameRates).includes(72)) session.updateTargetFrameRate(72).catch(()=>{}); }catch(e){}
+  xr.layer=layer; xr.ref=await session.requestReferenceSpace('local');
+  if (xr.ref.addEventListener) xr.ref.addEventListener('reset',()=>{ xr.rigInit=false; xr.head0=null; });
+  xr.rigInit=false; xr.rigYaw=cam.yaw; xr.head0=null;
+  bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
+  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode');
+  audioStart();
+  session.addEventListener('end', ()=>{ xr.session=null; QQ=Q; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; requestAnimationFrame(loop); });
+  session.requestAnimationFrame(onXRFrame);
+}
+const qRot=(q,v)=>{ const [x,y,z,w]=q; const uv=V.cross([x,y,z],v), uuv=V.cross([x,y,z],uv); return V.add(v,V.add(V.mul(uv,2*w),V.mul(uuv,2))); };
+const yawRot=(a,v)=>[Math.cos(a)*v[0]-Math.sin(a)*v[2], v[1], Math.sin(a)*v[0]+Math.cos(a)*v[2]];
+function onXRFrame(t, xf){
+  const session=xf.session; session.requestAnimationFrame(onXRFrame);
+  const dt=xr.lastT ? clamp((t-xr.lastT)/1000,0,.1) : 1/72; xr.lastT=t;
+  const pose=xf.getViewerPose(xr.ref); if (!pose) return;
+  frame++; xrAdapt(dt);
+  const hp=pose.transform.position, hq=pose.transform.orientation;
+  const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w];
+  const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aimL=null, aimR=null; xr.rays=[];
+  for (const src of session.inputSources){
+    const side=src.handedness==='left'?-1:1;
+    const gp=src.gamepad; if (gp){
+      const ax=gp.axes.length>=4 ? [gp.axes[2],gp.axes[3]] : [gp.axes[0]||0, gp.axes[1]||0];
+      const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
+      if (side<0){ mv=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) xBtn=true; }
+      else { turn=ax[0]; lift=-ax[1]; if (btn(0)) fast=true; if (btn(5)) bBtn=true; }
+    }
+    // where each controller points: drawn as a short beam; the left one steers movement
+    if (src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if (rp){ const p=rp.transform.position, q=rp.transform.orientation;
+      const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if (side<0) aimL=d; else aimR=d; } }
+  }
+  // X: performance readout
+  if (xBtn && !xr.xLatch){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
+  if (xr.perfT>0){ xr.perfT-=dt; if (simT-xr.perfLast>1){ xr.perfLast=simT;
+      vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+Math.round(session.frameRate||72)+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · '+Math.round(lastTris/1000)+'k triangles per eye · Build '+BUILD, true); } }
+  // B: next mode (walk -> fly -> tour)
+  if (bBtn && !xr.bLatch){ const next={walk:'fly', fly:'tour', tour:'walk'}[cam.mode]; vrSetMode(next); }
+  xr.bLatch=bBtn;
+  const dz=v=>Math.abs(v)<.15?0:v;
+  if (cam.mode!=='tour'){
+    if (Math.abs(turn)>.7 && !xr.snapLatch){ xr.snapLatch=true; const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); xr.rigYaw+=Math.sign(turn)*Math.PI/6; xr.rigPos=V.sub(head,yawRot(xr.rigYaw,headLocal)); xr.fade=Math.max(xr.fade||0,.35); }
+    if (Math.abs(turn)<.3) xr.snapLatch=false;
+  }
+  // movement follows where the LEFT controller points (then the right one, then your gaze)
+  const aim=yawRot(xr.rigYaw, aimL||aimR||gazeLocal);
+  let flat=[aim[0],0,aim[2]]; if (Math.hypot(flat[0],flat[2])<.15){ const g=yawRot(xr.rigYaw,gazeLocal); flat=[g[0],0,g[2]]; }
+  flat=V.norm(flat); const right=V.norm(V.cross(flat,[0,1,0]));
+  const rig0=xr.rigPos.slice();
+  if (cam.mode==='walk'){
+    if (!xr.rigInit){ xr.hy0=headLocal[1]; xr.rigPos=V.sub(cam.pos, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
+    const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
+    cam.pos=head; const before=head.slice();
+    walkStep(dt, V.add(V.mul(flat,-dz(mv[1])),V.mul(right,dz(mv[0]))), fast, true);
+    // sideways correction keeps you on the path; HEIGHT comes from the path only, so crouching, leaning and
+    // nodding still move your view
+    xr.rigPos[0]+=cam.pos[0]-before[0]; xr.rigPos[2]+=cam.pos[2]-before[2];
+    xr.rigPos[1]=cam.pos[1]-xr.hy0;
+  } else if (cam.mode==='fly'){
+    let move=V.add(V.mul(aim,-dz(mv[1])),V.mul(right,dz(mv[0]))); move[1]+=dz(lift);
+    const sp=(fast?14:4);
+    xr.flyV=V.lerp(xr.flyV||[0,0,0], V.mul(move,sp), Math.min(1,dt*4));
+    xr.rigPos=V.add(xr.rigPos, V.mul(xr.flyV,dt));
+    const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal)); const fl=groundH(head[0],head[2])+.6; if (head[1]<fl) xr.rigPos[1]+=fl-head[1];
+  } else {
+    // the tour glides you along the path; you look wherever you like. At each new subject, if you are facing well
+    // away from it, the view blinks (a short fade) and turns to face it.
+    cam.tourT+=dt;
+    const r=tourStep(dt);
+    if (TOUR.done){ vrSetMode('walk'); }
+    else {
+      cam.s=r.s;
+      if (!xr.head0) xr.head0=headLocal.slice();
+      if (cam.tourCut){ cam.tourCut=false; vrLabel(r.cap||'Origami Jungle','B: next mode');
+        const want=Math.atan2(r.dir[2],r.dir[0]), g=yawRot(xr.rigYaw,gazeLocal), have=Math.atan2(g[2],g[0]);
+        let dA=want-have; dA=Math.atan2(Math.sin(dA),Math.cos(dA));
+        if (Math.abs(dA)>.9 || cam.tourT<.5){ xr.turnPending=dA; xr.fade=Math.max(xr.fade,1); xr.head0=headLocal.slice(); } }
+      // turn while the view is dark, never in plain sight
+      if (xr.turnPending!=null && xr.fade>.85){ xr.rigYaw+=xr.turnPending; xr.turnPending=null; }
+      xr.rigPos=V.sub(r.p, yawRot(xr.rigYaw, xr.head0));
+    }
+  }
+  { const v=V.len(V.sub(xr.rigPos,rig0))/Math.max(dt,1e-3); xr.speed+=((v>40?0:Math.min(v,8))-xr.speed)*Math.min(1,dt*6); }
+  xr.fade=Math.max(0,(xr.fade||0)-dt*2.2);
+  const gaze=yawRot(xr.rigYaw,gazeLocal);
+  const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
+  cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
+  if (vrLab.t>0){ vrLab.t-=dt; const want=V.add(head, V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
+    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; vrLab.face=head; }
+  simulate(dt);
+  const layer=xr.layer, RR=v=>yawRot(xr.rigYaw,v);
+  const eyes=pose.views.map(view=>{
+    if (view.requestViewportScale) view.requestViewportScale(xr.scale);      // the quality ladder's pixel share
+    const vp=layer.getViewport(view); const p=view.transform.position, q=view.transform.orientation; const vq=[q.x,q.y,q.z,q.w];
+    const eye=V.add(xr.rigPos,RR([p.x,p.y,p.z])), fwd=RR(qRot(vq,[0,0,-1])), up=RR(qRot(vq,[0,1,0]));
+    return {view, vp, eye, fwd, up, VPr:M.mul(view.projectionMatrix, M.lookDir(fwd,up,[0,0,0]))}; });
+  // choose the visible part of the jungle ONCE for both eyes (so both eyes always see the same plants)
+  const vis=jungleVisible(head, eyes.map(e=>({P:frustumPlanes(e.VPr), o:V.sub(e.eye,head)})), QQ.far, QQ.frac);
+  eyes.forEach((e,i)=>{ const vp=e.vp;
+    renderView({pos:e.eye, head, fwd:e.fwd, up:e.up, proj:e.view.projectionMatrix, vis, fb:layer.framebuffer, vp:[vp.x,vp.y,vp.width,vp.height], eye:i, xr:true, dt});
+  });
+}
+function vrSetMode(m){
+  if (m==='walk'){
+    const prev=cam.mode; setMode('walk');
+    const n=pathNear(cam.pos[0],cam.pos[2]), tt=pathAt(n.s).t, g=xr.gazeLocal||[0,0,-1];
+    xr.rigYaw=Math.atan2(tt[2],tt[0])-Math.atan2(g[2],g[0]);
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode');
+  } else if (m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
+  else { setMode('tour'); xr.head0=null; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
+}
+
+// ================================================================ FRAME LOOP
+function desktopFrame(dt){
+  updateDesktopCamera(noticeOpen ? 0 : dt);      // the tour waits while the notice is open
+  simulate(dt);
+  const dpr=Math.min(window.devicePixelRatio||1, 1.5);
+  const w=Math.max(2,Math.round(canvas.clientWidth*dpr*renderScale)), h=Math.max(2,Math.round(canvas.clientHeight*dpr*renderScale));
+  if (canvas.width!==w || canvas.height!==h){ canvas.width=w; canvas.height=h; }
+  renderView({pos:cam.pos, fwd:fwdOf(cam.yaw,cam.pitch), up:[0,1,0], proj:M.persp(cam.fov,w/h,.1,2000), fb:null, vp:[0,0,w,h], eye:0, xr:false, dt});
+  frame++;
+}
+const fpsEl=$('fps');
+function loop(now){
+  if (xr.session) return;
+  const dt=Math.min(.1,(now-lastNow)/1000); lastNow=now;
+  desktopFrame(dt);
+  fpsAcc+=dt; fpsN++; if (fpsAcc>.5){ fpsEl.textContent=Math.round(fpsN/fpsAcc)+' fps'; fpsAcc=0; fpsN=0; }
+  dynAcc+=dt; dynN++;
+  // the desktop view adjusts its resolution to keep the frame rate up (checked every second)
+  if (dynAcc>1){ const avg=dynAcc/dynN; if (avg>.034 && renderScale>.5) renderScale=Math.max(.5,renderScale-.12); else if (avg<.022 && renderScale<MAX_SCALE) renderScale=Math.min(MAX_SCALE,renderScale+.05); dynAcc=0; dynN=0; }
+  requestAnimationFrame(loop);
+}
+
+// ================================================================ INIT
+refreshEnv();
+setMode('tour');
+let noticeOpen = true;
+const noticeEl = $('notice');
+function openNotice(){ noticeOpen=true; noticeEl.hidden=false; $('noticeOk').focus(); }
+function closeNotice(){ noticeOpen=false; noticeEl.hidden=true; canvas.focus(); if (cam.mode==='tour') setMode('tour'); }
+$('noticeOk').onclick = closeNotice;
+$('bNotice').onclick = openNotice;
+document.addEventListener('keydown', e=>{ if (noticeOpen && (e.code==='Enter'||e.code==='Escape')) closeNotice(); });
+window.jungle = {
+  S, cam, E, xr, PATH, PATH_LEN, TOUR, ROAMERS, GLADES, SCN, BRIDGE, GROUPS, ANIMALS, BIRDS, FLIES, TIGER_POSE, pathAt, pathNear, groundH, eyeAt, riverNear,
+  set(o){ Object.assign(S,o); $('tod').value=S.tod; $('mist').value=S.mist; refreshEnv(); },
+  mode(m){ setMode(m); },
+  sideView(a,d,h,fov,yaw){ const y=yaw!=null?yaw:(a.yaw||0), c=Math.cos(y), s=Math.sin(y), P=a.pos; this.lookAt([P[0]+s*d+c*d*.35,P[1]+h,P[2]+c*d-s*d*.35],[P[0],P[1]+h*.6,P[2]],fov||45); },
+  closeNotice, tourStepForTest:dt=>tourStep(dt), simOnly:(n,dt)=>{ for(let i=0;i<n;i++) simulate(dt); },
+  lookAt(p,t,fov){ setMode('fly'); cam.pos=p.slice(); const a=lookAtAngles(p,t); cam.yaw=a.yaw; cam.pitch=a.pitch; if(fov) cam.fov=fov*Math.PI/180; cam.fade=0; },
+  walkAt(s,u,yawOff,pitch){ setMode('walk'); cam.fade=0; placeWalker(s); cam.u=u||0; cam.pos=eyeAt(s,cam.u); cam.yaw+=yawOff||0; cam.pitch=pitch||0; },
+  trunkTest(){ let worst=1e9, tested=0; const cs=[]; for (let s=5;s<PATH_LEN-5;s+=7){ const p=pathAt(s); for (const c of TRUNKS.near(p.x,p.z)) cs.push(c); }
+    for (const c of cs.slice(0,40)){ cam.pos=[c[0]+c[2]+3,0,c[1]]; cam.vel=[0,0,0]; for (let i=0;i<300;i++) walkStep(1/60,[-1,0,0],false,false); const d=Math.hypot(cam.pos[0]-c[0],cam.pos[2]-c[1])-c[2]; worst=Math.min(worst,d); tested++; } return {n:TRUNKS.n, tested, worstGap:worst}; },
+  tour(t){ setMode('tour'); for (let k=0;k<Math.round(t/.1);k++){ cam.tourT+=.1; tourStep(.1); } cam.fade=0; },
+  step(n,dt){ for (let i=0;i<n;i++) desktopFrame(dt); gl.finish(); },
+  stats(){ return {tris:lastTris, groups:GROUPS.map(G=>({kind:G.kind, n:G.n, tris:G.tris}))}; },
+  keys, vrLabel, labCanvas:labCv, jungleVisible, frustumPlanes,
+  get simT(){ return simT; }, get QQ(){ return QQ; }, get tris(){ return lastTris; }, vrLab, HEADSET, XRL
+};
+window.jungleReady = true;
+if (!TEST) requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
