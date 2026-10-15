@@ -106,7 +106,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
     <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
     <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
-    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 15 Oct 2026 (f) · in the headset, press X for a performance readout</p>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 15 Oct 2026 (g) · in the headset, press A for time and fog, X for a performance readout</p>
   </div>
 </div>
 <div id="err"></div>
@@ -1823,6 +1823,7 @@ const vrLab={t:0, pos:null, alpha:0};
 // The panel is 0.84 m wide at 1.6 m (about 30 degrees), inside the sharp centre of the Quest lenses.
 const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
 function vrLabel(title, sub, keep){
+  if (xr.menu && xr.menu.open) return;
   const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
   const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
   const T=String(title||''); let tp=52;
@@ -1845,6 +1846,35 @@ function vrLabel(title, sub, keep){
   gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
   if (keep && vrLab.pos){ vrLab.t=Math.max(vrLab.t,1.5); return; }
   vrLab.t=3+1.1*L.length; vrLab.pos=null;
+}
+// ---------------------------------------------------------------- SETTINGS PANEL IN THE HEADSET
+// A opens it. The right stick picks a slider (up/down) and moves it (left/right); A closes it.
+// It drives the SAME Time and Fog values as the web sliders, so the two always agree.
+// Example: push the stick right on "Time" and 07:24 runs forward to 17:30 while you watch the sun drop.
+const XR_SET=[
+  {key:'tod',  name:'Time', el:'tod',  rate:2.5, fmt:v=>fmtT(v)},                      // 2.5 hours a second at full push
+  {key:'mist', name:'Fog',  el:'mist', rate:.45, fmt:v=>v<.03?'none':v<.35?'light':v<.7?'misty':v<.95?'thick':'dense'}
+];
+function drawSettingsPanel(sel){
+  const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
+  const font=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  c.fillStyle='rgba(10,12,13,.82)'; c.beginPath(); if (c.roundRect) c.roundRect(4,4,LAB_W-8,LAB_H-8,22); else c.rect(4,4,LAB_W-8,LAB_H-8); c.fill();
+  c.strokeStyle='rgba(238,240,238,.22)'; c.lineWidth=2; c.stroke();
+  font(500,40); c.fillStyle='#eef0ee'; c.fillText('Time and fog', LAB_PAD, 54);
+  XR_SET.forEach((it,i)=>{
+    const el=$(it.el), lo=+el.min, hi=+el.max, v=S[it.key], k=(v-lo)/(hi-lo), y=132+i*96, on=i===sel;
+    if (on){ c.fillStyle='rgba(238,240,238,.08)'; c.beginPath(); if (c.roundRect) c.roundRect(24,y-40,LAB_W-48,80,16); else c.rect(24,y-40,LAB_W-48,80); c.fill(); }
+    font(on?500:400,34); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillText((on?'▸ ':'  ')+it.name, LAB_PAD-8, y);
+    // the bar: a thin track, the filled part, and a round knob
+    const x0=300, x1=LAB_W-220, xk=x0+(x1-x0)*k;
+    c.fillStyle='rgba(238,240,238,.18)'; c.fillRect(x0,y-3,x1-x0,6);
+    c.fillStyle=on?'#ffffff':'rgba(238,240,238,.55)'; c.fillRect(x0,y-3,xk-x0,6);
+    c.beginPath(); c.arc(xk,y,on?16:11,0,7); c.fill();
+    font(400,32); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillText(it.fmt(v), x1+34, y);
+  });
+  font(400,26); c.fillStyle='rgba(238,240,238,.62)';
+  c.fillText('Stick up/down: choose  ·  left/right: adjust  ·  A: close', LAB_PAD, LAB_H-44);
+  gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
 }
 function drawVRLabel(VPr, pos){
   const a=vrLab.t>0?1:0; if (!vrLab.pos) return;
@@ -2384,7 +2414,7 @@ $('mist').addEventListener('input', ()=>{ S.mist=+$('mist').value; refreshEnv();
 // thin = how many far plants are kept, frac = share of each 16 m square drawn. Quest 2 starts lower than Quest 3.
 const XRL=[ {s:1.00, far:130, thin:1,   frac:1},   {s:.9, far:110, thin:.85, frac:.9}, {s:.8, far:95, thin:.7, frac:.78},
             {s:.72, far:90, thin:.6, frac:.75}, {s:.64, far:80, thin:.5, frac:.65},  {s:.56, far:70, thin:.42, frac:.55} ];
-const BUILD='15 Oct 2026 (f)';
+const BUILD='15 Oct 2026 (g)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 2 : HEADSET==='Quest' ? 2 : 1;
 const xr={ session:null, ref:null, layer:null, rigPos:[0,0,0], rigYaw:0, snapLatch:false, rigInit:false, lastT:0, fade:0, speed:0, scale:1, level:1 };
@@ -2424,7 +2454,7 @@ async function startXR(session){
   if (xr.ref.addEventListener) xr.ref.addEventListener('reset',()=>{ xr.rigInit=false; xr.head0=null; });
   xr.rigInit=false; xr.rigYaw=cam.yaw; xr.head0=null;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode');
+  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode · A: time and fog');
   audioStart();
   session.addEventListener('end', ()=>{ xr.session=null; QQ=Q; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -2439,21 +2469,43 @@ function onXRFrame(t, xf){
   const hp=pose.transform.position, hq=pose.transform.orientation;
   const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w];
   const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
-  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aimL=null, aimR=null; xr.rays=[];
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aBtn=false, stick=[0,0], aimL=null, aimR=null; xr.rays=[];
   for (const src of session.inputSources){
     const side=src.handedness==='left'?-1:1;
     const gp=src.gamepad; if (gp){
       const ax=gp.axes.length>=4 ? [gp.axes[2],gp.axes[3]] : [gp.axes[0]||0, gp.axes[1]||0];
       const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
       if (side<0){ mv=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) xBtn=true; }
-      else { turn=ax[0]; lift=-ax[1]; if (btn(0)) fast=true; if (btn(5)) bBtn=true; }
+      else { turn=ax[0]; lift=-ax[1]; stick=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) aBtn=true; }
     }
     // where each controller points: drawn as a short beam; the left one steers movement
     if (src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if (rp){ const p=rp.transform.position, q=rp.transform.orientation;
       const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if (side<0) aimL=d; else aimR=d; } }
   }
+  // A: the Time and Fog panel
+  const MN=xr.menu||(xr.menu={open:false, sel:0, ud:0, dirty:false, drawT:0, envT:0});
+  if (aBtn && !xr.aLatch){
+    MN.open=!MN.open;
+    if (MN.open){ xr.perfT=0; vrLab.pos=null; vrLab.t=1; MN.dirty=true; }
+    else { refreshLabels(); vrLab.t=0; }
+  }
+  xr.aLatch=aBtn;
+  if (MN.open){
+    const it=XR_SET[MN.sel], el=$(it.el), lo=+el.min, hi=+el.max;
+    const ud=stick[1]>.6?1:stick[1]<-.6?-1:0;                     // flick up/down to choose
+    if (ud && ud!==MN.ud){ MN.sel=(MN.sel+ud+XR_SET.length)%XR_SET.length; MN.dirty=true; }
+    MN.ud=ud;
+    const x=Math.abs(stick[0])<.2?0:stick[0];                    // push left/right to adjust; further = faster
+    if (x){ let v=S[it.key]+Math.sign(x)*x*x*it.rate*dt;
+      v= it.key==='tod' ? ((v-lo)%(hi-lo)+(hi-lo))%(hi-lo)+lo : clamp(v,lo,hi);   // the clock wraps round midnight
+      S[it.key]=v; el.value=v; MN.dirty=true; MN.envChanged=true; }
+    MN.envT-=dt; if (MN.envChanged && MN.envT<=0){ updateEnv(); MN.envChanged=false; MN.envT=1/24; }   // sky and fog follow ~24 times a second
+    MN.drawT-=dt; if (MN.dirty && MN.drawT<=0){ drawSettingsPanel(MN.sel); MN.dirty=false; MN.drawT=1/15; }
+    vrLab.t=Math.max(vrLab.t,.5);                                  // keep the card up while the panel is open
+    mv=[0,0]; turn=0; lift=0;                                     // the stick belongs to the panel for now
+  }
   // X: performance readout
-  if (xBtn && !xr.xLatch){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
+  if (xBtn && !xr.xLatch && !MN.open){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
   if (xr.perfT>0){ xr.perfT-=dt; if (simT-xr.perfLast>1){ xr.perfLast=simT;
       vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+Math.round(session.frameRate||72)+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · '+Math.round(lastTris/1000)+'k triangles per eye · Build '+BUILD, true); } }
   // B: next mode (walk -> fly -> tour)
@@ -2508,7 +2560,7 @@ function onXRFrame(t, xf){
   const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
   cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
   if (vrLab.t>0){ vrLab.t-=dt; const want=V.add(head, V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
-    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; vrLab.face=head; }
+    vrLab.pos = !vrLab.pos ? want : (xr.menu&&xr.menu.open) ? vrLab.pos : V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)); vrLab.face=head; }
   simulate(dt);
   const layer=xr.layer, RR=v=>yawRot(xr.rigYaw,v);
   const eyes=pose.views.map(view=>{
@@ -2527,9 +2579,9 @@ function vrSetMode(m){
     const prev=cam.mode; setMode('walk');
     const n=pathNear(cam.pos[0],cam.pos[2]), tt=pathAt(n.s).t, g=xr.gazeLocal||[0,0,-1];
     xr.rigYaw=Math.atan2(tt[2],tt[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode');
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode · A: time and fog');
   } else if (m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
-  else { setMode('tour'); xr.head0=null; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
+  else { setMode('tour'); xr.head0=null; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode · A: time and fog'); }
 }
 
 // ================================================================ FRAME LOOP
