@@ -106,7 +106,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
     <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
     <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
-    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 15 Oct 2026 (g) · in the headset, press A for time and fog, X for a performance readout</p>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 15 Oct 2026 (h) · in the headset, press A for time and fog, X for a performance readout</p>
   </div>
 </div>
 <div id="err"></div>
@@ -1346,7 +1346,7 @@ uniform mat4 uVPr; uniform vec3 uC, uR, uU, uCam; uniform vec2 uSz; out vec2 vT;
 const vec2 Q[6]=vec2[6](vec2(-1.,-1.),vec2(1.,-1.),vec2(1.,1.),vec2(-1.,-1.),vec2(1.,1.),vec2(-1.,1.));
 void main(){ vec2 q=Q[gl_VertexID]; vT=q*.5+.5; vec3 P=uC+uR*q.x*uSz.x+uU*q.y*uSz.y; gl_Position=uVPr*vec4(P-uCam,1.); }`,
 `uniform sampler2D uTex; uniform float uA; in vec2 vT; out vec4 o;
-void main(){ vec4 c=texture(uTex, vec2(vT.x, 1.-vT.y)); o=vec4(c.rgb*c.a*uA, c.a*uA); }`);
+void main(){ vec4 c=texture(uTex, vec2(vT.x, 1.-vT.y)); o=c*uA; }`);   // the texture is already pre-multiplied
 
 // ---------------------------------------------------------------- fireflies: tiny glowing paper beads that drift and blink at night
 const P_glow = program(`${G_COMMON}
@@ -1674,8 +1674,20 @@ const dragonG = (() => { const m=DRAGON, inst=new Float32Array(FLIES.filter(f=>f
 // caption texture for the headset (drawn on a 2D canvas when the text changes)
 const labCv=document.createElement('canvas'); labCv.width=1024; labCv.height=384; const labCtx=labCv.getContext('2d');
 const labTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,labTex);
-gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+// Crisp text in the headset. The card's 1024 pixels are squeezed into roughly 400 pixels of the Quest's screen, so the
+// GPU must shrink the text about 2.5 times. Shrinking by simply picking the nearest few pixels makes letters break up
+// and look pixelated. So we also keep ready-made smaller copies of the card (mipmaps: 512, 256, 128 ... pixels wide,
+// each one carefully averaged), and the GPU blends between the two copies closest to the size actually on screen.
+// Example: like reading a small printed label rather than a blown-down screenshot.
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+{ const an=gl.getExtension('EXT_texture_filter_anisotropic'); if (an) gl.texParameterf(gl.TEXTURE_2D, an.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(4, gl.getParameter(an.MAX_TEXTURE_MAX_ANISOTROPY_EXT))); }
+// upload the caption canvas with its smaller copies. Colours are pre-multiplied by their transparency first, so the
+// averaged copies don't get dark halos round the letters.
+function uploadLabel(){ gl.bindTexture(gl.TEXTURE_2D,labTex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.generateMipmap(gl.TEXTURE_2D); }
+uploadLabel();
 
 // ---------------------------------------------------------------- 3. culling: which squares to draw this frame
 function frustumPlanes(m){ const P=[]; const r=i=>[m[i],m[4+i],m[8+i],m[12+i]]; const r3=r(3);
@@ -1829,21 +1841,21 @@ function vrLabel(title, sub, keep){
   const T=String(title||''); let tp=52;
   const tw=()=>{ setF(500,tp); return c.measureText(T).width; };
   while (tw()>LAB_TXT && tp>30) tp-=2;
-  const fs=34; setF(400,fs); const lines=[];
+  const fs=38; setF(500,fs); const lines=[];
   for (const item of String(sub||'').split(/\s*·\s*/).filter(Boolean)){
     let line='';
     for (const w of item.split(' ')){ const tryL=line?line+' '+w:w; if (c.measureText(tryL).width>LAB_TXT && line){ lines.push(line); line=w; } else line=tryL; }
     if (line) lines.push(line);
   }
   for (let i=0;i<lines.length;i++) lines[i]=lines[i][0].toUpperCase()+lines[i].slice(1);
-  const L=lines.slice(0,5), lh=46, titleH=tp+12, gap=L.length?16:0;
+  const L=lines.slice(0,5), lh=50, titleH=tp+12, gap=L.length?16:0;
   const boxH=Math.min(LAB_H-8, 40+titleH+gap+L.length*lh+34), y0=(LAB_H-boxH)/2;
   c.fillStyle='rgba(10,12,13,.72)'; c.beginPath(); if (c.roundRect) c.roundRect(4,y0,LAB_W-8,boxH,22); else c.rect(4,y0,LAB_W-8,boxH); c.fill();
   c.strokeStyle='rgba(238,240,238,.2)'; c.lineWidth=2; c.stroke();
   c.fillStyle='#eef0ee'; tw(); c.fillText(T, LAB_PAD, y0+40+titleH/2);
-  c.fillStyle='rgba(238,240,238,.78)'; setF(400,fs);
+  c.fillStyle='rgba(238,240,238,.85)'; setF(500,fs);
   L.forEach((l,i)=>c.fillText(l, LAB_PAD, y0+40+titleH+gap+lh*i+lh/2));
-  gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
+  uploadLabel();
   if (keep && vrLab.pos){ vrLab.t=Math.max(vrLab.t,1.5); return; }
   vrLab.t=3+1.1*L.length; vrLab.pos=null;
 }
@@ -1858,23 +1870,25 @@ const XR_SET=[
 function drawSettingsPanel(sel){
   const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
   const font=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
-  c.fillStyle='rgba(10,12,13,.82)'; c.beginPath(); if (c.roundRect) c.roundRect(4,4,LAB_W-8,LAB_H-8,22); else c.rect(4,4,LAB_W-8,LAB_H-8); c.fill();
-  c.strokeStyle='rgba(238,240,238,.22)'; c.lineWidth=2; c.stroke();
-  font(500,40); c.fillStyle='#eef0ee'; c.fillText('Time and fog', LAB_PAD, 54);
+  // Big, medium-weight letters: on the Quest a 26-pixel line of text ends up only about 10 screen pixels tall, which is
+  // where letters start to break up. Everything here is 34 pixels or more. Example: the hint line was 26 px, now 34 px.
+  c.fillStyle='rgba(10,12,13,.86)'; c.beginPath(); if (c.roundRect) c.roundRect(4,4,LAB_W-8,LAB_H-8,24); else c.rect(4,4,LAB_W-8,LAB_H-8); c.fill();
+  c.strokeStyle='rgba(238,240,238,.24)'; c.lineWidth=3; c.stroke();
+  font(500,50); c.fillStyle='#ffffff'; c.fillText('Time and fog', LAB_PAD, 62);
   XR_SET.forEach((it,i)=>{
-    const el=$(it.el), lo=+el.min, hi=+el.max, v=S[it.key], k=(v-lo)/(hi-lo), y=132+i*96, on=i===sel;
-    if (on){ c.fillStyle='rgba(238,240,238,.08)'; c.beginPath(); if (c.roundRect) c.roundRect(24,y-40,LAB_W-48,80,16); else c.rect(24,y-40,LAB_W-48,80); c.fill(); }
-    font(on?500:400,34); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillText((on?'▸ ':'  ')+it.name, LAB_PAD-8, y);
-    // the bar: a thin track, the filled part, and a round knob
-    const x0=300, x1=LAB_W-220, xk=x0+(x1-x0)*k;
-    c.fillStyle='rgba(238,240,238,.18)'; c.fillRect(x0,y-3,x1-x0,6);
-    c.fillStyle=on?'#ffffff':'rgba(238,240,238,.55)'; c.fillRect(x0,y-3,xk-x0,6);
-    c.beginPath(); c.arc(xk,y,on?16:11,0,7); c.fill();
-    font(400,32); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillText(it.fmt(v), x1+34, y);
+    const el=$(it.el), lo=+el.min, hi=+el.max, v=S[it.key], k=(v-lo)/(hi-lo), y=158+i*98, on=i===sel;
+    if (on){ c.fillStyle='rgba(238,240,238,.12)'; c.beginPath(); if (c.roundRect) c.roundRect(24,y-42,LAB_W-48,84,18); else c.rect(24,y-42,LAB_W-48,84); c.fill(); }
+    font(500,46); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText((on?'▸':' ')+it.name, LAB_PAD-12, y);
+    // the bar: a track, the filled part, and a round knob, all thick enough not to shimmer
+    const x0=270, x1=LAB_W-250, xk=x0+(x1-x0)*k;
+    c.fillStyle='rgba(238,240,238,.24)'; c.fillRect(x0,y-5,x1-x0,10);
+    c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillRect(x0,y-5,xk-x0,10);
+    c.beginPath(); c.arc(xk,y,on?20:14,0,7); c.fill();
+    font(500,44); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText(it.fmt(v), x1+30, y);
   });
-  font(400,26); c.fillStyle='rgba(238,240,238,.62)';
-  c.fillText('Stick up/down: choose  ·  left/right: adjust  ·  A: close', LAB_PAD, LAB_H-44);
-  gl.bindTexture(gl.TEXTURE_2D,labTex); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,labCv);
+  font(500,34); c.fillStyle='rgba(238,240,238,.75)';
+  c.fillText('Up/down: pick · Left/right: set · A: close', LAB_PAD, LAB_H-40);
+  uploadLabel();
 }
 function drawVRLabel(VPr, pos){
   const a=vrLab.t>0?1:0; if (!vrLab.pos) return;
@@ -2414,7 +2428,7 @@ $('mist').addEventListener('input', ()=>{ S.mist=+$('mist').value; refreshEnv();
 // thin = how many far plants are kept, frac = share of each 16 m square drawn. Quest 2 starts lower than Quest 3.
 const XRL=[ {s:1.00, far:130, thin:1,   frac:1},   {s:.9, far:110, thin:.85, frac:.9}, {s:.8, far:95, thin:.7, frac:.78},
             {s:.72, far:90, thin:.6, frac:.75}, {s:.64, far:80, thin:.5, frac:.65},  {s:.56, far:70, thin:.42, frac:.55} ];
-const BUILD='15 Oct 2026 (g)';
+const BUILD='15 Oct 2026 (h)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 2 : HEADSET==='Quest' ? 2 : 1;
 const xr={ session:null, ref:null, layer:null, rigPos:[0,0,0], rigYaw:0, snapLatch:false, rigInit:false, lastT:0, fade:0, speed:0, scale:1, level:1 };
@@ -2626,6 +2640,8 @@ window.jungle = {
   walkAt(s,u,yawOff,pitch){ setMode('walk'); cam.fade=0; placeWalker(s); cam.u=u||0; cam.pos=eyeAt(s,cam.u); cam.yaw+=yawOff||0; cam.pitch=pitch||0; },
   trunkTest(){ let worst=1e9, tested=0; const cs=[]; for (let s=5;s<PATH_LEN-5;s+=7){ const p=pathAt(s); for (const c of TRUNKS.near(p.x,p.z)) cs.push(c); }
     for (const c of cs.slice(0,40)){ cam.pos=[c[0]+c[2]+3,0,c[1]]; cam.vel=[0,0,0]; for (let i=0;i<300;i++) walkStep(1/60,[-1,0,0],false,false); const d=Math.hypot(cam.pos[0]-c[0],cam.pos[2]-c[1])-c[2]; worst=Math.min(worst,d); tested++; } return {n:TRUNKS.n, tested, worstGap:worst}; },
+  labTest(kind){ forceLabel=true; if (kind==='menu') drawSettingsPanel(1); else vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode · A: time and fog');
+    const d=[Math.sin(cam.yaw),0,-Math.cos(cam.yaw)]; vrLab.pos=V.add(cam.pos,V.add(V.mul(d,1.6),[0,-.12,0])); vrLab.face=cam.pos.slice(); vrLab.t=9; vrLab.alpha=1; cam.fov=53*Math.PI/180; },
   tour(t){ setMode('tour'); for (let k=0;k<Math.round(t/.1);k++){ cam.tourT+=.1; tourStep(.1); } cam.fade=0; },
   step(n,dt){ for (let i=0;i<n;i++) desktopFrame(dt); gl.finish(); },
   stats(){ return {tris:lastTris, groups:GROUPS.map(G=>({kind:G.kind, n:G.n, tris:G.tris}))}; },
