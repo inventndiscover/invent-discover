@@ -96,8 +96,8 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     </div>
   </div>
   <label class="ctl" for="tod"><span class="k">Time</span><input id="tod" type="range" min="6" max="18.5" step="0.05" value="10.2"><span class="v" id="todV">10:12</span></label>
-  <label class="ctl" for="mist"><span class="k">Mist</span><input id="mist" type="range" min="0" max="1" step="0.01" value="0.45"><span class="v" id="mistV">45%</span></label>
-  <label class="ctl" for="light"><span class="k">Light</span><input id="light" type="range" min="0" max="1" step="0.01" value="0.6"><span class="v" id="lightV">60%</span></label>
+  <label class="ctl" for="mist"><span class="k">Mist</span><input id="mist" type="range" min="0" max="1" step="0.01" value="0.35"><span class="v" id="mistV">35%</span></label>
+  <label class="ctl" for="light"><span class="k">Light</span><input id="light" type="range" min="0" max="1" step="0.01" value="0.7"><span class="v" id="lightV">70%</span></label>
   <label class="ctl" for="wind"><span class="k">Wind</span><input id="wind" type="range" min="0" max="1" step="0.01" value="0.5"><span class="v" id="windV">50%</span></label>
   <label class="ctl" for="season"><span class="k">Season</span><input id="season" type="range" min="0" max="1" step="0.01" value="0"><span class="v" id="seasonV">Summer</span></label>
   <div class="btns">
@@ -118,7 +118,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
     <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
     <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
     <button id="noticeOk" class="ok" aria-pressed="false">I understand, begin</button>
-    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 (b) · in the headset, press X for a performance readout</p>
+    <p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 16 Oct 2026 (a) · in the headset, press A for time, light and season, X for a performance readout</p>
   </div>
 </div>
 <div id="err"></div>
@@ -1481,7 +1481,50 @@ const vrLab={t:0, pos:null, alpha:0};
 // Text is laid out to FIT: the title shrinks if long; instructions split at ' · ' onto their own lines and wrap.
 // The panel is 0.84 m wide at 1.6 m (about 30 degrees), inside the sharp centre of the Quest lenses.
 const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
+const XR_SET_TITLE='Time, light and season';
+const XR_SET=[   // rate: share of the slider's range per second at full push
+  {name:'Time',   el:'tod',    rate:.2,  fmt:v=>fmtT(v)},
+  {name:'Mist',   el:'mist',   rate:.45, fmt:v=>v<.02?'clear':Math.round(v*100)+'%'},
+  {name:'Light',  el:'light',  rate:.45, fmt:v=>Math.round(v*100)+'%'},
+  {name:'Wind',   el:'wind',   rate:.45, fmt:v=>v<.02?'still':Math.round(v*100)+'%'},
+  {name:'Season', el:'season', rate:.35, fmt:v=>SEASON_NAMES(v)}
+];
+// A: an in-headset panel for the same sliders as the web page.
+// Each row points at a page slider (el); moving it fires that slider's own 'input' handler, so VR and web behave the same.
+// The panel gets its own taller card, so every row can use big, crisp letters (34 px or more; smaller text breaks up
+// in the headset). Example: 5 rows -> a card 1024 x 704 pixels, about 0.84 m wide and 0.58 m tall at 1.6 m.
+const PAN_H=Math.round((150+XR_SET.length*96+70)/8)*8;
+const panCv=document.createElement('canvas'); panCv.width=LAB_W; panCv.height=PAN_H; const panCtx=panCv.getContext('2d');
+const panTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,panTex);
+// mipmaps: ready-made, carefully averaged smaller copies of the card, so the GPU shrinks the text smoothly instead of pixelating it
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+{ const an=gl.getExtension('EXT_texture_filter_anisotropic'); if (an) gl.texParameterf(gl.TEXTURE_2D, an.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(4, gl.getParameter(an.MAX_TEXTURE_MAX_ANISOTROPY_EXT))); }
+const panelOn=()=>!!(xr.menu && xr.menu.open);
+function drawSettingsPanel(sel){
+  const c=panCtx, H=PAN_H; c.clearRect(0,0,LAB_W,H); c.textBaseline='middle';
+  const font=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  const box=(x,y,w,h,r)=>{ c.beginPath(); if (c.roundRect) c.roundRect(x,y,w,h,r); else c.rect(x,y,w,h); };
+  c.fillStyle='rgba(10,12,13,.86)'; box(4,4,LAB_W-8,H-8,24); c.fill();
+  c.strokeStyle='rgba(238,240,238,.24)'; c.lineWidth=3; c.stroke();
+  font(500,50); c.fillStyle='#ffffff'; c.fillText(XR_SET_TITLE, LAB_PAD, 62);
+  XR_SET.forEach((it,i)=>{
+    const el=$(it.el), lo=+el.min, hi=+el.max, v=xr.menu.v[i], k=(v-lo)/(hi-lo), y=158+i*96, on=i===sel;
+    if (on){ c.fillStyle='rgba(238,240,238,.12)'; box(24,y-42,LAB_W-48,84,18); c.fill(); }
+    font(500,46); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText((on?'▸':' ')+it.name, LAB_PAD-12, y);
+    const x0=300, x1=LAB_W-250, xk=x0+(x1-x0)*k;          // the bar: track, filled part, round knob, thick enough not to shimmer
+    c.fillStyle='rgba(238,240,238,.24)'; c.fillRect(x0,y-5,x1-x0,10);
+    c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillRect(x0,y-5,xk-x0,10);
+    c.beginPath(); c.arc(xk,y,on?20:14,0,7); c.fill();
+    font(500,42); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText(it.fmt(v), x1+30, y);
+  });
+  font(500,34); c.fillStyle='rgba(238,240,238,.75)';
+  c.fillText('Up/down: pick · Left/right: set · A: close', LAB_PAD, H-46);
+  gl.bindTexture(gl.TEXTURE_2D,panTex);  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,panCv);
+  gl.generateMipmap(gl.TEXTURE_2D);
+}
 function vrLabel(title, sub, keep){
+  if (xr.menu && xr.menu.open) return;
   const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
   const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
   const T=String(title||''); let tp=52;
@@ -1511,7 +1554,7 @@ function drawVRLabel(VPr, pos){
   if (vrLab.alpha<.01) return;
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   const to=V.norm(V.sub(vrLab.face||pos, vrLab.pos)), R=V.norm(V.cross([0,1,0],to)), U=[0,1,0];
-  P_label.use().tex('uTex',labTex).m('uVPr',VPr).f('uC',...vrLab.pos).f('uR',...R).f('uU',...U).f('uSz',.42,.42*LAB_H/LAB_W).f('uCam',...pos).f('uA',vrLab.alpha);
+  P_label.use().tex('uTex',panelOn()?panTex:labTex).m('uVPr',VPr).f('uC',...vrLab.pos).f('uR',...R).f('uU',...U).f('uSz',.42,.42*(panelOn()?PAN_H:LAB_H)/LAB_W).f('uCam',...pos).f('uA',vrLab.alpha);
   gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,6);
   gl.disable(gl.BLEND);
 }
@@ -1611,7 +1654,7 @@ const Q = {msaa:4, bloom:true, mistSteps:22}, QX = {msaa:2, bloom:false, mistSte
 // headset quality levels: s = fraction of the headset's pixel size the grove is drawn at. The page measures its own
 // frame rate in the headset and steps down a level when frames are being missed (missed frames = judder/'glitch').
 const XRL=[ {s:1.00, mistSteps:14, far:150}, {s:.88, mistSteps:12, far:130}, {s:.77, mistSteps:12, far:115}, {s:.67, mistSteps:10, far:100}, {s:.58, mistSteps:9, far:85}, {s:.50, mistSteps:8, far:70} ];
-const BUILD='12 Oct 2026 (b)';
+const BUILD='16 Oct 2026 (a)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 2 : HEADSET==='Quest' ? 2 : 1;
 let QQ = Q;
@@ -1848,7 +1891,7 @@ async function startXR(session){
   if (xr.ref.addEventListener) xr.ref.addEventListener('reset',()=>{ xr.rigInit=false; xr.head0=null; });
   xr.rigInit=false; xr.rigYaw=cam.yaw;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · Y/B: next mode');
+  vrLabel('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · A: settings · Y/B: next mode');
   audioStart();
   session.addEventListener('end', ()=>{ xr.session=null; QQ=Q; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; W=H=0; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -1863,21 +1906,43 @@ function onXRFrame(t, xf){
   const hp=pose.transform.position, hq=pose.transform.orientation;
   const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w];
   const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
-  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aimL=null, aimR=null; xr.rays=[];
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, xBtn=false, aBtn=false, stick=[0,0], aimL=null, aimR=null; xr.rays=[];
   for (const src of session.inputSources){
     const side=src.handedness==='left'?-1:1;
     const gp=src.gamepad; if (gp){
       const ax=gp.axes.length>=4 ? [gp.axes[2],gp.axes[3]] : [gp.axes[0]||0, gp.axes[1]||0];
       const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
       if (side<0){ mv=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) xBtn=true; }
-      else { turn=ax[0]; lift=-ax[1]; if (btn(0)) fast=true; if (btn(5)) bBtn=true; }
+      else { turn=ax[0]; lift=-ax[1]; stick=ax; if (btn(0)) fast=true; if (btn(5)) bBtn=true; if (btn(4)) aBtn=true; }
     }
     // where each controller points: drawn as a short beam; the left one steers movement
     if (src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if (rp){ const p=rp.transform.position, q=rp.transform.orientation;
       const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if (side<0) aimL=d; else aimR=d; } }
   }
+  // A: the settings panel (right stick chooses and adjusts; walking pauses while it is open)
+  const MN=xr.menu||(xr.menu={open:false, sel:0, ud:0, dirty:false, drawT:0, envT:0, v:[], changed:new Set()});
+  if (aBtn && !xr.aLatch){
+    MN.open=!MN.open;
+    if (MN.open){ MN.v=XR_SET.map(it=>+$(it.el).value); xr.perfT=0; vrLab.pos=null; vrLab.t=1; MN.dirty=true; MN.drawT=0; }
+    else { vrLab.t=0; }
+  }
+  xr.aLatch=aBtn;
+  if (MN.open){
+    const it=XR_SET[MN.sel], el=$(it.el), lo=+el.min, hi=+el.max;
+    const ud=stick[1]>.6?1:stick[1]<-.6?-1:0;                     // flick up/down to choose a row
+    if (ud && ud!==MN.ud){ MN.sel=(MN.sel+ud+XR_SET.length)%XR_SET.length; MN.dirty=true; }
+    MN.ud=ud;
+    const x=Math.abs(stick[0])<.2?0:stick[0];                    // push left/right to adjust; further = faster
+    if (x){ MN.v[MN.sel]=clamp(MN.v[MN.sel]+Math.sign(x)*x*x*it.rate*(hi-lo)*dt, lo, hi); MN.dirty=true; MN.changed.add(MN.sel); }
+    MN.envT-=dt; if (MN.changed.size && MN.envT<=0){                // hand the new values to the page's own sliders ~15 times a second
+      for (const i of MN.changed){ const e=$(XR_SET[i].el); e.value=MN.v[i]; e.dispatchEvent(new Event('input')); }
+      MN.changed.clear(); MN.envT=1/15; }
+    MN.drawT-=dt; if (MN.dirty && MN.drawT<=0){ drawSettingsPanel(MN.sel); MN.dirty=false; MN.drawT=1/15; }
+    vrLab.t=Math.max(vrLab.t,1);                                   // keep the card up while the panel is open
+    mv=[0,0]; turn=0; lift=0;                                     // the stick belongs to the panel for now
+  }
   // X: performance readout
-  if (xBtn && !xr.xLatch){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
+  if (xBtn && !xr.xLatch && !MN.open){ xr.perfT=8; xr.perfLast=-9; } xr.xLatch=xBtn;
   if (xr.perfT>0){ xr.perfT-=dt; if (simT-xr.perfLast>1){ xr.perfLast=simT;
       vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+Math.round(session.frameRate||72)+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · Build '+BUILD, true); } }
   // B: next mode (walk -> fly -> tour)
@@ -1924,7 +1989,7 @@ function onXRFrame(t, xf){
   const head=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
   cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
   if (vrLab.t>0){ vrLab.t-=dt; const want=V.add(head, V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
-    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; vrLab.face=head; }
+    vrLab.pos = !vrLab.pos ? want : MN.open ? vrLab.pos : V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)); vrLab.face=head; }
   simulate(dt);
   if (frame%14===0) drawMap(false);
   const layer=xr.layer, RR=v=>yawRot(xr.rigYaw,v);
@@ -1944,9 +2009,9 @@ function vrSetMode(m){
     // face along the path
     const n=pathNear(cam.pos[0],cam.pos[2]), tt=pathAt(n.s).t, g=xr.gazeLocal||[0,0,-1];
     xr.rigYaw=Math.atan2(tt[2],tt[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode');
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · A: settings · B: mode');
   } else if (m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
-  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
+  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · A: settings · B: next mode'); }
 }
 
 // ================================================================ FRAME LOOP
@@ -1991,7 +2056,7 @@ window.grove = {
   tour(t){ setMode('tour'); cam.tourT=t; },
   sim(n,dt){ for (let i=0;i<n;i++){ updateDesktopCamera(dt); simulate(dt); } gl.finish(); },
   step(n,dt){ for (let i=0;i<n;i++) desktopFrame(dt); gl.finish(); },
-  keys, vrLabel, labCanvas:labCv, CELLS, BLADES, groveVisible, frustumPlanes,
+  keys, vrLabel, labCanvas:labCv, drawSettingsPanel, panCanvas:panCv, CELLS, BLADES, groveVisible, frustumPlanes,
   get simT(){ return simT; }
 };
 window.groveReady = true;

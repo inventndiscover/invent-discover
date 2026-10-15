@@ -118,7 +118,7 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 <p><b>1. Digital creation.</b> This experience is a digital creation, a representation inspired by the Malabar Hill nature trail in Mumbai. It is not a real place, and it is not a surveyed or accurate map. The route, landmarks, buildings and sounds are illustrative and must not be treated as real.</p>
 <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
 <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
-<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 12 Oct 2026 (b) · in the headset, press X for a performance readout</p></div></div>
+<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 16 Oct 2026 (a) · in the headset, press A for time and weather, X for a performance readout</p></div></div>
 <script>
 /* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open. */
 window.__gate=!/[?&]test/.test(location.search);
@@ -3129,7 +3129,7 @@ const XRL=[
 ];
 // Which headset is this? The Quest browser names it in its user-agent string, e.g. "... Quest 2) ..." or "... Quest 3) ...".
 // A Quest 2 has roughly half the graphics power of a Quest 3, so it starts lower down the ladder above.
-const BUILD='12 Oct 2026 (b)';
+const BUILD='16 Oct 2026 (a)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 3 : 2;
 let Q=QD;
@@ -3327,7 +3327,7 @@ async function startXR(session){
   if(cam.mode==='tour') { xr.rigInit=false; } else setMode('walk');
   xr.rigInit=false; xr.rigYaw=cam.yaw;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · B: next mode':'Left stick walks where you point · right stick turns · B: mode');
+  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · A: time and weather · B: next mode':'Left stick walks where you point · right stick turns · A: time and weather · B: mode');
   audioStart();
   session.addEventListener('end',()=>{ xr.session=null; Q=QD; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; W=H=0; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -3342,23 +3342,45 @@ function onXRFrame(t, xf){
   const hp=pose.transform.position, hq=pose.transform.orientation;
   const headLocal=[hp.x,hp.y,hp.z], hQ=[hq.x,hq.y,hq.z,hq.w]; xr.headLocal=headLocal;
   const gazeLocal=qRot(hQ,[0,0,-1]); xr.gazeLocal=gazeLocal;
-  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, aimL=null, aimR=null; xr.hands=[]; xr.rays=[];
+  let mv=[0,0], lift=0, fast=false, turn=0, bBtn=false, aBtn=false, stick=[0,0], aimL=null, aimR=null; xr.hands=[]; xr.rays=[];
   for(const src of session.inputSources){
     const side=src.handedness==='left'?-1:1;
     const gp=src.gamepad; if(gp){
       const ax=gp.axes.length>=4?[gp.axes[2],gp.axes[3]]:[gp.axes[0]||0,gp.axes[1]||0];
       const btn=i=>gp.buttons[i]&&gp.buttons[i].pressed;
       if(side<0){ mv=ax; if(btn(0)) fast=true; if(btn(5)) bBtn=true; }
-      else { turn=ax[0]; lift=-ax[1]; if(btn(0)) fast=true; if(btn(5)) bBtn=true; }
+      else { turn=ax[0]; lift=-ax[1]; stick=ax; if(btn(0)) fast=true; if(btn(5)) bBtn=true; if(btn(4)) aBtn=true; }
     }
     if(src.gripSpace){ const gpose=xf.getPose(src.gripSpace, xr.ref); if(gpose){ const p=gpose.transform.position, q=gpose.transform.orientation; xr.hands.push({p:[p.x,p.y,p.z], q:[q.x,q.y,q.z,q.w], side}); } }
     // where each controller points (its 'target ray'); drawn as a short beam, and the left one steers movement
     if(src.targetRaySpace && src.targetRayMode==='tracked-pointer'){ const rp=xf.getPose(src.targetRaySpace, xr.ref); if(rp){ const p=rp.transform.position, q=rp.transform.orientation;
       const d=qRot([q.x,q.y,q.z,q.w],[0,0,-1]); xr.rays.push({p:[p.x,p.y,p.z], d, side}); if(side<0) aimL=d; else aimR=d; } }
   }
+  // A: the settings panel (right stick chooses and adjusts; walking pauses while it is open)
+  const MN=xr.menu||(xr.menu={open:false, sel:0, ud:0, dirty:false, drawT:0, envT:0, v:[], changed:new Set()});
+  if (aBtn && !xr.aLatch){
+    MN.open=!MN.open;
+    if (MN.open){ MN.v=XR_SET.map(it=>+document.getElementById(it.el).value); xr.perfT=0; vrLab.pos=null; vrLab.t=1; MN.dirty=true; MN.drawT=0; }
+    else { vrLab.t=0; }
+  }
+  xr.aLatch=aBtn;
+  if (MN.open){
+    const it=XR_SET[MN.sel], el=document.getElementById(it.el), lo=+el.min, hi=+el.max;
+    const ud=stick[1]>.6?1:stick[1]<-.6?-1:0;                     // flick up/down to choose a row
+    if (ud && ud!==MN.ud){ MN.sel=(MN.sel+ud+XR_SET.length)%XR_SET.length; MN.dirty=true; }
+    MN.ud=ud;
+    const x=Math.abs(stick[0])<.2?0:stick[0];                    // push left/right to adjust; further = faster
+    if (x){ MN.v[MN.sel]=clamp(MN.v[MN.sel]+Math.sign(x)*x*x*it.rate*(hi-lo)*dt, lo, hi); MN.dirty=true; MN.changed.add(MN.sel); }
+    MN.envT-=dt; if (MN.changed.size && MN.envT<=0){                // hand the new values to the page's own sliders ~15 times a second
+      for (const i of MN.changed){ const e=document.getElementById(XR_SET[i].el); e.value=MN.v[i]; e.dispatchEvent(new Event('input')); }
+      MN.changed.clear(); MN.envT=1/15; }
+    MN.drawT-=dt; if (MN.dirty && MN.drawT<=0){ drawSettingsPanel(MN.sel); MN.dirty=false; MN.drawT=1/15; }
+    vrLab.t=Math.max(vrLab.t,1);                                   // keep the card up while the panel is open
+    mv=[0,0]; turn=0; lift=0;                                     // the stick belongs to the panel for now
+  }
   // X (left controller): show a performance readout -- headset, frame rate, quality level, build
   { let x=false; for(const src of session.inputSources){ const gp=src.gamepad; if(gp && src.handedness==='left' && gp.buttons[4] && gp.buttons[4].pressed) x=true; }
-    if(x && !xr.xLatch){ xr.perfT=8; xr.perfLast=0; } xr.xLatch=x; }
+    if(x && !xr.xLatch && !MN.open){ xr.perfT=8; xr.perfLast=0; } xr.xLatch=x; }
   if(xr.perfT>0){ xr.perfT-=dt; if(simT-(xr.perfLast||0)>1){ xr.perfLast=simT;
       const hz=Math.round(xr.session.frameRate||72);
       vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+hz+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · Build '+BUILD, true); } }
@@ -3412,7 +3434,7 @@ function onXRFrame(t, xf){
   cam.pos=head; const ya=lookAtAngles([0,0,0],gaze); cam.yaw=ya.yaw; cam.pitch=ya.pitch;
   xr.head=head;
   if(vrLab.t>0){ vrLab.t-=dt; const want=V.add(head,V.add(V.mul(V.norm([gaze[0],0,gaze[2]]),1.6),[0,-.12,0]));
-    vrLab.pos = vrLab.pos ? V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)) : want; }
+    vrLab.pos = !vrLab.pos ? want : MN.open ? vrLab.pos : V.lerp(vrLab.pos, want, Math.min(1,dt*2.5)); }
   simulate(dt);
   drawMap(false);
   prepareFrame(head);
@@ -3435,9 +3457,9 @@ function vrSetMode(m){
   if(m==='walk'){ const prev=cam.mode; setMode('walk'); if(prev==='tour') placeWalker(3.5);
     // face along the trail
     const n=nearestOnPath(cam.pos[0],cam.pos[2]); const t=n.p.t, g=xr.gazeLocal||[0,0,-1]; xr.rigYaw=Math.atan2(t[2],t[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · B: mode'); }
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · A: time and weather · B: mode'); }
   else if(m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; xr.rigInit=true; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
-  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · B: next mode'); }
+  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · A: time and weather · B: next mode'); }
 }
 // floating label in the headset (mode names, tour captions)
 const vrLab={t:0, pos:null};
@@ -3448,7 +3470,49 @@ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParame
 // instructions are split at each ' · ' and word-wrapped onto their own lines (before, one long line was simply
 // cut off at the panel's edge). The panel is kept narrow so all of it sits in the sharp centre of the lenses.
 const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
+const XR_SET_TITLE='Time and weather';
+const XR_SET=[   // rate: share of the slider's range per second at full push
+  {name:'Time',  el:'tod',  rate:.16, fmt:v=>fmtT(v)},
+  {name:'Mist',  el:'mist', rate:.45, fmt:v=>v<.02?'clear':Math.round(v*100)+'%'},
+  {name:'Cloud', el:'cld',  rate:.45, fmt:v=>Math.round(v*100)+'%'},
+  {name:'Rain',  el:'rain', rate:.45, fmt:v=>v<0.02?'none':v<0.35?'light':v<0.7?'steady':'heavy'}
+];
+// A: an in-headset panel for the same sliders as the web page.
+// Each row points at a page slider (el); moving it fires that slider's own 'input' handler, so VR and web behave the same.
+// The panel gets its own taller card, so every row can use big, crisp letters (34 px or more; smaller text breaks up
+// in the headset). Example: 5 rows -> a card 1024 x 704 pixels, about 0.84 m wide and 0.58 m tall at 1.6 m.
+const PAN_H=Math.round((150+XR_SET.length*96+70)/8)*8;
+const panCv=document.createElement('canvas'); panCv.width=LAB_W; panCv.height=PAN_H; const panCtx=panCv.getContext('2d');
+const panTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,panTex);
+// mipmaps: ready-made, carefully averaged smaller copies of the card, so the GPU shrinks the text smoothly instead of pixelating it
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+{ const an=gl.getExtension('EXT_texture_filter_anisotropic'); if (an) gl.texParameterf(gl.TEXTURE_2D, an.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(4, gl.getParameter(an.MAX_TEXTURE_MAX_ANISOTROPY_EXT))); }
+const panelOn=()=>!!(xr.menu && xr.menu.open);
+function drawSettingsPanel(sel){
+  const c=panCtx, H=PAN_H; c.clearRect(0,0,LAB_W,H); c.textBaseline='middle';
+  const font=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
+  const box=(x,y,w,h,r)=>{ c.beginPath(); if (c.roundRect) c.roundRect(x,y,w,h,r); else c.rect(x,y,w,h); };
+  c.fillStyle='rgba(10,12,13,.86)'; box(4,4,LAB_W-8,H-8,24); c.fill();
+  c.strokeStyle='rgba(238,240,238,.24)'; c.lineWidth=3; c.stroke();
+  font(500,50); c.fillStyle='#ffffff'; c.fillText(XR_SET_TITLE, LAB_PAD, 62);
+  XR_SET.forEach((it,i)=>{
+    const el=document.getElementById(it.el), lo=+el.min, hi=+el.max, v=xr.menu.v[i], k=(v-lo)/(hi-lo), y=158+i*96, on=i===sel;
+    if (on){ c.fillStyle='rgba(238,240,238,.12)'; box(24,y-42,LAB_W-48,84,18); c.fill(); }
+    font(500,46); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText((on?'▸':' ')+it.name, LAB_PAD-12, y);
+    const x0=300, x1=LAB_W-250, xk=x0+(x1-x0)*k;          // the bar: track, filled part, round knob, thick enough not to shimmer
+    c.fillStyle='rgba(238,240,238,.24)'; c.fillRect(x0,y-5,x1-x0,10);
+    c.fillStyle=on?'#ffffff':'rgba(238,240,238,.6)'; c.fillRect(x0,y-5,xk-x0,10);
+    c.beginPath(); c.arc(xk,y,on?20:14,0,7); c.fill();
+    font(500,42); c.fillStyle=on?'#ffffff':'rgba(238,240,238,.66)'; c.fillText(it.fmt(v), x1+30, y);
+  });
+  font(500,34); c.fillStyle='rgba(238,240,238,.75)';
+  c.fillText('Up/down: pick · Left/right: set · A: close', LAB_PAD, H-46);
+  gl.bindTexture(gl.TEXTURE_2D,panTex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,panCv); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.generateMipmap(gl.TEXTURE_2D);
+}
 function vrLabel(title, sub, keep){
+  if (xr.menu && xr.menu.open) return;
   const c=labCtx; c.clearRect(0,0,LAB_W,LAB_H); c.textBaseline='middle';
   const setF=(w,px)=>{ c.font=w+' '+px+'px "IBM Plex Mono", ui-monospace, Menlo, monospace'; };
   // title: shrink until it fits on one line
@@ -3487,7 +3551,7 @@ function drawVRLabel(VPr, pos){
   if(vrLab.t<=0 || !vrLab.pos) return;
   const to=V.norm(V.sub(pos,vrLab.pos)); const Rv=V.norm(V.cross([0,1,0],to)); const Uv=[0,1,0];
   gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  P_label.use().m('uVPr',VPr).f('uCam',...pos).f('uC',...vrLab.pos).f('uR',...V.mul(Rv,.42)).f('uU',...V.mul(Uv,.42*384/1024)).tex('uTex',labTex).f('uA',clamp(vrLab.t/.6,0,1));
+  P_label.use().m('uVPr',VPr).f('uCam',...pos).f('uC',...vrLab.pos).f('uR',...V.mul(Rv,.42)).f('uU',...V.mul(Uv,.42*(panelOn()?PAN_H:384)/1024)).tex('uTex',panelOn()?panTex:labTex).f('uA',clamp(vrLab.t/.6,0,1));
   gl.bindVertexArray(emptyVAO); gl.drawArrays(gl.TRIANGLES,0,6);
   gl.disable(gl.BLEND);
 }
@@ -3818,7 +3882,7 @@ window.trail = {
   lookAt(p,t,fov){ setMode('fly'); cam.pos=p.slice(); const a=lookAtAngles(p,t); cam.yaw=a.yaw; cam.pitch=a.pitch; if(fov) cam.fov=fov*Math.PI/180; },
   walkAt(s,u,yawOff,pitch){ setMode('walk'); placeWalker(s); cam.u=u||0; cam.pos=eyeAt(s,cam.u); cam.yaw+=yawOff||0; cam.pitch=pitch||0; },
   tour(t){ setMode('tour'); cam.tourT=t; },
-  vrLabel, labCanvas:labCv,
+  vrLabel, labCanvas:labCv, drawSettingsPanel, panCanvas:panCv,
   testLabel(){ vrLabel('Walk','Left stick walks · right stick turns'); vrLab.pos=V.add(cam.pos,V.mul(fwdOf(cam.yaw,cam.pitch),1.6)); forceLabel=true; },
   keys, strike(){ S.bolt=true; bolt.next=0; },
   stats(){ const o={}; for(const T of TEMPLATES){ o[T.kind]=(o[T.kind]||0)+T.list.length; } const c=TEMPLATES.map(T=>T.kind+':'+T.lods.map(l=>l.cards+'/'+l.tris).join(',')); return {count:o, cards:c, pathLen:PATH_LEN}; },
