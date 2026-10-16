@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Might We question generator · Invent + Discover</title>
+<meta name="description" content="Turn a problem into “How might we…” questions through ten lenses. Edit, star your favourites, save them as an image or sketch them in Crazy 8s. Free, in your browser.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/how-might-we/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="How Might We question generator · Invent + Discover">
+<meta property="og:description" content="Type a problem, get “How might we…” questions through ten lenses. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/how-might-we/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"How Might We question generator","url":"https://inventndiscover.com/toolkit/how-might-we/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same colour "tokens" as Crazy 8s, so the two tools feel like one set.
+  Example: change --violet to #22D3EE and every violet glow turns cyan.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --blue: #3B82F6;
+    --pink: #EC4899;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }   /* makes sure hidden buttons stay hidden */
+
+  body {
+    margin: 0;
+    color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    /* Faint grid (two thin line gradients) + soft coloured glows */
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 96px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 40px 0 20px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill {
+    display: inline-block; margin: 18px 0 10px; padding: 5px 12px;
+    border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD;
+    box-shadow: 0 0 18px rgba(139,92,246,0.25);
+  }
+  h1 {
+    margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25);
+  }
+  .lede { color: var(--muted); max-width: 660px; font-size: 17px; line-height: 1.55; }
+  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .credit a, .about a, .how a { color: #C4B5FD; }
+
+  /* ---------- Cards, inputs, buttons ---------- */
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px;
+    backdrop-filter: blur(6px);
+  }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text] {
+    width: 100%; background: rgba(0,0,0,0.35); color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; font: inherit; font-size: 16px;
+  }
+  input[type=text]:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+
+  button, .btn {
+    font: inherit; font-size: 15px; color: var(--text); cursor: pointer; text-decoration: none;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 16px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  button:hover, .btn:hover { border-color: rgba(255,255,255,0.25); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary {
+    background: linear-gradient(135deg, var(--violet), var(--pink)); border: none;
+    box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700;
+  }
+
+  .ask { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+  @media (max-width: 640px) { .ask { grid-template-columns: 1fr; } .ask button { justify-content: center; } }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+  .examples span { color: var(--muted); font-size: 13px; }
+  .chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; }
+
+  /* "How we read it" — the three blanks the templates fill */
+  .reading { display: none; margin-top: 14px; }
+  .reading.show { display: block; }
+  .reading h2 { font-size: 15px; margin: 0 0 4px; }
+  .reading p { color: var(--muted); font-size: 14px; margin: 0 0 12px; line-height: 1.5; }
+  .slots { display: grid; grid-template-columns: 1fr 1.4fr 1.2fr; gap: 12px; }
+  @media (max-width: 760px) { .slots { grid-template-columns: 1fr; } }
+  .slots label b { font-weight: 500; }
+  .tag-who { color: #C4B5FD; } .tag-bad { color: #F9A8D4; } .tag-where { color: #93C5FD; }
+
+  /* ---------- Lenses and question cards ---------- */
+  #results { margin-top: 26px; display: grid; gap: 22px; }
+  .lens h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .lens h3 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); }
+  .lens .hint { color: var(--muted); margin: 4px 0 12px 20px; font-size: 14px; }
+  .qs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 900px) { .qs { grid-template-columns: 1fr; } }
+  .lens.violet { --c: var(--violet); --soft: rgba(139,92,246,0.45); }
+  .lens.blue   { --c: var(--blue);   --soft: rgba(59,130,246,0.45); }
+  .lens.pink   { --c: var(--pink);   --soft: rgba(236,72,153,0.45); }
+
+  .q {
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 14px;
+    background: var(--panel); display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .q.starred { border-color: var(--c); box-shadow: 0 0 0 1px var(--c), 0 0 26px var(--soft); }
+  .q-text { margin: 0; font-size: 16.5px; line-height: 1.45; flex: 1; border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }
+  .q-text:hover { background: rgba(255,255,255,0.03); }
+  .q-text:focus { outline: none; background: rgba(0,0,0,0.35); box-shadow: 0 0 0 2px var(--c); }
+  .q-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .star { padding: 6px 12px; font-size: 14px; }
+  .star[aria-pressed=true] { border-color: var(--c); color: #fff; box-shadow: 0 0 12px var(--soft); }
+  .to8 { padding: 6px 12px; font-size: 14px; color: #F9A8D4; border-color: rgba(236,72,153,0.45); }
+  .to8:hover { border-color: var(--pink); box-shadow: 0 0 14px rgba(236,72,153,0.4); }
+  .edit-hint { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+  /* ---------- Favourites ---------- */
+  .favs { margin-top: 32px; display: none; border-color: rgba(236,72,153,0.5); box-shadow: 0 0 30px rgba(236,72,153,0.18); }
+  .favs.show { display: block; }
+  .favs-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .favs-head h2 { margin: 0; font-size: 22px; flex: 1; min-width: 200px; }
+  .favs ol { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: fav; }
+  .favs li {
+    counter-increment: fav; display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center;
+    padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25);
+  }
+  .favs li::before { content: counter(fav); font-weight: 700; color: #F9A8D4; text-align: center; }
+  .favs li small { display: block; color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+  .favs li .row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .favs li .x { padding: 6px 10px; font-size: 13px; }
+  @media (max-width: 640px) { .favs li { grid-template-columns: 26px 1fr; } .favs li .row { grid-column: 2; justify-content: flex-start; } }
+
+  /* Floating counter, so you always know how many are starred */
+  .floater {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(120px); z-index: 20;
+    background: rgba(5,6,10,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(236,72,153,0.5);
+    box-shadow: 0 0 24px rgba(236,72,153,0.3); border-radius: 999px; padding: 10px 18px; transition: transform 0.3s;
+  }
+  .floater.show { transform: translateX(-50%) translateY(0); }
+
+  /* ---------- How-to, about, footer ---------- */
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; }
+  @media (max-width: 760px) { .how { grid-template-columns: 1fr; } }
+  .how h3 { margin: 0 0 6px; font-size: 17px; }
+  .how p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 15px; }
+  .step { color: var(--pink); font-weight: 700; font-size: 13px; letter-spacing: 0.1em; }
+  .about { margin-top: 36px; }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  footer a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  footer a:hover { color: var(--text); }
+  footer .method { margin-top: 10px; max-width: 80ch; }
+  footer .method a { color: #C4B5FD; margin: 0; display: inline; }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  The skeleton. The questions and favourites start empty;
+  JavaScript (Part 3) fills them in.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · HOW MIGHT WE</span>
+    <h1>How Might We</h1>
+    <p class="lede">Turn a problem into questions you can design for. Type what's going wrong, and the tool rewrites it as “How might we…” questions through ten different lenses. Edit any of them, star the ones worth chasing, then save them or sketch them in Crazy 8s.</p>
+    <p class="credit">“How might we” is a classic framing from design thinking, taught in Google's Design Sprint. <a href="#where">Where it comes from</a></p>
+  </header>
+
+  <div class="card">
+    <div class="ask">
+      <div>
+        <label for="problem">Your problem, in one sentence: who, what goes wrong, and where</label>
+        <input type="text" id="problem" maxlength="200" placeholder="Commuters miss their station on crowded local trains">
+      </div>
+      <button class="primary" id="goBtn">Make questions</button>
+    </div>
+    <div class="examples" id="examples"><span>Try:</span></div>
+
+    <!-- The three blanks. Editing any of them rewrites every question. -->
+    <div class="reading" id="reading">
+      <h2>How the tool read your problem</h2>
+      <p>Every question is a template with blanks. These are the blanks it found. If one looks off, fix it here and all the questions update.</p>
+      <div class="slots">
+        <div><label for="sWho"><b class="tag-who">Who</b> has the problem</label><input type="text" id="sWho"></div>
+        <div><label for="sBad"><b class="tag-bad">What goes wrong</b> for them</label><input type="text" id="sBad"></div>
+        <div><label for="sWhere"><b class="tag-where">Where or when</b> (optional)</label><input type="text" id="sWhere"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results"></div>
+
+  <section class="card favs" id="favs">
+    <div class="favs-head">
+      <h2>★ Your starred questions</h2>
+      <button id="copyBtn">Copy text</button>
+      <button class="primary" id="saveBtn">Save as image</button>
+    </div>
+    <ol id="favList"></ol>
+  </section>
+
+  <a class="btn floater" id="floater" href="#favs">★ <span id="favCount">0</span> starred · view & save</a>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1</div><h3>Name the problem</h3><p>One sentence: who is stuck, what goes wrong, and where. Real and specific beats big and vague.</p></div>
+    <div class="card"><div class="step">STEP 2</div><h3>Look through the lenses</h3><p>Each lens tilts the problem a different way. Rewrite any question until it sounds like your team. A good one is narrow enough to start on, wide enough to surprise you.</p></div>
+    <div class="card"><div class="step">STEP 3</div><h3>Star, then sketch</h3><p>Star three to five. Save them as an image for the wall, or send one straight into <a href="/toolkit/crazy-8s/">Crazy 8s</a> to sketch eight answers in eight minutes.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <h2>Where “How might we” comes from</h2>
+    <p><b>How Might We</b> is one of the best-known framing methods in <b>design thinking</b>. The phrasing is usually traced to <b>Min Basadur</b>, who used it in creative problem-solving work at Procter &amp; Gamble in the 1970s. It later became a habit at <b>IDEO</b> and the Stanford d.school, and is now a standard step in <b>Google's Design Sprint</b>, where teams turn notes from experts into “How might we” sticky notes and vote on the best ones. Google teaches it in its free <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Design Sprint Kit</a>.</p>
+    <p>Each word does a job. <b>How</b> assumes there is an answer. <b>Might</b> says it's fine if an idea doesn't work. <b>We</b> makes it a shared problem. The lenses on this page (amp up the good, remove the bad, explore the opposite and the rest) follow the prompts design-thinking teachers commonly use to push a problem in different directions.</p>
+    <p>The question templates and this page are made by Invent + Discover. They run in your browser with simple fill-in-the-blank rules, no AI, and nothing you type is uploaded.</p>
+  </section>
+
+  <footer>
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div class="method">Method: <b>How Might We</b>, from design thinking (first used by Min Basadur; popularised by IDEO and the Stanford d.school), as taught in <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Google's Design Sprint Kit</a>. Question templates by Invent + Discover.</div>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+const $ = (sel) => document.querySelector(sel);
+
+// ---------- 3a. The lenses and their templates ----------
+// Each template is a sentence with blanks in {curly brackets}.
+// The tool fills the blanks from your problem. Example, for
+// "Commuters miss their station on crowded local trains":
+//   {who}      → commuters
+//   {bad}      → miss their station          (what goes wrong, as you wrote it)
+//   {badBase}  → miss their station          (the plain "to ___" form)
+//   {badIng}   → missing their station       (the "-ing" form)
+//   {goodBase} → avoid missing their station (the thing we want instead)
+//   {where}    → " on crowded local trains"  (with a space in front, or empty)
+//   {place}    → crowded local trains
+//   {adj}      → crowded,  {adjOpp} → spacious and calm
+//   {whoPoss}  → commuters'                  (possessive: "commuters' advantage")
+//   {manage} {carry} {have} → "manage / carry / have" for many people,
+//                  "manages / carries / has" for one ("My grandmother misses…")
+// So "How might we stop {who} from {badIng}?" becomes
+//    "How might we stop commuters from missing their station?"
+// A template that needs a blank which is empty (e.g. no {place}) is skipped.
+// To add your own question: add a line to any list below. That's it.
+const LENSES = [
+  { name: 'Amp up the good', color: 'violet', hint: 'Find what already works and make more of it.', templates: [
+    'How might we build on the times when {who} {manage} to {goodBase}?',
+    'How might we turn {place} into something that helps {who}, not something that gets in the way?',
+    'How might we make getting it right feel like a small win for {who}?' ]},
+  { name: 'Remove the bad', color: 'pink', hint: 'Go straight at the cause and take it away.', templates: [
+    'How might we remove the reasons {who} {bad}{where}?',
+    'How might we stop {who} from {badIng}?',
+    'How might we spot the moment just before {who} {badMoment}, and step in?' ]},
+  { name: 'Explore the opposite', color: 'blue', hint: 'Flip it. Sometimes the reverse shows you the answer.', templates: [
+    'What would make {who} {badBase} every single time? How might we do the exact reverse?',
+    'How might we make {badIng} useful, or even fun?',
+    "How might we make it so easy to {goodBase} that {who} couldn't get it wrong if they tried?" ]},
+  { name: 'Change the context', color: 'violet', hint: 'Move the problem to a different person, time or situation.', templates: [
+    'How might we stop a child, a tourist or an older person from {badIng}{where}?',
+    'How might we help {who} {goodBase} at 2 a.m., in heavy rain, or with no phone signal?',
+    'How might we solve this if {who} had only ten seconds to act?' ]},
+  { name: 'Question an assumption', color: 'pink', hint: 'Pick something everyone takes for granted and drop it.', templates: [
+    "What if {who} didn't have to pay attention at all? How might we make that work?",
+    'How might we solve this without changing {place} at all?',
+    "What if it isn't {whoPoss} fault? How might we fix the system around them?" ]},
+  { name: 'Go after the adjective', color: 'blue', hint: 'Take the describing word in your problem and turn it around.', templates: [
+    'How might we make {place} feel {adjOpp}?',
+    'How might we use the fact that it is {adj} to {whoPoss} advantage?' ]},
+  { name: 'Use unexpected resources', color: 'violet', hint: 'Look at what is already around that nobody is using.', templates: [
+    'How might we use the people around {who} to help?',
+    'How might we use what {who} already {carry}{where}?',
+    'How might we use sound, light or touch to help {who} {goodBase}?' ]},
+  { name: 'Borrow an analogy', color: 'pink', hint: 'Who else has solved a problem that feels like this one?', templates: [
+    'How might we help {who} {goodBase} the way a good flight crew looks after passengers?',
+    'How might we borrow tricks from games, alarm clocks or maps to help {who} {goodBase}?' ]},
+  { name: 'Change the status quo', color: 'blue', hint: 'Question the normal way of doing it, not just the problem.', templates: [
+    'How might we change the usual routine so {who} no longer {have} to worry about this?',
+    'How might we move the job off {who} and onto the system around them?' ]},
+  { name: 'Break it into pieces', color: 'violet', hint: 'Make it smaller: before, during and after.', templates: [
+    'How might we help {who} in the minutes before it goes wrong?',
+    'How might we help {who} bounce back quickly when it does go wrong?',
+    'How might we fix just one small part of {badIng}{where} first?' ]}
+];
+
+const EXAMPLES = [
+  'Commuters miss their station on crowded local trains',
+  "Students can't find a quiet place to study on campus",
+  'Small shop owners forget to restock popular items during festival season'
+];
+
+// ---------- 3b. Reading the problem: splitting it into blanks ----------
+// Plain rules, no AI. Example: "Commuters miss their station on crowded local trains"
+//  1. Find the first VERB ("miss"). Everything before it is WHO → "Commuters".
+//  2. Everything after is WHAT GOES WRONG → "miss their station on crowded local trains".
+//  3. A place word like "on / in / at / during" (not right at the start) splits off
+//     WHERE → "on crowded local trains", leaving "miss their station".
+// If it guesses wrong, the visitor fixes the three boxes by hand.
+const VERBS = ('miss lose forget waste skip ignore avoid struggle fail find get have feel need want wait take ' +
+  'spend arrive leave drop stop end give buy eat drink use worry hate stand push pay walk run drive ride go come ' +
+  'make do say see hear know think leave sit sleep wake study read write learn work travel cross carry fall break ' +
+  'search look queue buy sell order cook clean throw park reach board catch call send share choose decide ' +
+  'remember understand speak talk listen hesitate panic rush depend rely struggle juggle overspend overpay').split(' ');
+const AUX = { are: 'be', is: 'be', am: 'be', was: 'be', were: 'be', has: 'have', have: 'have' };
+const ADVERBS = ['often', 'always', 'sometimes', 'usually', 'frequently', 'regularly', 'still', 'rarely'];
+const CANT = ["can't", 'cannot', "couldn't", 'struggle', 'struggles', 'fail', 'fails'];   // followed by what they can't do
+const DONT = ["don't", "doesn't", 'never'];                                                // followed by what they don't do
+const PLACE_WORDS = ['on', 'in', 'at', 'inside', 'near', 'around', 'through'];
+const TIME_WORDS = ['during', 'while', 'when', 'before', 'after'];
+
+// Opposites for "Go after the adjective". Example: crowded → spacious and calm.
+const ADJ_OPP = { crowded: 'spacious and calm', packed: 'roomy', busy: 'calm', noisy: 'quiet', loud: 'quiet',
+  slow: 'quick', long: 'short', expensive: 'affordable', costly: 'affordable', boring: 'exciting', tedious: 'quick and fun',
+  confusing: 'obvious', complicated: 'simple', complex: 'simple', dark: 'bright and safe', dirty: 'clean', hot: 'cool',
+  cold: 'warm', stressful: 'relaxing', dangerous: 'safe', unsafe: 'safe', empty: 'lively', lonely: 'welcoming',
+  small: 'roomy', tiny: 'roomy', cramped: 'roomy', messy: 'tidy', rushed: 'unhurried', chaotic: 'calm',
+  overwhelming: 'manageable', difficult: 'easy', hard: 'easy', unfamiliar: 'familiar', far: 'close', old: 'fresh',
+  hidden: 'easy to find', strict: 'flexible', unreliable: 'dependable', late: 'on time', public: 'personal' };
+
+const clean = (w) => w.toLowerCase().replace(/[^a-z']/g, '');
+
+// "misses" → "miss", "carries" → "carry", "rides" → "ride"
+function toBase(w) {
+  w = w.toLowerCase();
+  if (AUX[w]) return AUX[w];
+  if (VERBS.includes(w)) return w;
+  if (/ies$/.test(w)) return w.slice(0, -3) + 'y';
+  if (/(ss|sh|ch|x|z)es$/.test(w)) return w.slice(0, -2);
+  if (/s$/.test(w) && !/ss$/.test(w)) return w.slice(0, -1);
+  return w;
+}
+
+// "miss" → "missing", "ride" → "riding", "stop" → "stopping", "be" → "being"
+function toIng(base) {
+  if (base === 'be') return 'being';
+  if (/ie$/.test(base)) return base.slice(0, -2) + 'ying';
+  if (/[^aeiou]e$/.test(base) || /ue$/.test(base)) return base.slice(0, -1) + 'ing';
+  const shortCVC = base.length <= 4 && (base.match(/[aeiou]+/g) || []).length === 1 && /[^aeiou][aeiou][^aeiouwxy]$/.test(base);
+  if (shortCVC || ['forget', 'begin', 'admit', 'regret', 'prefer', 'occur'].includes(base))
+    return base + base.slice(-1) + 'ing';
+  return base + 'ing';
+}
+
+const isVerbish = (w) => {
+  const c = clean(w);
+  return VERBS.includes(c) || AUX[c] || ADVERBS.includes(c) || CANT.includes(c) || DONT.includes(c) ||
+         c === 'do' || c === 'does' || c === 'find' || (c.endsWith('s') && VERBS.includes(toBase(c)));
+};
+
+// Step 1–3 above: problem sentence → { who, bad, where }
+function splitProblem(text) {
+  text = text.trim().replace(/[.!?]+$/, '');
+  const words = text.split(/\s+/).filter(Boolean);
+  let v = words.findIndex((w, i) => i > 0 && isVerbish(w));   // the verb can't be the very first word
+  if (v === -1) v = words.length >= 3 ? 1 : 0;                 // no verb found: guess "first word = who"
+  let who = words.slice(0, v).join(' ') || 'people';
+  let rest = words.slice(v);
+
+  // Lower-case the first letter of WHO ("Commuters" → "commuters") unless it looks like an acronym ("NGOs")
+  if (/^[A-Z][a-z]/.test(who)) who = who[0].toLowerCase() + who.slice(1);
+
+  // Find a place/time word that is at least 2 words in, so "fill in forms" isn't split at "in"
+  let where = '';
+  const cut = rest.findIndex((w, i) => i >= 2 && (PLACE_WORDS.includes(clean(w)) || TIME_WORDS.includes(clean(w))));
+  if (cut !== -1) { where = rest.slice(cut).join(' '); rest = rest.slice(0, cut); }
+  return { who, bad: rest.join(' ') || 'run into this problem', where };
+}
+
+// The three boxes → every blank the templates use
+function makeBlanks(who, bad, where) {
+  who = who.trim() || 'people';
+  bad = bad.trim() || 'run into this problem';
+  where = where.trim();
+  const words = bad.split(/\s+/);
+  let first = clean(words[0]), rest = words.slice(1);
+  let badBase, badIng, goodBase, badMoment;
+
+  // Drop "often / always / usually…" for the plain forms: "often miss X" → "miss X"
+  while (ADVERBS.includes(first) && rest.length) { first = clean(rest[0]); rest = rest.slice(1); }
+
+  // ONE person or MANY? If the verb has an extra "s" ("misses", "has", "doesn't"), it's one.
+  // Example: "My grandmother misses her stop" → one → "my grandmother manages to…"
+  const one = ['is', 'has', 'was', "doesn't", 'does', 'struggles', 'fails'].includes(first) ||
+              (first.endsWith('s') && !first.endsWith('ss') && toBase(first) !== first);
+
+  if (CANT.includes(first)) {
+    // "can't find a seat" → struggle to find a seat / struggling to … / goal: find a seat
+    if (rest[0] && clean(rest[0]) === 'to') rest = rest.slice(1);
+    goodBase = rest.join(' ');
+    badBase = 'struggle to ' + goodBase;
+    badIng = 'struggling to ' + goodBase;
+    badMoment = (one ? 'struggles to ' : 'struggle to ') + goodBase;
+  } else if (DONT.includes(first) || first === 'do' || first === 'does') {
+    // "don't drink enough water" → not drink … / not drinking … / goal: drink enough water
+    if (rest[0] && clean(rest[0]) === 'not') rest = rest.slice(1);
+    const b = toBase(rest[0] || 'act');
+    goodBase = [b, ...rest.slice(1)].join(' ');
+    badBase = 'not ' + goodBase;
+    badIng = 'not ' + [toIng(b), ...rest.slice(1)].join(' ');
+    badMoment = '';                    // "just before they don't drink" reads oddly, so skip it
+  } else {
+    // "miss their station" → miss … / missing … / goal: avoid missing their station
+    const b = toBase(first);
+    badBase = [b, ...rest].join(' ');
+    badIng = [toIng(b), ...rest].join(' ');
+    goodBase = 'avoid ' + badIng;
+    badMoment = bad;
+  }
+
+  // PLACE only for real places ("on crowded local trains"), not times ("during festival season")
+  const prep = clean(where.split(/\s+/)[0] || '');
+  const place = PLACE_WORDS.includes(prep) ? where.split(/\s+/).slice(1).join(' ') : '';
+
+  // ADJECTIVE: the first describing word of the place. "crowded local trains" → crowded
+  let adj = '', adjOpp = '';
+  const placeWords = place.split(/\s+/).filter(w => !['the', 'a', 'an', 'their', 'our', 'its'].includes(clean(w)));
+  if (placeWords.length > 1 || ADJ_OPP[clean(placeWords[0] || '')]) {
+    const w = clean(placeWords[0] || '');
+    if (ADJ_OPP[w]) { adj = w; adjOpp = ADJ_OPP[w]; }
+    else if (placeWords.length > 1 && /(ed|y|ful|ous|ive|less)$/.test(w)) { adj = w; adjOpp = 'less ' + w; }
+  }
+
+  const whoPoss = /s$/i.test(who) ? who + "'" : who + "'s";
+  return { who, bad, badBase, badIng, goodBase, badMoment, where: where ? ' ' + where : '', place, adj, adjOpp, whoPoss,
+           manage: one ? 'manages' : 'manage', carry: one ? 'carries, sees or hears' : 'carry, see or hear', have: one ? 'has' : 'have' };
+}
+
+// Fill one template. Returns null if it needs a blank that is empty.
+// Example: fill('How might we stop {who} from {badIng}?', blanks)
+//        → 'How might we stop commuters from missing their station?'
+function fill(template, blanks) {
+  let missing = false;
+  const out = template.replace(/\{(\w+)\}/g, (_, key) => {
+    if (key !== 'where' && !blanks[key]) missing = true;
+    return blanks[key] || '';
+  });
+  return missing ? null : out;
+}
+
+// ---------- 3c. State: what the tool remembers ----------
+// questions: what's on screen now.  favs: the starred ones.
+// Each question gets an id like "g2-4" (round 2, question 4) so that
+// starring survives editing, and old stars survive a new round.
+let round = 0;
+let questions = [];   // { id, lens, color, text }
+let favs = [];        // same shape, in the order you starred them
+
+// ---------- 3d. Drawing the questions ----------
+function generate() {
+  const blanks = makeBlanks($('#sWho').value, $('#sBad').value, $('#sWhere').value);
+  round++;
+  questions = [];
+  const box = $('#results');
+  box.innerHTML = '';
+  let n = 0;
+  for (const lens of LENSES) {
+    const texts = lens.templates.map(t => fill(t, blanks)).filter(Boolean);
+    if (!texts.length) continue;                       // e.g. no adjective → skip that lens
+    const sec = document.createElement('section');
+    sec.className = 'lens ' + lens.color;
+    sec.innerHTML = `<h3><span class="dot"></span></h3><p class="hint"></p><div class="qs"></div>`;
+    sec.querySelector('h3').append(lens.name);         // append/textContent = safe, never treated as code
+    sec.querySelector('.hint').textContent = lens.hint;
+    for (const text of texts) {
+      const q = { id: `g${round}-${n++}`, lens: lens.name, color: lens.color, text };
+      questions.push(q);
+      sec.querySelector('.qs').appendChild(makeCard(q));
+    }
+    box.appendChild(sec);
+  }
+}
+
+function makeCard(q) {
+  const card = document.createElement('article');
+  card.className = 'q';
+  card.innerHTML = `<p class="q-text"></p>
+    <div class="q-actions">
+      <button class="star" aria-pressed="false">☆ Star</button>
+      <a class="btn to8" hidden>Sketch this in Crazy 8s →</a>
+      <span class="edit-hint">click text to edit</span>
+    </div>`;
+  const textEl = card.querySelector('.q-text');
+  const star = card.querySelector('.star');
+  const to8 = card.querySelector('.to8');
+  textEl.textContent = q.text;
+
+  // Make the text editable. "plaintext-only" stops pasted formatting; older browsers get "true".
+  textEl.contentEditable = 'plaintext-only';
+  if (textEl.contentEditable !== 'plaintext-only') textEl.contentEditable = 'true';
+  textEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); textEl.blur(); } });
+  textEl.addEventListener('input', () => {
+    q.text = textEl.textContent.trim();
+    const f = favs.find(f => f.id === q.id);
+    if (f) { f.text = q.text; renderFavs(); }
+    to8.href = crazy8sLink(q.text);
+  });
+
+  const paint = () => {
+    const on = favs.some(f => f.id === q.id);
+    card.classList.toggle('starred', on);
+    star.setAttribute('aria-pressed', on);
+    star.textContent = on ? '★ Starred' : '☆ Star';
+    to8.hidden = !on;                       // the Crazy 8s button only shows on starred questions
+    to8.href = crazy8sLink(q.text);
+  };
+  star.addEventListener('click', () => {
+    const i = favs.findIndex(f => f.id === q.id);
+    if (i === -1) favs.push({ ...q }); else favs.splice(i, 1);
+    paint(); renderFavs();
+  });
+  card.paint = paint;
+  paint();
+  return card;
+}
+
+// ---------- 3e. The link between the two tools ----------
+// A web address can carry extra information after a "?". Example:
+//   /toolkit/crazy-8s/?challenge=How%20might%20we%20stop%20commuters…
+// encodeURIComponent turns spaces into %20 and "?" into %3F, so the question
+// travels safely inside the address. Crazy 8s reads it back on arrival.
+function crazy8sLink(question) {
+  return '/toolkit/crazy-8s/?challenge=' + encodeURIComponent(question);
+}
+
+// ---------- 3f. Favourites list ----------
+function renderFavs() {
+  const list = $('#favList');
+  list.innerHTML = '';
+  for (const f of favs) {
+    const li = document.createElement('li');
+    li.className = 'lens ' + f.color;                       // borrows the lens colour
+    li.innerHTML = `<div><small></small><span></span></div>
+      <div class="row"><a class="btn to8">Sketch this in Crazy 8s →</a><button class="x" aria-label="Remove star">✕</button></div>`;
+    li.querySelector('small').textContent = f.lens;
+    li.querySelector('span').textContent = f.text;
+    li.querySelector('.to8').href = crazy8sLink(f.text);
+    li.querySelector('.x').addEventListener('click', () => {
+      favs = favs.filter(x => x.id !== f.id);
+      document.querySelectorAll('.q').forEach(c => c.paint && c.paint());
+      renderFavs();
+    });
+    list.appendChild(li);
+  }
+  $('#favs').classList.toggle('show', favs.length > 0);
+  $('#floater').classList.toggle('show', favs.length > 0);
+  $('#favCount').textContent = favs.length;
+}
+
+$('#copyBtn').addEventListener('click', async () => {
+  const text = favs.map((f, i) => `${i + 1}. ${f.text}`).join('\n');
+  try { await navigator.clipboard.writeText(text); $('#copyBtn').textContent = 'Copied ✓'; }
+  catch (e) { prompt('Copy your questions:', text); }
+  setTimeout(() => { $('#copyBtn').textContent = 'Copy text'; }, 1600);
+});
+
+// ---------- 3g. Save the starred questions as one neon image ----------
+// We draw on an invisible <canvas>, the same way Crazy 8s builds its sheet:
+// background → grid → glows → title → one glowing card per question.
+// Text has to be wrapped by hand: we add words to a line until it is too wide.
+// Example: at 46px, "How might we stop commuters from missing their station?"
+// is wider than the card, so it breaks after "from".
+const NEON = { violet: '#8B5CF6', blue: '#3B82F6', pink: '#EC4899' };
+
+function wrap(ctx, text, maxW) {
+  const lines = []; let line = '';
+  for (const word of text.split(' ')) {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = word; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function saveImage() {
+  if (!favs.length) return;
+  await document.fonts.ready;                      // wait for Geist so the image uses it
+  const W = 1600, PAD = 96, CARD_PAD = 40, LINE = 62, GAP = 28;
+  const textW = W - 2 * PAD - 2 * CARD_PAD - 60;
+  const out = document.createElement('canvas');
+  const ctx = out.getContext('2d');
+
+  // First pass: measure, so we know how tall the image must be
+  ctx.font = '500 46px "Geist", sans-serif';
+  const blocks = favs.map(f => ({ ...f, lines: wrap(ctx, f.text, textW) }));
+  ctx.font = '400 34px "Geist", sans-serif';
+  const problemLines = wrap(ctx, $('#problem').value.trim() || 'Untitled problem', W - 2 * PAD);
+  const headH = 150 + problemLines.length * 46 + 50;
+  const cardsH = blocks.reduce((h, b) => h + CARD_PAD * 2 + 44 + b.lines.length * LINE + GAP, 0);
+  const H = PAD + headH + cardsH + 80 + PAD;
+  out.width = W; out.height = H;
+
+  // Background, faint 40px grid, and the three soft glows
+  ctx.fillStyle = '#05060A'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.045)'; ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke(); }
+  const glow = (x, y, r, rgba) => {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, rgba); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  };
+  glow(160, 0, 700, 'rgba(139,92,246,0.30)');
+  glow(W - 80, 160, 600, 'rgba(236,72,153,0.20)');
+  glow(W / 2, H + 100, 800, 'rgba(59,130,246,0.20)');
+
+  // Title with a neon glow (shadowBlur blurs a coloured copy behind the text)
+  let y = PAD + 80;
+  ctx.fillStyle = '#EDEEF5'; ctx.font = '700 88px "Geist", sans-serif';
+  ctx.shadowColor = 'rgba(139,92,246,0.9)'; ctx.shadowBlur = 40;
+  ctx.fillText('How might we…', PAD, y);
+  ctx.shadowBlur = 0;
+  y += 70;
+  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 34px "Geist", sans-serif';
+  problemLines.forEach(l => { ctx.fillText(l, PAD, y); y += 46; });
+  y += 50;
+
+  // One card per starred question, in its lens colour
+  blocks.forEach((b, i) => {
+    const c = NEON[b.color];
+    const h = CARD_PAD * 2 + 44 + b.lines.length * LINE;
+    ctx.save();
+    ctx.shadowColor = c; ctx.shadowBlur = 30;
+    ctx.strokeStyle = c; ctx.lineWidth = 3;
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    ctx.beginPath(); ctx.roundRect(PAD, y, W - 2 * PAD, h, 22); ctx.fill(); ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = c; ctx.font = '700 40px "Geist", sans-serif';
+    ctx.fillText(String(i + 1), PAD + CARD_PAD, y + CARD_PAD + 82);
+    ctx.font = '500 24px "Geist", sans-serif';
+    ctx.fillText(b.lens.toUpperCase(), PAD + CARD_PAD + 60, y + CARD_PAD + 26);
+    ctx.fillStyle = '#EDEEF5'; ctx.font = '500 46px "Geist", sans-serif';
+    b.lines.forEach((l, k) => ctx.fillText(l, PAD + CARD_PAD + 60, y + CARD_PAD + 44 + 40 + k * LINE));
+    y += h + GAP;
+  });
+
+  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 28px "Geist", sans-serif';
+  ctx.fillText('Made with the How Might We tool · inventndiscover.com', PAD, H - PAD + 10);
+
+  const link = document.createElement('a');
+  link.download = 'how-might-we.png';
+  link.href = out.toDataURL('image/png');
+  link.click();
+}
+$('#saveBtn').addEventListener('click', saveImage);
+
+// ---------- 3h. Wiring up the inputs ----------
+function fromProblem() {
+  const text = $('#problem').value.trim();
+  if (!text) { $('#problem').focus(); return; }
+  const parts = splitProblem(text);
+  $('#sWho').value = parts.who;
+  $('#sBad').value = parts.bad;
+  $('#sWhere').value = parts.where;
+  $('#reading').classList.add('show');
+  generate();
+  $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+$('#goBtn').addEventListener('click', fromProblem);
+$('#problem').addEventListener('keydown', (e) => { if (e.key === 'Enter') fromProblem(); });
+
+// Editing a blank rewrites the questions after a short pause (so it doesn't flicker on every key)
+let timer = null;
+['#sWho', '#sBad', '#sWhere'].forEach(id => $(id).addEventListener('input', () => {
+  clearTimeout(timer); timer = setTimeout(generate, 350);
+}));
+
+for (const ex of EXAMPLES) {
+  const b = document.createElement('button');
+  b.className = 'chip'; b.textContent = ex;
+  b.addEventListener('click', () => { $('#problem').value = ex; fromProblem(); });
+  $('#examples').appendChild(b);
+}
+</script>
+</body>
+</html>

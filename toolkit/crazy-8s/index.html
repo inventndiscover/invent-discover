@@ -169,6 +169,11 @@
   }
   .frame input[type=text] { margin-top: 8px; padding: 8px 10px; font-size: 14px; }
 
+  /* Note shown when the challenge arrived from another tool (e.g. How Might We) */
+  .handoff { margin: 8px 0 0; font-size: 13px; color: #F9A8D4; }
+  .handoff a { color: #C4B5FD; }
+  .handoff-glow { border-color: var(--pink) !important; box-shadow: 0 0 0 3px rgba(236,72,153,0.25), 0 0 24px rgba(236,72,153,0.35) !important; transition: box-shadow 1.2s, border-color 1.2s; }
+
   /* ---------- Done banner ---------- */
   .done {
     display: none; margin: 16px 0; text-align: center;
@@ -210,6 +215,7 @@
     <div>
       <label for="challenge">Your challenge</label>
       <input type="text" id="challenge" placeholder="How might we make Mumbai locals easier for first-time riders?">
+      <p class="handoff" id="handoff" hidden>★ Brought over from <a href="/toolkit/how-might-we/">How Might We</a>. Edit it if you like, then press Start.</p>
     </div>
     <div>
       <label for="secs">Time per frame</label>
@@ -260,7 +266,7 @@
   <div class="grid" id="grid" style="margin-top:16px"></div>
 
   <section class="how">
-    <div class="card"><div class="step">STEP 1</div><h3>Frame the problem</h3><p>Write one clear challenge. "How might we…" questions work well. Want ideas first? Try <a href="/toolkit/scamper/" style="color:#C4B5FD">SCAMPER</a> before this.</p></div>
+    <div class="card"><div class="step">STEP 1</div><h3>Frame the problem</h3><p>Write one clear challenge. "How might we…" questions work well; <a href="/toolkit/how-might-we/" style="color:#C4B5FD">How Might We</a> writes some for you. Want ideas first? Try <a href="/toolkit/scamper/" style="color:#C4B5FD">SCAMPER</a> before this.</p></div>
     <div class="card"><div class="step">STEP 2</div><h3>Sketch fast</h3><p>One idea per frame. Stick figures, arrows and boxes are fine. When the frame moves on, so do you.</p></div>
     <div class="card"><div class="step">STEP 3</div><h3>Caption and share</h3><p>Give each sketch a few words, save the sheet as a printable A4 page, and compare it with your team's.</p></div>
   </section>
@@ -693,9 +699,25 @@ function fitText(ctx, text, maxW) {
 $('#exportBtn').addEventListener('click', exportSheet);
 $('#exportBtn2').addEventListener('click', exportSheet);
 
-// ---------- 3l. Go! ----------
+// ---------- 3l. A challenge sent from another tool ----------
+// The How Might We tool opens this page with the question in the address:
+//   /toolkit/crazy-8s/?challenge=How%20might%20we%20stop%20commuters…
+// URLSearchParams reads the part after "?" and turns %20 back into spaces.
+// Setting .value (not innerHTML) means the text is only ever shown as text.
+function readChallengeFromLink() {
+  const q = new URLSearchParams(location.search).get('challenge');
+  if (!q || !q.trim()) return;
+  const box = $('#challenge');
+  box.value = q.trim().slice(0, 300);
+  $('#handoff').hidden = false;
+  box.classList.add('handoff-glow');                       // a short pink glow so you notice it
+  setTimeout(() => box.classList.remove('handoff-glow'), 2500);
+}
+
+// ---------- 3m. Go! ----------
 buildFrames();
 setActive(0);
+readChallengeFromLink();
 </script>
 </body>
 </html>
