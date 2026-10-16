@@ -554,7 +554,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Anunād and Anunād XR, real tabla bols drawn as they sound, on screen and in VR. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Origami Jungle, a folded-paper hill-forest trek, in your browser or in VR. Also new: Anunād and Anunād XR, real tabla bols drawn as they sound, on screen and in VR. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
