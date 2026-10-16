@@ -688,10 +688,9 @@ const TOOLS=[
  {id:"scamper",added:"2026-10-01",name:"SCAMPER",line:"Seven questions that turn something you already know into new ideas.",url:"/toolkit/scamper/",
   credit:"Bob Eberle (1971), from Alex Osborn's questions in Applied Imagination (1953)",time:"15–30 minutes",letters:["S","C","A","M","P","E","R"],
   colors:["#A58BFF","#7B8CFF","#3D9BFF","#2FD1C5","#46D69A","#FFB23F","#FF7B8A"],hub:"questions"},
- {id:"how-might-we",added:"2026-10-16",name:"How Might We",line:"Turn a problem into “How might we…” questions through ten lenses, star the best and sketch them in Crazy 8s.",url:"/toolkit/how-might-we/",
-  credit:"Design thinking (Min Basadur; IDEO), as taught in Google's Design Sprint Kit",time:"10–15 minutes · nothing uploaded",tag:"Problem framing",
-  letters:["+","−","⇄","◐","?","✦","◎","≈","↯","÷"],
-  colors:["#A58BFF","#EC4899","#3D9BFF","#8B7BFF","#FF7BB8","#5A8CFF","#2FD1C5","#FF7B8A","#46D69A","#FFB23F"],hub:"lenses",cta:"Start framing"},
+ {id:"how-might-we",added:"2026-10-16",name:"How Might We",line:"Turn a problem into “How might we…” questions in three steps, keep the best, and sketch them in Crazy 8s.",url:"/toolkit/how-might-we/",
+  credit:"Design thinking (Min Basadur; IDEO), as taught in Google's Design Sprint Kit",time:"5–10 minutes · nothing uploaded",tag:"Problem framing",visual:"funnel",
+  letters:["+","−","⇄","◐","?"],colors:["#A58BFF","#EC4899","#3D9BFF","#2FD1C5","#FFB23F"],cta:"Start framing"},
  {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",shape:"diamond",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
   colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
@@ -707,7 +706,9 @@ function viewTools(){
   </div></div>
   <div class="wrap" style="padding-top:28px">
     ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
-      ${t.visual==="cube"?`<div class="tool-cube" aria-hidden="true"><div class="cube">${["f","b","l","r","t","d"].map(f=>`<span class="${f}"></span>`).join("")}</div><em>.glb → .js</em></div>`:t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
+      ${t.visual==="funnel"?`<div class="tool-funnel" aria-hidden="true"><span class="fn-in">Your problem</span><i class="fn-ln"></i>
+        <div class="fn-row">${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--i:${i}">${l}</b>`).join("")}</div><em class="fn-cap">5 lenses</em><i class="fn-ln"></i>
+        <span class="fn-out">How might we…?</span></div>`:t.visual==="cube"?`<div class="tool-cube" aria-hidden="true"><div class="cube">${["f","b","l","r","t","d"].map(f=>`<span class="${f}"></span>`).join("")}</div><em>.glb → .js</em></div>`:t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
         <span class="tq" style="--c:#A58BFF">Keep<br>satisfied</span><span class="tq r" style="--c:#FF7B8A">Manage<br>closely</span>
         <span class="tq b" style="--c:#3D9BFF">Monitor</span><span class="tq r b" style="--c:#2FD1C5">Keep<br>informed</span>
         ${[["#FF7B8A",78,22,0],["#A58BFF",26,30,1],["#2FD1C5",80,72,2],["#3D9BFF",30,78,3],["#FF7B8A",62,38,4]].map(([c,x,y,i])=>`<i style="--c:${c};left:${x}%;top:${y}%;--i:${i}"></i>`).join("")}

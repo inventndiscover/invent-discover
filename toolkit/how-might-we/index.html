@@ -5,11 +5,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How Might We question generator · Invent + Discover</title>
-<meta name="description" content="Turn a problem into “How might we…” questions in three steps: type it, look through ten lenses, keep your favourites. Free, in your browser.">
+<meta name="description" content="Turn a problem into “How might we…” questions in three steps: type it, look through five lenses, keep your favourites. Free, in your browser.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/how-might-we/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="How Might We question generator · Invent + Discover">
-<meta property="og:description" content="Type a problem, get “How might we…” questions through ten lenses. Free, in your browser.">
+<meta property="og:description" content="Type a problem, get “How might we…” questions through five lenses. Free, in your browser.">
 <meta property="og:url" content="https://inventndiscover.com/toolkit/how-might-we/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"How Might We question generator","url":"https://inventndiscover.com/toolkit/how-might-we/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
@@ -87,8 +87,10 @@
 
   /* ---------- Cards, inputs, buttons ---------- */
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; backdrop-filter: blur(6px); }
-  .stage h2 { margin: 0 0 6px; font-size: 22px; }
-  .stage .sub { color: var(--muted); margin: 0 0 16px; font-size: 15px; line-height: 1.5; }
+  /* Type scale, biggest to smallest: page title 60 → step title 30 → question 18.5 → body 15 → labels 12 */
+  .stage h2 { margin: 0 0 8px; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; }
+  .stage .sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; line-height: 1.5; }
+  #problem { font-size: 19px; padding: 16px; }
   label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
   input[type=text] {
     width: 100%; background: rgba(0,0,0,0.35); color: var(--text);
@@ -109,12 +111,13 @@
   .nav { display: flex; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
   .nav .grow { flex: 1; }
 
-  .examples { margin-top: 14px; font-size: 14px; color: var(--muted); }
-  .examples button { display: block; text-align: left; margin-top: 6px; padding: 8px 12px; font-size: 14px; color: var(--text); width: 100%; justify-content: flex-start; }
+  .examples { margin-top: 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .examples button { display: block; text-align: left; margin-top: 6px; padding: 9px 12px; font-size: 14px; color: var(--muted); width: 100%; justify-content: flex-start; letter-spacing: 0; text-transform: none; }
+  .examples button:hover { color: var(--text); }
 
   /* ---------- Step 2: one lens at a time ---------- */
   .lens-head { display: flex; align-items: center; gap: 10px; }
-  .lens-count { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+  .lens-count { font-size: 12px; letter-spacing: 0.12em; color: #F9A8D4; text-transform: uppercase; font-weight: 500; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); flex: none; }
   .violet { --c: var(--violet); --soft: rgba(139,92,246,0.45); }
   .blue   { --c: var(--blue);   --soft: rgba(59,130,246,0.45); }
@@ -123,7 +126,7 @@
   /* Each question is one big button: tap to keep it */
   .pick {
     width: 100%; display: flex; align-items: flex-start; gap: 12px; text-align: left; justify-content: flex-start;
-    padding: 14px 16px; margin-top: 10px; font-size: 16.5px; line-height: 1.45; border-radius: var(--radius);
+    padding: 16px 18px; margin-top: 10px; font-size: 18.5px; font-weight: 500; line-height: 1.4; border-radius: var(--radius);
     background: var(--panel); transition: border-color 0.2s, box-shadow 0.2s;
   }
   .pick .mark { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; margin-top: 1px; color: transparent; }
@@ -145,7 +148,7 @@
   .picks li { counter-increment: p; border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 12px; padding: 12px 14px; background: rgba(0,0,0,0.25); }
   .picks small { color: var(--c); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; }
   .picks small::before { content: counter(p) " · "; color: var(--muted); }
-  .picks .q-text { margin: 4px 0 10px; font-size: 16.5px; line-height: 1.45; border-radius: 8px; padding: 4px 6px; margin-left: -6px; margin-right: -6px; }
+  .picks .q-text { margin: 6px 0 12px; font-size: 18.5px; font-weight: 500; line-height: 1.4; border-radius: 8px; padding: 4px 6px; margin-left: -6px; margin-right: -6px; }
   .picks .q-text:focus { outline: none; background: rgba(0,0,0,0.35); box-shadow: 0 0 0 2px var(--c); }
   .picks .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .to8 { padding: 7px 12px; font-size: 14px; color: #F9A8D4; border-color: rgba(236,72,153,0.45); }
@@ -202,13 +205,13 @@
     <label for="problem" class="sr">Your problem</label>
     <input type="text" id="problem" maxlength="200" placeholder="Commuters miss their station on crowded local trains">
     <div class="nav"><span class="grow"></span><button class="primary" id="goBtn">Show me questions →</button></div>
-    <div class="examples" id="examples">Or try an example:</div>
+    <div class="examples" id="examples">Or try an example</div>
   </section>
 
   <!-- STEP 2 -->
   <section class="card stage" id="stage2" hidden>
     <div class="lens-head"><span class="dot" id="lensDot"></span><span class="lens-count" id="lensCount">Lens 1 of 10</span></div>
-    <h2 id="lensName" style="margin-top:8px">Amp up the good</h2>
+    <h2 id="lensName" style="margin-top:10px">Amp up the good</h2>
     <p class="sub" id="lensHint"></p>
     <div id="picks"></div>
     <div class="dots" id="dots" aria-label="Lenses"></div>
@@ -249,7 +252,7 @@
   <details class="card about" id="where">
     <summary>Where “How might we” comes from</summary>
     <p><b>How Might We</b> is one of the best-known framing methods in <b>design thinking</b>. The phrasing is usually traced to <b>Min Basadur</b>, who used it in creative problem-solving at Procter &amp; Gamble in the 1970s. It became a habit at <b>IDEO</b> and the Stanford d.school, and is a standard step in <b>Google's Design Sprint</b>, taught in the free <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Design Sprint Kit</a>.</p>
-    <p><b>How</b> assumes there is an answer. <b>Might</b> says it's fine if an idea doesn't work. <b>We</b> makes it a shared problem. The ten lenses follow prompts design-thinking teachers use to push a problem in different directions.</p>
+    <p><b>How</b> assumes there is an answer. <b>Might</b> says it's fine if an idea doesn't work. <b>We</b> makes it a shared problem. The five lenses are the classic prompts design-thinking teachers use to push a problem in different directions.</p>
     <p>The templates and this page are made by Invent + Discover. They run in your browser with simple fill-in-the-blank rules, no AI, and nothing you type is uploaded.</p>
   </details>
 
@@ -290,43 +293,26 @@ const $ = (sel) => document.querySelector(sel);
 // A template that needs a blank which is empty (e.g. no {place}) is skipped.
 // To add your own question: add a line to any list below. That's it.
 const LENSES = [
-  { name: 'Amp up the good', color: 'violet', hint: 'Find what already works and make more of it.', templates: [
+  { name: 'Amp up the good', color: 'violet', hint: 'Find what already works, and make more of it.', templates: [
     'How might we build on the times when {who} {manage} to {goodBase}?',
     'How might we turn {place} into something that helps {who}, not something that gets in the way?',
     'How might we make getting it right feel like a small win for {who}?' ]},
-  { name: 'Remove the bad', color: 'pink', hint: 'Go straight at the cause and take it away.', templates: [
+  { name: 'Remove the bad', color: 'pink', hint: 'Go straight at the cause, and take it away.', templates: [
     'How might we remove the reasons {who} {bad}{where}?',
     'How might we stop {who} from {badIng}?',
     'How might we spot the moment just before {who} {badMoment}, and step in?' ]},
-  { name: 'Explore the opposite', color: 'blue', hint: 'Flip it. Sometimes the reverse shows you the answer.', templates: [
+  { name: 'Flip it', color: 'blue', hint: 'Turn it upside down. The reverse often shows you the answer.', templates: [
     'What would make {who} {badBase} every single time? How might we do the exact reverse?',
     'How might we make {badIng} useful, or even fun?',
     "How might we make it so easy to {goodBase} that {who} couldn't get it wrong if they tried?" ]},
-  { name: 'Change the context', color: 'violet', hint: 'Move the problem to a different person, time or situation.', templates: [
+  { name: 'Change the context', color: 'violet', hint: 'Move the problem to a different person, time or place.', templates: [
     'How might we stop a child, a tourist or an older person from {badIng}{where}?',
     'How might we help {who} {goodBase} at 2 a.m., in heavy rain, or with no phone signal?',
-    'How might we solve this if {who} had only ten seconds to act?' ]},
-  { name: 'Question an assumption', color: 'pink', hint: 'Pick something everyone takes for granted and drop it.', templates: [
+    'How might we help {who} {goodBase} the way a good flight crew looks after passengers?' ]},
+  { name: 'Question an assumption', color: 'pink', hint: 'Pick something everyone takes for granted, and drop it.', templates: [
     "What if {who} didn't have to pay attention at all? How might we make that work?",
     'How might we solve this without changing {place} at all?',
-    "What if it isn't {whoPoss} fault? How might we fix the system around them?" ]},
-  { name: 'Go after the adjective', color: 'blue', hint: 'Take the describing word in your problem and turn it around.', templates: [
-    'How might we make {place} feel {adjOpp}?',
-    'How might we use the fact that it is {adj} to {whoPoss} advantage?' ]},
-  { name: 'Use unexpected resources', color: 'violet', hint: 'Look at what is already around that nobody is using.', templates: [
-    'How might we use the people around {who} to help?',
-    'How might we use what {who} already {carry}{where}?',
-    'How might we use sound, light or touch to help {who} {goodBase}?' ]},
-  { name: 'Borrow an analogy', color: 'pink', hint: 'Who else has solved a problem that feels like this one?', templates: [
-    'How might we help {who} {goodBase} the way a good flight crew looks after passengers?',
-    'How might we borrow tricks from games, alarm clocks or maps to help {who} {goodBase}?' ]},
-  { name: 'Change the status quo', color: 'blue', hint: 'Question the normal way of doing it, not just the problem.', templates: [
-    'How might we change the usual routine so {who} no longer {have} to worry about this?',
-    'How might we move the job off {who} and onto the system around them?' ]},
-  { name: 'Break it into pieces', color: 'violet', hint: 'Make it smaller: before, during and after.', templates: [
-    'How might we help {who} in the minutes before it goes wrong?',
-    'How might we help {who} bounce back quickly when it does go wrong?',
-    'How might we fix just one small part of {badIng}{where} first?' ]}
+    'How might we move the job off {who} and onto the system around them?' ]}
 ];
 
 const EXAMPLES = [
@@ -484,7 +470,7 @@ function fill(template, blanks) {
 }
 
 // ---------- 3c. State: what the tool remembers ----------
-// lenses: the ten lenses, each with its filled-in questions (empty lenses removed)
+// lenses: the five lenses, each with its filled-in questions (empty lenses removed)
 // at:     which lens is on screen (0 = first)
 // favs:   the questions you picked, in the order you picked them
 // Example after picking two: favs = [{ id:'0-1', lens:'Amp up the good', color:'violet', text:'How might we…' }, …]
