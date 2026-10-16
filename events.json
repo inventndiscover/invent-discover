@@ -1,31 +1,6 @@
 {
- "REFRESHED": "2026-10-13T08:13:33+05:30",
+ "REFRESHED": "2026-10-16T07:58:48+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "ibm-think-mumbai",
-   "title": "IBM Think Mumbai 2026",
-   "cat": "AI",
-   "tags": [
-    "Enterprise",
-    "Hybrid cloud",
-    "Conference"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue on the event page",
-   "start": "2026-10-13T08:30",
-   "end": "18:45",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Registration on IBM's site",
-   "aud": [
-    "Professional"
-   ],
-   "src": "IBM",
-   "url": "https://www.ibm.com/events/think/mumbai",
-   "org": "IBM",
-   "access": "open",
-   "desc": "IBM's large one-day conference for business and technology leaders on scaling AI in enterprises, hybrid cloud and data sovereignty."
-  },
   {
    "id": "titan-consumer-mixer",
    "title": "Titan Capital × V3 Ventures Consumer Mixer",
@@ -794,24 +769,14 @@
  ],
  "RUNS": [
   {
-   "src": "Luma Mumbai",
-   "what": "luma.com/mumbai listing and 9 event pages",
-   "found": 11,
-   "pub": 0,
-   "review": 4,
-   "dup": 0,
-   "skip": 0,
-   "note": "Listing shows no dates; 4 new undated events queued. Several pages blocked by a permission prompt."
-  },
-  {
-   "src": "Luma discover (AI/Tech/Arts)",
-   "what": "discover pages",
+   "src": "Luma (Mumbai + discover AI/Tech/Arts)",
+   "what": "listing and event pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run (fetch permission not granted)."
+   "note": "Not reachable this run: fetch permission was not granted for luma.com pages."
   },
   {
    "src": "Meetup / AllEvents / hiddenevents",
@@ -821,27 +786,27 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run. Mumbai Meets AI 06 (10 Oct) is already past."
+   "note": "Not reachable this run (fetch permission not granted). Mumbai Meets AI 06 (10 Oct) is already past."
   },
   {
    "src": "StartupGrants India",
-   "what": "Forward Deploy Enterprise AI Summit, Design Samvaad",
-   "found": 2,
+   "what": "Forward Deploy Enterprise AI Summit, StartupLive Mumbai, two older listings",
+   "found": 4,
    "pub": 0,
    "review": 0,
-   "dup": 1,
-   "skip": 1,
-   "note": "Forward Deploy summit (26 Oct, Jio World Convention Centre) matches the existing Enterprise AI Summit entry; Design Samvaad is in Gurugram, skipped."
+   "dup": 2,
+   "skip": 2,
+   "note": "Forward Deploy (26 Oct, Jio World Convention Centre) and StartupLive Mumbai (20-21 Nov) match existing entries; no cancellation shown. Two other listings are from March/April 2026 or outside Mumbai, skipped."
   },
   {
    "src": "Existing events",
    "what": "re-check of published list",
    "found": 14,
-   "pub": 14,
+   "pub": 13,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "StartupLive Mumbai (20-21 Nov, IIT Bombay) re-confirmed; the rest kept as-is because their pages could not be opened this run. Removed past: none."
+   "note": "Removed IBM Think Mumbai (ended 13 Oct). Others kept as-is; most pages could not be opened this run."
   }
  ],
  "COMMUNITIES": [

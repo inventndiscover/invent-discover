@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-15T07:19:28+05:30",
+ "REFRESHED": "2026-10-16T07:18:51+05:30",
  "SIGNALS": [
+  {
+   "id": "2110797830361436604",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2110797830361436604",
+   "posted": "2026-10-15T23:49:54+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "OpenAI says GPT-Live-1.1 improves voices and accents in ChatGPT Voice, Codex and dots, adding French, German, Hindi, Mexican Spanish, Korean and Japanese. API access is coming soon."
+  },
+  {
+   "id": "2110749846231814251",
+   "handle": "NVIDIAAI",
+   "name": "NVIDIA AI",
+   "url": "https://x.com/NVIDIAAI/status/2110749846231814251",
+   "posted": "2026-10-15T20:39:13+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "NVIDIA published a write-up on how it built Nemotron 3.5 Super VL, and says the model is open with weights, data and recipes available on Hugging Face."
+  },
+  {
+   "id": "2110733618599653465",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2110733618599653465",
+   "posted": "2026-10-15T19:34:44+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Reported: CERN and Mistral AI signed a statement of intent on October 15 for a long-term partnership to build a Large Physics Model for scientific discovery."
+  },
   {
    "id": "2110463962877989276",
    "handle": "trq212",
@@ -10,6 +40,26 @@
    "topic": "AI",
    "kind": "Official",
    "summary": "Thariq, who works on Claude Code, says Claude Code Desktop now understands its own capabilities better, such as spinning off subsessions, and calls it almost a v2."
+  },
+  {
+   "id": "2110333272261566672",
+   "handle": "Inc42",
+   "name": "Inc42",
+   "url": "https://x.com/Inc42/status/2110333272261566672",
+   "posted": "2026-10-14T17:03:54+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Inc42 reports an agentic AI startup raised $2.5M in a seed round led by Accion Ventures to build AI relationship managers."
+  },
+  {
+   "id": "2110055514012823934",
+   "handle": "Workday",
+   "name": "Workday",
+   "url": "https://x.com/Workday/status/2110055514012823934",
+   "posted": "2026-10-13T22:40:12+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Workday announced a partnership with Anthropic to connect Claude reasoning to business rules across the places where people work."
   },
   {
    "id": "2110042429801840924",
@@ -32,34 +82,14 @@
    "summary": "Google DeepMind says Gemini 4 Argon is now globally available, aimed at hard problems across coding, enterprise workflows and cyber defense."
   },
   {
-   "id": "2109691148943999167",
-   "handle": "AIatMeta",
-   "name": "AI at Meta",
-   "url": "https://x.com/AIatMeta/status/2109691148943999167",
-   "posted": "2026-10-12T22:32:20+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Meta introduces Muse Wonder and Muse Wonder Full, its most capable models yet, aimed at personal and professional agentic tasks; Muse Wonder is available now through the Meta Model API."
-  },
-  {
-   "id": "2108624138369929725",
-   "handle": "OpenAIDevs",
-   "name": "OpenAI Developers",
-   "url": "https://x.com/OpenAIDevs/status/2108624138369929725",
-   "posted": "2026-10-09T23:52:25+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI Developers announce a beta of composer predictions in Codex for Pro users, which suggests your next message based on the conversation and how you write."
-  },
-  {
-   "id": "2108224572663414796",
-   "handle": "DoT_India",
-   "name": "DoT India",
-   "url": "https://x.com/DoT_India/status/2108224572663414796",
-   "posted": "2026-10-08T21:24:41+05:30",
-   "topic": "India",
-   "kind": "Official",
-   "summary": "India's Department of Telecommunications says ITU's AI for Good initiative will be inaugurated in New Delhi on 9 October as part of IMC 2026."
+   "id": "2109922359172030750",
+   "handle": "TheStatesmanLtd",
+   "name": "The Statesman",
+   "url": "https://x.com/TheStatesmanLtd/status/2109922359172030750",
+   "posted": "2026-10-13T13:51:05+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "The Statesman reports Anthropic said in a threat intelligence report that actors linked to the Houthis misused Claude to develop navigation and control software for missiles."
   }
  ]
 }
