@@ -5,7 +5,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How Might We question generator · Invent + Discover</title>
-<meta name="description" content="Turn a problem into “How might we…” questions through ten lenses. Edit, star your favourites, save them as an image or sketch them in Crazy 8s. Free, in your browser.">
+<meta name="description" content="Turn a problem into “How might we…” questions in three steps: type it, look through ten lenses, keep your favourites. Free, in your browser.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/how-might-we/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="How Might We question generator · Invent + Discover">
@@ -21,7 +21,6 @@
   ============================================================
   PART 1 — CSS (how it looks)
   Same colour "tokens" as Crazy 8s, so the two tools feel like one set.
-  Example: change --violet to #22D3EE and every violet glow turns cyan.
   ============================================================
 -->
 <style>
@@ -36,16 +35,13 @@
     --pink: #EC4899;
     --radius: 14px;
   }
-
   * { box-sizing: border-box; }
-  [hidden] { display: none !important; }   /* makes sure hidden buttons stay hidden */
+  [hidden] { display: none !important; }
 
   body {
-    margin: 0;
-    color: var(--text);
+    margin: 0; color: var(--text);
     font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
     background-color: var(--bg);
-    /* Faint grid (two thin line gradients) + soft coloured glows */
     background-image:
       radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
       radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
@@ -56,135 +52,123 @@
     background-attachment: fixed;
     min-height: 100vh;
   }
-
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 96px; }
+  /* Narrower than Crazy 8s: one thing at a time reads better in a single column */
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 64px; }
 
   /* ---------- Header ---------- */
-  header { padding: 40px 0 20px; }
+  header { padding: 36px 0 18px; }
   .back { color: var(--muted); text-decoration: none; font-size: 14px; }
   .back:hover { color: var(--text); }
   .pill {
-    display: inline-block; margin: 18px 0 10px; padding: 5px 12px;
+    display: inline-block; margin: 16px 0 10px; padding: 5px 12px;
     border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
     font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD;
     box-shadow: 0 0 18px rgba(139,92,246,0.25);
   }
   h1 {
-    margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1;
+    margin: 0; font-size: clamp(38px, 7vw, 60px); line-height: 1;
     text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25);
   }
-  .lede { color: var(--muted); max-width: 660px; font-size: 17px; line-height: 1.55; }
-  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
-  .credit a, .about a, .how a { color: #C4B5FD; }
+  .lede { color: var(--muted); font-size: 17px; line-height: 1.5; margin: 12px 0 0; }
+
+  /* ---------- Step tracker: 1 · 2 · 3 ---------- */
+  .track { display: flex; gap: 8px; margin: 22px 0 14px; padding: 0; list-style: none; }
+  .track li {
+    flex: 1; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted);
+    padding-top: 10px; border-top: 3px solid rgba(255,255,255,0.08); transition: border-color 0.3s, color 0.3s;
+  }
+  .track li b {
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px;
+    border: 1px solid var(--line); flex: none;
+  }
+  .track li.done { border-top-color: rgba(139,92,246,0.6); }
+  .track li.now { border-top-color: var(--pink); color: var(--text); }
+  .track li.now b { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 12px rgba(236,72,153,0.5); }
 
   /* ---------- Cards, inputs, buttons ---------- */
-  .card {
-    background: var(--panel); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 18px;
-    backdrop-filter: blur(6px);
-  }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; backdrop-filter: blur(6px); }
+  .stage h2 { margin: 0 0 6px; font-size: 22px; }
+  .stage .sub { color: var(--muted); margin: 0 0 16px; font-size: 15px; line-height: 1.5; }
   label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
   input[type=text] {
     width: 100%; background: rgba(0,0,0,0.35); color: var(--text);
-    border: 1px solid var(--line); border-radius: 10px;
-    padding: 12px 14px; font: inherit; font-size: 16px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px; font: inherit; font-size: 16px;
   }
   input[type=text]:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
 
   button, .btn {
     font: inherit; font-size: 15px; color: var(--text); cursor: pointer; text-decoration: none;
     background: rgba(255,255,255,0.05); border: 1px solid var(--line);
-    border-radius: 10px; padding: 10px 16px; display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 10px; padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   }
   button:hover, .btn:hover { border-color: rgba(255,255,255,0.25); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.primary {
-    background: linear-gradient(135deg, var(--violet), var(--pink)); border: none;
-    box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700;
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; }
+  .link { background: none; border: none; color: #C4B5FD; padding: 4px 0; font-size: 14px; }
+  .link:hover { text-decoration: underline; }
+  .nav { display: flex; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .nav .grow { flex: 1; }
+
+  .examples { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .examples button { display: block; text-align: left; margin-top: 6px; padding: 8px 12px; font-size: 14px; color: var(--text); width: 100%; justify-content: flex-start; }
+
+  /* ---------- Step 2: one lens at a time ---------- */
+  .lens-head { display: flex; align-items: center; gap: 10px; }
+  .lens-count { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); flex: none; }
+  .violet { --c: var(--violet); --soft: rgba(139,92,246,0.45); }
+  .blue   { --c: var(--blue);   --soft: rgba(59,130,246,0.45); }
+  .pink   { --c: var(--pink);   --soft: rgba(236,72,153,0.45); }
+
+  /* Each question is one big button: tap to keep it */
+  .pick {
+    width: 100%; display: flex; align-items: flex-start; gap: 12px; text-align: left; justify-content: flex-start;
+    padding: 14px 16px; margin-top: 10px; font-size: 16.5px; line-height: 1.45; border-radius: var(--radius);
+    background: var(--panel); transition: border-color 0.2s, box-shadow 0.2s;
   }
+  .pick .mark { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; margin-top: 1px; color: transparent; }
+  .pick[aria-pressed=true] { border-color: var(--c); box-shadow: 0 0 0 1px var(--c), 0 0 22px var(--soft); }
+  .pick[aria-pressed=true] .mark { background: var(--c); border-color: var(--c); color: #fff; }
 
-  .ask { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
-  @media (max-width: 640px) { .ask { grid-template-columns: 1fr; } .ask button { justify-content: center; } }
-  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
-  .examples span { color: var(--muted); font-size: 13px; }
-  .chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; }
+  .dots { display: flex; gap: 6px; margin: 18px 0 0; justify-content: center; }
+  .dots button { width: 9px; height: 9px; padding: 0; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); }
+  .dots button.now { background: var(--pink); box-shadow: 0 0 8px var(--pink); }
+  .dots button.has { background: rgba(196,181,253,0.8); }
 
-  /* "How we read it" — the three blanks the templates fill */
-  .reading { display: none; margin-top: 14px; }
-  .reading.show { display: block; }
-  .reading h2 { font-size: 15px; margin: 0 0 4px; }
-  .reading p { color: var(--muted); font-size: 14px; margin: 0 0 12px; line-height: 1.5; }
-  .slots { display: grid; grid-template-columns: 1fr 1.4fr 1.2fr; gap: 12px; }
-  @media (max-width: 760px) { .slots { grid-template-columns: 1fr; } }
-  .slots label b { font-weight: 500; }
-  .tag-who { color: #C4B5FD; } .tag-bad { color: #F9A8D4; } .tag-where { color: #93C5FD; }
+  details.adjust { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+  details.adjust summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+  details.adjust p { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin: 10px 0; }
+  .slots { display: grid; gap: 10px; }
 
-  /* ---------- Lenses and question cards ---------- */
-  #results { margin-top: 26px; display: grid; gap: 22px; }
-  .lens h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-  .lens h3 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); }
-  .lens .hint { color: var(--muted); margin: 4px 0 12px 20px; font-size: 14px; }
-  .qs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  @media (max-width: 900px) { .qs { grid-template-columns: 1fr; } }
-  .lens.violet { --c: var(--violet); --soft: rgba(139,92,246,0.45); }
-  .lens.blue   { --c: var(--blue);   --soft: rgba(59,130,246,0.45); }
-  .lens.pink   { --c: var(--pink);   --soft: rgba(236,72,153,0.45); }
-
-  .q {
-    border: 1px solid var(--line); border-radius: var(--radius); padding: 14px;
-    background: var(--panel); display: flex; flex-direction: column; gap: 12px;
-    transition: border-color 0.25s, box-shadow 0.25s;
-  }
-  .q.starred { border-color: var(--c); box-shadow: 0 0 0 1px var(--c), 0 0 26px var(--soft); }
-  .q-text { margin: 0; font-size: 16.5px; line-height: 1.45; flex: 1; border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }
-  .q-text:hover { background: rgba(255,255,255,0.03); }
-  .q-text:focus { outline: none; background: rgba(0,0,0,0.35); box-shadow: 0 0 0 2px var(--c); }
-  .q-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .star { padding: 6px 12px; font-size: 14px; }
-  .star[aria-pressed=true] { border-color: var(--c); color: #fff; box-shadow: 0 0 12px var(--soft); }
-  .to8 { padding: 6px 12px; font-size: 14px; color: #F9A8D4; border-color: rgba(236,72,153,0.45); }
+  /* ---------- Step 3: your picks ---------- */
+  .picks { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: p; }
+  .picks li { counter-increment: p; border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 12px; padding: 12px 14px; background: rgba(0,0,0,0.25); }
+  .picks small { color: var(--c); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .picks small::before { content: counter(p) " · "; color: var(--muted); }
+  .picks .q-text { margin: 4px 0 10px; font-size: 16.5px; line-height: 1.45; border-radius: 8px; padding: 4px 6px; margin-left: -6px; margin-right: -6px; }
+  .picks .q-text:focus { outline: none; background: rgba(0,0,0,0.35); box-shadow: 0 0 0 2px var(--c); }
+  .picks .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .to8 { padding: 7px 12px; font-size: 14px; color: #F9A8D4; border-color: rgba(236,72,153,0.45); }
   .to8:hover { border-color: var(--pink); box-shadow: 0 0 14px rgba(236,72,153,0.4); }
-  .edit-hint { color: var(--muted); font-size: 12px; margin-left: auto; }
+  .x { padding: 7px 10px; font-size: 13px; margin-left: auto; color: var(--muted); }
+  .empty { color: var(--muted); }
 
-  /* ---------- Favourites ---------- */
-  .favs { margin-top: 32px; display: none; border-color: rgba(236,72,153,0.5); box-shadow: 0 0 30px rgba(236,72,153,0.18); }
-  .favs.show { display: block; }
-  .favs-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-  .favs-head h2 { margin: 0; font-size: 22px; flex: 1; min-width: 200px; }
-  .favs ol { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: fav; }
-  .favs li {
-    counter-increment: fav; display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center;
-    padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25);
-  }
-  .favs li::before { content: counter(fav); font-weight: 700; color: #F9A8D4; text-align: center; }
-  .favs li small { display: block; color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
-  .favs li .row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-  .favs li .x { padding: 6px 10px; font-size: 13px; }
-  @media (max-width: 640px) { .favs li { grid-template-columns: 26px 1fr; } .favs li .row { grid-column: 2; justify-content: flex-start; } }
-
-  /* Floating counter, so you always know how many are starred */
-  .floater {
-    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(120px); z-index: 20;
-    background: rgba(5,6,10,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(236,72,153,0.5);
-    box-shadow: 0 0 24px rgba(236,72,153,0.3); border-radius: 999px; padding: 10px 18px; transition: transform 0.3s;
-  }
-  .floater.show { transform: translateX(-50%) translateY(0); }
-
-  /* ---------- How-to, about, footer ---------- */
-  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; }
-  @media (max-width: 760px) { .how { grid-template-columns: 1fr; } }
-  .how h3 { margin: 0 0 6px; font-size: 17px; }
-  .how p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 15px; }
-  .step { color: var(--pink); font-weight: 700; font-size: 13px; letter-spacing: 0.1em; }
-  .about { margin-top: 36px; }
-  .about h2 { margin: 0 0 10px; font-size: 22px; }
-  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
-  .about b { color: var(--text); }
-  footer { margin-top: 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  /* ---------- About + footer ---------- */
+  details.about { margin-top: 28px; }
+  details.about summary { cursor: pointer; font-weight: 500; }
+  details.about p { color: var(--muted); line-height: 1.6; margin: 12px 0 0; }
+  details.about b { color: var(--text); }
+  details.about a, footer .method a { color: #C4B5FD; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 13px; line-height: 1.6; }
   footer a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
   footer a:hover { color: var(--text); }
-  footer .method { margin-top: 10px; max-width: 80ch; }
-  footer .method a { color: #C4B5FD; margin: 0; display: inline; }
+  footer .method { margin-top: 10px; }
+  footer .method a { margin: 0; display: inline; }
+
+  @media (max-width: 560px) {
+    .track li span { display: none; }           /* phones: just the numbers */
+    .nav .primary { flex: 1; }
+  }
 </style>
 </head>
 
@@ -192,8 +176,9 @@
 <!--
   ============================================================
   PART 2 — HTML (what's on the page)
-  The skeleton. The questions and favourites start empty;
-  JavaScript (Part 3) fills them in.
+  Three "stages", only one visible at a time:
+    #stage1  your problem   →   #stage2  one lens at a time   →   #stage3  your picks
+  JavaScript (Part 3) switches between them with goTo(1 / 2 / 3).
   ============================================================
 -->
 <div class="wrap">
@@ -201,57 +186,72 @@
     <a class="back" href="/#tools">← All tools</a><br>
     <span class="pill">TOOL · HOW MIGHT WE</span>
     <h1>How Might We</h1>
-    <p class="lede">Turn a problem into questions you can design for. Type what's going wrong, and the tool rewrites it as “How might we…” questions through ten different lenses. Edit any of them, star the ones worth chasing, then save them or sketch them in Crazy 8s.</p>
-    <p class="credit">“How might we” is a classic framing from design thinking, taught in Google's Design Sprint. <a href="#where">Where it comes from</a></p>
+    <p class="lede">Turn a problem into questions you can design for, in three steps.</p>
   </header>
 
-  <div class="card">
-    <div class="ask">
-      <div>
-        <label for="problem">Your problem, in one sentence: who, what goes wrong, and where</label>
-        <input type="text" id="problem" maxlength="200" placeholder="Commuters miss their station on crowded local trains">
-      </div>
-      <button class="primary" id="goBtn">Make questions</button>
-    </div>
-    <div class="examples" id="examples"><span>Try:</span></div>
+  <ol class="track" id="track">
+    <li><b>1</b><span>Your problem</span></li>
+    <li><b>2</b><span>Pick questions</span></li>
+    <li><b>3</b><span>Your picks</span></li>
+  </ol>
 
-    <!-- The three blanks. Editing any of them rewrites every question. -->
-    <div class="reading" id="reading">
-      <h2>How the tool read your problem</h2>
-      <p>Every question is a template with blanks. These are the blanks it found. If one looks off, fix it here and all the questions update.</p>
+  <!-- STEP 1 -->
+  <section class="card stage" id="stage1">
+    <h2>What's the problem?</h2>
+    <p class="sub">One sentence: <b>who</b> is stuck, <b>what</b> goes wrong, and <b>where</b>.</p>
+    <label for="problem" class="sr">Your problem</label>
+    <input type="text" id="problem" maxlength="200" placeholder="Commuters miss their station on crowded local trains">
+    <div class="nav"><span class="grow"></span><button class="primary" id="goBtn">Show me questions →</button></div>
+    <div class="examples" id="examples">Or try an example:</div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card stage" id="stage2" hidden>
+    <div class="lens-head"><span class="dot" id="lensDot"></span><span class="lens-count" id="lensCount">Lens 1 of 10</span></div>
+    <h2 id="lensName" style="margin-top:8px">Amp up the good</h2>
+    <p class="sub" id="lensHint"></p>
+    <div id="picks"></div>
+    <div class="dots" id="dots" aria-label="Lenses"></div>
+    <div class="nav">
+      <button id="prevBtn">← Back</button>
+      <span class="grow"></span>
+      <button class="primary" id="nextBtn">Next lens →</button>
+    </div>
+    <div class="nav" style="margin-top:8px"><span class="grow"></span><button class="link" id="doneBtn">I'm done, see my picks (<span id="pickCount">0</span>)</button></div>
+
+    <!-- Tucked away: only needed if the questions read oddly -->
+    <details class="adjust" id="adjust">
+      <summary>Questions sound odd? Adjust the blanks</summary>
+      <p>Each question is a template with blanks. These are the blanks the tool found in your sentence. Fix one and the questions update.</p>
       <div class="slots">
-        <div><label for="sWho"><b class="tag-who">Who</b> has the problem</label><input type="text" id="sWho"></div>
-        <div><label for="sBad"><b class="tag-bad">What goes wrong</b> for them</label><input type="text" id="sBad"></div>
-        <div><label for="sWhere"><b class="tag-where">Where or when</b> (optional)</label><input type="text" id="sWhere"></div>
+        <div><label for="sWho">Who has the problem</label><input type="text" id="sWho"></div>
+        <div><label for="sBad">What goes wrong for them</label><input type="text" id="sBad"></div>
+        <div><label for="sWhere">Where or when (optional)</label><input type="text" id="sWhere"></div>
       </div>
-    </div>
-  </div>
+    </details>
+  </section>
 
-  <div id="results"></div>
-
-  <section class="card favs" id="favs">
-    <div class="favs-head">
-      <h2>★ Your starred questions</h2>
+  <!-- STEP 3 -->
+  <section class="card stage" id="stage3" hidden>
+    <h2>Your picks</h2>
+    <p class="sub">Tap any question to reword it. Then sketch one in Crazy 8s, or save them all as an image.</p>
+    <ol class="picks" id="favList"></ol>
+    <p class="empty" id="empty" hidden>Nothing picked yet. Go back and tap the questions you like.</p>
+    <div class="nav">
+      <button id="backBtn">← Back to lenses</button>
+      <span class="grow"></span>
       <button id="copyBtn">Copy text</button>
       <button class="primary" id="saveBtn">Save as image</button>
     </div>
-    <ol id="favList"></ol>
+    <div class="nav" style="margin-top:8px"><span class="grow"></span><button class="link" id="restartBtn">Start over with a new problem</button></div>
   </section>
 
-  <a class="btn floater" id="floater" href="#favs">★ <span id="favCount">0</span> starred · view & save</a>
-
-  <section class="how">
-    <div class="card"><div class="step">STEP 1</div><h3>Name the problem</h3><p>One sentence: who is stuck, what goes wrong, and where. Real and specific beats big and vague.</p></div>
-    <div class="card"><div class="step">STEP 2</div><h3>Look through the lenses</h3><p>Each lens tilts the problem a different way. Rewrite any question until it sounds like your team. A good one is narrow enough to start on, wide enough to surprise you.</p></div>
-    <div class="card"><div class="step">STEP 3</div><h3>Star, then sketch</h3><p>Star three to five. Save them as an image for the wall, or send one straight into <a href="/toolkit/crazy-8s/">Crazy 8s</a> to sketch eight answers in eight minutes.</p></div>
-  </section>
-
-  <section class="card about" id="where">
-    <h2>Where “How might we” comes from</h2>
-    <p><b>How Might We</b> is one of the best-known framing methods in <b>design thinking</b>. The phrasing is usually traced to <b>Min Basadur</b>, who used it in creative problem-solving work at Procter &amp; Gamble in the 1970s. It later became a habit at <b>IDEO</b> and the Stanford d.school, and is now a standard step in <b>Google's Design Sprint</b>, where teams turn notes from experts into “How might we” sticky notes and vote on the best ones. Google teaches it in its free <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Design Sprint Kit</a>.</p>
-    <p>Each word does a job. <b>How</b> assumes there is an answer. <b>Might</b> says it's fine if an idea doesn't work. <b>We</b> makes it a shared problem. The lenses on this page (amp up the good, remove the bad, explore the opposite and the rest) follow the prompts design-thinking teachers commonly use to push a problem in different directions.</p>
-    <p>The question templates and this page are made by Invent + Discover. They run in your browser with simple fill-in-the-blank rules, no AI, and nothing you type is uploaded.</p>
-  </section>
+  <details class="card about" id="where">
+    <summary>Where “How might we” comes from</summary>
+    <p><b>How Might We</b> is one of the best-known framing methods in <b>design thinking</b>. The phrasing is usually traced to <b>Min Basadur</b>, who used it in creative problem-solving at Procter &amp; Gamble in the 1970s. It became a habit at <b>IDEO</b> and the Stanford d.school, and is a standard step in <b>Google's Design Sprint</b>, taught in the free <a href="https://designsprintkit.withgoogle.com/" target="_blank" rel="noopener">Design Sprint Kit</a>.</p>
+    <p><b>How</b> assumes there is an answer. <b>Might</b> says it's fine if an idea doesn't work. <b>We</b> makes it a shared problem. The ten lenses follow prompts design-thinking teachers use to push a problem in different directions.</p>
+    <p>The templates and this page are made by Invent + Discover. They run in your browser with simple fill-in-the-blank rules, no AI, and nothing you type is uploaded.</p>
+  </details>
 
   <footer>
     <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
@@ -259,6 +259,8 @@
     <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
   </footer>
 </div>
+
+<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style>
 
 <!--
   ============================================================
@@ -482,82 +484,104 @@ function fill(template, blanks) {
 }
 
 // ---------- 3c. State: what the tool remembers ----------
-// questions: what's on screen now.  favs: the starred ones.
-// Each question gets an id like "g2-4" (round 2, question 4) so that
-// starring survives editing, and old stars survive a new round.
-let round = 0;
-let questions = [];   // { id, lens, color, text }
-let favs = [];        // same shape, in the order you starred them
+// lenses: the ten lenses, each with its filled-in questions (empty lenses removed)
+// at:     which lens is on screen (0 = first)
+// favs:   the questions you picked, in the order you picked them
+// Example after picking two: favs = [{ id:'0-1', lens:'Amp up the good', color:'violet', text:'How might we…' }, …]
+let lenses = [];
+let at = 0;
+let favs = [];
 
-// ---------- 3d. Drawing the questions ----------
-function generate() {
+// ---------- 3d. Moving between the three steps ----------
+// Only one stage is visible. goTo(2) hides stages 1 and 3 and shows stage 2,
+// and colours the 1 · 2 · 3 tracker so you can see where you are.
+function goTo(step) {
+  [1, 2, 3].forEach(n => { $('#stage' + n).hidden = n !== step; });
+  document.querySelectorAll('#track li').forEach((li, i) => {
+    li.classList.toggle('done', i + 1 < step);
+    li.classList.toggle('now', i + 1 === step);
+  });
+  if (step === 2) showLens();
+  if (step === 3) renderFavs();
+  if (started) $('#track').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  started = true;
+}
+let started = false;   // don't scroll on the very first load
+
+// Fill every template with the current blanks.
+// Example: a lens with 3 templates, one needing {place}, and no place → 2 questions.
+function buildLenses() {
   const blanks = makeBlanks($('#sWho').value, $('#sBad').value, $('#sWhere').value);
-  round++;
-  questions = [];
-  const box = $('#results');
+  lenses = LENSES.map((lens, li) => ({
+    ...lens,
+    questions: lens.templates.map((t, ti) => ({ id: li + '-' + ti, text: fill(t, blanks) })).filter(q => q.text)
+  })).filter(l => l.questions.length);
+  if (at >= lenses.length) at = lenses.length - 1;
+}
+
+// ---------- 3e. Step 2: show one lens ----------
+function showLens() {
+  const lens = lenses[at];
+  $('#lensCount').textContent = `Lens ${at + 1} of ${lenses.length} · tap the ones worth keeping`;
+  $('#lensName').textContent = lens.name;
+  $('#lensHint').textContent = lens.hint;
+  $('#lensDot').className = 'dot ' + lens.color;
+  const box = $('#picks');
   box.innerHTML = '';
-  let n = 0;
-  for (const lens of LENSES) {
-    const texts = lens.templates.map(t => fill(t, blanks)).filter(Boolean);
-    if (!texts.length) continue;                       // e.g. no adjective → skip that lens
-    const sec = document.createElement('section');
-    sec.className = 'lens ' + lens.color;
-    sec.innerHTML = `<h3><span class="dot"></span></h3><p class="hint"></p><div class="qs"></div>`;
-    sec.querySelector('h3').append(lens.name);         // append/textContent = safe, never treated as code
-    sec.querySelector('.hint').textContent = lens.hint;
-    for (const text of texts) {
-      const q = { id: `g${round}-${n++}`, lens: lens.name, color: lens.color, text };
-      questions.push(q);
-      sec.querySelector('.qs').appendChild(makeCard(q));
-    }
-    box.appendChild(sec);
+  for (const q of lens.questions) {
+    const b = document.createElement('button');
+    b.className = 'pick ' + lens.color;
+    b.innerHTML = '<span class="mark">✓</span><span></span>';
+    b.lastChild.textContent = q.text;                   // textContent = always shown as text, never as code
+    const paint = () => b.setAttribute('aria-pressed', favs.some(f => f.id === q.id));
+    b.addEventListener('click', () => {                // tap = keep it; tap again = drop it
+      const i = favs.findIndex(f => f.id === q.id);
+      if (i === -1) favs.push({ id: q.id, lens: lens.name, color: lens.color, text: q.text });
+      else favs.splice(i, 1);
+      paint(); paintDots();
+    });
+    paint();
+    box.appendChild(b);
   }
+  $('#prevBtn').disabled = false;
+  $('#nextBtn').textContent = at === lenses.length - 1 ? 'See my picks →' : 'Next lens →';
+  paintDots();
 }
 
-function makeCard(q) {
-  const card = document.createElement('article');
-  card.className = 'q';
-  card.innerHTML = `<p class="q-text"></p>
-    <div class="q-actions">
-      <button class="star" aria-pressed="false">☆ Star</button>
-      <a class="btn to8" hidden>Sketch this in Crazy 8s →</a>
-      <span class="edit-hint">click text to edit</span>
-    </div>`;
-  const textEl = card.querySelector('.q-text');
-  const star = card.querySelector('.star');
-  const to8 = card.querySelector('.to8');
-  textEl.textContent = q.text;
-
-  // Make the text editable. "plaintext-only" stops pasted formatting; older browsers get "true".
-  textEl.contentEditable = 'plaintext-only';
-  if (textEl.contentEditable !== 'plaintext-only') textEl.contentEditable = 'true';
-  textEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); textEl.blur(); } });
-  textEl.addEventListener('input', () => {
-    q.text = textEl.textContent.trim();
-    const f = favs.find(f => f.id === q.id);
-    if (f) { f.text = q.text; renderFavs(); }
-    to8.href = crazy8sLink(q.text);
+// The row of dots under the questions: pink = this lens, lilac = you picked something here
+function paintDots() {
+  const dots = $('#dots');
+  dots.innerHTML = '';
+  lenses.forEach((l, i) => {
+    const d = document.createElement('button');
+    d.setAttribute('aria-label', l.name);
+    d.classList.toggle('now', i === at);
+    d.classList.toggle('has', i !== at && favs.some(f => f.lens === l.name));
+    d.addEventListener('click', () => { at = i; showLens(); });
+    dots.appendChild(d);
   });
-
-  const paint = () => {
-    const on = favs.some(f => f.id === q.id);
-    card.classList.toggle('starred', on);
-    star.setAttribute('aria-pressed', on);
-    star.textContent = on ? '★ Starred' : '☆ Star';
-    to8.hidden = !on;                       // the Crazy 8s button only shows on starred questions
-    to8.href = crazy8sLink(q.text);
-  };
-  star.addEventListener('click', () => {
-    const i = favs.findIndex(f => f.id === q.id);
-    if (i === -1) favs.push({ ...q }); else favs.splice(i, 1);
-    paint(); renderFavs();
-  });
-  card.paint = paint;
-  paint();
-  return card;
+  $('#pickCount').textContent = favs.length;
 }
 
-// ---------- 3e. The link between the two tools ----------
+$('#nextBtn').addEventListener('click', () => { if (at < lenses.length - 1) { at++; showLens(); } else goTo(3); });
+$('#prevBtn').addEventListener('click', () => { if (at > 0) { at--; showLens(); } else goTo(1); });
+$('#doneBtn').addEventListener('click', () => goTo(3));
+
+// Arrow keys flip through the lenses (when you're not typing)
+document.addEventListener('keydown', (e) => {
+  if ($('#stage2').hidden || ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+  if (e.key === 'ArrowRight') $('#nextBtn').click();
+  if (e.key === 'ArrowLeft') $('#prevBtn').click();
+});
+
+// Adjusting a blank rebuilds the questions after a short pause.
+// Picks you already made are kept as they were.
+let timer = null;
+['#sWho', '#sBad', '#sWhere'].forEach(id => $(id).addEventListener('input', () => {
+  clearTimeout(timer); timer = setTimeout(() => { buildLenses(); showLens(); }, 350);
+}));
+
+// ---------- 3f. The link between the two tools ----------
 // A web address can carry extra information after a "?". Example:
 //   /toolkit/crazy-8s/?challenge=How%20might%20we%20stop%20commuters…
 // encodeURIComponent turns spaces into %20 and "?" into %3F, so the question
@@ -566,29 +590,42 @@ function crazy8sLink(question) {
   return '/toolkit/crazy-8s/?challenge=' + encodeURIComponent(question);
 }
 
-// ---------- 3f. Favourites list ----------
+// ---------- 3g. Step 3: your picks ----------
 function renderFavs() {
   const list = $('#favList');
   list.innerHTML = '';
   for (const f of favs) {
     const li = document.createElement('li');
-    li.className = 'lens ' + f.color;                       // borrows the lens colour
-    li.innerHTML = `<div><small></small><span></span></div>
-      <div class="row"><a class="btn to8">Sketch this in Crazy 8s →</a><button class="x" aria-label="Remove star">✕</button></div>`;
+    li.className = f.color;
+    li.innerHTML = `<small></small><p class="q-text"></p>
+      <div class="row"><a class="btn to8">Sketch this in Crazy 8s →</a><button class="x" aria-label="Remove">Remove</button></div>`;
     li.querySelector('small').textContent = f.lens;
-    li.querySelector('span').textContent = f.text;
-    li.querySelector('.to8').href = crazy8sLink(f.text);
-    li.querySelector('.x').addEventListener('click', () => {
-      favs = favs.filter(x => x.id !== f.id);
-      document.querySelectorAll('.q').forEach(c => c.paint && c.paint());
-      renderFavs();
-    });
+    const text = li.querySelector('.q-text');
+    const to8 = li.querySelector('.to8');
+    text.textContent = f.text;
+    to8.href = crazy8sLink(f.text);
+
+    // Editable in place. "plaintext-only" stops pasted formatting; older browsers get "true".
+    text.contentEditable = 'plaintext-only';
+    if (text.contentEditable !== 'plaintext-only') text.contentEditable = 'true';
+    text.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); text.blur(); } });
+    text.addEventListener('input', () => { f.text = text.textContent.trim(); to8.href = crazy8sLink(f.text); });
+
+    li.querySelector('.x').addEventListener('click', () => { favs = favs.filter(x => x !== f); renderFavs(); });
     list.appendChild(li);
   }
-  $('#favs').classList.toggle('show', favs.length > 0);
-  $('#floater').classList.toggle('show', favs.length > 0);
-  $('#favCount').textContent = favs.length;
+  const none = favs.length === 0;
+  $('#empty').hidden = !none;
+  $('#saveBtn').disabled = none;
+  $('#copyBtn').disabled = none;
 }
+
+$('#backBtn').addEventListener('click', () => goTo(2));
+$('#restartBtn').addEventListener('click', () => {
+  if (favs.length && !confirm('Clear your picks and start with a new problem?')) return;
+  favs = []; at = 0; $('#problem').value = ''; $('#adjust').open = false;
+  goTo(1); $('#problem').focus();
+});
 
 $('#copyBtn').addEventListener('click', async () => {
   const text = favs.map((f, i) => `${i + 1}. ${f.text}`).join('\n');
@@ -597,7 +634,7 @@ $('#copyBtn').addEventListener('click', async () => {
   setTimeout(() => { $('#copyBtn').textContent = 'Copy text'; }, 1600);
 });
 
-// ---------- 3g. Save the starred questions as one neon image ----------
+// ---------- 3h. Save your picks as one neon image ----------
 // We draw on an invisible <canvas>, the same way Crazy 8s builds its sheet:
 // background → grid → glows → title → one glowing card per question.
 // Text has to be wrapped by hand: we add words to a line until it is too wide.
@@ -689,33 +726,28 @@ async function saveImage() {
 }
 $('#saveBtn').addEventListener('click', saveImage);
 
-// ---------- 3h. Wiring up the inputs ----------
-function fromProblem() {
+// ---------- 3i. Step 1: your problem ----------
+function start() {
   const text = $('#problem').value.trim();
   if (!text) { $('#problem').focus(); return; }
   const parts = splitProblem(text);
   $('#sWho').value = parts.who;
   $('#sBad').value = parts.bad;
   $('#sWhere').value = parts.where;
-  $('#reading').classList.add('show');
-  generate();
-  $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  favs = []; at = 0;
+  buildLenses();
+  goTo(2);
 }
-$('#goBtn').addEventListener('click', fromProblem);
-$('#problem').addEventListener('keydown', (e) => { if (e.key === 'Enter') fromProblem(); });
-
-// Editing a blank rewrites the questions after a short pause (so it doesn't flicker on every key)
-let timer = null;
-['#sWho', '#sBad', '#sWhere'].forEach(id => $(id).addEventListener('input', () => {
-  clearTimeout(timer); timer = setTimeout(generate, 350);
-}));
+$('#goBtn').addEventListener('click', start);
+$('#problem').addEventListener('keydown', (e) => { if (e.key === 'Enter') start(); });
 
 for (const ex of EXAMPLES) {
   const b = document.createElement('button');
-  b.className = 'chip'; b.textContent = ex;
-  b.addEventListener('click', () => { $('#problem').value = ex; fromProblem(); });
+  b.textContent = ex;
+  b.addEventListener('click', () => { $('#problem').value = ex; start(); });
   $('#examples').appendChild(b);
 }
+goTo(1);
 </script>
 </body>
 </html>
