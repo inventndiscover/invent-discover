@@ -26,6 +26,33 @@
   "desc": "A small four-hour workshop where non-technical professionals bring a real work problem and turn it into a simple AI-powered tool without writing code. Capped at 15 people and run mostly in Hinglish.",
   "firstSeen": "2026-09-30"
  },
+ "ai-leadership-playbook": {
+  "id": "ai-leadership-playbook",
+  "title": "The AI Leadership Playbook",
+  "cat": "AI",
+  "tags": [
+   "Leadership",
+   "Product",
+   "Operators"
+  ],
+  "area": "Andheri East",
+  "venue": "Paytm campus, Marol (exact address after registration)",
+  "start": "2026-10-24T10:00",
+  "end": "13:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · curated, host approval needed",
+  "aud": [
+   "Professional",
+   "Founder"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/6igqwui2",
+  "org": "The Operators Collective",
+  "access": "approval",
+  "desc": "A curated morning session for product leaders and operators on leading teams through AI adoption, hosted at Paytm.",
+  "firstSeen": "2026-10-16"
+ },
  "aicd-mumbai": {
   "id": "aicd-mumbai",
   "title": "AICD Mumbai",
@@ -37,11 +64,11 @@
   ],
   "area": "Santacruz East",
   "venue": "Microsoft India office, Central Salsette Tramway Road",
-  "start": "2026-11-07T08:00",
+  "start": "2026-11-21T08:00",
   "end": "17:00",
   "fmt": "Offline",
   "price": 0,
-  "priceNote": "Free",
+  "priceNote": "Free · the listing shows some ticket types as sold out, so check availability",
   "aud": [
    "Professional",
    "Founder"
@@ -77,6 +104,33 @@
   "access": "open",
   "desc": "Build a small drone, learn how it flies, then take part in a flying challenge. For beginners aged 10 and up.",
   "firstSeen": "2026-09-28"
+ },
+ "buildup-over-coffee": {
+  "id": "buildup-over-coffee",
+  "title": "Buildup over Coffee",
+  "cat": "Startup",
+  "tags": [
+   "Builders",
+   "Networking",
+   "Coffee"
+  ],
+  "area": "Bandra West",
+  "venue": "Grounded Cafe, Mount Mary",
+  "start": "2026-10-17T16:00",
+  "end": null,
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · waitlist only, 25 seats, confirmation required",
+  "aud": [
+   "Founder",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/jfc8y4xq",
+  "org": "PowerSkills Community Meetup",
+  "access": "approval",
+  "desc": "A small café meetup for early builders and founders, hosted with ATLAS Online and a startup-partnerships lead from Google India. Seats are confirmed from a waitlist.",
+  "firstSeen": "2026-10-16"
  },
  "climate-panchayat": {
   "id": "climate-panchayat",
@@ -413,6 +467,33 @@
   "desc": "A networking morning for founders and aspiring entrepreneurs with business speed dating and 30-second pitches.",
   "firstSeen": "2026-10-07"
  },
+ "growsphere-mcp-security": {
+  "id": "growsphere-mcp-security",
+  "title": "GrowSphere | Prompt Injection & MCP Security",
+  "cat": "Tech",
+  "tags": [
+   "Security",
+   "LLM",
+   "MCP"
+  ],
+  "area": "Kurla West",
+  "venue": "ATLAS SkillTech University, Equinox Business Park",
+  "start": "2026-10-17T10:00",
+  "end": "14:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · host approval needed",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/ign60602",
+  "org": "GrowSphere Community",
+  "access": "approval",
+  "desc": "A half-day community session on prompt-injection risks and securing tools built on the Model Context Protocol.",
+  "firstSeen": "2026-10-16"
+ },
  "hack-nation-bombay-hub": {
   "id": "hack-nation-bombay-hub",
   "title": "Bombay Hub: 7th Hack-Nation Global AI Hackathon",
@@ -499,7 +580,7 @@
  },
  "healthtech-founders-mixer": {
   "id": "healthtech-founders-mixer",
-  "title": "Startup Founders' Mixer: Health Tech",
+  "title": "HealthTech Founder's Mixer (Mumbai)",
   "cat": "Startup",
   "tags": [
    "Health tech",
@@ -508,17 +589,17 @@
   ],
   "area": "Mumbai",
   "venue": "Shared with approved attendees",
-  "start": "2026-10-29T17:00",
-  "end": "20:00",
+  "start": "2026-10-29T16:00",
+  "end": "19:00",
   "fmt": "Offline",
-  "price": 700,
-  "priceNote": "₹700 · screened, about 30 seats",
+  "price": 750,
+  "priceNote": "₹750 · application-based, limited slots",
   "aud": [
    "Founder",
    "Professional"
   ],
   "src": "AllEvents",
-  "url": "https://allevents.in/mumbai/startup-founders-mixer-health-tech-mumbai/100002001776961779",
+  "url": "https://allevents.in/mumbai/healthtech-founders-mixer-mumbai/100002001776961779",
   "org": "Bhavik Jain",
   "access": "approval",
   "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce.",
@@ -690,6 +771,34 @@
   "desc": "A one-day hackathon where solo builders or teams of two to three create a mobile app around a challenge announced on the day.",
   "firstSeen": "2026-10-06"
  },
+ "monad-blitz-mumbai": {
+  "id": "monad-blitz-mumbai",
+  "title": "Monad Blitz Mumbai: Devcon Edition",
+  "cat": "Tech",
+  "tags": [
+   "Hackathon",
+   "Web3",
+   "Devcon week"
+  ],
+  "area": "Mumbai",
+  "venue": "Shared on registration",
+  "start": "2026-11-04",
+  "end": null,
+  "timeNote": "Times not shown on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · every ticket type needs approval",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/Blitz-Mumbai-Devcon-2026",
+  "org": "Monad Foundation Events",
+  "access": "approval",
+  "desc": "A short developer hackathon held in Devcon week, with separate tickets for hackathon participants, general visitors and content creators.",
+  "firstSeen": "2026-10-16"
+ },
  "mongodb-local-mumbai": {
   "id": "mongodb-local-mumbai",
   "title": "MongoDB.local Mumbai",
@@ -827,6 +936,33 @@
   "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two.",
   "firstSeen": "2026-10-06"
  },
+ "swift-mumbai-assemble": {
+  "id": "swift-mumbai-assemble",
+  "title": "Swift Mumbai Assemble!",
+  "cat": "Tech",
+  "tags": [
+   "Swift",
+   "iOS",
+   "Meetup"
+  ],
+  "area": "BKC",
+  "venue": "ATLAS SkillTech University, Building 2, BKC",
+  "start": "2026-10-17T10:15",
+  "end": null,
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown · host approval needed",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/ryn305b9",
+  "org": "Swift Mumbai",
+  "access": "approval",
+  "desc": "A community meetup for Swift and Apple-platform developers at ATLAS SkillTech University. Registration closes once venue capacity is reached.",
+  "firstSeen": "2026-10-16"
+ },
  "titan-consumer-mixer": {
   "id": "titan-consumer-mixer",
   "title": "Titan Capital × V3 Ventures Consumer Mixer",
@@ -852,6 +988,34 @@
   "access": "approval",
   "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval.",
   "firstSeen": "2026-09-28"
+ },
+ "unchained-summit-india": {
+  "id": "unchained-summit-india",
+  "title": "Unchained Summit India",
+  "cat": "Tech",
+  "tags": [
+   "Web3",
+   "Conference",
+   "AI"
+  ],
+  "area": "Mumbai",
+  "venue": "Not stated on the listing",
+  "start": "2026-11-05T10:00",
+  "end": "17:00",
+  "endDate": "2026-11-06",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "No ticket price shown on the listing",
+  "aud": [
+   "Professional",
+   "Founder"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/unchained-summit-india/80003460442107",
+  "org": "Aeternum",
+  "access": "open",
+  "desc": "A two-day Web3 conference covering institutional crypto adoption, tokenised assets, DeFi and the role of AI in Web3.",
+  "firstSeen": "2026-10-16"
  },
  "we-founders-collab-oct10": {
   "id": "we-founders-collab-oct10",

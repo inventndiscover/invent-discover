@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-16T07:58:48+05:30",
+ "REFRESHED": "2026-10-16T18:27:14+05:30",
  "EVENTS_RAW": [
   {
    "id": "titan-consumer-mixer",
@@ -25,6 +25,58 @@
    "org": "Titan Capital",
    "access": "approval",
    "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval."
+  },
+  {
+   "id": "growsphere-mcp-security",
+   "title": "GrowSphere | Prompt Injection & MCP Security",
+   "cat": "Tech",
+   "tags": [
+    "Security",
+    "LLM",
+    "MCP"
+   ],
+   "area": "Kurla West",
+   "venue": "ATLAS SkillTech University, Equinox Business Park",
+   "start": "2026-10-17T10:00",
+   "end": "14:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · host approval needed",
+   "aud": [
+    "Developer",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/ign60602",
+   "org": "GrowSphere Community",
+   "access": "approval",
+   "desc": "A half-day community session on prompt-injection risks and securing tools built on the Model Context Protocol."
+  },
+  {
+   "id": "swift-mumbai-assemble",
+   "title": "Swift Mumbai Assemble!",
+   "cat": "Tech",
+   "tags": [
+    "Swift",
+    "iOS",
+    "Meetup"
+   ],
+   "area": "BKC",
+   "venue": "ATLAS SkillTech University, Building 2, BKC",
+   "start": "2026-10-17T10:15",
+   "end": null,
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · host approval needed",
+   "aud": [
+    "Developer",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/ryn305b9",
+   "org": "Swift Mumbai",
+   "access": "approval",
+   "desc": "A community meetup for Swift and Apple-platform developers at ATLAS SkillTech University. Registration closes once venue capacity is reached."
   },
   {
    "id": "gamingcon-bharat-2026",
@@ -57,6 +109,32 @@
    "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers."
   },
   {
+   "id": "buildup-over-coffee",
+   "title": "Buildup over Coffee",
+   "cat": "Startup",
+   "tags": [
+    "Builders",
+    "Networking",
+    "Coffee"
+   ],
+   "area": "Bandra West",
+   "venue": "Grounded Cafe, Mount Mary",
+   "start": "2026-10-17T16:00",
+   "end": null,
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · waitlist only, 25 seats, confirmation required",
+   "aud": [
+    "Founder",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/jfc8y4xq",
+   "org": "PowerSkills Community Meetup",
+   "access": "approval",
+   "desc": "A small café meetup for early builders and founders, hosted with ATLAS Online and a startup-partnerships lead from Google India. Seats are confirmed from a waitlist."
+  },
+  {
    "id": "code-to-capital",
    "title": "Code to Capital Summit",
    "cat": "Startup",
@@ -80,6 +158,32 @@
    "org": "LegalTechMeet",
    "access": "open",
    "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers."
+  },
+  {
+   "id": "ai-leadership-playbook",
+   "title": "The AI Leadership Playbook",
+   "cat": "AI",
+   "tags": [
+    "Leadership",
+    "Product",
+    "Operators"
+   ],
+   "area": "Andheri East",
+   "venue": "Paytm campus, Marol (exact address after registration)",
+   "start": "2026-10-24T10:00",
+   "end": "13:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown · curated, host approval needed",
+   "aud": [
+    "Professional",
+    "Founder"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/6igqwui2",
+   "org": "The Operators Collective",
+   "access": "approval",
+   "desc": "A curated morning session for product leaders and operators on leading teams through AI adoption, hosted at Paytm."
   },
   {
    "id": "ifp-festival-16",
@@ -139,7 +243,7 @@
   },
   {
    "id": "healthtech-founders-mixer",
-   "title": "Startup Founders' Mixer: Health Tech",
+   "title": "HealthTech Founder's Mixer (Mumbai)",
    "cat": "Startup",
    "tags": [
     "Health tech",
@@ -148,17 +252,17 @@
    ],
    "area": "Mumbai",
    "venue": "Shared with approved attendees",
-   "start": "2026-10-29T17:00",
-   "end": "20:00",
+   "start": "2026-10-29T16:00",
+   "end": "19:00",
    "fmt": "Offline",
-   "price": 700,
-   "priceNote": "₹700 · screened, about 30 seats",
+   "price": 750,
+   "priceNote": "₹750 · application-based, limited slots",
    "aud": [
     "Founder",
     "Professional"
    ],
    "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/startup-founders-mixer-health-tech-mumbai/100002001776961779",
+   "url": "https://allevents.in/mumbai/healthtech-founders-mixer-mumbai/100002001776961779",
    "org": "Bhavik Jain",
    "access": "approval",
    "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce."
@@ -273,30 +377,58 @@
    "desc": "The Ethereum Foundation's global developer conference, held in Mumbai this year across four days. It is open to engineers, designers, researchers, educators and artists, not only developers."
   },
   {
-   "id": "aicd-mumbai",
-   "title": "AICD Mumbai",
-   "cat": "AI",
+   "id": "monad-blitz-mumbai",
+   "title": "Monad Blitz Mumbai: Devcon Edition",
+   "cat": "Tech",
    "tags": [
-    "Microsoft",
-    "Azure",
-    "Power Platform"
+    "Hackathon",
+    "Web3",
+    "Devcon week"
    ],
-   "area": "Santacruz East",
-   "venue": "Microsoft India office, Central Salsette Tramway Road",
-   "start": "2026-11-07T08:00",
-   "end": "17:00",
+   "area": "Mumbai",
+   "venue": "Shared on registration",
+   "start": "2026-11-04",
+   "end": null,
+   "timeNote": "Times not shown on the page",
    "fmt": "Offline",
    "price": 0,
-   "priceNote": "Free",
+   "priceNote": "No ticket price shown · every ticket type needs approval",
+   "aud": [
+    "Developer",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/Blitz-Mumbai-Devcon-2026",
+   "org": "Monad Foundation Events",
+   "access": "approval",
+   "desc": "A short developer hackathon held in Devcon week, with separate tickets for hackathon participants, general visitors and content creators."
+  },
+  {
+   "id": "unchained-summit-india",
+   "title": "Unchained Summit India",
+   "cat": "Tech",
+   "tags": [
+    "Web3",
+    "Conference",
+    "AI"
+   ],
+   "area": "Mumbai",
+   "venue": "Not stated on the listing",
+   "start": "2026-11-05T10:00",
+   "end": "17:00",
+   "endDate": "2026-11-06",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "No ticket price shown on the listing",
    "aud": [
     "Professional",
     "Founder"
    ],
    "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
-   "org": "MCEXPERT",
+   "url": "https://allevents.in/mumbai/unchained-summit-india/80003460442107",
+   "org": "Aeternum",
    "access": "open",
-   "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
+   "desc": "A two-day Web3 conference covering institutional crypto adoption, tokenised assets, DeFi and the role of AI in Web3."
   },
   {
    "id": "earthshot-prize-mumbai",
@@ -354,6 +486,32 @@
    "org": "Startup Live Global",
    "access": "approval",
    "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two."
+  },
+  {
+   "id": "aicd-mumbai",
+   "title": "AICD Mumbai",
+   "cat": "AI",
+   "tags": [
+    "Microsoft",
+    "Azure",
+    "Power Platform"
+   ],
+   "area": "Santacruz East",
+   "venue": "Microsoft India office, Central Salsette Tramway Road",
+   "start": "2026-11-21T08:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free · the listing shows some ticket types as sold out, so check availability",
+   "aud": [
+    "Professional",
+    "Founder"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+   "org": "MCEXPERT",
+   "access": "open",
+   "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
   }
  ],
  "QUEUE_RAW": [
@@ -365,7 +523,7 @@
    "src": "Luma",
    "url": "https://luma.com/datatalks-mumbai-2026",
    "access": "open",
-   "why": "No date on the page; described as a Saturday morning session.",
+   "why": "No date on the page; a Saturday morning session at COWRKS Powai.",
    "conf": {
     "date": 0,
     "place": 98,
@@ -380,10 +538,10 @@
    "src": "Luma",
    "url": "https://luma.com/d1f99fgo",
    "access": "approval",
-   "why": "No date on the page. For compute and data-centre leaders.",
+   "why": "No date on the page. Earth Cafe, BKC; for GPU and data-centre leaders.",
    "conf": {
     "date": 0,
-    "place": 90,
+    "place": 95,
     "category": 85
    }
   },
@@ -418,21 +576,6 @@
    }
   },
   {
-   "qid": "q-startup-mixer",
-   "title": "The Startup Mixer: capital, connections & growth",
-   "cat": "Startup",
-   "area": "BKC",
-   "src": "Luma",
-   "url": "https://luma.com/2b4osmy7",
-   "access": "approval",
-   "why": "No date on the page.",
-   "conf": {
-    "date": 0,
-    "place": 95,
-    "category": 88
-   }
-  },
-  {
    "qid": "q-onchain-legal",
    "title": "Onchain Legal Summit (Devcon India 2026)",
    "cat": "Startup",
@@ -440,7 +583,7 @@
    "src": "Luma",
    "url": "https://luma.com/cw0h549b",
    "access": "open",
-   "why": "No date on the page. Likely during Devcon week.",
+   "why": "No date on the page; agenda marked coming soon. Likely Devcon week.",
    "conf": {
     "date": 0,
     "place": 70,
@@ -466,30 +609,15 @@
    "qid": "q-cypherpunk",
    "title": "Ethereum Cypherpunk Congress #3",
    "cat": "Tech",
-   "area": "Mumbai",
+   "area": "Nariman Point",
    "src": "Luma",
    "url": "https://luma.com/spsnos9t",
    "access": "open",
-   "why": "No date on the page. Privacy and digital-rights festival.",
+   "why": "No date or time on the page; venue is Yashwantrao Chavan Centre. Privacy and digital-rights festival.",
    "conf": {
     "date": 0,
-    "place": 30,
+    "place": 95,
     "category": 80
-   }
-  },
-  {
-   "qid": "q-near",
-   "title": "NEAR Builders Cafe: Roast My Repo",
-   "cat": "Tech",
-   "area": "Lokmanya Tilak Nagar",
-   "src": "Luma",
-   "url": "https://luma.com/near-ss07",
-   "access": "approval",
-   "why": "No date on the page. 15 to 20 builders.",
-   "conf": {
-    "date": 0,
-    "place": 50,
-    "category": 90
    }
   },
   {
@@ -500,7 +628,7 @@
    "src": "Luma",
    "url": "https://luma.com/5lxd2x7o",
    "access": "approval",
-   "why": "No date on the page last run; page could not be opened again this run.",
+   "why": "Page re-opened: Third Wave Coffee, Lokhandwala, one spot left; still no date.",
    "conf": {
     "date": 0,
     "place": 97,
@@ -606,7 +734,7 @@
    "src": "Luma",
    "url": "https://luma.com/c6v1qjx0",
    "access": "approval",
-   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; 5 spots left, address only after approval.",
+   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; one spot left, address only after approval.",
    "conf": {
     "date": 70,
     "place": 30,
@@ -707,21 +835,6 @@
    }
   },
   {
-   "qid": "q-swift-assemble",
-   "title": "Swift Mumbai Assemble!",
-   "cat": "Tech",
-   "area": "BKC",
-   "src": "Luma",
-   "url": "https://luma.com/ryn305b9",
-   "access": "approval",
-   "why": "Listed on Luma Mumbai at ATLAS SkillTech University, BKC; date could not be read.",
-   "conf": {
-    "date": 0,
-    "place": 85,
-    "category": 75
-   }
-  },
-  {
    "qid": "q-gemma4",
    "title": "Hands-on Workshop: On-device AI with Gemma 4",
    "cat": "AI",
@@ -752,61 +865,161 @@
    }
   },
   {
-   "qid": "q-monad-blitz",
-   "title": "Monad Blitz Mumbai: Devcon Edition",
-   "cat": "Tech",
-   "area": "Sag Baug",
+   "qid": "q-agri-ai",
+   "title": "Agriculture AI on WhatsApp",
+   "cat": "AI",
+   "area": "BKC",
    "src": "Luma",
-   "url": "https://luma.com/qk93a446",
+   "url": "https://luma.com/uorbqle5",
    "access": "approval",
-   "why": "Developer blitz listed on Luma Mumbai; date not visible and page not opened.",
+   "why": "No date on the page; 10:00 to about 13:30 at the Meta office, ONE BKC (KissanAI with Meta).",
    "conf": {
     "date": 0,
-    "place": 60,
+    "place": 95,
     "category": 80
+   }
+  },
+  {
+   "qid": "q-arbiverse",
+   "title": "ArbiVerse Mumbai",
+   "cat": "Tech",
+   "area": "Vile Parle East",
+   "src": "Luma",
+   "url": "https://luma.com/arbiverse-mumbai",
+   "access": "approval",
+   "why": "Page says only \"during Devcon week\"; venue shown after approval.",
+   "conf": {
+    "date": 20,
+    "place": 30,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-cloud-days",
+   "title": "Cloud Community Days 2026 Mumbai",
+   "cat": "Tech",
+   "area": "Andheri East",
+   "src": "Luma",
+   "url": "https://luma.com/tsbs46dq",
+   "access": "approval",
+   "why": "No date on the page; at The LaLiT Mumbai, GDG Cloud Mumbai.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-odyssey",
+   "title": "Odyssey Mumbai '26",
+   "cat": "Startup",
+   "area": "Vile Parle East",
+   "src": "Luma",
+   "url": "https://luma.com/m4yby11t",
+   "access": "approval",
+   "why": "No date on the page; invite-only evening from 4:30 PM at Hotel Sahara Star.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 60
+   }
+  },
+  {
+   "qid": "q-ai-pm",
+   "title": "AI Product Management Meetup (ProductTank Mumbai)",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/gi3oi2yc",
+   "access": "approval",
+   "why": "No date on the page; 10:45 to 13:00 panel and networking, address after approval.",
+   "conf": {
+    "date": 0,
+    "place": 20,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-idea-to-product",
+   "title": "From Idea to Product: Product Development Workshop",
+   "cat": "Startup",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/vvu0ojdd",
+   "access": "open",
+   "why": "No date or time on the page; at ATLAS SkillTech University, BKC.",
+   "conf": {
+    "date": 0,
+    "place": 90,
+    "category": 70
+   }
+  },
+  {
+   "qid": "q-llm-inference",
+   "title": "Inside LLM Inference: From Model Weights to Tokens at Scale",
+   "cat": "AI",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/fi0qgdzs",
+   "access": "approval",
+   "why": "No date or time on the page; at ATLAS SkillTech University, BKC.",
+   "conf": {
+    "date": 0,
+    "place": 90,
+    "category": 90
    }
   }
  ],
  "RUNS": [
   {
-   "src": "Luma (Mumbai + discover AI/Tech/Arts)",
-   "what": "listing and event pages",
-   "found": 0,
+   "src": "Luma Mumbai",
+   "what": "luma.com/mumbai listing and 12 event pages",
+   "found": 12,
+   "pub": 2,
+   "review": 3,
+   "dup": 0,
+   "skip": 0,
+   "note": "Listing has no dates; opened each page. Swift Mumbai Assemble and Monad Blitz now have confirmed dates; Agriculture AI, ArbiVerse and Cloud Community Days queued as undated."
+  },
+  {
+   "src": "Luma discover (AI)",
+   "what": "discover/mumbai/ai and 12 event pages",
+   "found": 17,
+   "pub": 3,
+   "review": 4,
+   "dup": 9,
+   "skip": 1,
+   "note": "Published GrowSphere, Buildup over Coffee and AI Leadership Playbook; queued four undated; Amateur Hour skipped as sold out. Tech and Arts discover pages were not opened."
+  },
+  {
+   "src": "Meetup",
+   "what": "Mumbai Meets AI",
+   "found": 2,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Not reachable this run: fetch permission was not granted for luma.com pages."
-  },
-  {
-   "src": "Meetup / AllEvents / hiddenevents",
-   "what": "Mumbai Meets AI, AllEvents tech and startup",
-   "found": 0,
-   "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Not reachable this run (fetch permission not granted). Mumbai Meets AI 06 (10 Oct) is already past."
-  },
-  {
-   "src": "StartupGrants India",
-   "what": "Forward Deploy Enterprise AI Summit, StartupLive Mumbai, two older listings",
-   "found": 4,
-   "pub": 0,
-   "review": 0,
-   "dup": 2,
    "skip": 2,
-   "note": "Forward Deploy (26 Oct, Jio World Convention Centre) and StartupLive Mumbai (20-21 Nov) match existing entries; no cancellation shown. Two other listings are from March/April 2026 or outside Mumbai, skipped."
+   "note": "No upcoming events; the group lists Mumbai Meets AI 6 (10 Oct) and 5 as past."
+  },
+  {
+   "src": "AllEvents",
+   "what": "allevents.in/mumbai/technology and 3 event pages",
+   "found": 15,
+   "pub": 1,
+   "review": 0,
+   "dup": 3,
+   "skip": 11,
+   "note": "Added Unchained Summit India; AICD Mumbai moved from 7 Nov to 21 Nov; HealthTech mixer is now 16:00 to 19:00 at ₹750. Finance, packaging and concert listings skipped as unrelated. hiddenevents not opened."
   },
   {
    "src": "Existing events",
    "what": "re-check of published list",
-   "found": 14,
+   "found": 13,
    "pub": 13,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Removed IBM Think Mumbai (ended 13 Oct). Others kept as-is; most pages could not be opened this run."
+   "note": "No cancellations seen. Others kept as-is; their own pages were not re-opened this run."
   }
  ],
  "COMMUNITIES": [
@@ -920,6 +1133,39 @@
    ],
    "area": "Andheri East",
    "url": "https://echai.ventures/mumbai"
+  },
+  {
+   "id": "growsphere",
+   "name": "GrowSphere Community",
+   "org": "GrowSphere Community",
+   "focus": "Runs community sessions on AI and security topics, such as prompt injection and MCP security.",
+   "cats": [
+    "Tech"
+   ],
+   "area": "Kurla West",
+   "url": "https://luma.com/ign60602"
+  },
+  {
+   "id": "operators-collective",
+   "name": "The Operators Collective",
+   "org": "The Operators Collective",
+   "focus": "Hosts curated in-person sessions for product leaders and operators.",
+   "cats": [
+    "AI"
+   ],
+   "area": "Andheri East",
+   "url": "https://luma.com/6igqwui2"
+  },
+  {
+   "id": "powerskills",
+   "name": "PowerSkills Community Meetup",
+   "org": "PowerSkills Community Meetup",
+   "focus": "Presents small community meetups for builders and founders.",
+   "cats": [
+    "Startup"
+   ],
+   "area": "Bandra West",
+   "url": "https://luma.com/jfc8y4xq"
   }
  ]
 }
