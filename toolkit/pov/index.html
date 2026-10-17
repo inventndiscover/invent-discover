@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POV statement builder · Invent + Discover</title>
+<meta name="description" content="Write a design-thinking Point of View statement in four short steps: who, what they need, and the insight behind it. Save it, or turn it into How Might We questions. Free, in your browser.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/pov/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="POV statement builder · Invent + Discover">
+<meta property="og:description" content="Who, what they need, and why. Build a Point of View statement in four short steps. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/pov/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"POV statement builder","url":"https://inventndiscover.com/toolkit/pov/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same colour tokens and type scale as How Might We, so the tools feel
+  like one family. Each part of the POV has its own colour:
+    WHO = violet    NEED = blue    INSIGHT = pink
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --blue: #3B82F6;
+    --pink: #EC4899;
+    --who: #A78BFA;  --need: #60A5FA;  --why: #F472B6;   /* lighter versions, easier to read as text */
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0; color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 64px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 36px 0 18px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill {
+    display: inline-block; margin: 16px 0 10px; padding: 5px 12px;
+    border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD;
+    box-shadow: 0 0 18px rgba(139,92,246,0.25);
+  }
+  h1 {
+    margin: 0; font-size: clamp(38px, 7vw, 60px); line-height: 1;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25);
+  }
+  .lede { color: var(--muted); font-size: 17px; line-height: 1.5; margin: 12px 0 0; }
+
+  /* ---------- The sentence that builds itself ----------
+     Type scale, biggest to smallest:
+     page title 60 → live sentence 24 → step title 30 (inside card) → input 19 → body 15 → labels 12 */
+  .sentence {
+    margin: 22px 0 0; padding: 18px 20px; border-radius: var(--radius);
+    border: 1px solid var(--line); background: rgba(0,0,0,0.3);
+    font-size: 22px; line-height: 1.5; font-weight: 500; color: var(--muted);
+  }
+  .sentence .label { display: block; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+  .slot { border-bottom: 2px dashed currentColor; padding: 0 2px; transition: color 0.3s, text-shadow 0.3s; }
+  .slot.empty { opacity: 0.55; }
+  .slot.who  { color: var(--who); }
+  .slot.need { color: var(--need); }
+  .slot.why  { color: var(--why); }
+  .slot.filled { border-bottom-style: solid; text-shadow: 0 0 18px currentColor; }
+  .slot.now { opacity: 1; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { text-shadow: 0 0 20px currentColor; } }
+  @media (prefers-reduced-motion: reduce) { .slot.now { animation: none; } }
+
+  /* ---------- Step tracker: 1 · 2 · 3 · 4 ---------- */
+  .track { display: flex; gap: 8px; margin: 18px 0 14px; padding: 0; list-style: none; }
+  .track li {
+    flex: 1; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted);
+    padding-top: 10px; border-top: 3px solid rgba(255,255,255,0.08); transition: border-color 0.3s, color 0.3s;
+  }
+  .track li b { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; border: 1px solid var(--line); flex: none; }
+  .track li.done { border-top-color: rgba(139,92,246,0.6); }
+  .track li.now { border-top-color: var(--pink); color: var(--text); }
+  .track li.now b { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 12px rgba(236,72,153,0.5); }
+
+  /* ---------- Cards, inputs, buttons ---------- */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; backdrop-filter: blur(6px); }
+  .stage h2 { margin: 0 0 8px; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; }
+  .stage h2 em { font-style: normal; color: var(--c); text-shadow: 0 0 18px var(--c); }
+  .stage .sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; line-height: 1.5; }
+  .field { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .field .fixed { color: var(--muted); font-size: 19px; white-space: nowrap; }
+  .field input, .field textarea { flex: 1; min-width: 220px; }
+  input[type=text], textarea {
+    width: 100%; resize: none; line-height: 1.4; background: rgba(0,0,0,0.35); color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px; padding: 16px; font: inherit; font-size: 19px;
+  }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: var(--c, var(--violet)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, #8B5CF6) 30%, transparent); }
+
+  /* Good vs weak example, side by side */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  @media (max-width: 560px) { .compare { grid-template-columns: 1fr; } }
+  .compare div { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14.5px; line-height: 1.45; }
+  .compare small { display: block; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; font-weight: 500; }
+  .compare .weak small { color: var(--muted); }
+  .compare .weak { color: var(--muted); }
+  .compare .good small { color: var(--c); }
+  .compare .good { border-color: color-mix(in srgb, var(--c) 45%, transparent); }
+
+  /* A gentle nudge from the rules (never blocks you) */
+  .nudge { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; font-size: 14px; line-height: 1.45;
+           color: #FDE68A; background: rgba(250,204,21,0.07); border: 1px solid rgba(250,204,21,0.25); }
+  .nudge.ok { color: #86EFAC; background: rgba(34,197,94,0.07); border-color: rgba(34,197,94,0.25); }
+
+  button, .btn {
+    font: inherit; font-size: 15px; color: var(--text); cursor: pointer; text-decoration: none;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  button:hover, .btn:hover { border-color: rgba(255,255,255,0.25); }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; }
+  .link { background: none; border: none; color: #C4B5FD; padding: 4px 0; font-size: 14px; }
+  .link:hover { text-decoration: underline; }
+  .nav { display: flex; align-items: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .nav .grow { flex: 1; }
+
+  .examples { margin-top: 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .examples button { display: block; text-align: left; margin-top: 6px; padding: 9px 12px; font-size: 14px; color: var(--muted); width: 100%; justify-content: flex-start; letter-spacing: 0; text-transform: none; }
+  .examples button:hover { color: var(--text); }
+
+  .who-c  { --c: var(--who); }
+  .need-c { --c: var(--need); }
+  .why-c  { --c: var(--why); }
+
+  /* ---------- Step 4: the finished POV ---------- */
+  .final { font-size: 26px; line-height: 1.45; font-weight: 500; margin: 6px 0 4px; }
+  .final .who  { color: var(--who);  text-shadow: 0 0 18px rgba(167,139,250,0.5); }
+  .final .need { color: var(--need); text-shadow: 0 0 18px rgba(96,165,250,0.5); }
+  .final .why  { color: var(--why);  text-shadow: 0 0 18px rgba(244,114,182,0.5); }
+  .final .glue { color: var(--muted); }
+  .checks { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+  .checks li::before { content: "✓ "; color: #86EFAC; }
+  .checks li.warn::before { content: "! "; color: #FDE68A; font-weight: 700; }
+  .next-step { margin-top: 20px; padding: 16px; border-radius: 12px; border: 1px solid rgba(236,72,153,0.45); box-shadow: 0 0 24px rgba(236,72,153,0.15); }
+  .next-step p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+  .next-step b { color: var(--text); }
+
+  /* ---------- About + footer ---------- */
+  details.about { margin-top: 28px; }
+  details.about summary { cursor: pointer; font-weight: 500; }
+  details.about p { color: var(--muted); line-height: 1.6; margin: 12px 0 0; }
+  details.about b { color: var(--text); }
+  details.about a, footer .method a { color: #C4B5FD; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  footer a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  footer a:hover { color: var(--text); }
+  footer .method { margin-top: 10px; }
+  footer .method a { margin: 0; display: inline; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  @media (max-width: 560px) {
+    .track li span { display: none; }
+    .nav .primary { flex: 1; }
+    .sentence { font-size: 19px; }
+    .final { font-size: 22px; }
+  }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  Four "stages", only one visible at a time (same idea as How Might We):
+    #stage1 WHO  →  #stage2 NEED  →  #stage3 INSIGHT  →  #stage4 YOUR POV
+  Above them, #sentence shows the POV filling in as you type.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · POV STATEMENT</span>
+    <h1>POV Statement</h1>
+    <p class="lede">Say clearly who you're designing for, what they need, and why it matters. Four short steps.</p>
+  </header>
+
+  <!-- The sentence builds itself as you type -->
+  <p class="sentence" id="sentence" aria-live="polite">
+    <span class="label">Your point of view</span>
+    <span class="slot who empty" id="pWho">[ who ]</span> needs a way to
+    <span class="slot need empty" id="pNeed">[ do something ]</span> because
+    <span class="slot why empty" id="pWhy">[ the surprising reason ]</span>.
+  </p>
+
+  <ol class="track" id="track">
+    <li><b>1</b><span>Who</span></li>
+    <li><b>2</b><span>Need</span></li>
+    <li><b>3</b><span>Insight</span></li>
+    <li><b>4</b><span>Your POV</span></li>
+  </ol>
+
+  <!-- STEP 1 · WHO -->
+  <section class="card stage who-c" id="stage1">
+    <h2>Who are you designing <em>for</em>?</h2>
+    <p class="sub">One specific person or group. Add a detail that makes them real: age, situation, place.</p>
+    <label for="who" class="sr">Who</label>
+    <input type="text" id="who" maxlength="120" placeholder="a first-time commuter on a crowded Mumbai local">
+    <div class="compare">
+      <div class="weak"><small>Too broad</small>people, users, commuters</div>
+      <div class="good"><small>Specific</small>a first-time commuter carrying a heavy bag</div>
+    </div>
+    <p class="nudge" id="nWho" hidden></p>
+    <div class="nav"><span class="grow"></span><button class="primary" data-next="2">Next: their need →</button></div>
+    <div class="examples" id="examples">Or start from an example</div>
+  </section>
+
+  <!-- STEP 2 · NEED -->
+  <section class="card stage need-c" id="stage2" hidden>
+    <h2>What do they <em>need</em> to do?</h2>
+    <p class="sub">Write it as an action, a verb. Not a product. You're describing the goal, not your idea for it.</p>
+    <div class="field"><span class="fixed">needs a way to</span>
+      <label for="need" class="sr">Need</label>
+      <input type="text" id="need" maxlength="140" placeholder="know their station is coming before the doors open"></div>
+    <div class="compare">
+      <div class="weak"><small>A solution, not a need</small>an app that alerts them</div>
+      <div class="good"><small>A need</small>know when to get off, without looking up</div>
+    </div>
+    <p class="nudge" id="nNeed" hidden></p>
+    <div class="nav"><button data-next="1">← Back</button><span class="grow"></span><button class="primary" data-next="3">Next: the insight →</button></div>
+  </section>
+
+  <!-- STEP 3 · INSIGHT -->
+  <section class="card stage why-c" id="stage3" hidden>
+    <h2>Why? What's the <em>insight</em>?</h2>
+    <p class="sub">The reason behind the need, ideally something you noticed or heard that surprised you. This is what makes the problem worth solving.</p>
+    <div class="field"><span class="fixed">because</span>
+      <label for="why" class="sr">Insight</label>
+      <textarea id="why" rows="2" maxlength="200" placeholder="they can't see the signboards through the crowd, and announcements are hard to hear"></textarea></div>
+    <div class="compare">
+      <div class="weak"><small>Obvious</small>it's important to them</div>
+      <div class="good"><small>An insight</small>the crowd hides every signboard, so they count stops on their fingers</div>
+    </div>
+    <p class="nudge" id="nWhy" hidden></p>
+    <div class="nav"><button data-next="2">← Back</button><span class="grow"></span><button class="primary" data-next="4">See my POV →</button></div>
+  </section>
+
+  <!-- STEP 4 · YOUR POV -->
+  <section class="card stage" id="stage4" hidden>
+    <h2>Your point of view</h2>
+    <p class="final" id="final"></p>
+    <ul class="checks" id="checks"></ul>
+    <div class="nav">
+      <button data-next="3">← Edit</button>
+      <span class="grow"></span>
+      <button id="copyBtn">Copy text</button>
+      <button id="saveBtn">Save as image</button>
+    </div>
+    <div class="next-step">
+      <p><b>Next step:</b> turn this into questions you can design for. How Might We opens with your <b>who</b> and <b>need</b> already filled in.</p>
+      <a class="btn primary" id="toHmw" href="/toolkit/how-might-we/">Turn this into How Might We →</a>
+    </div>
+    <div class="nav" style="margin-top:10px"><span class="grow"></span><button class="link" id="restartBtn">Start a new POV</button></div>
+  </section>
+
+  <details class="card about" id="where">
+    <summary>Where the POV statement comes from</summary>
+    <p>The <b>Point of View (POV)</b> statement belongs to the <b>Define</b> stage of design thinking, between understanding people (Empathize) and coming up with ideas (Ideate). This fill-in-the-blank version, <i>[user] needs a way to [need] because [insight]</i>, is the <b>POV Madlib</b> taught by the <b>Stanford d.school</b> (Hasso Plattner Institute of Design) in its design thinking guides.</p>
+    <p>A good POV is about <b>one specific person</b>, describes a <b>need as an action</b> rather than a product, and rests on an <b>insight</b>: something you learned that others might miss. From a good POV, “How might we…” questions almost write themselves, which is why this tool hands straight over to <a href="/toolkit/how-might-we/">How Might We</a>, and that hands over to <a href="/toolkit/crazy-8s/">Crazy 8s</a>.</p>
+    <p>This page is made by Invent + Discover. The hints come from simple word rules in your browser, no AI, and nothing you type is uploaded.</p>
+  </details>
+
+  <footer>
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div class="method">Method: the <b>POV Madlib</b> (Point of View statement) from the <b>Stanford d.school</b>, Hasso Plattner Institute of Design, part of the design thinking Define stage. Page and hints by Invent + Discover.</div>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+const $ = (sel) => document.querySelector(sel);
+
+// ---------- 3a. Examples ----------
+const EXAMPLES = [
+  { who: 'a first-time commuter on a crowded Mumbai local', need: 'know their station is coming before the doors open',
+    why: "they can't see the signboards through the crowd, and announcements are hard to hear" },
+  { who: 'a college student living away from home for the first time', need: 'eat well on a tight budget',
+    why: 'cooking feels like a big project after a long day of classes, so they skip meals' },
+  { who: 'a small shop owner during the Diwali rush', need: 'know which items are about to run out',
+    why: 'the rush leaves no time to check shelves, and lost sales only show up days later' }
+];
+
+// ---------- 3b. Tidying what people type ----------
+// People often type the glue words themselves. We strip them so the sentence
+// doesn't say them twice. Examples:
+//   need: "needs a way to know when to get off"  → "know when to get off"
+//   why:  "because the crowd hides the signs."    → "the crowd hides the signs"
+//   who:  "Commuters need"                        → "Commuters"
+function tidy(text, kind) {
+  let t = text.trim().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+  if (kind === 'who')  t = t.replace(/\s+(needs?|wants?)(\s+a\s+way)?(\s+to)?$/i, '');
+  if (kind === 'need') t = t.replace(/^(needs?|wants?)\s+/i, '').replace(/^a\s+way\s+to\s+/i, '').replace(/^to\s+/i, '');
+  if (kind === 'why')  t = t.replace(/^(because|as|since)\s+/i, '');
+  return t;
+}
+const cap = (s) => s ? s[0].toUpperCase() + s.slice(1) : s;
+const get = (kind) => tidy($('#' + kind).value, kind);
+
+// ---------- 3c. The gentle rules ----------
+// Each check looks for simple word patterns and returns a tip, or '' if it looks fine.
+// They NEVER stop you; they just nudge. Example:
+//   checkNeed('an app that reminds them')  → tip, because it starts with "an" and contains "app"
+//   checkNeed('know when to get off')      → '' (fine: starts with a verb)
+const VAGUE = ['people', 'users', 'user', 'everyone', 'everybody', 'someone', 'customers', 'customer', 'humans', 'person', 'public', 'consumers'];
+const SOLUTION = ['app', 'apps', 'website', 'site', 'platform', 'button', 'device', 'software', 'dashboard', 'chatbot', 'bot', 'ai',
+                  'portal', 'feature', 'gadget', 'screen', 'notification', 'notifications', 'sensor', 'tool', 'system', 'kiosk', 'qr'];
+const words = (s) => s.toLowerCase().match(/[a-z']+/g) || [];
+
+function checkWho(t) {
+  const w = words(t);
+  if (!w.length) return '';
+  if (w.length <= 2 && w.some(x => VAGUE.includes(x)))
+    return 'That could be anyone. Who exactly? Try adding a detail: “a retired teacher who…”, “a first-year student in…”.';
+  if (w.length === 1)
+    return 'Can you add one detail? A situation or place makes it much easier to design for.';
+  return '';
+}
+function checkNeed(t) {
+  const w = words(t);
+  if (!w.length) return '';
+  const hit = w.find(x => SOLUTION.includes(x));
+  if (hit || ['a', 'an', 'the'].includes(w[0]))
+    return `This sounds like a solution${hit ? ` (“${hit}”)` : ''}. What is the person actually trying to do? Start with a verb, e.g. “know…”, “find…”, “feel…”.`;
+  return '';
+}
+function checkWhy(t, need) {
+  const w = words(t);
+  if (!w.length) return '';
+  if (w.length < 5) return 'Say a little more. What did you notice that others might miss?';
+  // If most of the insight's longer words already appear in the need, it's just repeating it.
+  const needW = new Set(words(need).filter(x => x.length > 3));
+  const long = w.filter(x => x.length > 3);
+  if (long.length && long.filter(x => needW.has(x)).length / long.length > 0.6)
+    return 'This mostly repeats the need. What is the reason behind it?';
+  return '';
+}
+
+function showNudge(id, tip) {
+  const el = $(id);
+  el.hidden = !tip;
+  el.textContent = tip;
+}
+
+// ---------- 3d. The live sentence ----------
+// Runs on every key press. Empty parts show a [ placeholder ]; filled parts glow.
+// The part you are working on gently pulses, so you can see where your words will go.
+let step = 1;
+function updateSentence() {
+  const parts = [['#pWho', get('who'), '[ who ]', 1], ['#pNeed', get('need'), '[ do something ]', 2], ['#pWhy', get('why'), '[ the surprising reason ]', 3]];
+  for (const [id, val, placeholder, s] of parts) {
+    const el = $(id);
+    el.textContent = val ? (s === 1 ? cap(val) : val) : placeholder;
+    el.classList.toggle('empty', !val);
+    el.classList.toggle('filled', !!val);
+    el.classList.toggle('now', s === step);
+  }
+}
+['who', 'need', 'why'].forEach(k => $('#' + k).addEventListener('input', () => {
+  updateSentence();
+  // Clear an old tip as soon as they start fixing it
+  showNudge({ who: '#nWho', need: '#nNeed', why: '#nWhy' }[k], '');
+}));
+
+// ---------- 3e. Moving between steps ----------
+// goTo(3) shows stage 3, hides the others, and colours the tracker.
+// Before leaving a step we run its check once. If there's a tip, we show it
+// and stay put the FIRST time; pressing Next again goes on anyway.
+const warned = {};
+var booted;   // set at the very end, once the page is ready
+function goTo(n) {
+  const leaving = step;
+  if (n > leaving && leaving <= 3) {
+    const kind = ['who', 'need', 'why'][leaving - 1];
+    const val = get(kind);
+    if (!val) { $('#' + kind).focus(); return; }               // a step can't be empty
+    const tip = kind === 'who' ? checkWho(val) : kind === 'need' ? checkNeed(val) : checkWhy(val, get('need'));
+    const key = kind + ':' + val;
+    if (tip && !warned[key]) {                                  // first time: show the tip, stay here
+      warned[key] = true;
+      showNudge('#n' + cap(kind === 'why' ? 'why' : kind), tip + ' Or press Next again to keep it.');
+      return;
+    }
+  }
+  step = n;
+  [1, 2, 3, 4].forEach(k => { $('#stage' + k).hidden = k !== n; });
+  document.querySelectorAll('#track li').forEach((li, i) => {
+    li.classList.toggle('done', i + 1 < n);
+    li.classList.toggle('now', i + 1 === n);
+  });
+  updateSentence();
+  $('#sentence').hidden = n === 4;          // step 4 shows the full sentence itself, so hide the live one
+  if (n === 4) showFinal();
+  else if (booted) setTimeout(() => $('#' + ['who', 'need', 'why'][n - 1]).focus(), 50);   // not on first load: it would pop up the phone keyboard
+}
+document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => goTo(Number(b.dataset.next))));
+['who', 'need', 'why'].forEach((k, i) => $('#' + k).addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); goTo(i + 2); } }));
+
+// ---------- 3f. Step 4: the finished POV ----------
+function povText() {
+  return `${cap(get('who'))} needs a way to ${get('need')} because ${get('why')}.`;
+}
+function showFinal() {
+  const f = $('#final');
+  f.innerHTML = '<span class="who"></span> <span class="glue">needs a way to</span> <span class="need"></span> <span class="glue">because</span> <span class="why"></span><span class="glue">.</span>';
+  f.querySelector('.who').textContent = cap(get('who'));      // textContent: always shown as plain text
+  f.querySelector('.need').textContent = get('need');
+  f.querySelector('.why').textContent = get('why');
+
+  // A quick checklist, using the same three rules
+  const list = [
+    [checkWho(get('who')), 'A specific person, not “everyone”'],
+    [checkNeed(get('need')), 'The need is an action, not a product'],
+    [checkWhy(get('why'), get('need')), 'There is a real reason behind it']
+  ];
+  $('#checks').innerHTML = '';
+  for (const [tip, okText] of list) {
+    const li = document.createElement('li');
+    li.className = tip ? 'warn' : '';
+    li.textContent = tip ? tip : okText;
+    $('#checks').appendChild(li);
+  }
+  $('#toHmw').href = hmwLink();
+}
+
+// ---------- 3g. The link to How Might We ----------
+// Same idea as How Might We → Crazy 8s: the information rides in the web address.
+//   /toolkit/how-might-we/?who=a%20first-time%20commuter…&need=know%20their%20station…
+// URLSearchParams builds the "?who=…&need=…" part and encodes spaces and symbols safely.
+// How Might We reads both values and fills its blanks, skipping its own step 1.
+function hmwLink() {
+  const q = new URLSearchParams({ who: get('who'), need: get('need') });
+  return '/toolkit/how-might-we/?' + q.toString();
+}
+
+$('#copyBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(povText()); $('#copyBtn').textContent = 'Copied ✓'; }
+  catch (e) { prompt('Copy your POV:', povText()); }
+  setTimeout(() => { $('#copyBtn').textContent = 'Copy text'; }, 1600);
+});
+$('#restartBtn').addEventListener('click', () => {
+  if (!confirm('Clear this POV and start a new one?')) return;
+  ['who', 'need', 'why'].forEach(k => { $('#' + k).value = ''; });
+  goTo(1);
+});
+
+// ---------- 3h. Save as one neon image ----------
+// The sentence has three colours, so we can't wrap it as one string.
+// Instead we split it into WORDS, each remembering its colour, and place them
+// one by one, starting a new line when the next word won't fit.
+// Example: "Commuters"(violet) "needs"(grey) "a"(grey) "way"(grey) "to"(grey) "know"(blue)…
+async function saveImage() {
+  await document.fonts.ready;
+  const W = 1600, PAD = 110, SIZE = 58, LINE = 82;
+  const C = { who: '#A78BFA', need: '#60A5FA', why: '#F472B6', glue: '#8A8FA3' };
+  const tokens = [];
+  const add = (text, color) => text.split(' ').filter(Boolean).forEach(w => tokens.push({ w, color }));
+  add(cap(get('who')), C.who); add('needs a way to', C.glue); add(get('need'), C.need);
+  add('because', C.glue); add(get('why') + '.', C.why);
+
+  const out = document.createElement('canvas');
+  const ctx = out.getContext('2d');
+  ctx.font = `500 ${SIZE}px "Geist", sans-serif`;
+  const space = ctx.measureText(' ').width, maxW = W - 2 * PAD;
+  // Work out where each word goes
+  let x = 0, line = 0;
+  for (const t of tokens) {
+    const w = ctx.measureText(t.w).width;
+    if (x > 0 && x + w > maxW) { x = 0; line++; }
+    t.x = x; t.line = line; x += w + space;
+  }
+  const H = PAD + 190 + (line + 1) * LINE + 150 + PAD;
+  out.width = W; out.height = H;
+
+  // Background, faint grid, glows (same recipe as How Might We)
+  ctx.fillStyle = '#05060A'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.045)'; ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx + 0.5, 0); ctx.lineTo(gx + 0.5, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy + 0.5); ctx.lineTo(W, gy + 0.5); ctx.stroke(); }
+  const glow = (gx, gy, r, rgba) => {
+    const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+    g.addColorStop(0, rgba); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  };
+  glow(160, 0, 700, 'rgba(139,92,246,0.30)');
+  glow(W - 80, 160, 600, 'rgba(236,72,153,0.20)');
+  glow(W / 2, H + 100, 800, 'rgba(59,130,246,0.20)');
+
+  // Label and title
+  ctx.fillStyle = '#C4B5FD'; ctx.font = '500 26px "Geist", sans-serif';
+  ctx.fillText('POINT OF VIEW', PAD, PAD + 20);
+  ctx.fillStyle = '#EDEEF5'; ctx.font = '700 64px "Geist", sans-serif';
+  ctx.shadowColor = 'rgba(139,92,246,0.9)'; ctx.shadowBlur = 36;
+  ctx.fillText('Who, what, and why', PAD, PAD + 100);
+  ctx.shadowBlur = 0;
+
+  // The sentence, word by word; coloured parts glow, grey glue words don't
+  const top = PAD + 210;
+  ctx.font = `500 ${SIZE}px "Geist", sans-serif`;
+  for (const t of tokens) {
+    ctx.fillStyle = t.color;
+    ctx.shadowColor = t.color; ctx.shadowBlur = t.color === C.glue ? 0 : 22;
+    ctx.fillText(t.w, PAD + t.x, top + t.line * LINE);
+  }
+  ctx.shadowBlur = 0;
+
+  // Colour key and footer
+  let kx = PAD; const ky = H - PAD - 50;
+  ctx.font = '500 24px "Geist", sans-serif';
+  for (const [label, col] of [['WHO', C.who], ['NEED', C.need], ['INSIGHT', C.why]]) {
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(kx + 8, ky - 8, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillText(label, kx + 26, ky); kx += ctx.measureText(label).width + 70;
+  }
+  ctx.fillStyle = '#8A8FA3'; ctx.font = '400 28px "Geist", sans-serif';
+  ctx.fillText('Made with the POV Statement tool · inventndiscover.com', PAD, H - PAD + 10);
+
+  const a = document.createElement('a');
+  a.download = 'pov-statement.png';
+  a.href = out.toDataURL('image/png');
+  a.click();
+}
+$('#saveBtn').addEventListener('click', saveImage);
+
+// ---------- 3i. Start ----------
+for (const ex of EXAMPLES) {
+  const b = document.createElement('button');
+  b.textContent = `${cap(ex.who)} needs a way to ${ex.need}…`;
+  b.addEventListener('click', () => {
+    $('#who').value = ex.who; $('#need').value = ex.need; $('#why').value = ex.why;
+    step = 3; goTo(4);                       // examples jump straight to the finished POV
+  });
+  $('#examples').appendChild(b);
+}
+booted = false;
+goTo(1);
+booted = true;
+</script>
+</body>
+</html>

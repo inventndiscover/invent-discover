@@ -750,6 +750,8 @@ const TOOLS=[
  {id:"how-might-we",added:"2026-10-16",name:"How Might We",line:"Turn a problem into “How might we…” questions in three steps, keep the best, and sketch them in Crazy 8s.",url:"/toolkit/how-might-we/",
   credit:"Design thinking (Min Basadur; IDEO), as taught in Google's Design Sprint Kit",time:"5–10 minutes · nothing uploaded",tag:"Problem framing",visual:"funnel",
   letters:["+","−","⇄","◐","?"],colors:["#A58BFF","#EC4899","#3D9BFF","#2FD1C5","#FFB23F"],cta:"Start framing"},
+ {id:"pov",added:"2026-10-19",name:"POV Statement",line:"Say who you're designing for, what they need and why, in four short steps. Then turn it into How Might We questions.",url:"/toolkit/pov/",
+  credit:"The POV Madlib, Stanford d.school (Hasso Plattner Institute of Design)",time:"5 minutes · nothing uploaded",tag:"Problem framing",visual:"madlib",cta:"Write my POV"},
  {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",shape:"diamond",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],
   colors:["#FFB23F","#A58BFF","#2FD1C5","#3D9BFF"],hub:"levels"},
@@ -765,7 +767,8 @@ function viewTools(){
   </div></div>
   <div class="wrap" style="padding-top:28px">
     ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
-      ${t.visual==="funnel"?`<div class="tool-funnel" aria-hidden="true"><span class="fn-in">Your problem</span><i class="fn-ln"></i>
+      ${t.visual==="madlib"?`<div class="tool-madlib" aria-hidden="true">
+        <p><b style="--c:#A58BFF;--i:0;--w:64px">who</b>needs a way to</p><p><b style="--c:#3D9BFF;--i:1;--w:84px">need</b>because</p><p><b style="--c:#FF7BB8;--i:2;--w:112px">insight</b></p></div>`:t.visual==="funnel"?`<div class="tool-funnel" aria-hidden="true"><span class="fn-in">Your problem</span><i class="fn-ln"></i>
         <div class="fn-row">${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--i:${i}">${l}</b>`).join("")}</div><em class="fn-cap">5 lenses</em><i class="fn-ln"></i>
         <span class="fn-out">How might we…?</span></div>`:t.visual==="cube"?`<div class="tool-cube" aria-hidden="true"><div class="cube">${["f","b","l","r","t","d"].map(f=>`<span class="${f}"></span>`).join("")}</div><em>.glb → .js</em></div>`:t.visual==="grid"?`<div class="tool-grid" aria-hidden="true">
         <span class="tq" style="--c:#A58BFF">Keep<br>satisfied</span><span class="tq r" style="--c:#FF7B8A">Manage<br>closely</span>
