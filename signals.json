@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-10-16T07:18:51+05:30",
+ "REFRESHED": "2026-10-17T05:25:00+05:30",
  "SIGNALS": [
+  {
+   "id": "2110893784422908225",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2110893784422908225",
+   "posted": "2026-10-16T06:11:11+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Artificial Analysis says Muse Spark Open scores 39 on its Intelligence Index, making it the top US open-weights model it has measured."
+  },
+  {
+   "id": "2110866531932316011",
+   "handle": "antigravity",
+   "name": "Google Antigravity",
+   "url": "https://x.com/antigravity/status/2110866531932316011",
+   "posted": "2026-10-16T04:22:53+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google Antigravity is rolling out Gemini 4 Argon to paid Google AI Pro subscribers, with a separate weekly-only Argon quota for Pro."
+  },
   {
    "id": "2110797830361436604",
    "handle": "OpenAI",
@@ -10,6 +30,16 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "OpenAI says GPT-Live-1.1 improves voices and accents in ChatGPT Voice, Codex and dots, adding French, German, Hindi, Mexican Spanish, Korean and Japanese. API access is coming soon."
+  },
+  {
+   "id": "2110779754274292212",
+   "handle": "AIatMeta",
+   "name": "AI at Meta",
+   "url": "https://x.com/AIatMeta/status/2110779754274292212",
+   "posted": "2026-10-15T22:38:04+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Meta released Muse Spark Open, an open-weight model with 816B total and 42B active parameters and a 1M-token context, built for coding and agentic work."
   },
   {
    "id": "2110749846231814251",
@@ -32,6 +62,16 @@
    "summary": "Reported: CERN and Mistral AI signed a statement of intent on October 15 for a long-term partnership to build a Large Physics Model for scientific discovery."
   },
   {
+   "id": "2110556285087232278",
+   "handle": "business",
+   "name": "Bloomberg",
+   "url": "https://x.com/business/status/2110556285087232278",
+   "posted": "2026-10-15T07:50:05+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Bloomberg reports Anthropic told prospective investors its third-quarter revenue reached $16.8 billion, as it moves ahead with plans to go public."
+  },
+  {
    "id": "2110463962877989276",
    "handle": "trq212",
    "name": "Thariq",
@@ -50,46 +90,6 @@
    "topic": "India",
    "kind": "Report",
    "summary": "Inc42 reports an agentic AI startup raised $2.5M in a seed round led by Accion Ventures to build AI relationship managers."
-  },
-  {
-   "id": "2110055514012823934",
-   "handle": "Workday",
-   "name": "Workday",
-   "url": "https://x.com/Workday/status/2110055514012823934",
-   "posted": "2026-10-13T22:40:12+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Workday announced a partnership with Anthropic to connect Claude reasoning to business rules across the places where people work."
-  },
-  {
-   "id": "2110042429801840924",
-   "handle": "DeItaone",
-   "name": "*Walter Bloomberg",
-   "url": "https://x.com/DeItaone/status/2110042429801840924",
-   "posted": "2026-10-13T21:48:12+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Reported: Nvidia CEO Jensen Huang says the company will announce $2 billion in new European AI investments next week, on top of $8 billion invested over the past year."
-  },
-  {
-   "id": "2110039274922131792",
-   "handle": "GoogleDeepMind",
-   "name": "Google DeepMind",
-   "url": "https://x.com/GoogleDeepMind/status/2110039274922131792",
-   "posted": "2026-10-13T21:35:40+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google DeepMind says Gemini 4 Argon is now globally available, aimed at hard problems across coding, enterprise workflows and cyber defense."
-  },
-  {
-   "id": "2109922359172030750",
-   "handle": "TheStatesmanLtd",
-   "name": "The Statesman",
-   "url": "https://x.com/TheStatesmanLtd/status/2109922359172030750",
-   "posted": "2026-10-13T13:51:05+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "The Statesman reports Anthropic said in a threat intelligence report that actors linked to the Houthis misused Claude to develop navigation and control software for missiles."
   }
  ]
 }

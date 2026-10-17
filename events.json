@@ -1,31 +1,6 @@
 {
- "REFRESHED": "2026-10-16T18:27:14+05:30",
+ "REFRESHED": "2026-10-17T05:22:08+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "titan-consumer-mixer",
-   "title": "Titan Capital × V3 Ventures Consumer Mixer",
-   "cat": "Startup",
-   "tags": [
-    "Consumer",
-    "Investors",
-    "Networking"
-   ],
-   "area": "Lower Parel",
-   "venue": "Shared on confirmation",
-   "start": "2026-10-16T19:30",
-   "end": "23:30",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · approval required",
-   "aud": [
-    "Founder"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/ubulpdq7",
-   "org": "Titan Capital",
-   "access": "approval",
-   "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval."
-  },
   {
    "id": "growsphere-mcp-security",
    "title": "GrowSphere | Prompt Injection & MCP Security",
@@ -214,6 +189,32 @@
    "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper."
   },
   {
+   "id": "global-startups-club-oct24",
+   "title": "Global Startups Club | Startup Networking Mumbai",
+   "cat": "Startup",
+   "tags": [
+    "Networking",
+    "Founders",
+    "Pitching"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue shared after registration",
+   "start": "2026-10-24T10:30",
+   "end": "13:30",
+   "fmt": "Offline",
+   "price": 475,
+   "priceNote": "₹475",
+   "aud": [
+    "Founder",
+    "Student"
+   ],
+   "src": "StartupGrantsIndia",
+   "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-12",
+   "org": "Global Startups Club",
+   "access": "open",
+   "desc": "A morning networking meetup for founders and aspiring entrepreneurs with speed-networking rounds and short elevator pitches."
+  },
+  {
    "id": "enterprise-ai-summit",
    "title": "Enterprise AI Summit Mumbai 2026",
    "cat": "AI",
@@ -239,7 +240,7 @@
    "org": "stage-x",
    "access": "open",
    "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
-   "also": "Eventbrite"
+   "also": "StartupGrantsIndia"
   },
   {
    "id": "healthtech-founders-mixer",
@@ -789,22 +790,6 @@
    }
   },
   {
-   "qid": "q-gujral-ngma",
-   "title": "The Modernist Returns: Satish Gujral (NGMA Fort)",
-   "cat": "Art",
-   "area": "Fort",
-   "src": "Time Out Mumbai",
-   "url": "https://www.timeout.com/mumbai/mumbai-events-in-october",
-   "access": "open",
-   "why": "Dates (9 Oct to 20 Nov, free) seen only in a Time Out roundup; gallery page not opened.",
-   "conf": {
-    "date": 85,
-    "place": 90,
-    "category": 85
-   },
-   "hint": "2026-10-09"
-  },
-  {
    "qid": "q-durable-devops",
    "title": "Durable DevOps Tech Meetup (Merge & Rise × Temporal)",
    "cat": "Tech",
@@ -972,54 +957,64 @@
  ],
  "RUNS": [
   {
-   "src": "Luma Mumbai",
-   "what": "luma.com/mumbai listing and 12 event pages",
-   "found": 12,
-   "pub": 2,
-   "review": 3,
-   "dup": 0,
-   "skip": 0,
-   "note": "Listing has no dates; opened each page. Swift Mumbai Assemble and Monad Blitz now have confirmed dates; Agriculture AI, ArbiVerse and Cloud Community Days queued as undated."
-  },
-  {
-   "src": "Luma discover (AI)",
-   "what": "discover/mumbai/ai and 12 event pages",
-   "found": 17,
-   "pub": 3,
-   "review": 4,
-   "dup": 9,
-   "skip": 1,
-   "note": "Published GrowSphere, Buildup over Coffee and AI Leadership Playbook; queued four undated; Amateur Hour skipped as sold out. Tech and Arts discover pages were not opened."
-  },
-  {
-   "src": "Meetup",
-   "what": "Mumbai Meets AI",
-   "found": 2,
+   "src": "Luma",
+   "what": "luma.com/mumbai and discover/ai listings could not be opened (fetch not permitted in unattended run); event pages found via search",
+   "found": 3,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 2,
-   "note": "No upcoming events; the group lists Mumbai Meets AI 6 (10 Oct) and 5 as past."
+   "skip": 3,
+   "note": "Search surfaced only past or non-Mumbai Luma events (AI Engineers Day May 2026, Mumbai Meets AI past editions, Design Nexus in Pune)."
   },
   {
    "src": "AllEvents",
-   "what": "allevents.in/mumbai/technology and 3 event pages",
-   "found": 15,
+   "what": "allevents.in/mumbai/technology and /startup not opened (fetch not permitted)",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Unreachable this run; existing AllEvents entries kept unchanged."
+  },
+  {
+   "src": "dev.events",
+   "what": "dev.events/meetups/AS/IN/MA/Mumbai",
+   "found": 8,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 8,
+   "note": "Only online events or ones with no stated Mumbai venue between Nov 11 and Dec 10; none published."
+  },
+  {
+   "src": "hiddenevents",
+   "what": "hiddenevents.online/mumbai not opened",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Unreachable this run."
+  },
+  {
+   "src": "web search",
+   "what": "searches for AI, design/UX, XR, climate/startup and student hackathon events",
+   "found": 3,
    "pub": 1,
    "review": 0,
-   "dup": 3,
-   "skip": 11,
-   "note": "Added Unchained Summit India; AICD Mumbai moved from 7 Nov to 21 Nov; HealthTech mixer is now 16:00 to 19:00 at ₹750. Finance, packaging and concert listings skipped as unrelated. hiddenevents not opened."
+   "dup": 1,
+   "skip": 1,
+   "note": "Added Global Startups Club networking (Oct 24). Enterprise AI Summit date reconfirmed via StartupGrantsIndia. Mumbai Builds 2027 (student hackathon, finale Feb 7 2027) is outside the 45-day window."
   },
   {
    "src": "Existing events",
    "what": "re-check of published list",
-   "found": 13,
-   "pub": 13,
+   "found": 19,
+   "pub": 18,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "No cancellations seen. Others kept as-is; their own pages were not re-opened this run."
+   "note": "Removed past event: Titan Capital x V3 Ventures mixer. Others kept as-is; their own pages could not be re-opened this run."
   }
  ],
  "COMMUNITIES": [
@@ -1166,6 +1161,17 @@
    ],
    "area": "Bandra West",
    "url": "https://luma.com/jfc8y4xq"
+  },
+  {
+   "id": "global-startups-club",
+   "name": "Global Startups Club",
+   "org": "Global Startups Club",
+   "focus": "Runs startup networking meetups for founders and aspiring entrepreneurs.",
+   "cats": [
+    "Startup"
+   ],
+   "area": "Mumbai",
+   "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-12"
   }
  ]
 }

@@ -350,7 +350,7 @@
   "org": "stage-x",
   "access": "open",
   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
-  "also": "Eventbrite",
+  "also": "StartupGrantsIndia",
   "firstSeen": "2026-09-28"
  },
  "evm-capital-hackathon": {
@@ -466,6 +466,33 @@
   "access": "open",
   "desc": "A networking morning for founders and aspiring entrepreneurs with business speed dating and 30-second pitches.",
   "firstSeen": "2026-10-07"
+ },
+ "global-startups-club-oct24": {
+  "id": "global-startups-club-oct24",
+  "title": "Global Startups Club | Startup Networking Mumbai",
+  "cat": "Startup",
+  "tags": [
+   "Networking",
+   "Founders",
+   "Pitching"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue shared after registration",
+  "start": "2026-10-24T10:30",
+  "end": "13:30",
+  "fmt": "Offline",
+  "price": 475,
+  "priceNote": "₹475",
+  "aud": [
+   "Founder",
+   "Student"
+  ],
+  "src": "StartupGrantsIndia",
+  "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-12",
+  "org": "Global Startups Club",
+  "access": "open",
+  "desc": "A morning networking meetup for founders and aspiring entrepreneurs with speed-networking rounds and short elevator pitches.",
+  "firstSeen": "2026-10-17"
  },
  "growsphere-mcp-security": {
   "id": "growsphere-mcp-security",
