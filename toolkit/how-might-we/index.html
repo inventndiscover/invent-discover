@@ -138,6 +138,9 @@
   .dots button.now { background: var(--pink); box-shadow: 0 0 8px var(--pink); }
   .dots button.has { background: rgba(196,181,253,0.8); }
 
+  .from-pov { margin: 0 0 16px; padding: 10px 12px; border-radius: 10px; font-size: 14px; line-height: 1.45; color: var(--muted);
+              border: 1px solid rgba(236,72,153,0.4); background: rgba(236,72,153,0.06); }
+  .from-pov a { color: #F9A8D4; }
   details.adjust { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
   details.adjust summary { cursor: pointer; color: var(--muted); font-size: 14px; }
   details.adjust p { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin: 10px 0; }
@@ -210,6 +213,7 @@
 
   <!-- STEP 2 -->
   <section class="card stage" id="stage2" hidden>
+    <p class="from-pov" id="fromPov" hidden>★ From your <a href="/toolkit/pov/">POV statement</a>: <span id="fromPovText"></span></p>
     <div class="lens-head"><span class="dot" id="lensDot"></span><span class="lens-count" id="lensCount">Lens 1 of 10</span></div>
     <h2 id="lensName" style="margin-top:10px">Amp up the good</h2>
     <p class="sub" id="lensHint"></p>
@@ -413,7 +417,8 @@ function makeBlanks(who, bad, where) {
   // ONE person or MANY? If the verb has an extra "s" ("misses", "has", "doesn't"), it's one.
   // Example: "My grandmother misses her stop" → one → "my grandmother manages to…"
   const one = ['is', 'has', 'was', "doesn't", 'does', 'struggles', 'fails'].includes(first) ||
-              (first.endsWith('s') && !first.endsWith('ss') && toBase(first) !== first);
+              (first.endsWith('s') && !first.endsWith('ss') && toBase(first) !== first) ||
+              /^(a|an)\s/i.test(who);          // "a first-time commuter" is one person too
 
   if (CANT.includes(first)) {
     // "can't find a seat" → struggle to find a seat / struggling to … / goal: find a seat
@@ -733,7 +738,33 @@ for (const ex of EXAMPLES) {
   b.addEventListener('click', () => { $('#problem').value = ex; start(); });
   $('#examples').appendChild(b);
 }
-goTo(1);
+// ---------- 3j. A POV sent over from the POV tool ----------
+// The POV tool opens this page like this:
+//   /toolkit/how-might-we/?who=a%20first-time%20commuter…&need=know%20their%20station…
+// We don't need to guess the blanks from a sentence: POV already split it for us.
+// The need is a goal ("know their station…"), so "can't" in front turns it into
+// the problem: "can't know their station…". Then we jump straight to step 2.
+function readPovFromLink() {
+  const p = new URLSearchParams(location.search);
+  const who = (p.get('who') || '').trim().slice(0, 150);
+  const need = (p.get('need') || '').trim().slice(0, 150);
+  if (!who || !need) return false;
+  $('#problem').value = `${who[0].toUpperCase() + who.slice(1)} can't ${need}`;
+  // A place inside WHO moves to the WHERE blank, so questions stay short.
+  // Example: "a first-time commuter on a crowded Mumbai local"
+  //   → who "a first-time commuter",  where "on a crowded Mumbai local"
+  const w = who.split(/\s+/);
+  const cut = w.findIndex((x, i) => i >= 2 && (PLACE_WORDS.includes(clean(x)) || TIME_WORDS.includes(clean(x))));
+  $('#sWho').value = cut === -1 ? who : w.slice(0, cut).join(' ');
+  $('#sWhere').value = cut === -1 ? '' : w.slice(cut).join(' ');
+  $('#sBad').value = "can't " + need;
+  $('#fromPovText').textContent = `${who} needs a way to ${need}.`;   // textContent: shown as text only
+  $('#fromPov').hidden = false;
+  favs = []; at = 0;
+  buildLenses();
+  return true;
+}
+goTo(readPovFromLink() ? 2 : 1);
 </script>
 </body>
 </html>

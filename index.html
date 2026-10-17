@@ -156,7 +156,13 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-funnel .fn-out{padding:10px 14px 12px;border-radius:4px 4px 14px 4px;transform:rotate(-3deg);font-size:15px;font-weight:700;color:#fff;
   background:linear-gradient(135deg,color-mix(in srgb,#EC4899 30%,#0B0D14),color-mix(in srgb,#A58BFF 26%,#0B0D14));border:1px solid rgba(236,72,153,.7);
   box-shadow:0 0 22px rgba(236,72,153,.35)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-grid i,.tool-cube .cube{animation:none}}
+/* ---- POV Statement: the sentence as a form with three glowing blanks (not a ring) ---- */
+.tool-madlib{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:12px;padding-left:6px}
+.tool-madlib p{margin:0;display:flex;align-items:center;gap:8px;font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.tool-madlib b{min-width:var(--w);padding:7px 10px;border-radius:8px;font:700 13px var(--sans);letter-spacing:0;text-transform:none;color:var(--c);
+  background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px dashed color-mix(in srgb,var(--c) 55%,transparent);
+  animation:id-lit 3s ease-in-out infinite,id-ink 3s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube{animation:none}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
