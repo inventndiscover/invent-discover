@@ -284,9 +284,63 @@ function articleRow(a){
     <div><div class="label">${esc(a.tag)} · ${d.getDate()} ${ARR_MON[d.getMonth()]} ${d.getFullYear()}</div><h3>${esc(a.title)}</h3></div>
     <span class="arrow">Read on the blog ↗</span></a>`;
 }
+// Organiser names differ a little between sites (the event says "GrowSphere", the community is
+// "GrowSphere Community"), so we compare loosely: equal, or one is the other plus extra words.
+const sameOrg=(a,b)=>{ a=(a||"").toLowerCase().trim(); b=(b||"").toLowerCase().trim();
+  return !!a && !!b && (a===b || a.startsWith(b+" ") || b.startsWith(a+" ")); };
+// ---------------------------------------------------------------- TOP COMMUNITIES (home page)
+// Hand-picked design and tech communities in Mumbai. Every number comes from the page in `src`,
+// read on the CHECKED date. Don't guess: if a figure can't be verified, leave it out of `stats`.
+// Only facts from 2025 onwards: no founding years or events older than that, and drop groups with nothing since.
+// The row shows 5 at a time. Which 5 changes every day, and the arrows show the others.
+const TOPC_CHECKED = "17 Oct 2026";
+const TOP_COMMUNITIES = [
+  {name:"AWS User Group Mumbai", cat:"Tech", area:"Cloud", url:"https://www.meetup.com/awsugmum/", src:"https://www.meetup.com/awsugmum/",
+   stats:[["9,661","members"],["80","events so far"]], hl:"Runs the yearly AWS Community Day Mumbai; the 2026 edition was on 17 Oct at Nesco, Goregaon."},
+  {name:"GDG MAD Mumbai", cat:"Tech", area:"Google developers", url:"https://gdg.community.dev/gdg-mad/", src:"https://sessionize.com/devfest-mumbai-2026",
+   stats:[["15,491","members"]], hl:"Co-runs DevFest Mumbai with GDG Cloud Mumbai, the city's big community tech day. DevFest Mumbai 2026: 5 Dec."},
+  {name:"Friends of Figma Mumbai", cat:"Design", area:"Product design", url:"https://friends.figma.com/mumbai", src:"https://friends.figma.com/mumbai",
+   stats:[["6,070","members"]], hl:"Figma's official Mumbai community. Recent: the Config 2026 watch party (in person and online) and Out of Office #2: The Art Trail (Aug 2026)."},
+  {name:"Mumbai Meets AI", cat:"AI", area:"AI builders", url:"https://www.meetup.com/mumbai-meets-ai/", src:"https://luma.com/t7ifye5x",
+   stats:[["6","editions"],["83","at the latest"]], hl:"Builders, engineers and founders meet for a talk, a fireside chat and networking."},
+  {name:"IxDF Mumbai", cat:"UX", area:"Interaction design", url:"https://ixdf.org/local-group/asia/india/mumbai", src:"https://ixdf.org/local-group/asia/india/mumbai",
+   stats:[["#3","IxDF group in India"]], hl:"The Interaction Design Foundation's Mumbai group. Recent: Asia Community Connect (Apr 2026); next: Design Futures, 30 Oct."},
+  {name:"FOSS United Mumbai", cat:"Tech", area:"Open source", url:"https://fossunited.org/c/mumbai", src:"https://www.fossunited.org/c/mumbai/mar25",
+   stats:[["83","at one 2025 meetup"]], hl:"Monthly free and open-source software meetups, often run with Mumbai's Python community (MumPy)."},
+  {name:"Haxnation Mumbai", cat:"Tech", area:"Security", url:"https://luma.com/5cxqmf5p", src:"https://luma.com/ylu7wd2b",
+   stats:[], hl:"Free security meetups on attack and defence, co-hosted with Hack The Box Mumbai."},
+  {name:"The Operators Collective", cat:"AI", area:"Product leaders", url:"https://luma.com/6igqwui2", src:"https://luma.com/6igqwui2",
+   stats:[], hl:"Curated in-person sessions for product leaders and operators."}
+];
+const TOPC_PER = 5;
+let topcPage = null;   // which group of 5 is showing; starts from today's date
+function topcPages(){ return Math.ceil(TOP_COMMUNITIES.length/TOPC_PER); }
+function topCard(c){
+  const col=(CAT[c.cat]||CAT.Tech).c, next=LIVE().filter(e=>sameOrg(e.org,c.name)).sort((a,b)=>a.at-b.at)[0];
+  return `<article class="comm topc-card" style="--c:${col}">
+    <div><h3>${esc(c.name)}</h3><div class="label">${esc(c.cat)} · ${esc(c.area)}</div></div>
+    ${c.stats.length?`<div class="topc-stats">${c.stats.map(([v,l])=>`<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>`:""}
+    <p>${esc(c.hl)}</p>
+    ${next?`<p class="topc-next"><span class="label">Next</span> <a href="#discover" data-open-event="${next.id}">${esc(next.title)}</a> · ${rel(next.day)}</p>`:""}
+    <div class="topc-foot"><a class="btn ghost small" href="${c.url}" target="_blank" rel="noopener">Visit ↗</a><a class="topc-src" href="${c.src}" target="_blank" rel="noopener" title="Where these figures come from">Source</a></div>
+  </article>`;
+}
+function topCommunitiesHTML(){
+  const n=topcPages();
+  if (topcPage===null) topcPage=n?Math.floor(Date.parse(TODAY+"T00:00:00Z")/864e5)%n:0;   // a new group each day
+  const list=TOP_COMMUNITIES.slice(topcPage*TOPC_PER, topcPage*TOPC_PER+TOPC_PER);
+  return `<div class="topc-row">${list.map(topCard).join("")}</div>
+    <div class="topc-bar"><span class="label">Figures from the source linked on each card, checked ${TOPC_CHECKED}</span>
+    ${n>1?`<span class="topc-nav"><button type="button" class="topc-btn" data-topc="-1" aria-label="Previous communities">‹</button><span class="label">${topcPage+1} / ${n}</span><button type="button" class="topc-btn" data-topc="1" aria-label="More communities">›</button></span>`:""}</div>`;
+}
+document.addEventListener("click",ev=>{
+  const b=ev.target.closest("[data-topc]"); if(!b) return;
+  const n=topcPages(); topcPage=((topcPage+ +b.dataset.topc)%n+n)%n;
+  const box=document.getElementById("topc"); if(box) box.innerHTML=topCommunitiesHTML();
+});
 function commCard(c){
   const col=CAT[c.cats[0]].c;
-  const next=LIVE().filter(e=>e.org===c.org).sort((a,b)=>a.at-b.at)[0];
+  const next=LIVE().filter(e=>sameOrg(e.org,c.org)||sameOrg(e.org,c.name)).sort((a,b)=>a.at-b.at)[0];
   return `<article class="comm" style="--c:${col}">
     <div class="comm-top"><div><h3>${esc(c.name)}</h3><div class="label">${esc(c.area)}</div></div></div>
     <p>${esc(c.focus)}</p>
@@ -485,8 +539,8 @@ function viewHome(){
   </div></section>
 
   <section class="block"><div class="wrap">
-    <div class="sec-head"><div><h2 class="sec-title">Communities running these</h2></div><a class="more" href="#communities" data-go="communities">All communities</a></div>
-    <div class="grid">${COMMUNITIES.slice(0,3).map(commCard).join("")}</div>
+    <div class="sec-head"><div><h2 class="sec-title">Top Communities in Mumbai</h2><p class="sec-sub">Design and tech groups worth joining, five at a time.</p></div><a class="more" href="#communities" data-go="communities">All communities</a></div>
+    <div id="topc">${topCommunitiesHTML()}</div>
   </div></section>
 
   <section class="block"><div class="wrap">
