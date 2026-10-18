@@ -1,6 +1,56 @@
 {
- "REFRESHED": "2026-10-17T05:25:00+05:30",
+ "REFRESHED": "2026-10-18T05:26:25+05:30",
  "SIGNALS": [
+  {
+   "id": "2111159690340061305",
+   "handle": "WhaleInsider",
+   "name": "Whale Insider",
+   "url": "https://x.com/WhaleInsider/status/2111159690340061305",
+   "posted": "2026-10-16T23:47:48+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Reports Anthropic saying its Claude Mythos model designed highly efficient quantum circuits that could bring quantum computing within reach sooner."
+  },
+  {
+   "id": "2111137377288958004",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2111137377288958004",
+   "posted": "2026-10-16T22:19:08+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Says Google announced on October 15 that inline source links will appear higher and more often in AI Overviews and AI Mode."
+  },
+  {
+   "id": "2111066538564325770",
+   "handle": "HuggingPapers",
+   "name": "DailyPapers",
+   "url": "https://x.com/HuggingPapers/status/2111066538564325770",
+   "posted": "2026-10-16T17:37:39+05:30",
+   "topic": "Open models",
+   "kind": "Report",
+   "summary": "Reports Mistral released Timestral on Hugging Face, a family of time series foundation models for zero-shot forecasting; the 5M-parameter version is out."
+  },
+  {
+   "id": "2111046519231058052",
+   "handle": "CGTNEurope",
+   "name": "CGTN Europe",
+   "url": "https://x.com/CGTNEurope/status/2111046519231058052",
+   "posted": "2026-10-16T16:18:06+05:30",
+   "topic": "Policy",
+   "kind": "Leak",
+   "summary": "Citing German government sources, reports Germany is set to announce an agreement with NVIDIA next week focused on industrial AI. Unconfirmed."
+  },
+  {
+   "id": "2110970534670512133",
+   "handle": "ANRFIndia",
+   "name": "Anusandhan National Research Foundation",
+   "url": "https://x.com/ANRFIndia/status/2110970534670512133",
+   "posted": "2026-10-16T11:16:10+05:30",
+   "topic": "India",
+   "kind": "Official",
+   "summary": "ANRF announces a second call for pre-proposals under its Maha AI-SE programme, run with MeitY, DRDO, other ministries, the Gates Foundation and Google."
+  },
   {
    "id": "2110893784422908225",
    "handle": "ArtificialAnlys",
@@ -12,14 +62,14 @@
    "summary": "Artificial Analysis says Muse Spark Open scores 39 on its Intelligence Index, making it the top US open-weights model it has measured."
   },
   {
-   "id": "2110866531932316011",
-   "handle": "antigravity",
-   "name": "Google Antigravity",
-   "url": "https://x.com/antigravity/status/2110866531932316011",
-   "posted": "2026-10-16T04:22:53+05:30",
-   "topic": "Models",
+   "id": "2110841898076418336",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2110841898076418336",
+   "posted": "2026-10-16T02:45:00+05:30",
+   "topic": "AI",
    "kind": "Official",
-   "summary": "Google Antigravity is rolling out Gemini 4 Argon to paid Google AI Pro subscribers, with a separate weekly-only Argon quota for Pro."
+   "summary": "OpenAI expands access to GPT-Rosalind for academic research through a Rosalind Academic Plan, with sponsored access for eligible labs at U.S. universities."
   },
   {
    "id": "2110797830361436604",
@@ -40,56 +90,6 @@
    "topic": "Open models",
    "kind": "Official",
    "summary": "Meta released Muse Spark Open, an open-weight model with 816B total and 42B active parameters and a 1M-token context, built for coding and agentic work."
-  },
-  {
-   "id": "2110749846231814251",
-   "handle": "NVIDIAAI",
-   "name": "NVIDIA AI",
-   "url": "https://x.com/NVIDIAAI/status/2110749846231814251",
-   "posted": "2026-10-15T20:39:13+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "NVIDIA published a write-up on how it built Nemotron 3.5 Super VL, and says the model is open with weights, data and recipes available on Hugging Face."
-  },
-  {
-   "id": "2110733618599653465",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2110733618599653465",
-   "posted": "2026-10-15T19:34:44+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "Reported: CERN and Mistral AI signed a statement of intent on October 15 for a long-term partnership to build a Large Physics Model for scientific discovery."
-  },
-  {
-   "id": "2110556285087232278",
-   "handle": "business",
-   "name": "Bloomberg",
-   "url": "https://x.com/business/status/2110556285087232278",
-   "posted": "2026-10-15T07:50:05+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Bloomberg reports Anthropic told prospective investors its third-quarter revenue reached $16.8 billion, as it moves ahead with plans to go public."
-  },
-  {
-   "id": "2110463962877989276",
-   "handle": "trq212",
-   "name": "Thariq",
-   "url": "https://x.com/trq212/status/2110463962877989276",
-   "posted": "2026-10-15T01:43:13+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Thariq, who works on Claude Code, says Claude Code Desktop now understands its own capabilities better, such as spinning off subsessions, and calls it almost a v2."
-  },
-  {
-   "id": "2110333272261566672",
-   "handle": "Inc42",
-   "name": "Inc42",
-   "url": "https://x.com/Inc42/status/2110333272261566672",
-   "posted": "2026-10-14T17:03:54+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Inc42 reports an agentic AI startup raised $2.5M in a seed round led by Accion Ventures to build AI relationship managers."
   }
  ]
 }
