@@ -1,58 +1,6 @@
 {
- "REFRESHED": "2026-10-17T05:22:08+05:30",
+ "REFRESHED": "2026-10-18T10:58:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "growsphere-mcp-security",
-   "title": "GrowSphere | Prompt Injection & MCP Security",
-   "cat": "Tech",
-   "tags": [
-    "Security",
-    "LLM",
-    "MCP"
-   ],
-   "area": "Kurla West",
-   "venue": "ATLAS SkillTech University, Equinox Business Park",
-   "start": "2026-10-17T10:00",
-   "end": "14:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · host approval needed",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/ign60602",
-   "org": "GrowSphere Community",
-   "access": "approval",
-   "desc": "A half-day community session on prompt-injection risks and securing tools built on the Model Context Protocol."
-  },
-  {
-   "id": "swift-mumbai-assemble",
-   "title": "Swift Mumbai Assemble!",
-   "cat": "Tech",
-   "tags": [
-    "Swift",
-    "iOS",
-    "Meetup"
-   ],
-   "area": "BKC",
-   "venue": "ATLAS SkillTech University, Building 2, BKC",
-   "start": "2026-10-17T10:15",
-   "end": null,
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · host approval needed",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/ryn305b9",
-   "org": "Swift Mumbai",
-   "access": "approval",
-   "desc": "A community meetup for Swift and Apple-platform developers at ATLAS SkillTech University. Registration closes once venue capacity is reached."
-  },
   {
    "id": "gamingcon-bharat-2026",
    "title": "GamingCon Bharat 2026",
@@ -82,32 +30,6 @@
    "org": "IDEX Events",
    "access": "open",
    "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers."
-  },
-  {
-   "id": "buildup-over-coffee",
-   "title": "Buildup over Coffee",
-   "cat": "Startup",
-   "tags": [
-    "Builders",
-    "Networking",
-    "Coffee"
-   ],
-   "area": "Bandra West",
-   "venue": "Grounded Cafe, Mount Mary",
-   "start": "2026-10-17T16:00",
-   "end": null,
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · waitlist only, 25 seats, confirmation required",
-   "aud": [
-    "Founder",
-    "Student"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/jfc8y4xq",
-   "org": "PowerSkills Community Meetup",
-   "access": "approval",
-   "desc": "A small café meetup for early builders and founders, hosted with ATLAS Online and a startup-partnerships lead from Google India. Seats are confirmed from a waitlist."
   },
   {
    "id": "code-to-capital",
@@ -713,21 +635,6 @@
    }
   },
   {
-   "qid": "q-ai-at-work",
-   "title": "AI at Work: Copilot, Apps, & Agents",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/gbzxsgj4",
-   "access": "approval",
-   "why": "Full with waitlist; no date on the page.",
-   "conf": {
-    "date": 0,
-    "place": 30,
-    "category": 85
-   }
-  },
-  {
    "qid": "q-structuring-ai",
    "title": "Structuring the AI Way (OpenArrow)",
    "cat": "AI",
@@ -735,7 +642,7 @@
    "src": "Luma",
    "url": "https://luma.com/c6v1qjx0",
    "access": "approval",
-   "why": "Page shows 24 Oct, 10:00 to 13:00 but no year; one spot left, address only after approval.",
+   "why": "Page shows 24 October, 10:00-13:00, but no year; approval required, one spot left.",
    "conf": {
     "date": 70,
     "place": 30,
@@ -925,96 +832,72 @@
    }
   },
   {
-   "qid": "q-idea-to-product",
-   "title": "From Idea to Product: Product Development Workshop",
-   "cat": "Startup",
-   "area": "BKC",
-   "src": "Luma",
-   "url": "https://luma.com/vvu0ojdd",
+   "qid": "q-swift-bharat",
+   "title": "Swift Bharat",
+   "cat": "Tech",
+   "area": "Around Mumbai",
+   "src": "dev.events",
+   "url": "https://swiftbharat.org",
    "access": "open",
-   "why": "No date or time on the page; at ATLAS SkillTech University, BKC.",
+   "why": "dev.events suggests 19-20 Nov 2026 only via image text; organiser page not verified.",
    "conf": {
-    "date": 0,
-    "place": 90,
-    "category": 70
-   }
-  },
-  {
-   "qid": "q-llm-inference",
-   "title": "Inside LLM Inference: From Model Weights to Tokens at Scale",
-   "cat": "AI",
-   "area": "BKC",
-   "src": "Luma",
-   "url": "https://luma.com/fi0qgdzs",
-   "access": "approval",
-   "why": "No date or time on the page; at ATLAS SkillTech University, BKC.",
-   "conf": {
-    "date": 0,
-    "place": 90,
+    "date": 55,
+    "place": 50,
     "category": 90
-   }
+   },
+   "hint": "2026-11-19"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai and discover/ai listings could not be opened (fetch not permitted in unattended run); event pages found via search",
-   "found": 3,
+   "what": "luma.com/mumbai and discover/ai listings opened; 12 event pages checked",
+   "found": 20,
    "pub": 0,
-   "review": 0,
+   "review": 1,
    "dup": 0,
    "skip": 3,
-   "note": "Search surfaced only past or non-Mumbai Luma events (AI Engineers Day May 2026, Mumbai Meets AI past editions, Design Nexus in Pune)."
+   "note": "Event pages hide dates in fetches; no new date could be confirmed. 3 closed/past items dropped from queue."
   },
   {
    "src": "AllEvents",
-   "what": "allevents.in/mumbai/technology and /startup not opened (fetch not permitted)",
-   "found": 0,
+   "what": "allevents.in/mumbai/technology opened",
+   "found": 25,
    "pub": 0,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Unreachable this run; existing AllEvents entries kept unchanged."
+   "dup": 4,
+   "skip": 17,
+   "note": "Mostly trade expos, finance summits and parties; skipped. Known entries already published."
   },
   {
    "src": "dev.events",
-   "what": "dev.events/meetups/AS/IN/MA/Mumbai",
-   "found": 8,
+   "what": "dev.events/AS/IN/Mumbai opened",
+   "found": 7,
    "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 8,
-   "note": "Only online events or ones with no stated Mumbai venue between Nov 11 and Dec 10; none published."
+   "review": 1,
+   "dup": 3,
+   "skip": 3,
+   "note": "Swift Bharat queued; Devfest and masterclasses fall outside 45 days. meetups page not opened."
   },
   {
    "src": "hiddenevents",
-   "what": "hiddenevents.online/mumbai not opened",
+   "what": "not opened this run",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable this run."
+   "note": "Skipped for time before the 5:50 sync."
   },
   {
    "src": "web search",
-   "what": "searches for AI, design/UX, XR, climate/startup and student hackathon events",
-   "found": 3,
-   "pub": 1,
-   "review": 0,
-   "dup": 1,
-   "skip": 1,
-   "note": "Added Global Startups Club networking (Oct 24). Enterprise AI Summit date reconfirmed via StartupGrantsIndia. Mumbai Builds 2027 (student hackathon, finale Feb 7 2027) is outside the 45-day window."
-  },
-  {
-   "src": "Existing events",
-   "what": "re-check of published list",
-   "found": 19,
-   "pub": 18,
+   "what": "2 searches: student hackathons, design/UX/XR",
+   "found": 0,
+   "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Removed past event: Titan Capital x V3 Ventures mixer. Others kept as-is; their own pages could not be re-opened this run."
+   "note": "Results were old or not Mumbai-specific."
   }
  ],
  "COMMUNITIES": [
