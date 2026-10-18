@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#050607">
 <meta name="description" content="A real-time walk along a raised boardwalk through the forest canopy of Malabar Hill, Mumbai: monsoon mist, light shafts, birdsong and the Arabian Sea between the leaves. WebXR VR.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
 <style>
 /* Layout: full-bleed WebGL canvas; one compact instrument card pinned bottom-left. Single dark, monochrome look by design. */
 :root{
@@ -85,7 +85,21 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 #noticeCard h2{margin:0 0 14px;font:500 11px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
 #noticeCard p{margin:0 0 12px}
 #noticeCard p b{color:var(--ink);font-weight:500}
-#noticeGo{margin-top:6px;font-size:10.5px;padding:7px 11px;color:var(--ink);border-color:var(--faint)}
+#noticeGo{margin-top:0}
+
+/* People mode: neon look for the new buttons, the People row and the credits */
+.nBtns{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 2px}
+button.nBtn{font:500 13px/1 "Geist",system-ui,sans-serif;letter-spacing:.01em;text-transform:none;color:#e9e8ff;background:#05060A;border:1px solid rgba(138,92,255,.75);border-radius:10px;padding:12px 17px;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(61,139,255,.14),0 0 14px rgba(138,92,255,.45),inset 0 0 12px rgba(255,61,154,.10);transition:box-shadow .2s,border-color .2s,color .2s}
+button.nBtn:hover,button.nBtn:focus-visible{color:#fff;border-color:#ff3d9a;outline:none;box-shadow:0 0 0 1px rgba(255,61,154,.35),0 0 20px rgba(255,61,154,.55),0 0 34px rgba(138,92,255,.4),inset 0 0 12px rgba(61,139,255,.18)}
+button.nBtn.alt{border-color:rgba(61,139,255,.7);box-shadow:0 0 14px rgba(61,139,255,.4),inset 0 0 12px rgba(138,92,255,.10)}
+#noticeCard .note{font:400 12px/1.6 "Geist",system-ui,sans-serif;color:rgba(233,232,255,.72)}
+.credits{border-top:1px solid var(--hair);padding-top:6px;font:400 9px/1.5 "Geist",system-ui,sans-serif;color:var(--dim)}
+.credits summary{cursor:pointer;letter-spacing:.14em;text-transform:uppercase;font-size:9px;color:rgba(233,232,255,.7)}
+.credits summary:hover{color:#ff7ac0;text-shadow:0 0 8px rgba(255,61,154,.6)}
+.credits p{margin:5px 0 0}
+.credits a{color:#9a7bff;text-decoration:none;border-bottom:1px solid rgba(154,123,255,.4);word-break:break-all}
+.credits a:hover{color:#ff7ac0}
 </style>
 </head>
 <body>
@@ -101,11 +115,13 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
   <label class="ctl" for="mist"><span class="k">Mist</span><input id="mist" type="range" min="0" max="1" step="0.01" value="0.35"><span class="v" id="mistV">35%</span></label>
   <label class="ctl" for="cld"><span class="k">Cloud</span><input id="cld" type="range" min="0" max="1" step="0.01" value="0.45"><span class="v" id="cldV">45%</span></label>
   <label class="ctl" for="rain"><span class="k">Rain</span><input id="rain" type="range" min="0" max="1" step="0.01" value="0"><span class="v" id="rainV">none</span></label>
+  <label class="ctl" for="ppl"><span class="k">People</span><input id="ppl" type="range" min="0" max="2" step="1" value="0"><span class="v" id="pplV">off</span></label>
   <div class="btns">
     <button id="bBolt" aria-pressed="false">Thunder</button>
     <button id="bSound" aria-pressed="true">Sound</button>
     <button id="bVR" aria-pressed="false">Enter VR</button>
   </div>
+  <details class="credits"><summary>Credits</summary><p>Avatars and animations from the Microsoft Rocketbox Avatar Library (<a href="https://github.com/microsoft/Microsoft-Rocketbox" target="_blank" rel="noopener">https://github.com/microsoft/Microsoft-Rocketbox</a>) by Microsoft Research, released under the MIT License. Copyright (c) 2020 Microsoft.</p></details>
   <div id="msg" role="status" hidden></div>
   <div class="hint" id="hint"><span>Any key or drag takes over</span><span>T replays the tour · H hides this</span></div>
 </div>
@@ -118,22 +134,41 @@ button.x{border:0;padding:0 2px;font-size:13px;line-height:1;letter-spacing:0}
 <p><b>1. Digital creation.</b> This experience is a digital creation, a representation inspired by the Malabar Hill nature trail in Mumbai. It is not a real place, and it is not a surveyed or accurate map. The route, landmarks, buildings and sounds are illustrative and must not be treated as real.</p>
 <p><b>2. Motion sickness.</b> Movement in virtual reality can cause dizziness, nausea or other discomfort, particularly during camera motion. Please use the experience seated or in a clear space, take regular breaks, and stop immediately if you feel unwell. Use of a headset is not recommended for children without adult supervision, or for anyone who is pregnant or has a condition affected by motion or visual stimulation.</p>
 <p>Sound is produced by the experience and may be adjusted with the Sound control.</p>
-<button id="noticeGo" type="button">I understand, begin</button><p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 16 Oct 2026 (a) · in the headset, press A for time and weather, X for a performance readout</p></div></div>
+<p id="noticePeople" hidden><b>3. People.</b> Includes digital characters walking near you.<br>Characters: Microsoft Rocketbox Avatar Library (MIT License).</p>
+<p id="noticeAsk" class="note" hidden><b>Walk with people</b> includes digital characters walking near you. Characters: Microsoft Rocketbox Avatar Library (MIT License). You can change this later in the controls, or with A in the headset.</p>
+<div id="noticeBtns" class="nBtns" hidden><button id="noticeAlone" class="nBtn alt" type="button">Walk alone</button><button id="noticeWith" class="nBtn" type="button">Walk with people</button></div>
+<div id="noticeOne" class="nBtns"><button id="noticeGo" class="nBtn" type="button">I understand, begin</button><button id="noticeChange" class="nBtn alt" type="button">Switch to walking with people</button></div>
+<p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.6">Build 18 Oct 2026 (a) · people test · in the headset, press A for time, weather and people, X for a performance readout</p></div></div>
 <script>
-/* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open. */
+/* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open.
+   People mode: if no choice is saved yet the card offers "Walk alone" / "Walk with people"; if one is saved, it is used and
+   the card offers one begin button plus a switch. (The choice itself is applied by the main script, which listens for 'pplpick'.) */
 window.__gate=!/[?&]test/.test(location.search);
 (function(){
   var n=document.getElementById('notice'); if(!window.__gate){ n.hidden=true; return; }
   var rest=['c','ui','show','mapBox'].map(function(i){return document.getElementById(i);});
   rest.forEach(function(e){ if(e) e.setAttribute('inert',''); });
   window.addEventListener('keydown',function(e){ if(window.__gate && e.key!=='Tab' && e.key!=='Enter' && e.key!==' ') e.stopImmediatePropagation(); },true);
-  var b=document.getElementById('noticeGo');
-  b.addEventListener('click',function(){
+  var saved=null; try{ saved=localStorage.getItem('invd.malabar.people'); }catch(e){}
+  var q=(location.search.match(/[?&]people=(off|few|more)/)||[])[1]; if(q) saved=q;
+  var $=function(i){return document.getElementById(i);};
+  function show(){
+    var asked=!saved, on=saved==='few'||saved==='more';
+    $('noticeBtns').hidden=!asked; $('noticeAsk').hidden=!asked; $('noticeOne').hidden=asked; $('noticePeople').hidden=asked||!on;
+    $('noticeChange').textContent = on ? 'Switch to walking alone' : 'Switch to walking with people';
+    (asked?$('noticeWith'):$('noticeGo')).focus();
+  }
+  function begin(){
     window.__gate=false; n.hidden=true;
     rest.forEach(function(e){ if(e) e.removeAttribute('inert'); });
     var c=document.getElementById('c'); if(c) c.focus({preventScroll:true});
-  });
-  b.focus();
+  }
+  function pick(v){ window.dispatchEvent(new CustomEvent('pplpick',{detail:v})); }
+  $('noticeGo').addEventListener('click',begin);
+  $('noticeAlone').addEventListener('click',function(){ pick('off'); begin(); });
+  $('noticeWith').addEventListener('click',function(){ pick('few'); begin(); });
+  $('noticeChange').addEventListener('click',function(){ var on=saved==='few'||saved==='more'; saved=on?'off':'few'; pick(saved); show(); });
+  show();
 })();
 </script>
 
@@ -3129,7 +3164,7 @@ const XRL=[
 ];
 // Which headset is this? The Quest browser names it in its user-agent string, e.g. "... Quest 2) ..." or "... Quest 3) ...".
 // A Quest 2 has roughly half the graphics power of a Quest 3, so it starts lower down the ladder above.
-const BUILD='16 Oct 2026 (a)';
+const BUILD='18 Oct 2026 (a) · people test';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 3 : 2;
 let Q=QD;
@@ -3202,7 +3237,8 @@ function updateDesktopCamera(dt){
       capEl.textContent=r.cap; capEl.style.opacity=(r.u>.06&&r.u<.82)?1:0; }
   } else capEl.style.opacity=0;
   if(cam.mode==='walk'){
-    walkStep(dt, keyMove(fwdOf(cam.yaw,cam.pitch)), fast, false);
+    const b0=cam.pos.slice(); walkStep(dt, keyMove(fwdOf(cam.yaw,cam.pitch)), fast, false);
+    { const d=pplBlock(b0); if(d[0]||d[1]){ cam.pos[0]+=d[0]; cam.pos[2]+=d[1]; cam.vel=V.mul(cam.vel||[0,0,0],.2); } }   // walked into someone: slide / stop
     cam.fov+=(64*Math.PI/180-cam.fov)*Math.min(1,dt*2);
   } else if(cam.mode==='fly'){
     const f=fwdOf(cam.yaw,cam.pitch); let m=keyMove(f); m=V.add(m,V.mul(f,0)); const sp=cam.speed*(fast?5:1);
@@ -3233,7 +3269,7 @@ window.addEventListener('keydown',e=>{
   if(['KeyW','KeyA','KeyS','KeyD','KeyQ','KeyE','KeyC','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){ if(cam.mode==='tour') setMode('walk'); if(e.target===canvas||e.target===document.body) e.preventDefault(); }
   keys.add(e.code);
   if(e.code==='KeyH') toggleUI(); if(e.code==='KeyT') setMode(cam.mode==='tour'?'walk':'tour');
-  if(e.code==='KeyF') setMode(cam.mode==='fly'?'walk':'fly'); if(e.code==='KeyM') setSound(!audio.on);
+  if(e.code==='KeyF') setMode(cam.mode==='fly'?'walk':'fly'); if(e.code==='KeyM') setSound(!audio.on); if(e.code==='KeyX') PPL.dbgDesk=!PPL.dbgDesk;
 });
 window.addEventListener('keyup',e=>keys.delete(e.code)); window.addEventListener('blur',()=>keys.clear());
 
@@ -3250,6 +3286,8 @@ ui.tod.addEventListener('input',()=>{ S.tod=+ui.tod.value; updateEnv(); updateLa
 ui.cld.addEventListener('input',()=>{ S.cloud=+ui.cld.value; updateEnv(); updateLand(); refreshLabels(); });
 ui.mist.addEventListener('input',()=>{ S.mist=+ui.mist.value; updateLand(); refreshLabels(); });
 ui.rain.addEventListener('input',()=>{ S.rain=+ui.rain.value; updateEnv(); clearTimeout(seaTimer); seaTimer=setTimeout(()=>updateLand(),60); refreshLabels(); });
+const pplEl=document.getElementById('ppl'); pplEl.addEventListener('input',()=>pplSetLevel(+pplEl.value,true));
+window.addEventListener('pplpick',e=>pplSetLevel(e.detail==='off'?0:e.detail==='more'?2:1,true));   // from the notice card
 const mB={tour:document.getElementById('mTour'), walk:document.getElementById('mWalk'), fly:document.getElementById('mFly')};
 const bBolt=document.getElementById('bBolt'), bSound=document.getElementById('bSound'), bVR=document.getElementById('bVR'), msgEl=document.getElementById('msg');
 const HINTS={
@@ -3327,7 +3365,7 @@ async function startXR(session){
   if(cam.mode==='tour') { xr.rigInit=false; } else setMode('walk');
   xr.rigInit=false; xr.rigYaw=cam.yaw;
   bVR.setAttribute('aria-pressed','true'); bVR.textContent='Exit VR'; say('');
-  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · A: time and weather · B: next mode':'Left stick walks where you point · right stick turns · A: time and weather · B: mode');
+  vrLabel(cam.mode==='tour'?'Tour':'Walk', cam.mode==='tour'?'Look around · A: time, weather and people · B: next mode':'Left stick walks where you point · right stick turns · A: time, weather and people · B: mode');
   audioStart();
   session.addEventListener('end',()=>{ xr.session=null; Q=QD; bVR.setAttribute('aria-pressed','false'); bVR.textContent='Enter VR'; W=H=0; requestAnimationFrame(loop); });
   session.requestAnimationFrame(onXRFrame);
@@ -3370,7 +3408,8 @@ function onXRFrame(t, xf){
     if (ud && ud!==MN.ud){ MN.sel=(MN.sel+ud+XR_SET.length)%XR_SET.length; MN.dirty=true; }
     MN.ud=ud;
     const x=Math.abs(stick[0])<.2?0:stick[0];                    // push left/right to adjust; further = faster
-    if (x){ MN.v[MN.sel]=clamp(MN.v[MN.sel]+Math.sign(x)*x*x*it.rate*(hi-lo)*dt, lo, hi); MN.dirty=true; MN.changed.add(MN.sel); }
+    if (it.step){ const lr=stick[0]>.6?1:stick[0]<-.6?-1:0; if (lr && lr!==MN.lr){ MN.v[MN.sel]=clamp(Math.round(MN.v[MN.sel])+lr*it.step, lo, hi); MN.dirty=true; MN.changed.add(MN.sel); } MN.lr=lr; }
+    else if (x){ MN.v[MN.sel]=clamp(MN.v[MN.sel]+Math.sign(x)*x*x*it.rate*(hi-lo)*dt, lo, hi); MN.dirty=true; MN.changed.add(MN.sel); }
     MN.envT-=dt; if (MN.changed.size && MN.envT<=0){                // hand the new values to the page's own sliders ~15 times a second
       for (const i of MN.changed){ const e=document.getElementById(XR_SET[i].el); e.value=MN.v[i]; e.dispatchEvent(new Event('input')); }
       MN.changed.clear(); MN.envT=1/15; }
@@ -3383,7 +3422,7 @@ function onXRFrame(t, xf){
     if(x && !xr.xLatch && !MN.open){ xr.perfT=8; xr.perfLast=0; } xr.xLatch=x; }
   if(xr.perfT>0){ xr.perfT-=dt; if(simT-(xr.perfLast||0)>1){ xr.perfLast=simT;
       const hz=Math.round(xr.session.frameRate||72);
-      vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+hz+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · Build '+BUILD, true); } }
+      vrLabel('Performance', HEADSET+' · '+(xr.fps||'…')+' of '+hz+' frames a second · Quality '+(XRL.length-xr.level)+' of '+XRL.length+' · People '+['off','few','more'][PPL.level]+' · Build '+BUILD, true); } }
   // B or Y: next mode (walk -> fly -> tour)
   if(bBtn && !xr.bLatch){ const next={walk:'fly', fly:'tour', tour:'walk'}[cam.mode]; vrSetMode(next); }
   xr.bLatch=bBtn;
@@ -3408,6 +3447,7 @@ function onXRFrame(t, xf){
     // which made the world move with your head).
     xr.rigPos[0]+=cam.pos[0]-before[0]; xr.rigPos[2]+=cam.pos[2]-before[2];
     xr.rigPos[1]=cam.pos[1]-xr.hy0;
+    { const d=pplBlock(before); if(d[0]||d[1]){ xr.rigPos[0]+=d[0]; xr.rigPos[2]+=d[1]; cam.pos[0]+=d[0]; cam.pos[2]+=d[1]; cam.vel=V.mul(cam.vel||[0,0,0],.2); } }   // walked into someone: slide / stop
   } else if(cam.mode==='fly'){
     if(!xr.rigInit){ xr.rigPos=V.sub(cam.pos, yawRot(xr.rigYaw,headLocal)); xr.rigInit=true; }
     const head0=V.add(xr.rigPos,yawRot(xr.rigYaw,headLocal));
@@ -3457,9 +3497,9 @@ function vrSetMode(m){
   if(m==='walk'){ const prev=cam.mode; setMode('walk'); if(prev==='tour') placeWalker(3.5);
     // face along the trail
     const n=nearestOnPath(cam.pos[0],cam.pos[2]); const t=n.p.t, g=xr.gazeLocal||[0,0,-1]; xr.rigYaw=Math.atan2(t[2],t[0])-Math.atan2(g[2],g[0]);
-    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · A: time and weather · B: mode'); }
+    xr.rigInit=false; xr.fade=1; vrLabel('Walk','Left stick walks where you point · right stick turns · A: time, weather and people · B: mode'); }
   else if(m==='fly'){ setMode('fly'); xr.flyV=[0,0,0]; xr.rigInit=true; vrLabel('Fly','Left stick flies where you point · right stick up/down · trigger: fast'); }
-  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · A: time and weather · B: next mode'); }
+  else { setMode('tour'); lastShot=-1; xr.fade=1; vrLabel('Tour','Look around freely · A: time, weather and people · B: next mode'); }
 }
 // floating label in the headset (mode names, tour captions)
 const vrLab={t:0, pos:null};
@@ -3470,12 +3510,13 @@ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParame
 // instructions are split at each ' · ' and word-wrapped onto their own lines (before, one long line was simply
 // cut off at the panel's edge). The panel is kept narrow so all of it sits in the sharp centre of the lenses.
 const LAB_W=1024, LAB_H=384, LAB_PAD=56, LAB_TXT=LAB_W-2*LAB_PAD;
-const XR_SET_TITLE='Time and weather';
+const XR_SET_TITLE='Time, weather, people';
 const XR_SET=[   // rate: share of the slider's range per second at full push
   {name:'Time',  el:'tod',  rate:.16, fmt:v=>fmtT(v)},
   {name:'Mist',  el:'mist', rate:.45, fmt:v=>v<.02?'clear':Math.round(v*100)+'%'},
   {name:'Cloud', el:'cld',  rate:.45, fmt:v=>Math.round(v*100)+'%'},
-  {name:'Rain',  el:'rain', rate:.45, fmt:v=>v<0.02?'none':v<0.35?'light':v<0.7?'steady':'heavy'}
+  {name:'Rain',  el:'rain', rate:.45, fmt:v=>v<0.02?'none':v<0.35?'light':v<0.7?'steady':'heavy'},
+  {name:'People', el:'ppl', step:1, fmt:v=>['Off','Few','More'][Math.round(v)]}   // step: one notch per flick instead of a smooth slide
 ];
 // A: an in-headset panel for the same sliders as the web page.
 // Each row points at a page slider (el); moving it fires that slider's own 'input' handler, so VR and web behave the same.
@@ -3653,6 +3694,382 @@ function drawWristMap(VPr, pos){
   gl.disable(gl.BLEND);
 }
 
+// ================================================================ PEOPLE (optional): morning walkers and joggers
+// Off by default. Nothing below runs, and no avatar file is downloaded, until the walker chooses "Walk with people"
+// (or sets People to Few / More in the A-button panel). Characters: Microsoft Rocketbox Avatar Library (MIT License).
+//
+// How it works, in four steps:
+//   1. LOAD     avatar files (small .glb files in the "people" folder) are fetched only when needed.
+//   2. MOVE     each person walks along the boardwalk as two numbers: s = metres along the trail, u = sideways offset.
+//               Using s and u (instead of x and z) keeps everyone on the deck automatically.
+//   3. POSE     the library's walk / jog / idle animations bend an 80-bone skeleton; the GPU skins the mesh.
+//   4. KEEP APART  three layers so nobody ever passes through anybody (see pplStep / pplBlock below).
+const PPL_CAST = [   // order = priority: "Few" shows the first 3, "More" up to 6 at once (the 7th is a spare face)
+  {id:'m14',        g:'m', role:'walk', clip:'m_walk',  v:[1.18,1.30], old:true},
+  {id:'f17',        g:'f', role:'walk', clip:'f_walk2', v:[1.22,1.38]},
+  {id:'sports-m04', g:'m', role:'jog',  clip:'m_jog',   v:[2.35,2.65]},
+  {id:'f12',        g:'f', role:'walk', clip:'f_walk',  v:[1.25,1.40]},
+  {id:'sports-f02', g:'f', role:'jog',  clip:'f_jog',   v:[2.30,2.60]},
+  {id:'m01',        g:'m', role:'walk', clip:'m_walk2', v:[1.25,1.40]},
+  {id:'m16',        g:'m', role:'walk', clip:'m_walk2', v:[1.22,1.35]}
+];
+const PPL_ME_R=.30, PPL_AV_R=.35;                  // ground circles: you 0.30 m, each person 0.35 m (centres must stay 0.65 m apart)
+const PPL_MIN_SPAWN=10, PPL_FAR=25, PPL_HEAD=.25;  // spawn never closer than 10 m; "far" means 25 m or more; head-to-head rule 0.25 m
+const PPL_KEY='invd.malabar.people';
+const PPL = { level:0, state:'idle', base:'people/', skins:{}, anims:null, animsP:null, people:[], prog:null, ringProg:null, boneTex:null,
+  boneData:null, nextId:1, lastSpawn:0, rnd:mulberry(20261018), err:'', dbg:false, dbgDesk:false, pending:0, unitTex:-1, unitBones:-1, blocked:0, frameStat:{n:0} };
+const pplGet=()=>{ try{ return localStorage.getItem(PPL_KEY); }catch(e){ return null; } };
+const pplPut=v=>{ try{ localStorage.setItem(PPL_KEY, v); }catch(e){} };
+const PPL_MAXROWS=12, PPL_NJ=80;
+
+// ---------------------------------------------------------------- small 4x4 helpers (column-major, like glTF and WebGL)
+function pplCompose(out, o, tx,ty,tz, x,y,z,w){    // translation + rotation (unit quaternion)
+  const x2=x+x, y2=y+y, z2=z+z, xx=x*x2, xy=x*y2, xz=x*z2, yy=y*y2, yz=y*z2, zz=z*z2, wx=w*x2, wy=w*y2, wz=w*z2;
+  out[o]=1-(yy+zz); out[o+1]=xy+wz; out[o+2]=xz-wy; out[o+3]=0;
+  out[o+4]=xy-wz; out[o+5]=1-(xx+zz); out[o+6]=yz+wx; out[o+7]=0;
+  out[o+8]=xz+wy; out[o+9]=yz-wx; out[o+10]=1-(xx+yy); out[o+11]=0;
+  out[o+12]=tx; out[o+13]=ty; out[o+14]=tz; out[o+15]=1;
+}
+function pplMulAff(out, o, a, ao, b, bo){      // out = a * b, both affine (last row 0 0 0 1); safe if out aliases neither
+  for(let c=0;c<3;c++){ const b0=b[bo+c*4], b1=b[bo+c*4+1], b2=b[bo+c*4+2];
+    out[o+c*4]  =a[ao]*b0+a[ao+4]*b1+a[ao+8]*b2;
+    out[o+c*4+1]=a[ao+1]*b0+a[ao+5]*b1+a[ao+9]*b2;
+    out[o+c*4+2]=a[ao+2]*b0+a[ao+6]*b1+a[ao+10]*b2; out[o+c*4+3]=0; }
+  const t0=b[bo+12], t1=b[bo+13], t2=b[bo+14];
+  out[o+12]=a[ao]*t0+a[ao+4]*t1+a[ao+8]*t2+a[ao+12];
+  out[o+13]=a[ao+1]*t0+a[ao+5]*t1+a[ao+9]*t2+a[ao+13];
+  out[o+14]=a[ao+2]*t0+a[ao+6]*t1+a[ao+10]*t2+a[ao+14]; out[o+15]=1;
+}
+
+// ---------------------------------------------------------------- 1. LOAD
+function pplInitGL(){
+  if(PPL.prog) return;
+  PPL.prog=program(`
+uniform mat4 uVPr; uniform vec3 uCam; uniform sampler2D uBones; uniform int uPid;
+layout(location=0) in vec3 aP; layout(location=1) in vec3 aN; layout(location=2) in vec2 aT; layout(location=3) in uvec4 aJ; layout(location=4) in vec4 aW;
+out vec3 vW; out vec3 vN; out vec2 vUv;
+mat4 bone(uint j){ int x=int(j)*4; return mat4(texelFetch(uBones,ivec2(x,uPid),0), texelFetch(uBones,ivec2(x+1,uPid),0), texelFetch(uBones,ivec2(x+2,uPid),0), texelFetch(uBones,ivec2(x+3,uPid),0)); }
+void main(){
+  mat4 S=aW.x*bone(aJ.x)+aW.y*bone(aJ.y)+aW.z*bone(aJ.z)+aW.w*bone(aJ.w);   // blend the (up to) 4 bones that move this vertex
+  vec4 w=S*vec4(aP,1.); vW=w.xyz; vN=mat3(S)*aN; vUv=aT;
+  gl_Position=uVPr*vec4(w.xyz-uCam,1.);
+}`, `
+${G_HASH}
+${G_ATMOS}
+${G_SCENE}
+${G_CLOUD}
+${G_LAND}
+uniform sampler2D uTex; uniform float uAlpha, uMask, uSkin;
+in vec3 vW; in vec3 vN; in vec2 vUv; out vec4 o;
+void main(){
+  vec4 t=texture(uTex,vUv);
+  if(uMask>.5 && t.a<.5) discard;                                           // hair cards and lashes are cut out by their own mask
+  if(uAlpha<.999){ float d=fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715)))); if(d>uAlpha) discard; }   // fade = fine screen-door dots
+  vec3 Vd=uCam-vW; float dist=length(Vd); vec3 V=Vd/dist;
+  vec3 N=normalize(vN); if(dot(N,V)<0.) N=-N;
+  vec3 alb=pow(t.rgb,vec3(2.2))*mix(1.,.62,uWet*.7);                        // photo colour -> linear light; damp air makes cloth darker
+  float rough=mix(.78,.52,uSkin), F0=.04;
+  float under; float sv=skyVis(vW,under);
+  vec3 L=uKeyDir; float nl=max(dot(N,L),0.);
+  float sun=sunVis(vW,.0008+.0015*(1.-nl));
+  vec3 col=uKeyCol*sun*(alb/PI*nl+ggxSpec(N,V,L,rough,F0));
+  col+=skyIrr(N)*sv*alb/PI + leafLight(under)*alb;
+  col+=envSpec(N,V,rough,F0,sv);
+  col+=uFlash.w*vec3(.02)*alb*max(N.y,0.);
+  col=aerial(col,-V,dist);
+  o=vec4(col,1.);
+}`);
+  PPL.ringProg=program(`
+uniform mat4 uVPr; uniform vec3 uCam, uC; uniform float uR; out vec2 vQ;
+void main(){ int v=gl_VertexID; vec2 q=vec2(v==1||v==2||v==4?1.:-1., v==2||v==4||v==5?1.:-1.); vQ=q;
+  gl_Position=uVPr*vec4(uC+vec3(q.x*uR,0.,q.y*uR)-uCam,1.); }`, `
+uniform vec3 uCol; in vec2 vQ; out vec4 o;
+void main(){ float r=length(vQ); float ring=smoothstep(.93,.97,r)*(1.-smoothstep(.985,1.,r)); float fill=(1.-smoothstep(.9,1.,r))*.07;
+  float a=clamp(ring*.9+fill,0.,1.); o=vec4(uCol*a,a); }`);
+  PPL.boneTex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,PPL.boneTex);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,PPL_NJ*4,PPL_MAXROWS,0,gl.RGBA,gl.FLOAT,null);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  PPL.boneData=new Float32Array(PPL_NJ*4*4*PPL_MAXROWS);
+}
+async function pplParseGLB(buf){
+  const dv=new DataView(buf); const jl=dv.getUint32(12,true);
+  const J=JSON.parse(new TextDecoder().decode(new Uint8Array(buf,20,jl))); const bin=20+jl+8;
+  const typed=(i)=>{ const a=J.accessors[i], bv=J.bufferViews[a.bufferView]; const n={SCALAR:1,VEC2:2,VEC3:3,VEC4:4,MAT4:16}[a.type];
+    const C={5126:Float32Array,5125:Uint32Array,5123:Uint16Array,5121:Uint8Array}[a.componentType]; const off=bin+(bv.byteOffset||0)+(a.byteOffset||0); const len=a.count*n;
+    const arr = off%C.BYTES_PER_ELEMENT ? new C(buf.slice(off, off+len*C.BYTES_PER_ELEMENT)) : new C(buf,off,len); return {arr,n,ct:a.componentType,count:a.count}; };
+  // skeleton
+  const N=J.nodes.length, parent=new Int32Array(N).fill(-1), T=new Float32Array(N*3), R=new Float32Array(N*4), names=[];
+  J.nodes.forEach((nd,i)=>{ names.push(nd.name||''); const t=nd.translation||[0,0,0], r=nd.rotation||[0,0,0,1]; T.set(t,i*3); R.set(r,i*4); (nd.children||[]).forEach(c=>parent[c]=i); });
+  const order=[]; { const seen=new Uint8Array(N); const visit=i=>{ if(seen[i]) return; if(parent[i]>=0) visit(parent[i]); seen[i]=1; order.push(i); }; for(let i=0;i<N;i++) visit(i); }
+  const skin=J.skins[0], joints=skin.joints; if(joints.length>PPL_NJ) throw new Error('too many bones');
+  const ibm=new Float32Array(typed(skin.inverseBindMatrices).arr);
+  const A={N,parent,T,R,names,order,joints,ibm,nameIdx:{},prims:[],clipMap:{}};
+  names.forEach((n,i)=>A.nameIdx[n]=i); A.root=A.nameIdx['Bip01']; A.head=A.nameIdx['Bip01 Head']; A.rootRestY=T[A.root*3+1];
+  // meshes -> GPU
+  const mesh=J.meshes[0];
+  for(const p of mesh.primitives){
+    const vao=gl.createVertexArray(); gl.bindVertexArray(vao);
+    const attr=(loc,acc,intg)=>{ const d=typed(acc); const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,d.arr,gl.STATIC_DRAW); gl.enableVertexAttribArray(loc);
+      if(intg) gl.vertexAttribIPointer(loc,d.n,d.ct===5121?gl.UNSIGNED_BYTE:gl.UNSIGNED_SHORT,0,0); else gl.vertexAttribPointer(loc,d.n,gl.FLOAT,false,0,0); };
+    attr(0,p.attributes.POSITION); attr(1,p.attributes.NORMAL); attr(2,p.attributes.TEXCOORD_0); attr(3,p.attributes.JOINTS_0,true); attr(4,p.attributes.WEIGHTS_0);
+    const ix=typed(p.indices); const ib=gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,ix.arr,gl.STATIC_DRAW);
+    gl.bindVertexArray(null);
+    const mat=J.materials[p.material]; const ti=mat.pbrMetallicRoughness.baseColorTexture.index; const im=J.images[J.textures[ti].source]; const bv=J.bufferViews[im.bufferView];
+    const blob=new Blob([new Uint8Array(buf,bin+(bv.byteOffset||0),bv.byteLength)],{type:im.mimeType});
+    const bmp=await createImageBitmap(blob,{premultiplyAlpha:'none',colorSpaceConversion:'none'});
+    const tx=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tx);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bmp); gl.generateMipmap(gl.TEXTURE_2D);   // mipmaps keep distant clothes from shimmering
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+    if(ANISO) gl.texParameterf(gl.TEXTURE_2D,ANISO.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(4,gl.getParameter(ANISO.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+    if(bmp.close) bmp.close();
+    A.prims.push({vao, count:ix.count, type:ix.ct===5125?gl.UNSIGNED_INT:gl.UNSIGNED_SHORT, tex:tx, mask:mat.alphaMode==='MASK'?1:0, skin:/body|head/.test(mat.name||'')&&!/opacity/.test(mat.name||'')?1:0, name:mat.name});
+  }
+  return A;
+}
+async function pplLoadSkin(id){
+  if(PPL.skins[id]) return PPL.skins[id].p;
+  const rec=PPL.skins[id]={A:null,p:null,failed:false};
+  rec.p=(async()=>{ try{ const r=await fetch(PPL.base+id+'.glb'); if(!r.ok) throw new Error(r.status); rec.A=await pplParseGLB(await r.arrayBuffer()); }catch(e){ rec.failed=true; PPL.err='Could not load '+id+': '+(e.message||e); console.warn(PPL.err); } })();
+  return rec.p;
+}
+async function pplLoadAnims(){
+  if(PPL.anims) return;
+  if(!PPL.animsP) PPL.animsP=(async()=>{ try{ const r=await fetch(PPL.base+'anims.json'); if(!r.ok) throw new Error(r.status); const d=await r.json();
+    for(const k in d){ const c=d[k]; c.rotF=new Float32Array(c.rot.flat()); c.rootF=new Float32Array(c.root.flat()); delete c.rot; delete c.root; c.J=c.joints.length; } PPL.anims=d; }catch(e){ PPL.err='Could not load animations: '+(e.message||e); console.warn(PPL.err); } })();
+  await PPL.animsP;
+}
+// ask for the faces needed for the current level; people appear as their files arrive
+async function pplEnsure(){
+  if(PPL.level<=0) return;
+  pplInitGL(); const need=PPL_CAST.slice(0,PPL.level===1?3:7);
+  const rest=Promise.all(need.map(c=>pplLoadSkin(c.id)));                 // all faces download side by side...
+  await Promise.all([pplLoadAnims(), pplLoadSkin(need[0].id)]);            // ...but people can start as soon as the first one is ready
+  if(PPL.anims && PPL.skins[need[0].id].A){ PPL.state='ready'; PPL.err=''; }
+  else { PPL.state='error'; say('People could not be loaded. Walking alone.'); PPL.level=0; pplSyncUI(); return; }
+  await rest;
+}
+
+// ---------------------------------------------------------------- 2. POSE (animation -> bone matrices)
+const PPL_Q=new Float32Array(160*4*2), PPL_W=new Float32Array(161*16), PPL_L=new Float32Array(16);
+function pplClipMap(A, key){ if(A.clipMap[key]) return A.clipMap[key]; const c=PPL.anims[key]; const m=new Int32Array(c.J); for(let k=0;k<c.J;k++){ const i=A.nameIdx[c.joints[k]]; m[k]=i===undefined?-1:i; } return A.clipMap[key]=m; }
+function pplSample(A, key, t, q, rootOut){     // fill q (N*4) with the clip's joint rotations at time t (seconds, looping)
+  const c=PPL.anims[key], map=pplClipMap(A,key); const f=((t*c.fps)%c.n+c.n)%c.n, i0=Math.floor(f), i1=(i0+1)%c.n, u=f-i0, J=c.J, a=i0*J*4, b=i1*J*4;
+  for(let k=0;k<J;k++){ const n=map[k]; if(n<0) continue; const o=n*4; let dot=0;
+    for(let e=0;e<4;e++) dot+=c.rotF[a+k*4+e]*c.rotF[b+k*4+e]; const s=dot<0?-1:1;
+    let x=c.rotF[a+k*4]*(1-u)+s*c.rotF[b+k*4]*u, y=c.rotF[a+k*4+1]*(1-u)+s*c.rotF[b+k*4+1]*u, z=c.rotF[a+k*4+2]*(1-u)+s*c.rotF[b+k*4+2]*u, w=c.rotF[a+k*4+3]*(1-u)+s*c.rotF[b+k*4+3]*u;
+    const l=1/Math.hypot(x,y,z,w); q[o]=x*l; q[o+1]=y*l; q[o+2]=z*l; q[o+3]=w*l; }
+  const ratio=A.rootRestY/c.rootRest; const r0=i0*3, r1=i1*3;
+  rootOut[0]=(c.rootF[r0]*(1-u)+c.rootF[r1]*u)*ratio; rootOut[1]=(c.rootF[r0+1]*(1-u)+c.rootF[r1+1]*u)*ratio; rootOut[2]=(c.rootF[r0+2]*(1-u)+c.rootF[r1+2]*u)*ratio;
+}
+const PPL_R1=[0,0,0], PPL_R2=[0,0,0];
+function pplPose(P, row){
+  const A=P.A, N=A.N, an=P.an; const qa=PPL_Q.subarray(0,N*4), qb=PPL_Q.subarray(N*4,N*8);
+  qa.set(A.R); pplSample(A, an.cur, an.t, qa, PPL_R1);
+  let root=PPL_R1;
+  if(an.w>.001 && an.prev){ qb.set(A.R); pplSample(A, an.prev, an.tp, qb, PPL_R2); const w=an.w;
+    for(let n=0;n<N;n++){ const o=n*4; let dot=qa[o]*qb[o]+qa[o+1]*qb[o+1]+qa[o+2]*qb[o+2]+qa[o+3]*qb[o+3]; const s=dot<0?-1:1;
+      let x=qa[o]*(1-w)+s*qb[o]*w, y=qa[o+1]*(1-w)+s*qb[o+1]*w, z=qa[o+2]*(1-w)+s*qb[o+2]*w, ww=qa[o+3]*(1-w)+s*qb[o+3]*w; const l=1/Math.hypot(x,y,z,ww); qa[o]=x*l; qa[o+1]=y*l; qa[o+2]=z*l; qa[o+3]=ww*l; }
+    root=[PPL_R1[0]*(1-w)+PPL_R2[0]*w, PPL_R1[1]*(1-w)+PPL_R2[1]*w, PPL_R1[2]*(1-w)+PPL_R2[2]*w]; }
+  // model matrix: stand at (x, y, z), turned to face yaw (the avatar faces +Z when it is not turned)
+  const c=Math.cos(P.yaw), s=Math.sin(P.yaw); const Mo=PPL_L; Mo.fill(0); Mo[0]=c; Mo[2]=-s; Mo[5]=1; Mo[8]=s; Mo[10]=c; Mo[12]=P.x; Mo[13]=P.y; Mo[14]=P.z; Mo[15]=1;
+  const W=PPL_W, tmp=PPL_W.subarray(N*16, N*16+16);   // W has room for N+1 matrices
+  for(const i of A.order){ const o=i*16; const pi=A.parent[i];
+    const tx=i===A.root?root[0]:A.T[i*3], ty=i===A.root?root[1]:A.T[i*3+1], tz=i===A.root?root[2]:A.T[i*3+2];
+    pplCompose(tmp,0,tx,ty,tz,qa[i*4],qa[i*4+1],qa[i*4+2],qa[i*4+3]);
+    if(pi<0) pplMulAff(W,o,Mo,0,tmp,0); else pplMulAff(W,o,W,pi*16,tmp,0); }
+  const bd=PPL.boneData, base=row*PPL_NJ*16;
+  for(let k=0;k<A.joints.length;k++) pplMulAff(bd,base+k*16,W,A.joints[k]*16,A.ibm,k*16);
+  const h=A.head*16; P.headW[0]=W[h+12]; P.headW[1]=W[h+13]+.07; P.headW[2]=W[h+14];     // the middle of the head, for the head-to-head rule
+}
+
+// ---------------------------------------------------------------- 3. WHO IS WHERE
+const pplWorld=(P)=>{ const p=pathAt(P.s); P.x=p.x+p.side[0]*P.u; P.z=p.z+p.side[2]*P.u; P.y=p.y; P.tx=p.t[0]; P.tz=p.t[2]; P.sx=p.side[0]; P.sz=p.side[2]; };
+const pplHW=s=>Math.max(.2, halfW(s)-.30);              // how far off the centre line a person's middle may go (keeps the 0.35 m circle on the boards)
+function pplMe(){
+  const p=cam.pos; let n=nearestOnPath(p[0],p[2],PPL.meHint); if(n.dist>8){ n=nearestOnPath(p[0],p[2]); } PPL.meHint=n.i;
+  return {x:p[0], y:p[1], z:p[2], s:n.s, u:n.u, deckY:n.y, active: cam.mode!=='fly' || (p[1]-n.y)<3};
+}
+// is a spot "out of sight"?  far enough (25 m or more) or outside a wide cone around where you are looking (never nearer than 10 m)
+function pplHidden(x,z,y,me){
+  const dx=x-me.x, dz=z-me.z, d=Math.hypot(dx,dz); if(d<PPL_MIN_SPAWN) return false; if(d>=PPL_FAR) return true;
+  const f=fwdOf(cam.yaw,0); const ang=Math.acos(clamp((dx*f[0]+dz*f[2])/d,-1,1)); return ang>1.45;     // 83 degrees either side of the gaze
+}
+function pplSpawn(skinIdx, force){
+  const me=pplMe(); const C=PPL_CAST[skinIdx], rec=PPL.skins[C.id]; if(!rec||!rec.A||!PPL.anims) return null;
+  for(let tries=0;tries<18;tries++){
+    const s=2+PPL.rnd()*(PATH_LEN-5); const p=pathAt(s); const dir=PPL.rnd()<.62 ? (s>me.s?-1:1) : (PPL.rnd()<.5?1:-1);
+    if(dir>0 && s>PATH_LEN-9) continue; if(dir<0 && s<8) continue;
+    const lane=(dir>0?-1:1)*(.30+PPL.rnd()*.25); const u=lane;
+    const x=p.x+p.side[0]*u, z=p.z+p.side[2]*u;
+    if(!force && !pplHidden(x,z,p.y,me)) continue;
+    if(PPL.people.some(o=>Math.hypot(o.x-x,o.z-z)<4)) continue;
+    const v0=C.v[0]+(C.v[1]-C.v[0])*PPL.rnd();
+    const P={id:PPL.nextId++, k:skinIdx, A:rec.A, C, g:C.g, role:C.role, s, u, dir, lane, v0, v:v0, state:'walk', pauseT:0, nextPause:C.role==='jog'?1e9:(14+PPL.rnd()*30), side:0,
+      x,z,y:p.y, tx:p.t[0], tz:p.t[2], sx:p.side[0], sz:p.side[2], yaw:Math.atan2(p.t[0]*dir,p.t[2]*dir), alpha:0, fadeT:1, fadeRate:1, recoil:0, rvx:0, rvz:0, lowT:0, headW:[x,p.y+1.6,z], vis:true,
+      an:{cur:C.clip,t:PPL.rnd()*3,prev:null,tp:0,w:0,rate:1}, born:simT, prx:x, prz:z, age:0};
+    P.alpha=force?1:1;   // spawned out of sight, so it can simply be there
+    (PPL.spawnLog||(PPL.spawnLog=[])).push({d:Math.hypot(x-me.x,z-me.z), ang:Math.acos(clamp(((x-me.x)*fwdOf(cam.yaw,0)[0]+(z-me.z)*fwdOf(cam.yaw,0)[2])/Math.max(Math.hypot(x-me.x,z-me.z),1e-3),-1,1)), t:simT, forced:!!force}); if(PPL.spawnLog.length>80) PPL.spawnLog.shift();
+    PPL.people.push(P); return P;
+  }
+  return null;
+}
+function pplRetire(P){ P.fadeT=0; P.leaving=true; P.fadeRate=1; }
+function pplSetAnim(P,key,rate){ const a=P.an; if(a.cur!==key){ a.prev=a.cur; a.tp=a.t; a.cur=key; a.t=0; a.w=1; } a.rate=rate; }
+
+// ---------------------------------------------------------------- 4. KEEP APART
+// Layer 1 (people yield) lives in pplStep.  Layer 2 (you are blocked) is pplBlock.  Layer 3 (head-to-head) is at the end of pplStep.
+function pplStep(dt){
+  if(PPL.state!=='ready') return;
+  const people=PPL.people, me=pplMe(); dt=Math.min(dt,.1);
+  const want=PPL.level===0?0:PPL.level===1?3:6;
+  // how many are staying (not leaving)?
+  let stay=people.filter(p=>!p.leaving).length;
+  if(stay>want){ for(let i=people.length-1;i>=0&&stay>want;i--) if(!people[i].leaving){ pplRetire(people[i]); stay--; } }
+  // bring people in, one at a time, only where nobody can see them appear
+  if(stay<want && simT-PPL.lastSpawn>(PPL.level===2?1.2:2)){
+    const used=new Set(people.filter(p=>!p.leaving).map(p=>p.k)); const pool=PPL_CAST.map((c,i)=>i).filter(i=>PPL.skins[PPL_CAST[i].id]&&PPL.skins[PPL_CAST[i].id].A&&(PPL.level===2||i<3));
+    const free=pool.filter(i=>!used.has(i)); const pick=(free.length?free:pool)[Math.floor(PPL.rnd()*(free.length?free.length:pool.length))];
+    if(pick!==undefined){ PPL.lastSpawn=simT; pplSpawn(pick,false); }
+  }
+  const tour=cam.mode==='tour';
+  for(const P of people){
+    P.age+=dt;
+    // ---- obstacles ahead (you and everyone else)
+    const hwP=pplHW(P.s); let vT=P.v0, uT=P.lane;
+    if(P.recoil>0){ vT=0; }
+    else if(P.state==='pause'){ vT=0; P.pauseT-=dt; if(P.pauseT<=0){ if(P.turnTo){ P.dir=P.turnTo; P.turnTo=0; P.lane=(P.dir>0?-1:1)*(.30+PPL.rnd()*.25); } P.state='walk'; } }
+    else if(P.role==='walk' && P.age>P.nextPause){ P.state='pause'; P.pauseT=3+PPL.rnd()*5; P.nextPause=P.age+P.pauseT+20+PPL.rnd()*35; }
+    if(P.state!=='pause' && !P.recoil){
+      const look=(P.role==='jog'?3.4:2.7)+(tour?1.3:0); const obs=[];
+      if(me.active) obs.push({s:me.s,u:me.u,v:0,dir:0,r:PPL_ME_R+.03});
+      for(const O of people){ if(O!==P && O.alpha>.15) obs.push({s:O.s,u:O.u,v:O.v,dir:O.dir,r:PPL_AV_R+.02}); }
+      let bestAhead=1e9, blocked=false;
+      for(const O of obs){
+        const ds=(O.s-P.s)*P.dir; if(ds<-.15||ds>look) continue;
+        const need=O.r+PPL_AV_R+.05;                   // centres this far apart sideways = clear (about 0.73 m from you, 0.77 m from another person)
+        const du=O.u-P.u; if(Math.abs(du)>need+.12) continue;
+        const cA=O.u+need, cB=O.u-need; const okA=Math.abs(cA)<=hwP+.02, okB=Math.abs(cB)<=hwP+.02;
+        let tgt=null;
+        if(okA&&okB){ tgt = P.side>0?cA:P.side<0?cB:(Math.abs(cA-P.u)<=Math.abs(cB-P.u)?cA:cB); } else if(okA) tgt=cA; else if(okB) tgt=cB;
+        if(tgt!==null){ P.side=tgt>O.u?1:-1; uT=tgt; if(ds<1.5 && Math.abs(du)<need*.85) vT=Math.min(vT, P.v0*.45); }
+        else { blocked=true; if(O.dir===P.dir && O.v>0) vT=Math.min(vT,O.v); else vT=Math.min(vT, P.v0*clamp((ds-1.05)/(look-1.05),0,1)); bestAhead=Math.min(bestAhead,ds); }
+      }
+      if(!obs.some(O=>{ const ds=(O.s-P.s)*P.dir; return ds>-.15&&ds<look&&Math.abs(O.u-P.u)<1; })) P.side=0;
+      P.blocked=blocked;
+    }
+    // ---- move: sideways at most 0.9 m/s, along the trail with gentle acceleration
+    P.u+=clamp(uT-P.u,-.9*dt,.9*dt); P.u=clamp(P.u,-hwP,hwP);
+    P.v+=clamp(vT-P.v,-2.6*dt,1.5*dt);
+    if(P.recoil>0){ P.recoil-=dt; const k=Math.max(P.recoil,0)/.55; const dx=P.rvx*k*dt, dz=P.rvz*k*dt; P.s+=dx*P.tx+dz*P.tz; P.u+=dx*P.sx+dz*P.sz; P.u=clamp(P.u,-hwP,hwP); }
+    P.s+=P.dir*P.v*dt;
+    // ---- the two ends of the trail
+    if(P.state!=='pause'){
+      if(P.dir>0 && P.s>=PATH_LEN-1.3){ P.s=PATH_LEN-1.3; P.state='pause'; P.pauseT=4+PPL.rnd()*7; P.turnTo=-1; P.v=0; }
+      else if(P.dir<0 && P.s<=1.2){ P.s=1.2; if(pplHidden(P.x,P.z,P.y,me)){ P.gone=true; } else { P.state='pause'; P.pauseT=2+PPL.rnd()*3; P.turnTo=1; P.v=0; } }
+    }
+    pplWorld(P);
+  }
+  // ---- keep apart: nobody stands inside anybody else's circle
+  for(let it=0;it<2;it++){
+    for(let i=0;i<people.length;i++){ const A=people[i];
+      for(let j=i+1;j<people.length;j++){ const B=people[j]; let dx=B.x-A.x, dz=B.z-A.z, d=Math.hypot(dx,dz); const minD=PPL_AV_R*2;
+        if(d<minD){ if(d<1e-4){ dx=A.sx; dz=A.sz; d=1; } const nx=dx/d, nz=dz/d, m=(minD-d)/2+.002;
+          A.s-=(nx*A.tx+nz*A.tz)*m; A.u-=(nx*A.sx+nz*A.sz)*m; B.s+=(nx*B.tx+nz*B.tz)*m; B.u+=(nx*B.sx+nz*B.sz)*m;
+          A.u=clamp(A.u,-pplHW(A.s),pplHW(A.s)); B.u=clamp(B.u,-pplHW(B.s),pplHW(B.s)); pplWorld(A); pplWorld(B); } }
+      if(me.active){ let dx=A.x-me.x, dz=A.z-me.z, d=Math.hypot(dx,dz); const minD=PPL_ME_R+PPL_AV_R;
+        if(d<minD){ if(d<1e-4){ dx=A.sx; dz=A.sz; d=1; } const nx=dx/d, nz=dz/d;
+          if(A.recoil<=0){ const rv=Math.min(3.6,(minD-d+.30)/.275); A.rvx=nx*rv; A.rvz=nz*rv; A.recoil=.55; A.lowT=Math.max(A.lowT,.9); PPL.stepBacks=(PPL.stepBacks||0)+1; }   // you are too close: they step back
+          const floor=minD-.18; if(d<floor){ const m=floor-d; A.s+=(nx*A.tx+nz*A.tz)*m; A.u+=(nx*A.sx+nz*A.sz)*m; const hw=pplHW(A.s); A.u=clamp(A.u,-hw,hw); pplWorld(A);   // never deeper than this
+            dx=A.x-me.x; dz=A.z-me.z; d=Math.hypot(dx,dz); if(d<floor-.01){ const sg=Math.sign((A.s-me.s)*(A.dir))||1; A.s+=sg*A.dir*(floor-d)*.9; pplWorld(A); } } } } } }
+  // ---- animation, fading, heading, layer 3 (heads), then the bones
+  const headMe=cam.pos; let row=0;
+  for(let i=people.length-1;i>=0;i--){ const P=people[i];
+    if(P.gone || (P.leaving && P.alpha<=.01)){ people.splice(i,1); continue; } }
+  for(const P of people){
+    const moving=P.v>.12 && P.state!=='pause' && !P.recoil;
+    const rate=moving ? clamp(P.v/PPL.anims[P.C.clip].speed,.55,1.7) : 1;
+    pplSetAnim(P, moving?P.C.clip:(P.g==='m'?'m_idle':'f_idle'), rate);
+    const a=P.an; a.t+=dt*a.rate; if(a.w>0){ a.tp+=dt*a.rate; a.w=Math.max(0,a.w-dt/.35); }
+    // heading follows the way the person is actually moving
+    const vx=(P.x-P.prx)/Math.max(dt,1e-3), vz=(P.z-P.prz)/Math.max(dt,1e-3); P.prx=P.x; P.prz=P.z;
+    let want=P.yaw; if(Math.hypot(vx,vz)>.2) want=Math.atan2(vx,vz); else if(P.state==='pause') want=Math.atan2(P.tx*P.dir,P.tz*P.dir);
+    let dA=want-P.yaw; dA=Math.atan2(Math.sin(dA),Math.cos(dA)); P.yaw+=dA*(1-Math.exp(-dt*(moving?7:3)));
+    // fade targets: leaving -> 0; scripted tour camera too close -> 0; head-to-head -> see-through for a moment
+    let tgt=P.leaving?0:1; const dMe=Math.hypot(P.x-me.x,P.z-me.z);
+    if(tour && dMe<1.7) tgt=0; if(P.lowT>0){ P.lowT-=dt; tgt=Math.min(tgt,.22); }
+    const rt=tgt<P.alpha ? (P.lowT>0||tour?6:1.2) : (P.leaving?1.2:.9); P.alpha=P.alpha+clamp(tgt-P.alpha,-rt*dt,rt*dt);
+    P.vis = dMe<95 && P.alpha>.005;
+    if(P.vis){ P.row=row++; if(P.row<PPL_MAXROWS) pplPose(P,P.row); else P.vis=false; }
+    // layer 3: your real head within 0.25 m of their head -> they step back and go see-through for a moment
+    if(P.vis && P.recoil<=0){ const dx=headMe[0]-P.headW[0], dy=headMe[1]-P.headW[1], dz=headMe[2]-P.headW[2];
+      if(dx*dx+dy*dy+dz*dz<PPL_HEAD*PPL_HEAD){ let hx=P.x-headMe[0], hz=P.z-headMe[2], hl=Math.hypot(hx,hz); if(hl<1e-3){ const f=fwdOf(cam.yaw,0); hx=f[0]; hz=f[2]; hl=1; }
+        P.rvx=hx/hl*1.9; P.rvz=hz/hl*1.9; P.recoil=.55; P.lowT=1.1; PPL.headHits=(PPL.headHits||0)+1; } }
+  }
+  if(row>0){ gl.bindTexture(gl.TEXTURE_2D,PPL.boneTex); gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,PPL_NJ*4,Math.min(row,PPL_MAXROWS),gl.RGBA,gl.FLOAT,PPL.boneData,0,0); }
+}
+// Layer 2: you are blocked. 'before' is where you were before walking this frame. If walking moved you into someone's
+// circle, you are pushed back out along the line between you (so you slide around them); if there is no room, you stop.
+function pplBlock(before){
+  if(PPL.state!=='ready'||!PPL.people.length||cam.mode==='tour') return [0,0];
+  const me=pplMe(); if(!me.active) return [0,0];
+  const R=PPL_ME_R+PPL_AV_R; let x=cam.pos[0], z=cam.pos[2]; const x0=x, z0=z;
+  const mvx=x-before[0], mvz=z-before[2]; if(mvx*mvx+mvz*mvz<1e-10) return [0,0];
+  for(let pass=0;pass<3;pass++){ let hit=false;
+    for(const P of PPL.people){ if(P.alpha<.3) continue;
+      const dx=x-P.x, dz=z-P.z, d=Math.hypot(dx,dz); if(d>=R) continue;
+      if(mvx*(P.x-before[0])+mvz*(P.z-before[2])<=0) continue;                // I was not walking toward them: leave me alone (they step back instead)
+      if(Math.hypot(before[0]-P.x,before[2]-P.z)<R-.02){ x=before[0]; z=before[2]; hit=true; continue; }   // I was already touching: just stop, never jump
+      const nx=d<1e-4?-P.tx:dx/d, nz=d<1e-4?-P.tz:dz/d; x=P.x+nx*(R+.003); z=P.z+nz*(R+.003); hit=true; }
+    if(!hit) break; }
+  // stay on the boards, then if still squeezed against someone, stand still
+  if(x!==x0||z!==z0){ const n=nearestOnPath(x,z,cam.hint); const s=clamp(n.s,.4,PATH_LEN-.4), hw=halfW(s)-.32; const u=clamp(n.u,-hw,hw); const p=pathAt(s); x=p.x+p.side[0]*u; z=p.z+p.side[2]*u;
+    let squeezed=false; for(const P of PPL.people){ if(P.alpha>=.3 && Math.hypot(x-P.x,z-P.z)<R-.02 && Math.hypot(before[0]-P.x,before[2]-P.z)>=R-.02) squeezed=true; }
+    if(squeezed){ x=before[0]; z=before[2]; }
+    PPL.blocked++; }
+  return [x-x0, z-z0];
+}
+function pplSyncUI(){ const e=document.getElementById('ppl'); if(e){ e.value=PPL.level; const v=document.getElementById('pplV'); if(v) v.textContent=['off','few','more'][PPL.level]; } pplNoticeSync(); }
+function pplNoticeSync(){ const el=document.getElementById('noticePeople'); if(el) el.hidden=PPL.level===0; }
+function pplSetLevel(l, save){
+  l=clamp(Math.round(l),0,2); const was=PPL.level; PPL.level=l; if(save) pplPut(['off','few','more'][l]);
+  pplSyncUI();
+  if(l===0){ for(const P of PPL.people) pplRetire(P); }                 // fade out over about a second
+  else pplEnsure();                    // (people still fading out stay leaving; new ones appear out of sight)
+}
+// the walker's choice, remembered between visits (nothing saved yet -> the notice card asks)
+{ const sv=pplGet(); const q=(location.search.match(/[?&]people=(off|few|more)/)||[])[1];
+  const init = q ? q : sv; PPL.level = init==='few'?1 : init==='more'?2 : 0; PPL.saved=sv; }
+if(PPL.level>0) pplEnsure();
+// ---------------------------------------------------------------- 5. DRAWING
+function pplDraw(landU, VPr, pos){
+  if(PPL.state!=='ready'||!PPL.people.length) return;
+  const vis=PPL.people.filter(P=>P.vis&&P.row<PPL_MAXROWS); if(!vis.length) return;
+  const pr=PPL.prog; landU(pr.use()).m('uVPr',VPr).tex('uBones',PPL.boneTex);
+  const first=vis[0].A.prims[0].tex; pr.tex('uTex',first);
+  const ut=gl.getUniform(pr.p,pr.u.uTex), ub=gl.getUniform(pr.p,pr.u.uBones);
+  gl.activeTexture(gl.TEXTURE0+ub); gl.bindTexture(gl.TEXTURE_2D,PPL.boneTex);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE);
+  for(const P of vis){ gl.uniform1i(pr.u.uPid,P.row); gl.uniform1f(pr.u.uAlpha,P.alpha);
+    for(const m of P.A.prims){ gl.activeTexture(gl.TEXTURE0+ut); gl.bindTexture(gl.TEXTURE_2D,m.tex); gl.uniform1f(pr.u.uMask,m.mask); gl.uniform1f(pr.u.uSkin,m.skin);
+      gl.bindVertexArray(m.vao); gl.drawElements(gl.TRIANGLES,m.count,m.type,0); } }
+  gl.bindVertexArray(null);
+}
+// debug view: a faint neon ring on the ground around you and around each person; red where two rings overlap
+function pplRings(VPr, pos){
+  if(PPL.state!=='ready'||!(PPL.dbg||PPL.dbgDesk)) return;
+  const me=pplMe(); const cs=[]; if(me.active) cs.push({x:me.x,z:me.z,y:me.deckY,r:PPL_ME_R,me:true});
+  for(const P of PPL.people) if(P.alpha>.15) cs.push({x:P.x,z:P.z,y:P.y,r:PPL_AV_R});
+  const red=new Array(cs.length).fill(false);
+  for(let i=0;i<cs.length;i++) for(let j=i+1;j<cs.length;j++) if(Math.hypot(cs[i].x-cs[j].x,cs[i].z-cs[j].z)<cs[i].r+cs[j].r){ red[i]=red[j]=true; PPL.overlapSeen=(PPL.overlapSeen||0)+1; }
+  const pr=PPL.ringProg; pr.use().m('uVPr',VPr).f('uCam',...pos);
+  gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA); gl.bindVertexArray(emptyVAO);
+  cs.forEach((c,i)=>{ pr.f('uC',c.x,c.y+.03,c.z).f('uR',c.r+.03).f('uCol',...(red[i]?[1,.18,.22]:c.me?[.35,.62,1]:[.62,.4,1])); gl.drawArrays(gl.TRIANGLES,0,6); });
+  gl.disable(gl.BLEND);
+}
+function pplUpdate(dt){ if(PPL.state==='ready') pplStep(dt); PPL.dbg = !!(xr.session && xr.perfT>0); }
+
 // ================================================================ FRAME
 let simT=40, frame=0, windOff=[0,0], lastNow=performance.now(), fpsAcc=0, fpsN=0, dynAcc=0, dynN=0;
 let lastVPr=null, lastFwd=null, flashI=0, forceLabel=false;
@@ -3681,6 +4098,7 @@ function simulate(dt){
     if(bolt.t<.8){ bolt.t+=dt; for(const s of bolt.strokes){ const u=bolt.t-s; if(u>0&&u<.09) bolt.flash=Math.max(bolt.flash, Math.exp(-u*40)); } }
   }
   flashI=Math.min(bolt.flash*SUN_E*.8*E.pre, 400);
+  pplUpdate(dt);   // people (does nothing at all when People is off)
 }
 function thunderAt(dist){ const C=audio.ctx, t=C.currentTime+Math.min(dist/340,6); const s=C.createBufferSource(); s.buffer=audio.brown; const lp=C.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=260;
   const g=C.createGain(); const a=1/(1+dist/3000); const d=4+Math.random()*3; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+.1); for(let k=1;k<7;k++) g.gain.linearRampToValueAtTime(a*(.3+.7*Math.random())*(1-k/7),t+k*d/7); g.gain.linearRampToValueAtTime(0,t+d);
@@ -3778,6 +4196,7 @@ function renderView(v){
     windU(landU(P_gc.use())).tex('uAtlas',atlasTex).tex('uAtlasN',atlasNTex).tex('uHM',hmTex).tex('uCor',corTex).tex('uNoise',noiseTex,gl.TEXTURE_3D).f('uOrigin',ox,oz).f('uCell',GC_CELL).i('uDim',dim).f('uRad',R);
     gl.bindVertexArray(emptyVAO); gl.drawArraysInstanced(gl.TRIANGLES,0,12,dim*dim); }
   gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+  pplDraw(landU, VPr, pos);   // people (skipped when nobody is there)
   // the water needs a copy of what lies beneath it (rocks in the shallows)
   if(!v.xr){ gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msF); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, opF);
   gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.blitFramebuffer(0,0,W,H,0,0,W,H,gl.DEPTH_BUFFER_BIT,gl.NEAREST); }
@@ -3845,6 +4264,7 @@ function renderView(v){
   P_tone.use().tex('uScene',sceneTex).tex('uBloom',Q.bloom?bloomTex[0]:sceneTex).tex('uLum',lumTex[lumCur]).f('uExpBias',.15).f('uBloomAmt',Q.bloom?.03:0).f('uFrame',frame).f('uNightDesat',E.nightDesat).f('uPre',E.pre).f('uRes',W,H).f('uVig',vig).f('uFade',v.xr?(xr.fade||0):0).f('uVig0',v.xr?0:1).f('uVc',v.xr?.5-v.proj[8]*.5:.5, v.xr?.5-v.proj[9]*.5:.5);
   fullscreen();
   if(v.xr || forceLabel) drawVRLabel(VPr, pos);
+  pplRings(VPr, pos);   // debug rings, only while the X readout (or desktop X key) is on
   if(v.xr){ drawControllers(VPr, pos); drawWristMap(VPr, pos); }
 }
 const blackTex=texture(1,1,gl.RGBA16F,gl.RGBA,gl.HALF_FLOAT,{});
@@ -3871,7 +4291,7 @@ function loop(now){
 }
 
 // ---------------------------------------------------------------- init
-setSea(S.sea); updateEnv(); updateLand(); refreshLabels();
+setSea(S.sea); updateEnv(); updateLand(); refreshLabels(); pplSyncUI();
 setMode('tour');
 window.trail = {
   S, cam, E, xr, PATH, PATH_LEN, TREES, TEMPLATES, pathAt, groundH, nearestOnPath, bigTree, BIRDS:BIRDS_A, BLD,
@@ -3883,6 +4303,7 @@ window.trail = {
   walkAt(s,u,yawOff,pitch){ setMode('walk'); placeWalker(s); cam.u=u||0; cam.pos=eyeAt(s,cam.u); cam.yaw+=yawOff||0; cam.pitch=pitch||0; },
   tour(t){ setMode('tour'); cam.tourT=t; },
   vrLabel, labCanvas:labCv, drawSettingsPanel, panCanvas:panCv,
+  ppl:PPL, PPL_CAST, pplSpawn, pplStep, pplBlock, pplSetLevel, pplEnsure, pplMe, pplPose,
   testLabel(){ vrLabel('Walk','Left stick walks · right stick turns'); vrLab.pos=V.add(cam.pos,V.mul(fwdOf(cam.yaw,cam.pitch),1.6)); forceLabel=true; },
   keys, strike(){ S.bolt=true; bolt.next=0; },
   stats(){ const o={}; for(const T of TEMPLATES){ o[T.kind]=(o[T.kind]||0)+T.list.length; } const c=TEMPLATES.map(T=>T.kind+':'+T.lods.map(l=>l.cards+'/'+l.tris).join(',')); return {count:o, cards:c, pathLen:PATH_LEN}; },
