@@ -603,6 +603,27 @@ function viewDiscover(){
   </div>`;
 }
 
+/* ---------- Invent "New: …" banner ----------
+   Built from DEMOS, so adding a demo to the list updates the banner too.
+   1. Keep real demos only (inst:"Real"); "Example" cards and Learn tutorials are skipped.
+   2. Sort by the "added" date, newest first. A demo without a date sorts as the oldest.
+   3. The newest 2 become "New: …"; the rest of Mohit's own demos become "Also live: …".
+   Example: Fish in a Jar (19 Oct) and Origami Jungle (15 Oct) are the two newest, so
+   "New: Fish in a Jar, see the world as a goldfish does… Also new: Origami Jungle, …" */
+const BANNER_NEW = 2;               // how many demos count as "new"
+const OWNER = "Mohit Bhardwaj";     // "Also live" lists only this maker's demos
+const lcFirst = s=>s.charAt(0).toLowerCase()+s.slice(1);       // "A walk" -> "a walk"
+const andList = a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];  // [A,B,C] -> "A, B and C"
+function inventBanner(){
+  const real=DEMOS.filter(d=>d.kind!=="tutorial"&&d.inst==="Real")
+    .sort((a,b)=>(b.added||"").localeCompare(a.added||""));   // dates are YYYY-MM-DD, so text order = date order
+  const fresh=real.slice(0,BANNER_NEW);
+  const rest=real.slice(BANNER_NEW).filter(d=>(d.makers||[]).includes(OWNER));
+  const newText=fresh.map((d,i)=>`${i?"Also new":"New"}: ${d.name}, ${lcFirst(d.line)}.`).join(" ");
+  const restText=rest.length?` Also live: ${andList(rest.map(d=>d.name))}.`:"";
+  return `<div class="banner"><span aria-hidden="true">✦</span><span><b>${esc(newText+restText)}</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>`;
+}
+
 function viewInvent(){
   const inv=DEMOS.filter(d=>d.kind!=="tutorial");
   const cats=["all",...new Set(inv.flatMap(d=>[d.cat,...(d.also||[])]))];  // "also": extra categories a demo is filed under
@@ -613,7 +634,7 @@ function viewInvent(){
     <a class="btn taxi" href="#submit" data-go="submit" data-kind="demo">+ Add your demo</a>
   </div></div>
   <div class="wrap">
-    <div class="banner"><span aria-hidden="true">✦</span><span><b>New: Origami Jungle, a folded-paper hill-forest trek, in your browser or in VR. Also new: Anunād and Anunād XR, real tabla bols drawn as they sound, on screen and in VR. Also live: Arashiyama Bamboo Grove, Malabar Hill Trail, Tufani Samundar and Market Walkthrough.</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>
+    ${inventBanner()}
     <div class="results-bar">
       <div class="frow">${cats.map(c=>`<button class="chip" data-dcat="${c}" aria-pressed="${state.demoCat===c}">${c==="all"?"All":c}</button>`).join("")}</div>
       <div class="seg" role="group" aria-label="Stage">${["all","Concept","Prototype","Live"].map(s=>`<button data-dstatus="${s}" aria-pressed="${state.demoStatus===s}">${s==="all"?"Any stage":s}</button>`).join("")}</div>
