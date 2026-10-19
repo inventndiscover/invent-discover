@@ -139,7 +139,7 @@ const PEOPLE = {"bones": ["Bip01", "Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1"
 
 // ================================================================ 10 CORE: tiny maths + WebGL helpers
 // Everything the rest of the file leans on: vectors, 4x4 matrices, shader compiling.
-const BUILD = '2026-10-19f';
+const BUILD = '2026-10-19g';
 const $ = id => document.getElementById(id);
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const mix = (a, b, t) => a + (b - a) * t;
@@ -522,7 +522,7 @@ void main(){
     float r = length(vp), th = acos(clamp(-vp.z / max(r, 1e-5), -1., 1.));
     vec2 d = vp.xy; float dl = length(d); d = dl > 1e-5 ? d / dl : vec2(0., 1.);
     float th2 = atan(th / uFE.w * uFE.z * uFE.y);   // the angle a normal camera needs to land the point at that distance
-    r *= 1. + 400. * smoothstep(uFE.w + .3, uFE.w + .6, th);   // further round than the lens can see: send it away
+    r *= 1. + 400. * smoothstep(uFE.w * 1.35, uFE.w * 1.55, th);   // further round than the lens can see: send it away
     vp = vec3(sin(th2) * d, -cos(th2)) * r;
   }
   gl_Position = uProj * vec4(vp, 1.);
@@ -931,7 +931,7 @@ void main(){
     vec3 c = mat3(uVR) * d; float rs = length(c.xy) / max(-c.z, 1e-5) / uFE.y;
     if (uFE.x > 1.5 && rs > uFE.z + .004) { o = vec4(0., 0., 0., 1.); return; }     // circular fisheye: black outside the circle
     edge = uFE.x > 1.5 ? smoothstep(uFE.z - .004, uFE.z + .004, rs) : 0.;
-    float th = min(rs / uFE.z, 1.) * uFE.w; vec2 dd = length(c.xy) > 1e-6 ? normalize(c.xy) : vec2(0.);
+    float th = min(rs / uFE.z * uFE.w, 3.); vec2 dd = length(c.xy) > 1e-6 ? normalize(c.xy) : vec2(0.);
     d = transpose(mat3(uVR)) * vec3(sin(th) * dd, -cos(th));
   }
   vec3 col = traceWater(uCam - uBowlC, d);
@@ -1965,7 +1965,7 @@ const P = mkProg(VS_MAIN, FS_MAIN), PB = mkProg(VS_BLIT, FS_BLIT), PTR = mkProg(
 const opticsOn = () => !!BAKE.view && Q.fx >= .5 && MODE.room;
 // the moving things outside the water (visitors, the door) are drawn each frame into a small picture from the bowl's centre;
 // the ray tracer looks them up there (see outsideCol in 30_shaders.js)
-const DYN = { size: 1024, fbo: null, tex: null, depth: null, vp: M.id(), on: false, t: -1 };
+const DYN = { size: /Quest\s?2/.test(navigator.userAgent) ? 1536 : 2048, fbo: null, tex: null, depth: null, vp: M.id(), on: false, t: -1 };
 function renderDyn() {
   // nothing moving outside the water? then the baked room photo (with the door closed) is all we need
   const vis = state.view === 'fish' && VISIT.visible && VISIT.P, doorOpen = false;   // the front door stays shut; visitors use the archway
@@ -2004,7 +2004,7 @@ function renderDyn() {
   if (vis) { const h = VISIT.pose.p, n = V.norm([h[0] - C[0], 0, h[2] - C[2]]); DYN.plane = [n[0], 0, n[2], n[0] * h[0] + n[2] * h[2]]; DYN.feet = VISIT.feet || [h[0], h[2], h[0], h[2]]; }
 }
 const emptyVAO = gl.createVertexArray();
-const LENS = { mode: 0 };                           // fish view lens on screens: 0 the fish's own eye, 1 full-frame fisheye, 2 circular fisheye
+const LENS = { mode: 0, xr: 1, xrEdge: 1.95, forceXr: false };   // xr: in the headset 1 = fisheye (default), 0 = the fish's own eye; xrEdge = angle (rad) seen at the picture's side edge                           // fish view lens on screens: 0 the fish's own eye, 1 full-frame fisheye, 2 circular fisheye
 const IDM = M.id();
 const LIGHT = {                                      // all light levels are "HDR" (above 1 = brighter than the screen can show; the tone curve tames it)
   sunDir: V.norm([-1, .62, -.3]), sunRad: [13.5, 12.3, 10.6], lampPos: [0, 2.3, 0], lampCol: [3.4, 2.5, 1.5],
@@ -2199,8 +2199,12 @@ function renderEye(v) {
   setU(P, 'uView', v.view); setU(P, 'uProj', v.proj); setU(P, 'uCam', v.pos); setU(P, 'uTime', state.t); setU(P, 'uBake', 0);
   frameUniforms();
   // fisheye LENS (fish view on a screen only): 1 = full frame (180 degrees corner to corner), 2 = circular (180 degree circle)
-  const lens = !v.xr && state.view === 'fish' && opticsOn() ? LENS.mode : 0;
-  const tf = 1 / v.proj[5], asp = v.proj[5] / v.proj[0], FE = lens ? [lens, tf, lens === 1 ? Math.hypot(asp, 1) : 1, Math.PI / 2] : [0, 1, 1, 1];
+  const asXr = v.xr || LENS.forceXr, fishLens = state.view === 'fish' && opticsOn();
+  const lens = fishLens ? (asXr ? LENS.xr : LENS.mode) : 0;
+  const tf = 1 / v.proj[5], asp = v.proj[5] / v.proj[0];
+  // headset: each eye's picture is bent around its own lens axis; the side edge of the picture shows LENS.xrEdge radians (about 110 degrees) instead of the real ~55
+  const tH = (1 + Math.abs(v.proj[8])) / v.proj[0];
+  const FE = !lens ? [0, 1, 1, 1] : asXr ? [1, tf, tH * v.proj[5], LENS.xrEdge] : [lens, tf, lens === 1 ? Math.hypot(asp, 1) : 1, Math.PI / 2];
   setU(P, 'uFE', FE); setU(P, 'uFERes', [rw, rh]);
   stats.tris = 0; stats.calls = 0;
   if (state.view === 'fish' && opticsOn()) {            // fish view: ray-trace everything outside the water in one full-screen pass
@@ -2423,7 +2427,7 @@ function vrSay(title, instr) {
 
 // ---- VR session state
 const xr = { session: null, ref: null, layer: null, hz: 72, rigPos: [0, 0, 0], rigYaw: 0, off: [0, 0, 0], anchor: true, h0: [0, 0, 0], fade: 0,
-  snapLatch: false, bLatch: false, xLatch: false, last: 0, speed: 0, prev: null, ctrl: [], cur: null, flat: [0, 0, -1] };
+  snapLatch: false, bLatch: false, xLatch: false, aLatch: false, last: 0, speed: 0, prev: null, ctrl: [], cur: null, flat: [0, 0, -1] };
 
 async function enterVR() {
   if (xr.session) { xr.session.end(); return; }
@@ -2447,7 +2451,7 @@ async function startXR(session) {
   if (HEADSET === 'Quest 2') setLevel(Math.max(qual.level, 2)); else if (HEADSET) setLevel(Math.max(qual.level, 1));
   qual.pause = 1.5; qual.acc = qual.n = 0; xr.anchor = true; xr.last = 0; xr.prev = null; xr.fade = 1;
   hooks.xrState(true);
-  vrSay('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · B or Y: switch view · X: performance');
+  vrSay('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · B or Y: switch view · A: lens · X: performance');
   session.addEventListener('end', () => { xr.session = null; hooks.xrState(false); hooks.resume(); });
   session.requestAnimationFrame(onXRFrame);
   // ask for 72 Hz WITHOUT waiting: the headset only answers once frames are flowing, so waiting here would freeze VR on a blank screen
@@ -2471,19 +2475,20 @@ function xrFrameBody(t, frame, session) {
   const pose = frame.getViewerPose(xr.ref); if (!pose) return;
   const hp = pose.transform.position, hq = pose.transform.orientation, headL = [hp.x, hp.y, hp.z], headQ = [hq.x, hq.y, hq.z, hq.w];
   // ---- controllers: right stick = snap turn, B/Y = switch view, X = readout
-  let turn = 0, bBtn = false, xBtn = false; xr.ctrl = [];
+  let turn = 0, bBtn = false, xBtn = false, aBtn = false; xr.ctrl = [];
   for (const src of session.inputSources) {
     const gp = src.gamepad;
     if (gp) {
       const ax = gp.axes.length >= 4 ? [gp.axes[2], gp.axes[3]] : [gp.axes[0] || 0, gp.axes[1] || 0], btn = i => gp.buttons[i] && gp.buttons[i].pressed;
       if (src.handedness === 'right') turn = ax[0];
-      if (btn(5)) bBtn = true; if (src.handedness === 'left' && btn(4)) xBtn = true;
+      if (src.handedness === 'right' && btn(4)) aBtn = true; if (btn(5)) bBtn = true; if (src.handedness === 'left' && btn(4)) xBtn = true;
     }
     const ray = src.targetRaySpace && frame.getPose(src.targetRaySpace, xr.ref), grip = src.gripSpace && frame.getPose(src.gripSpace, xr.ref);
     if (ray || grip) xr.ctrl.push({ hand: src.handedness, ray, grip });
   }
   if (bBtn && !xr.bLatch) switchView(); xr.bLatch = bBtn;
   if (xBtn && !xr.xLatch) showReadout(); xr.xLatch = xBtn;
+  if (aBtn && !xr.aLatch) { LENS.xr = 1 - LENS.xr; vrSay('Lens', LENS.xr ? 'Fisheye · wide curved view · press A to go back' : 'The fish\'s own eye · press A for fisheye'); } xr.aLatch = aBtn;
   simulate(dt);
   qualityTick(Math.min(raw, .5), xr.hz, true);
 
