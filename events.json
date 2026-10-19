@@ -1,36 +1,6 @@
 {
- "REFRESHED": "2026-10-18T10:58:00+05:30",
+ "REFRESHED": "2026-10-19T05:21:45+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "gamingcon-bharat-2026",
-   "title": "GamingCon Bharat 2026",
-   "cat": "Tech",
-   "tags": [
-    "Gaming",
-    "Esports",
-    "Game dev",
-    "Board games"
-   ],
-   "area": "Goregaon",
-   "venue": "Bombay Exhibition Centre (NESCO), Hall 3",
-   "start": "2026-10-17T11:00",
-   "end": null,
-   "endDate": "2026-10-18",
-   "fmt": "In person",
-   "price": 249,
-   "priceNote": "Ticket listed at ₹249 on District; required from age 4",
-   "aud": [
-    "Developer",
-    "Student",
-    "Open to All"
-   ],
-   "src": "District",
-   "also": "Time Out Mumbai",
-   "url": "https://www.district.in/events/gamingcon-bharat-2026-buy-tickets",
-   "org": "IDEX Events",
-   "access": "open",
-   "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers."
-  },
   {
    "id": "code-to-capital",
    "title": "Code to Capital Summit",
@@ -435,6 +405,32 @@
    "org": "MCEXPERT",
    "access": "open",
    "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
+  },
+  {
+   "id": "structuring-ai-openarrow",
+   "title": "Structuring the AI Way (OpenArrow)",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Automation",
+    "Workflows"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue shared after registration (Gulmohar Road listing)",
+   "start": "2026-10-24T10:00",
+   "end": "13:00",
+   "fmt": "In person",
+   "price": null,
+   "priceNote": "Price not stated on the page; attendees get a one-week trial of OpenArrow",
+   "aud": [
+    "Founder",
+    "Developer"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/c6v1qjx0",
+   "org": "OpenArrow",
+   "access": "approval",
+   "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked."
   }
  ],
  "QUEUE_RAW": [
@@ -633,22 +629,6 @@
     "place": 95,
     "category": 85
    }
-  },
-  {
-   "qid": "q-structuring-ai",
-   "title": "Structuring the AI Way (OpenArrow)",
-   "cat": "AI",
-   "area": "Gulmohar Road",
-   "src": "Luma",
-   "url": "https://luma.com/c6v1qjx0",
-   "access": "approval",
-   "why": "Page shows 24 October, 10:00-13:00, but no year; approval required, one spot left.",
-   "conf": {
-    "date": 70,
-    "place": 30,
-    "category": 80
-   },
-   "hint": "2026-10-24"
   },
   {
    "qid": "q-yield-layer",
@@ -851,33 +831,33 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai and discover/ai listings opened; 12 event pages checked",
-   "found": 20,
-   "pub": 0,
-   "review": 1,
+   "what": "luma.com/mumbai opened; 6 event pages fetched",
+   "found": 11,
+   "pub": 1,
+   "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Event pages hide dates in fetches; no new date could be confirmed. 3 closed/past items dropped from queue."
+   "skip": 1,
+   "note": "Structuring the AI Way confirmed (24 Oct) and published. Swift Mumbai Assemble was 17 Oct (past), skipped. Durable DevOps, Gemma 4 workshop and Agentic Commerce pages show no date, so they stay in the queue."
   },
   {
    "src": "AllEvents",
-   "what": "allevents.in/mumbai/technology opened",
-   "found": 25,
+   "what": "allevents.in/mumbai/technology and /startup fetch blocked",
+   "found": 0,
    "pub": 0,
    "review": 0,
-   "dup": 4,
-   "skip": 17,
-   "note": "Mostly trade expos, finance summits and parties; skipped. Known entries already published."
+   "dup": 0,
+   "skip": 0,
+   "note": "Unreachable this run (permission request timed out); existing entries kept."
   },
   {
    "src": "dev.events",
-   "what": "dev.events/AS/IN/Mumbai opened",
-   "found": 7,
+   "what": "fetch blocked",
+   "found": 0,
    "pub": 0,
-   "review": 1,
-   "dup": 3,
-   "skip": 3,
-   "note": "Swift Bharat queued; Devfest and masterclasses fall outside 45 days. meetups page not opened."
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Unreachable this run; existing entries kept."
   },
   {
    "src": "hiddenevents",
@@ -887,17 +867,17 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Skipped for time before the 5:50 sync."
+   "note": "Not used."
   },
   {
    "src": "web search",
-   "what": "2 searches: student hackathons, design/UX/XR",
-   "found": 0,
+   "what": "3 searches (Mumbai AI meetup, hackathon/design/XR, tech/startup events)",
+   "found": 4,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Results were old or not Mumbai-specific."
+   "skip": 4,
+   "note": "Results were past Mumbai Meets AI editions and older items; nothing new and dated within 45 days."
   }
  ],
  "COMMUNITIES": [

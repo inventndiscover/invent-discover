@@ -963,6 +963,33 @@
   "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two.",
   "firstSeen": "2026-10-06"
  },
+ "structuring-ai-openarrow": {
+  "id": "structuring-ai-openarrow",
+  "title": "Structuring the AI Way (OpenArrow)",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Automation",
+   "Workflows"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue shared after registration (Gulmohar Road listing)",
+  "start": "2026-10-24T10:00",
+  "end": "13:00",
+  "fmt": "In person",
+  "price": null,
+  "priceNote": "Price not stated on the page; attendees get a one-week trial of OpenArrow",
+  "aud": [
+   "Founder",
+   "Developer"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/c6v1qjx0",
+  "org": "OpenArrow",
+  "access": "approval",
+  "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked.",
+  "firstSeen": "2026-10-19"
+ },
  "swift-mumbai-assemble": {
   "id": "swift-mumbai-assemble",
   "title": "Swift Mumbai Assemble!",

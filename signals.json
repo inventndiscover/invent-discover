@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-10-18T05:26:25+05:30",
+ "REFRESHED": "2026-10-19T05:26:47+05:30",
  "SIGNALS": [
+  {
+   "id": "2111677810788155649",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2111677810788155649",
+   "posted": "2026-10-18T10:06:37+05:30",
+   "topic": "AI",
+   "kind": "Leak",
+   "summary": "Says Andrew Curran reported three undocumented models, aurora-red-alpha, aurora-green-alpha and aurora-blue-alpha, appearing in the OpenAI API on October 18."
+  },
   {
    "id": "2111159690340061305",
    "handle": "WhaleInsider",
@@ -42,6 +52,16 @@
    "summary": "Citing German government sources, reports Germany is set to announce an agreement with NVIDIA next week focused on industrial AI. Unconfirmed."
   },
   {
+   "id": "2111010508262564207",
+   "handle": "aakashgupta",
+   "name": "Aakash Gupta",
+   "url": "https://x.com/aakashgupta/status/2111010508262564207",
+   "posted": "2026-10-16T13:55:00+05:30",
+   "topic": "Open models",
+   "kind": "Report",
+   "summary": "Says Meta released for free download an AI model it had kept internal for months, just three days after building a better one."
+  },
+  {
    "id": "2110970534670512133",
    "handle": "ANRFIndia",
    "name": "Anusandhan National Research Foundation",
@@ -60,36 +80,6 @@
    "topic": "Models",
    "kind": "Report",
    "summary": "Artificial Analysis says Muse Spark Open scores 39 on its Intelligence Index, making it the top US open-weights model it has measured."
-  },
-  {
-   "id": "2110841898076418336",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2110841898076418336",
-   "posted": "2026-10-16T02:45:00+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI expands access to GPT-Rosalind for academic research through a Rosalind Academic Plan, with sponsored access for eligible labs at U.S. universities."
-  },
-  {
-   "id": "2110797830361436604",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2110797830361436604",
-   "posted": "2026-10-15T23:49:54+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "OpenAI says GPT-Live-1.1 improves voices and accents in ChatGPT Voice, Codex and dots, adding French, German, Hindi, Mexican Spanish, Korean and Japanese. API access is coming soon."
-  },
-  {
-   "id": "2110779754274292212",
-   "handle": "AIatMeta",
-   "name": "AI at Meta",
-   "url": "https://x.com/AIatMeta/status/2110779754274292212",
-   "posted": "2026-10-15T22:38:04+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Meta released Muse Spark Open, an open-weight model with 816B total and 42B active parameters and a 1M-token context, built for coding and agentic work."
   }
  ]
 }
