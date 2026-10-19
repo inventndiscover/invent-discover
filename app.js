@@ -55,6 +55,11 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"fish-in-a-jar",added:"2026-10-19",name:"Fish in a Jar",line:"See the world as a goldfish does, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
+  gif:"media/fish-in-a-jar.gif",img:"media/fish-in-a-jar-cover.jpg",sheetImg:"media/fish-in-a-jar-visitor.jpg",url:"demos/fish-in-a-jar/",cta:"Enter the bowl",
+  vr:"inventndiscover.com/demos/fish-in-a-jar",
+  needs:"On a laptop: drag to look, V switches between the fish and the table, L changes the lens, M for sound, H to hide the controls. On a phone: drag to look and use the buttons. Call visitor brings someone in at once. In VR on Meta Quest: B or Y switches view, the right stick turns and X shows a performance readout. Best in a recent Chrome, Edge or Safari.",
+  desc:"A round glass goldfish bowl on an oak table in a sunlit living room. Switch between sitting at the table and being the goldfish inside. From inside, the room is ray-traced through the water and the curved glass, so it bends and swims as you move, and looking up shows Snell's window: the whole room squeezed into one bright circle on the water surface. Visitors walk in through the archway, crouch until their eyes are level with the bowl, blink and smile at you. Slide how strongly water bends light (1.00 is air, with no bending at all), swap to a 180-degree photographer's fisheye lens, and set the swimming, the bubbles and the TV sound. Everything runs in one web page, with nothing to download."},
  {id:"origami-jungle",added:"2026-10-15",name:"Origami Jungle",line:"A folded-paper hill-forest trek, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/origami-jungle.gif",img:"media/origami-jungle-cover.jpg",sheetImg:"media/origami-jungle-sunrise.jpg",url:"demos/origami-jungle/",
   vr:"inventndiscover.com/demos/origami-jungle",
