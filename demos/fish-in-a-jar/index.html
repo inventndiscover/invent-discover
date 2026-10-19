@@ -139,7 +139,7 @@ const PEOPLE = {"bones": ["Bip01", "Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1"
 
 // ================================================================ 10 CORE: tiny maths + WebGL helpers
 // Everything the rest of the file leans on: vectors, 4x4 matrices, shader compiling.
-const BUILD = '2026-10-19e';
+const BUILD = '2026-10-19f';
 const $ = id => document.getElementById(id);
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const mix = (a, b, t) => a + (b - a) * t;
@@ -2435,7 +2435,7 @@ async function enterVR() {
   catch (e) { hooks.say('Could not start VR: ' + (e.message || e)); }
 }
 async function startXR(session) {
-  xr.session = session;
+  xr.session = session; xr.failed = false; xr.flat = xr.flat || [0, 0, -1];
   const sf = HEADSET === 'Quest 2' ? .8 : HEADSET ? .9 : 1;                      // layer size: Quest 2 gets less
   const layer = new XRWebGLLayer(session, gl, { antialias: false, depth: false, framebufferScaleFactor: sf });
   if ('fixedFoveation' in layer) layer.fixedFoveation = .2;
@@ -2444,19 +2444,29 @@ async function startXR(session) {
   try { xr.ref = await session.requestReferenceSpace('local-floor'); } catch (e) { xr.ref = await session.requestReferenceSpace('local'); }
   if (xr.ref.addEventListener) xr.ref.addEventListener('reset', () => { xr.anchor = true; });       // user recentred: re-anchor, do not jump
   xr.hz = 72;
-  try { if (session.updateTargetFrameRate) { const r = session.supportedFrameRates ? [...session.supportedFrameRates] : [72]; xr.hz = r.includes(72) ? 72 : Math.max(...r.filter(x => x <= 90), 60); await session.updateTargetFrameRate(xr.hz); } } catch (e) { }
   if (HEADSET === 'Quest 2') setLevel(Math.max(qual.level, 2)); else if (HEADSET) setLevel(Math.max(qual.level, 1));
   qual.pause = 1.5; qual.acc = qual.n = 0; xr.anchor = true; xr.last = 0; xr.prev = null; xr.fade = 1;
   hooks.xrState(true);
   vrSay('Digital creation, not a real place', 'Motion sickness: take breaks, stop if unwell · B or Y: switch view · X: performance');
   session.addEventListener('end', () => { xr.session = null; hooks.xrState(false); hooks.resume(); });
   session.requestAnimationFrame(onXRFrame);
+  // ask for 72 Hz WITHOUT waiting: the headset only answers once frames are flowing, so waiting here would freeze VR on a blank screen
+  try { if (session.updateTargetFrameRate) { const r = session.supportedFrameRates ? [...session.supportedFrameRates] : [72]; xr.hz = r.includes(72) ? 72 : Math.max(...r.filter(x => x <= 90), 60); session.updateTargetFrameRate(xr.hz).catch(() => { }); } } catch (e) { }
+}
+// if anything goes wrong inside VR, leave VR and say what happened on the page (instead of a silent blank headset)
+function xrFail(e) {
+  console.error('VR error', e); const m = 'VR stopped: ' + (e && e.message || e) + ' (build ' + BUILD + ')';
+  try { xr.session && xr.session.end(); } catch (_) { }
+  setTimeout(() => { hooks.say(m); const ui = document.getElementById('ui'); if (ui) ui.style.opacity = 1; }, 300);
 }
 const showReadout = () => vrSay('Performance', [HEADSET || 'Headset', Math.round(qual.fps || 0) + ' of ' + xr.hz + ' fps', 'Quality ' + (qual.level + 1) + ' of ' + LADDER.length,
   Math.round(stats.tris / 1000) + 'k triangles per eye', 'Build ' + BUILD].join(' · '));
 
 function onXRFrame(t, frame) {
   const session = frame.session; session.requestAnimationFrame(onXRFrame);
+  try { xrFrameBody(t, frame, session); } catch (e) { if (!xr.failed) { xr.failed = true; xrFail(e); } }
+}
+function xrFrameBody(t, frame, session) {
   const raw = xr.last ? (t - xr.last) / 1000 : 1 / 72, dt = clamp(raw, 0, .1); xr.last = t;      // dt for motion is capped; raw (real) time feeds the quality ladder
   const pose = frame.getViewerPose(xr.ref); if (!pose) return;
   const hp = pose.transform.position, hq = pose.transform.orientation, headL = [hp.x, hp.y, hp.z], headQ = [hq.x, hq.y, hq.z, hq.w];
@@ -2554,7 +2564,8 @@ $('stamp').textContent = 'Build ' + BUILD;
 
 // ---- small helpers the other files call through "hooks"
 let msgTimer = 0, capTimer = 0;
-hooks.say = t => { msgEl.textContent = t; msgEl.hidden = !t; clearTimeout(msgTimer); if (t) msgTimer = setTimeout(() => { msgEl.hidden = true; }, 8000); };
+canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); try { xr.session && xr.session.end(); } catch (_) { } setTimeout(() => hooks.say('The graphics chip reset (too much work). Reload the page to try again.'), 300); });
+hooks.say = t => { msgEl.textContent = t; msgEl.hidden = !t; clearTimeout(msgTimer); if (t) msgTimer = setTimeout(() => { msgEl.hidden = true; }, /^VR stopped|graphics/i.test(t) ? 60000 : 8000); };
 function caption(t, ms = 6000) { capEl.textContent = t; capEl.style.opacity = 1; clearTimeout(capTimer); capTimer = setTimeout(() => { capEl.style.opacity = 0; }, ms); }
 const CAPTION = { fish: 'You are the goldfish · someone may come over to look', outside: 'At the table, watching the bowl' };
 hooks.view = v => {
