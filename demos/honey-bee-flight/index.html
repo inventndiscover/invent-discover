@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Honey Bee Flight · Invent + Discover</title>
+<meta name="description" content="Drift slowly over giant, folded-paper flowers from a bee's-eye view — a fixed, gentle flight path built for comfort. In your browser or in VR on Meta Quest.">
+<link rel="canonical" href="https://inventndiscover.com/demos/honey-bee-flight/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Honey Bee Flight">
+<meta property="og:description" content="A bee's-eye view, drifting slowly over giant folded-paper flowers. In your browser, or in VR on Meta Quest.">
+<meta property="og:url" content="https://inventndiscover.com/demos/honey-bee-flight/">
+<meta property="og:image" content="https://inventndiscover.com/media/honey-bee-flight-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{ --bg:#05060A; --panel:rgba(16,14,20,.74); --line:rgba(190,150,255,.22);
+  --ink:#f2ece0; --muted:#9a8fa0; --violet:#8a6bd9; --pink:#d96bb0; color-scheme:dark; }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#stage:active{cursor:grabbing}
+.title{position:fixed;top:16px;left:0;right:0;text-align:center;pointer-events:none;z-index:4}
+.title h1{margin:0;font:600 24px/1.2 "Inter",sans-serif;letter-spacing:.01em}
+.title p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;
+  display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+button{font:500 14px "Inter",system-ui,sans-serif;color:var(--ink);background:#15121c;border:1px solid var(--line);
+  border-radius:999px;padding:9px 16px;cursor:pointer;-webkit-appearance:none;appearance:none}
+button:hover{border-color:var(--violet)}
+button:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+.vr{background:#efe7f6;color:#14100c;font-weight:600}
+.vr[disabled]{opacity:.55;cursor:default}
+.hint{font-size:11.5px;color:var(--muted)}
+#hideUI{position:fixed;top:14px;right:14px;z-index:6;padding:6px 11px;font-size:12px}
+body.clean .dock,body.clean .title{display:none}
+@media (max-width:640px){ .title{top:52px} .title h1{font-size:19px} .title p{display:none} }
+#notice{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:rgba(5,6,10,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto}
+#notice[hidden]{display:none!important}
+#noticeCard{width:min(520px,100%);padding:22px 24px 20px;background:#110f16;border:1px solid var(--line);border-radius:18px;font:400 14px/1.6 "Inter",sans-serif;color:#cfc6d5}
+#noticeCard h2{margin:0 0 12px;font:600 12px "Inter",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+#noticeCard p{margin:0 0 12px}#noticeCard b{color:var(--ink);font-weight:600}
+#noticeGo{margin-top:4px;background:var(--violet);color:#120b1f;font-weight:600;border:0}
+#diag{position:fixed;left:14px;bottom:14px;z-index:7;font:12px/1.5 monospace;color:#cbb7ff;background:rgba(16,14,20,.7);
+  border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:none;white-space:pre}
+#err{position:fixed;inset:0;display:none;place-items:center;padding:24px;text-align:center;color:var(--muted);z-index:50}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+
+<div class="title"><h1>Honey Bee Flight</h1><p>A bee's-eye drift over giant flowers</p></div>
+
+<div class="dock">
+  <button id="vrBtn" class="vr" disabled>Checking VR…</button>
+  <button id="muteBtn">Sound: on</button>
+  <span class="hint">Drag to look around · X for readout · H to hide</span>
+</div>
+<button id="hideUI">Hide</button>
+
+<div id="diag"></div>
+
+<div id="notice">
+  <div id="noticeCard">
+    <h2>Notice before you begin</h2>
+    <p><b>What this is.</b> A bee's-eye view drifting slowly over a field of giant flowers, folded from paper in the same style as Origami Jungle: paper-grain petals, visible fold creases, and the white back of the paper showing through on the underside of a bending petal or leaf. It is a digital creation, not a real place.</p>
+    <p><b>Comfort.</b> You do not steer. The flight follows one fixed, gentle, looping path at a constant slow speed — smooth curves, no sudden turns or climbs. On a laptop or phone, dragging only nudges which way you're looking, not where you go. There is a faint vignette at the edge of view while moving, which some people find eases motion sensitivity; it fades to nothing when you hold still.</p>
+    <p><b>In VR.</b> Built for Meta Quest 2 and 3 in a browser. Your own head movement — turning, leaning, crouching — still works normally on top of the flight path.</p>
+    <p class="hint">Build 2026-10-20</p>
+    <button id="noticeGo">Begin</button>
+  </div>
+</div>
+
+<div id="err"><div>
+  <p>Something went wrong starting Honey Bee Flight.</p>
+  <p class="hint" id="errMsg"></p>
+</div></div>
+
+<script type="module">
+import * as THREE from "/toolkit/glb-studio/vendor/three.module.min.js";
+
+/* ================================================================
+   HONEY BEE FLIGHT — build notes
+   ------------------------------------------------------------------
+   The flowers below are built with the same "folded paper" idea as
+   Origami Jungle: a flat strip of triangles gets a raised centre
+   crease (a "mountain fold"), so the two halves of the strip catch
+   light differently and read as a fold rather than a flat sticker.
+   The leaf()-folding function just below is ported, almost line for
+   line, from Origami Jungle's leaf() — same trick, scaled up to
+   bee-sized giant petals instead of forest-sized leaves.
+
+   Unlike Origami Jungle (which has its own hand-written WebGL2
+   renderer with instancing across hundreds of plants), this scene
+   only needs 15-30 giant flowers, so it is built as ordinary
+   three.js meshes with one small custom "paper" shader — simpler,
+   and plenty fast for this scene's size. ------------------------ */
+
+// ---------- seeded RNG (load-time layout only, never per frame — see WebXR standard §1) ----------
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rng = mulberry32(20261020);
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.xr.enabled = true;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x1c1026, 0.009);
+
+/* ---------- sky: a huge inside-out sphere with a hand-painted vertex
+   gradient (near-black overhead fading to a violet/rose glow at the
+   horizon), the same cheap trick Mars Sky uses. It also gives the flight
+   a fixed, stable horizon line to look at — a steady visual reference
+   that helps comfort during continuous movement (WebXR standard §3). */
+const skyGeo = new THREE.SphereGeometry(300, 24, 16);
+const skyPos = skyGeo.attributes.position;
+const skyColor = new Float32Array(skyPos.count * 3);
+const skyTop = new THREE.Color(0x070512), skyHorizon = new THREE.Color(0x4a2a4a);
+for(let i=0;i<skyPos.count;i++){
+  const y = skyPos.getY(i) / 300;
+  const f = Math.pow(Math.max(0, 1 - Math.max(y,0)*1.4), 2);
+  const c = skyTop.clone().lerp(skyHorizon, Math.min(1,f));
+  skyColor[i*3]=c.r; skyColor[i*3+1]=c.g; skyColor[i*3+2]=c.b;
+}
+skyGeo.setAttribute('color', new THREE.BufferAttribute(skyColor, 3));
+const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors:true, side:THREE.BackSide, fog:false }));
+scene.add(sky);
+
+const camera = new THREE.PerspectiveCamera(62, innerWidth/innerHeight, 0.1, 400);
+camera.near = 0.1; // depthNear 0.1 in VR, per the standard
+
+/* The "dolly" carries the flight path: its position/orientation is set
+   every frame from the guided curve below. The camera sits inside it at
+   local (0,0,0) — in VR, the headset moves the camera a little more on
+   top of that (real lean, nod, turn); the dolly never touches the
+   camera's own local transform, so real head movement is never
+   overwritten (WebXR standard §3). */
+const dolly = new THREE.Group();
+dolly.add(camera);
+scene.add(dolly);
+
+/* ---------- lighting (simple — the paper shader below does its own sun/fill/ambient mix) ---------- */
+scene.add(new THREE.AmbientLight(0x4a3a60, 0.9));
+const sun = new THREE.DirectionalLight(0xfff0d9, 1.0);
+sun.position.set(30, 60, 20);
+scene.add(sun);
+
+// ================================================================ FOLDED PAPER (ported from Origami Jungle's Fold/leaf())
+class Fold {
+  constructor(){ this.pos=[]; this.nrm=[]; this.col=[]; this.crease=[]; }
+  push(p,n,c,crease){ this.pos.push(p[0],p[1],p[2]); this.nrm.push(n[0],n[1],n[2]); this.col.push(c[0],c[1],c[2]); this.crease.push(crease); }
+  tri(a,b,c){ // a,b,c are {p,c,crease} triples sharing a flat face normal
+    const n = faceNormal(a.p,b.p,c.p);
+    this.push(a.p,n,a.c,a.crease); this.push(b.p,n,b.c,b.crease); this.push(c.p,n,c.c,c.crease);
+  }
+}
+function faceNormal(a,b,c){
+  const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]], v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
+  const n=[u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]];
+  const len=Math.hypot(n[0],n[1],n[2])||1;
+  return [n[0]/len,n[1]/len,n[2]/len];
+}
+const V = {
+  add:(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],
+  mul:(a,s)=>[a[0]*s,a[1]*s,a[2]*s], cross:(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],
+  len:a=>Math.hypot(a[0],a[1],a[2]), norm:a=>{const l=V.len(a)||1;return [a[0]/l,a[1]/l,a[2]/l];}
+};
+const mix=(a,b,t)=>a+(b-a)*t;
+
+/* A folded strip: base point o, initial direction dir, length/width len/wid,
+   how much it arcs (droop), fold depth (crease), and a flat colour.
+   Same shape of maths as Origami Jungle's leaf(), used here for petals,
+   sepals and leaves instead of forest leaves. 'crease' marker (0 centre,
+   1 edge) lets the shader draw a faint highlight line along the fold. */
+function foldedStrip(F, o, dir, q){
+  const segs=q.segs||5, len=q.len, wid=q.wid, droop=q.droop||0, fold=q.fold==null?.22:q.fold;
+  const color=q.color;
+  dir=V.norm(dir);
+  let side=V.cross(dir,[0,1,0]); side = V.len(side)<1e-3 ? [1,0,0] : V.norm(side);
+  const L=[],S=[],R=[]; let c=o.slice();
+  for(let i=0;i<=segs;i++){
+    const u=i/segs, th=droop*u;
+    const d=V.norm(V.add(V.mul(dir,Math.cos(th)), V.mul(V.cross(side,dir),-Math.sin(th))));
+    const n=V.norm(V.cross(side,d));
+    let hw=wid*.5*Math.pow(Math.sin(Math.PI*Math.min(1,u*.93+.07)),.7)*(q.taper?mix(1,.3,u):1);
+    if(i===segs) hw=0;
+    const dn=V.mul(n,-fold*hw);
+    L.push({p:V.add(V.add(c,V.mul(side,-hw)),dn), c:color, crease:1});
+    S.push({p:c.slice(), c:color, crease:0});
+    R.push({p:V.add(V.add(c,V.mul(side,hw)),dn), c:color, crease:1});
+    if(i<segs) c=V.add(c,V.mul(d,len/segs));
+  }
+  for(let i=0;i<segs;i++){
+    F.tri(L[i],S[i],S[i+1]); F.tri(L[i],S[i+1],L[i+1]);
+    F.tri(S[i],R[i],R[i+1]); F.tri(S[i],R[i+1],S[i+1]);
+  }
+  return c;
+}
+// a simple faceted cone/tube for stems and stamens
+function tube(F, rings, sides, color){
+  const n=rings.length, idx=[];
+  for(let i=0;i<n;i++){
+    const a=rings[Math.max(i-1,0)].c, b=rings[Math.min(i+1,n-1)].c, d=V.norm(V.sub(b,a));
+    const ref=Math.abs(d[1])>.9?[1,0,0]:[0,1,0];
+    const sd=V.norm(V.cross(d,ref)), up=V.cross(sd,d), r=rings[i], row=[];
+    for(let k=0;k<sides;k++){ const ang=2*Math.PI*k/sides;
+      row.push(V.add(r.c, V.add(V.mul(sd,Math.cos(ang)*r.r), V.mul(up,Math.sin(ang)*r.r)))); }
+    idx.push(row);
+  }
+  for(let i=0;i<n-1;i++) for(let k=0;k<sides;k++){
+    const k2=(k+1)%sides;
+    F.tri({p:idx[i][k],c:color,crease:0},{p:idx[i+1][k],c:color,crease:0},{p:idx[i+1][k2],c:color,crease:0});
+    F.tri({p:idx[i][k],c:color,crease:0},{p:idx[i+1][k2],c:color,crease:0},{p:idx[i][k2],c:color,crease:0});
+  }
+}
+
+// ---------- the paper shader: flat per-triangle lighting, white paper-back on the far side, faint crease highlight ----------
+const PAPER_VS = `
+attribute float crease;
+varying vec3 vColor; varying vec3 vNormalW; varying float vCrease;
+void main(){
+  vColor = color; vCrease = crease;
+  vNormalW = normalize(mat3(modelMatrix) * normal);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+}`;
+const PAPER_FS = `
+varying vec3 vColor; varying vec3 vNormalW; varying float vCrease;
+uniform vec3 uSunDir;
+void main(){
+  // origami paper is coloured on one side, white on the other — the back
+  // of a folded petal shows the paler side (Origami Jungle: paperBack()).
+  vec3 albedo = gl_FrontFacing ? vColor : mix(vColor, vec3(0.95,0.93,0.88), 0.62);
+  vec3 n = gl_FrontFacing ? vNormalW : -vNormalW;
+  float s = dot(n, uSunDir);
+  vec3 sun = vec3(1.0,0.96,0.88) * clamp(s*0.75+0.35, 0.0, 1.0);
+  vec3 amb = vec3(0.30,0.27,0.38) + vec3(0.10,0.08,0.14) * (n.y*0.5+0.5);
+  vec3 lit = albedo * (sun + amb);
+  // a faint light line along the fold's centre crease, like a pressed paper fold catching light
+  lit += vec3(0.06) * (1.0 - smoothstep(0.0, 1.0, vCrease));
+  gl_FragColor = vec4(lit, 1.0);
+}`;
+function paperMaterial(){
+  return new THREE.ShaderMaterial({
+    uniforms:{ uSunDir:{ value: new THREE.Vector3(0.4,0.75,0.3).normalize() } },
+    vertexShader: PAPER_VS, fragmentShader: PAPER_FS, side: THREE.DoubleSide, vertexColors: true
+  });
+}
+function buildMesh(F){
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(F.pos,3));
+  geo.setAttribute('normal', new THREE.Float32BufferAttribute(F.nrm,3));
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(F.col,3));
+  geo.setAttribute('crease', new THREE.Float32BufferAttribute(F.crease,1));
+  return new THREE.Mesh(geo, paperMaterial());
+}
+
+// ---------- flower templates: a handful of species, each a different fold pattern ----------
+// Colours match the site's neon palette family: violet / pink / blue blossoms, warm gold centres.
+const PETAL_PALETTES = [
+  {petal:[0.70,0.42,0.82], inner:[0.86,0.66,0.92], centre:[0.95,0.72,0.28], leaf:[0.30,0.52,0.30]},
+  {petal:[0.86,0.42,0.68], inner:[0.96,0.70,0.82], centre:[0.98,0.80,0.30], leaf:[0.26,0.48,0.34]},
+  {petal:[0.40,0.52,0.90], inner:[0.68,0.74,0.98], centre:[0.95,0.75,0.30], leaf:[0.28,0.50,0.32]},
+  {petal:[0.62,0.46,0.92], inner:[0.84,0.70,0.98], centre:[0.92,0.68,0.26], leaf:[0.32,0.54,0.28]}
+];
+function makeFlowerTemplate(seed, palette){
+  const F = new Fold(), r = mulberry32(seed);
+  // outer ring of six large petals, folded with a visible centre crease
+  const outerN = 6;
+  for(let k=0;k<outerN;k++){
+    const az = (k/outerN)*6.283 + r()*0.12;
+    foldedStrip(F, [0,0.05,0], [Math.cos(az), 0.18+r()*0.08, Math.sin(az)], {
+      len: 2.1+r()*0.3, wid: 1.25+r()*0.15, segs:6, droop: 1.15+r()*0.2, fold: 0.30, taper:true, color: palette.petal
+    });
+  }
+  // inner ring of five smaller, paler petals, standing a bit more upright
+  const innerN = 5;
+  for(let k=0;k<innerN;k++){
+    const az = (k/innerN)*6.283 + r()*0.2 + 0.4;
+    foldedStrip(F, [0,0.25,0], [Math.cos(az), 0.65+r()*0.15, Math.sin(az)], {
+      len: 0.95+r()*0.2, wid: 0.6, segs:4, droop: 0.4, fold: 0.26, taper:true, color: palette.inner
+    });
+  }
+  // centre: a short faceted cone of "stamens" — reuses the tube() faceted-cone trick
+  tube(F, [{c:[0,0.22,0], r:0.42},{c:[0,0.5,0], r:0.30},{c:[0,0.66,0], r:0}], 10, palette.centre);
+  // a couple of broad folded leaves at the base, in the Origami Jungle leaf style
+  for(let k=0;k<2;k++){
+    const az = r()*6.283;
+    foldedStrip(F, [Math.cos(az)*0.3, -0.1, Math.sin(az)*0.3], [Math.cos(az), -0.08, Math.sin(az)], {
+      len: 1.6+r()*0.4, wid: 1.0, segs:5, droop: 1.3, fold: 0.26, taper:true, color: palette.leaf
+    });
+  }
+  return buildMesh(F);
+}
+const TEMPLATES = PETAL_PALETTES.map((p,i)=>makeFlowerTemplate(1000+i*7, p));
+
+// ---------- the flower field: 22 giant flowers on stems, placed either side of the flight path ----------
+// Scale ~2-3x gives each flower head roughly 8-13m across — "house-sized" next
+// to a bee, without the petals swallowing the whole view. Each flower sits on
+// a simple stem so it reads as rising from the ground rather than floating.
+const GROUND_Y = -6;
+const stemMat = new THREE.MeshStandardMaterial({ color:0x2e4a2e, roughness:0.95 });
+const flowerGroup = new THREE.Group();
+scene.add(flowerGroup);
+const FLOWER_COUNT = 22;
+const flowerSpots = [];
+for(let i=0;i<FLOWER_COUNT;i++){
+  const t = i / FLOWER_COUNT;
+  const tmpl = TEMPLATES[Math.floor(rng()*TEMPLATES.length)];
+  const m = tmpl.clone();
+  const scale = 2.1 + rng()*1.1;
+  m.scale.setScalar(scale);
+  // spread flowers in a loose double row either side of where the path will run,
+  // far enough off the line that the guided flight clears the petals comfortably
+  const along = t*220 - 110 + (rng()-0.5)*8;
+  const side = (i%2===0 ? 1 : -1) * (11 + rng()*9);
+  const stemHeight = 3.2 + rng()*2.4;
+  m.position.set(along, GROUND_Y + stemHeight, side);
+  m.rotation.y = rng()*6.283;
+  flowerGroup.add(m);
+  flowerSpots.push(m.position.clone());
+
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.26,stemHeight,7), stemMat);
+  stem.position.set(along, GROUND_Y + stemHeight/2, side);
+  flowerGroup.add(stem);
+}
+// soft ground plane so flowers don't float in a void
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(500,500),
+  new THREE.MeshStandardMaterial({ color:0x18241a, roughness:1 })
+);
+ground.rotation.x = -Math.PI/2; ground.position.y = GROUND_Y;
+scene.add(ground);
+
+// ---------- pollen / dust motes: smooth, time-driven drift (never per-frame random — standard §1) ----------
+const MOTE_COUNT = 500;
+const motePos = new Float32Array(MOTE_COUNT*3);
+const motePhase = new Float32Array(MOTE_COUNT);
+const moteBase = new Float32Array(MOTE_COUNT*3);
+for(let i=0;i<MOTE_COUNT;i++){
+  const x=(rng()-0.5)*200, y=rng()*8-1, z=(rng()-0.5)*40;
+  motePos[i*3]=x; motePos[i*3+1]=y; motePos[i*3+2]=z;
+  moteBase[i*3]=x; moteBase[i*3+1]=y; moteBase[i*3+2]=z;
+  motePhase[i]=rng()*6.283;
+}
+const moteGeo = new THREE.BufferGeometry();
+moteGeo.setAttribute('position', new THREE.BufferAttribute(motePos,3));
+moteGeo.setAttribute('base', new THREE.BufferAttribute(moteBase,3));
+moteGeo.setAttribute('phase', new THREE.BufferAttribute(motePhase,1));
+const moteMat = new THREE.ShaderMaterial({
+  uniforms:{ uTime:{value:0} },
+  vertexShader:`
+    attribute vec3 base; attribute float phase; uniform float uTime;
+    varying float vA;
+    void main(){
+      vec3 p = base;
+      p.x += sin(uTime*0.15 + phase) * 1.6;
+      p.y += sin(uTime*0.35 + phase*1.7) * 0.5 + 0.3;
+      p.z += cos(uTime*0.12 + phase*0.6) * 1.6;
+      vA = 0.5 + 0.5*sin(uTime*0.8 + phase*3.1);
+      vec4 mv = modelViewMatrix * vec4(p,1.0);
+      gl_Position = projectionMatrix * mv;
+      gl_PointSize = 5.0 * (1.0/-mv.z) * 60.0;
+    }`,
+  fragmentShader:`
+    varying float vA;
+    void main(){
+      vec2 c = gl_PointCoord-0.5; float d=length(c);
+      if(d>0.5) discard;
+      gl_FragColor = vec4(1.0,0.95,0.75, vA*(1.0-d*2.0)*0.55);
+    }`,
+  transparent:true, depthWrite:false
+});
+const motes = new THREE.Points(moteGeo, moteMat);
+scene.add(motes);
+
+// ================================================================ THE GUIDED FLIGHT PATH
+// A fixed, closed, smooth curve the camera always follows at a constant
+// speed — never steered by the visitor (standard §3: comfort). Control
+// points weave gently between the flower rows, with only small, gradual
+// height changes (never a sudden climb or dive).
+const pathPoints = [
+  [-110, 2.0,  0], [-85, 2.6, 3], [-60, 2.2, -3], [-35, 3.0, 2],
+  [-10, 2.4, -2],  [15, 3.2, 3],  [40, 2.6, -3],  [65, 3.0, 2],
+  [90, 2.2, -2],   [110, 2.8, 0], [95, 3.4, 6],    [60, 3.0, 8],
+  [20, 2.6, 7],    [-20, 3.2, 8], [-60, 2.8, 7],   [-95, 2.4, 5]
+].map(p=>new THREE.Vector3(p[0],p[1],p[2]));
+const flightCurve = new THREE.CatmullRomCurve3(pathPoints, true, 'catmullrom', 0.5);
+const CURVE_LEN = flightCurve.getLength();
+const FLIGHT_SPEED = 2.0; // m/s — slow and constant, the whole flight through
+let pathT = 0; // 0..1 fraction of one full loop, advanced at constant real speed below
+
+// ---------- desktop / phone look-nudge: drag only changes where you're looking, never the path ----------
+let lookYaw = 0, lookPitch = -0.05, dragging = false, lastX = 0, lastY = 0;
+function onDown(x,y){ dragging = true; lastX = x; lastY = y; }
+function onMove(x,y){
+  if(!dragging) return;
+  lookYaw   -= (x - lastX) * 0.0035;
+  lookPitch -= (y - lastY) * 0.0035;
+  lookPitch = Math.max(-1.1, Math.min(1.1, lookPitch));
+  lastX = x; lastY = y;
+}
+function onUp(){ dragging = false; }
+canvas.addEventListener('pointerdown', e=>onDown(e.clientX,e.clientY));
+canvas.addEventListener('pointermove', e=>onMove(e.clientX,e.clientY));
+window.addEventListener('pointerup', onUp);
+
+// ================================================================ COMFORT VIGNETTE (per-eye, lens-axis centred — standard §1/§3)
+// A plane parented to each eye camera, very close and oversized so it always
+// covers the full view regardless of FOV. Its radial fade is centred using
+// the eye's own asymmetric-frustum offset (proj[8], proj[9]), not the screen
+// corner, so in a headset each eye's vignette sits on that eye's own lens
+// axis rather than drifting with head yaw.
+const VIGNETTE_VS = `varying vec2 vUv; void main(){ vUv=uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`;
+const VIGNETTE_FS = `
+  varying vec2 vUv; uniform float uStrength; uniform vec2 uCenter;
+  void main(){
+    vec2 d = vUv - uCenter;
+    float r = length(d);
+    float a = smoothstep(0.32, 0.56, r) * uStrength;
+    gl_FragColor = vec4(0.0,0.0,0.0, a);
+  }`;
+function makeVignette(){
+  const geo = new THREE.PlaneGeometry(26,26);
+  const mat = new THREE.ShaderMaterial({
+    uniforms:{ uStrength:{value:0}, uCenter:{value:new THREE.Vector2(0.5,0.5)} },
+    vertexShader: VIGNETTE_VS, fragmentShader: VIGNETTE_FS,
+    transparent:true, depthTest:false, depthWrite:false
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(0,0,-0.9);
+  mesh.renderOrder = 999;
+  return mesh;
+}
+const desktopVignette = makeVignette();
+camera.add(desktopVignette);
+const eyeVignettes = new Map(); // eye sub-camera -> vignette mesh, attached once each
+function ensureEyeVignette(eyeCam){
+  if(eyeVignettes.has(eyeCam)) return eyeVignettes.get(eyeCam);
+  const v = makeVignette();
+  const p = eyeCam.projectionMatrix.elements;
+  v.material.uniforms.uCenter.value.set(0.5 - p[8]*0.5, 0.5 - p[9]*0.5);
+  eyeCam.add(v);
+  eyeVignettes.set(eyeCam, v);
+  return v;
+}
+function setVignetteStrength(strength){
+  desktopVignette.material.uniforms.uStrength.value = strength;
+  for(const v of eyeVignettes.values()) v.material.uniforms.uStrength.value = strength;
+}
+
+/* ---------- VR entry ---------- */
+const vrBtn = document.getElementById('vrBtn');
+let xrSession = null, xrRefSpace = null;
+if(navigator.xr){
+  navigator.xr.isSessionSupported('immersive-vr').then(ok=>{
+    vrBtn.disabled = !ok;
+    vrBtn.textContent = ok ? 'Enter VR' : 'VR not available here';
+  });
+} else {
+  vrBtn.textContent = 'VR not available here';
+}
+vrBtn.addEventListener('click', async ()=>{
+  if(xrSession) return;
+  xrSession = await navigator.xr.requestSession('immersive-vr', { optionalFeatures:['local-floor'] });
+  await renderer.xr.setSession(xrSession);
+  try{ xrSession.updateTargetFrameRate && xrSession.updateTargetFrameRate(72); }catch(e){}
+  const isQuest2 = /Quest\s?2(?!0)/i.test(navigator.userAgent);
+  renderer.xr.setFramebufferScaleFactor(isQuest2 ? 0.8 : 0.9);
+  vrBtn.textContent = 'In VR…';
+  // listen for recentre: re-anchor rather than letting the view jump (standard §3)
+  try{
+    xrRefSpace = renderer.xr.getReferenceSpace();
+    xrRefSpace && xrRefSpace.addEventListener('reset', ()=>{ /* dolly keeps driving the path; headset re-anchors locally */ });
+  }catch(e){}
+  xrSession.addEventListener('end', ()=>{ xrSession = null; vrBtn.textContent = 'Enter VR'; });
+});
+
+/* ---------- controllers: drawn for presence, per the standard, even though the flight path is fixed ---------- */
+function addControllerVisual(i){
+  const grip = renderer.xr.getControllerGrip(i);
+  const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.022,0.11,10),
+    new THREE.MeshStandardMaterial({ color:0x1a1a1a }));
+  handle.rotation.x = Math.PI/2.2;
+  grip.add(handle);
+  dolly.add(grip);
+
+  const ray = renderer.xr.getController(i);
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.0015,0.006,0.5,6),
+    new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.3 }));
+  beam.rotation.x = -Math.PI/2; beam.position.z = -0.25;
+  ray.add(beam);
+  dolly.add(ray);
+}
+addControllerVisual(0); addControllerVisual(1);
+
+/* ---------- in-headset message panel ---------- */
+function makePanel(text){
+  const cnv = document.createElement('canvas'); cnv.width = 1024; cnv.height = 384;
+  const ctx = cnv.getContext('2d');
+  ctx.fillStyle = 'rgba(16,14,20,0.82)'; ctx.fillRect(0,0,1024,384);
+  ctx.strokeStyle = 'rgba(190,150,255,0.5)'; ctx.lineWidth = 4; ctx.strokeRect(2,2,1020,380);
+  ctx.fillStyle = '#f2ece0'; ctx.font = '600 46px Inter, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(text, 512, 220);
+  const tex = new THREE.CanvasTexture(cnv);
+  const mat = new THREE.MeshBasicMaterial({ map:tex, transparent:true });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(0.84, 0.315), mat);
+  mesh.position.set(0, -0.2, -1.55);
+  mesh.rotation.x = -0.5236;
+  camera.add(mesh);
+  return mesh;
+}
+let panel = null, panelT0 = 0;
+renderer.xr.addEventListener('sessionstart', ()=>{
+  panel = makePanel('Drifting over giant blossoms. Just enjoy the ride.');
+  panelT0 = performance.now();
+});
+renderer.xr.addEventListener('sessionend', ()=>{ if(panel){ camera.remove(panel); panel = null; } });
+
+/* ---------- ambient buzz: Web Audio, two detuned low oscillators through a lowpass, slow amplitude wobble ---------- */
+let audioCtx = null, buzzOn = true, buzzNodes = null;
+function startBuzz(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const gain = audioCtx.createGain(); gain.gain.value = 0.05;
+  const filt = audioCtx.createBiquadFilter(); filt.type = 'lowpass'; filt.frequency.value = 420;
+  const o1 = audioCtx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=92;
+  const o2 = audioCtx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=97;
+  const lfo = audioCtx.createOscillator(); lfo.type='sine'; lfo.frequency.value=5.2;
+  const lfoGain = audioCtx.createGain(); lfoGain.gain.value=0.025;
+  lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+  o1.connect(filt); o2.connect(filt); filt.connect(gain); gain.connect(audioCtx.destination);
+  o1.start(); o2.start(); lfo.start();
+  buzzNodes = {gain, o1, o2, lfo};
+}
+document.getElementById('muteBtn').addEventListener('click', (e)=>{
+  buzzOn = !buzzOn;
+  e.target.textContent = 'Sound: ' + (buzzOn ? 'on' : 'off');
+  if(audioCtx) buzzNodes.gain.gain.value = buzzOn ? 0.05 : 0;
+});
+
+/* ---------- X button / diagnostics ---------- */
+const diag = document.getElementById('diag');
+let diagOn = false, lastFrames = [];
+document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='x') diagOn = !diagOn; if(e.key.toLowerCase()==='h') document.body.classList.toggle('clean'); });
+function pollXButtons(){
+  const sources = xrSession ? xrSession.inputSources : [];
+  for(const src of sources){
+    if(src.gamepad && (src.gamepad.buttons[4]?.pressed || src.gamepad.buttons[5]?.pressed)){ diagOn = true; return; }
+  }
+}
+document.getElementById('hideUI').addEventListener('click', ()=>document.body.classList.toggle('clean'));
+
+/* ---------- notice modal ---------- */
+const notice = document.getElementById('notice');
+document.getElementById('noticeGo').addEventListener('click', ()=>{
+  notice.hidden = true;
+  startBuzz();
+});
+
+/* ---------- resize ---------- */
+function resize(){
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ================================================================ main loop ---------- */
+const UP = new THREE.Vector3(0,1,0);
+const clock = new THREE.Clock();
+let smoothedQuat = new THREE.Quaternion();
+let firstFrame = true;
+
+renderer.setAnimationLoop(()=>{
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+  moteMat.uniforms.uTime.value = t;
+
+  // ---- advance along the path at a CONSTANT real-world speed (standard §3: no sudden speed changes) ----
+  pathT = (pathT + (FLIGHT_SPEED * dt) / CURVE_LEN) % 1;
+  const pos = flightCurve.getPointAt(pathT);
+  const ahead = flightCurve.getPointAt((pathT + 0.004) % 1);
+  dolly.position.copy(pos);
+
+  // orient the dolly to face where the path goes next; smoothed frame to frame
+  // so even the (already-smooth) curve never produces a visible snap
+  const dir = ahead.clone().sub(pos).normalize();
+  const targetQuat = new THREE.Quaternion().setFromRotationMatrix(
+    new THREE.Matrix4().lookAt(pos, ahead, UP)
+  );
+  if(firstFrame){ smoothedQuat.copy(targetQuat); firstFrame = false; }
+  smoothedQuat.slerp(targetQuat, Math.min(1, dt*2.2));
+  dolly.quaternion.copy(smoothedQuat);
+
+  // desktop/phone look-nudge rides on top of the path, inside the dolly's local space.
+  // In VR the headset itself drives the camera's local rotation, so we leave it alone there.
+  if(!renderer.xr.isPresenting){
+    camera.rotation.order = 'YXZ';
+    camera.rotation.y = lookYaw;
+    camera.rotation.x = lookPitch;
+  }
+
+  // ---- comfort vignette: driven by actual speed (here constant while flying, fading
+  // to nothing within a couple of seconds after the notice closes, never instant) ----
+  const age = t;
+  const rampIn = Math.min(1, age/2.5);
+  setVignetteStrength(0.16 * rampIn);
+  if(renderer.xr.isPresenting){
+    const xrCam = renderer.xr.getCamera();
+    if(xrCam.cameras && xrCam.cameras.length===2){
+      ensureEyeVignette(xrCam.cameras[0]);
+      ensureEyeVignette(xrCam.cameras[1]);
+    }
+  }
+
+  if(panel){
+    const pAge = (performance.now() - panelT0)/1000;
+    panel.material.opacity = Math.max(0, Math.min(1, 1 - (pAge-6)/2));
+  }
+
+  pollXButtons();
+  if(diagOn){
+    lastFrames.push(performance.now());
+    if(lastFrames.length>60) lastFrames.shift();
+    const fps = lastFrames.length>1 ? Math.round(1000*(lastFrames.length-1)/(lastFrames[lastFrames.length-1]-lastFrames[0])) : 0;
+    diag.style.display = 'block';
+    diag.textContent = `Honey Bee Flight — Build 2026-10-20\nheadset: ${renderer.xr.isPresenting ? (navigator.userAgent.match(/Quest\s?(3S|3|2|Pro)/)?.[0] || 'XR') : 'desktop'}\nfps: ${fps} / target 72\nquality: fixed (scene is light)\nflight: t=${pathT.toFixed(2)} speed=${FLIGHT_SPEED}m/s`;
+  } else {
+    diag.style.display = 'none';
+  }
+
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('error', e=>{
+  document.getElementById('err').style.display = 'grid';
+  document.getElementById('errMsg').textContent = e.message || 'Unknown error';
+});
+</script>
+</body>
+</html>
