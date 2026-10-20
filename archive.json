@@ -383,6 +383,33 @@
   "desc": "A 24-hour hackathon for 50 to 60 builders that judges teams on real user traction rather than slides. The winning team gets an investor screening with Venture Catalysts, plus a ₹1 lakh prize pool.",
   "firstSeen": "2026-09-28"
  },
+ "founders-meetup-mumbai-oct23": {
+  "id": "founders-meetup-mumbai-oct23",
+  "title": "Founder's Meetup Mumbai 2026",
+  "cat": "Startup",
+  "tags": [
+   "Networking",
+   "Founders",
+   "Investors"
+  ],
+  "area": "Vidyavihar",
+  "venue": "Somaiya Vidyavihar University, Vidyavihar",
+  "start": "2026-10-23T11:00",
+  "end": "14:00",
+  "fmt": "Offline",
+  "price": 749,
+  "priceNote": "₹749 per attendee",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "StartupGrants India",
+  "url": "https://www.startupgrantsindia.com/events/founders-meetup-mumbai-2026",
+  "org": "StartupNews.fyi (DOTFYI Media Ventures)",
+  "access": "open",
+  "desc": "A small, curated networking morning where Mumbai startup founders meet investors, accelerators and mentors face to face. It is part of a two-city October series with Pune.",
+  "firstSeen": "2026-10-20"
+ },
  "frontier-d2c-ai-summit": {
   "id": "frontier-d2c-ai-summit",
   "title": "Frontier D2C AI Summit, 2nd edition",

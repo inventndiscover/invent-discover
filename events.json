@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-19T05:21:45+05:30",
+ "REFRESHED": "2026-10-20T05:20:00+05:30",
  "EVENTS_RAW": [
   {
    "id": "code-to-capital",
@@ -25,6 +25,32 @@
    "org": "LegalTechMeet",
    "access": "open",
    "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers."
+  },
+  {
+   "id": "founders-meetup-mumbai-oct23",
+   "title": "Founder's Meetup Mumbai 2026",
+   "cat": "Startup",
+   "tags": [
+    "Networking",
+    "Founders",
+    "Investors"
+   ],
+   "area": "Vidyavihar",
+   "venue": "Somaiya Vidyavihar University, Vidyavihar",
+   "start": "2026-10-23T11:00",
+   "end": "14:00",
+   "fmt": "Offline",
+   "price": 749,
+   "priceNote": "₹749 per attendee",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "StartupGrants India",
+   "url": "https://www.startupgrantsindia.com/events/founders-meetup-mumbai-2026",
+   "org": "StartupNews.fyi (DOTFYI Media Ventures)",
+   "access": "open",
+   "desc": "A small, curated networking morning where Mumbai startup founders meet investors, accelerators and mentors face to face. It is part of a two-city October series with Pune."
   },
   {
    "id": "ai-leadership-playbook",
@@ -79,6 +105,32 @@
    "org": "IFP",
    "access": "open",
    "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper."
+  },
+  {
+   "id": "structuring-ai-openarrow",
+   "title": "Structuring the AI Way (OpenArrow)",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Automation",
+    "Workflows"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue shared after registration (Gulmohar Road listing)",
+   "start": "2026-10-24T10:00",
+   "end": "13:00",
+   "fmt": "In person",
+   "price": null,
+   "priceNote": "Price not stated on the page; attendees get a one-week trial of OpenArrow",
+   "aud": [
+    "Founder",
+    "Developer"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/c6v1qjx0",
+   "org": "OpenArrow",
+   "access": "approval",
+   "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked."
   },
   {
    "id": "global-startups-club-oct24",
@@ -405,32 +457,6 @@
    "org": "MCEXPERT",
    "access": "open",
    "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
-  },
-  {
-   "id": "structuring-ai-openarrow",
-   "title": "Structuring the AI Way (OpenArrow)",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Automation",
-    "Workflows"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue shared after registration (Gulmohar Road listing)",
-   "start": "2026-10-24T10:00",
-   "end": "13:00",
-   "fmt": "In person",
-   "price": null,
-   "priceNote": "Price not stated on the page; attendees get a one-week trial of OpenArrow",
-   "aud": [
-    "Founder",
-    "Developer"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/c6v1qjx0",
-   "org": "OpenArrow",
-   "access": "approval",
-   "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked."
   }
  ],
  "QUEUE_RAW": [
@@ -826,32 +852,62 @@
     "category": 90
    },
    "hint": "2026-11-19"
+  },
+  {
+   "qid": "q-google-data-challenge",
+   "title": "Building Mumbai's AI Talent | Launch of the Google Mumbai Data Challenge",
+   "cat": "Climate",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/h3hq02qb",
+   "access": "approval",
+   "why": "Launch evening (7:30-9:30 pm) has no date on the page; the online challenge itself runs 26 Oct-9 Nov 2026.",
+   "conf": {
+    "date": 0,
+    "place": 30,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-near-builders-cafe",
+   "title": "Near Builder's Cafe #2",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/ijy8hzbj",
+   "access": "approval",
+   "why": "No date or venue on the page; an evening AI discussion circle.",
+   "conf": {
+    "date": 0,
+    "place": 20,
+    "category": 70
+   }
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai opened; 6 event pages fetched",
-   "found": 11,
-   "pub": 1,
-   "review": 0,
+   "what": "luma.com/mumbai listing plus 6 event pages (Google Data Challenge, Cloud Community Days, Agri AI, Gemma 4, Near Builder's Cafe, Agentic Commerce, Launchpad)",
+   "found": 17,
+   "pub": 0,
+   "review": 2,
    "dup": 0,
    "skip": 1,
-   "note": "Structuring the AI Way confirmed (24 Oct) and published. Swift Mumbai Assemble was 17 Oct (past), skipped. Durable DevOps, Gemma 4 workshop and Agentic Commerce pages show no date, so they stay in the queue."
+   "note": "Luma pages show no dates, so all stay queued. Two new queue items added. Launchpad Mumbai skipped (registration closed). /discover/ai and /discover/tech pages were refused."
   },
   {
    "src": "AllEvents",
-   "what": "allevents.in/mumbai/technology and /startup fetch blocked",
+   "what": "allevents.in/mumbai/startup opened; /technology refused",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable this run (permission request timed out); existing entries kept."
+   "note": "Startup page showed only past events; technology page unreachable (permission timed out). Existing entries kept."
   },
   {
    "src": "dev.events",
-   "what": "fetch blocked",
+   "what": "fetch refused",
    "found": 0,
    "pub": 0,
    "review": 0,
@@ -861,23 +917,23 @@
   },
   {
    "src": "hiddenevents",
-   "what": "not opened this run",
+   "what": "fetch refused",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not used."
+   "note": "Unreachable this run; not used."
   },
   {
    "src": "web search",
-   "what": "3 searches (Mumbai AI meetup, hackathon/design/XR, tech/startup events)",
-   "found": 4,
-   "pub": 0,
+   "what": "6 searches (AI meetups, hackathons/XR, design/UX, startups, climate, GDG)",
+   "found": 9,
+   "pub": 1,
    "review": 0,
-   "dup": 0,
-   "skip": 4,
-   "note": "Results were past Mumbai Meets AI editions and older items; nothing new and dated within 45 days."
+   "dup": 1,
+   "skip": 7,
+   "note": "Founder's Meetup Mumbai (23 Oct) confirmed on StartupGrants India and published. Global Startups Club already listed. Others were past or outside Mumbai (Design Samvaad in Gurugram, UX event in Pune, GDG AI Labs 2025). AI Tinkerers Mumbai shows no upcoming events."
   }
  ],
  "COMMUNITIES": [
