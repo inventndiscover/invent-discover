@@ -60,6 +60,7 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/fish-in-a-jar",
   needs:"On a laptop: drag to look, V switches between the fish and the table, L changes the lens, M for sound, H to hide the controls. On a phone: drag to look and use the buttons. Call visitor brings someone in at once. In VR on Meta Quest: B or Y switches view, the right stick turns and X shows a performance readout. Best in a recent Chrome, Edge or Safari.",
   desc:"A round glass goldfish bowl on an oak table in a sunlit living room. Switch between sitting at the table and being the goldfish inside. From inside, the room is ray-traced through the water and the curved glass, so it bends and swims as you move, and looking up shows Snell's window: the whole room squeezed into one bright circle on the water surface. Visitors walk in through the archway, crouch until their eyes are level with the bowl, blink and smile at you. Slide how strongly water bends light (1.00 is air, with no bending at all), swap to a 180-degree photographer's fisheye lens, and set the swimming, the bubbles and the TV sound. Everything runs in one web page, with nothing to download."},
+/* Held back on purpose — not yet listed on the live site, pending Mohit's go-ahead:
  {id:"mars-sky",added:"2026-10-20",name:"Mars Sky",line:"The night sky from the Martian surface, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR"],
   img:"media/mars-sky-cover.jpg",sheetImg:"media/mars-sky-visitor.jpg",url:"demos/mars-sky/",cta:"Look up",
   vr:"inventndiscover.com/demos/mars-sky",
@@ -75,6 +76,7 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/ocean-taal",
   needs:"On a laptop or phone: drag to look around, press Play for the tabla, pick a taal and layakari, X shows a performance readout, H hides the controls. In VR on Meta Quest: just turn your head; the taal keeps playing; X on a controller shows the same readout. Best in a recent Chrome, Edge or Safari.",
   desc:"Stand on a small wooden jetty at dusk over a calm sea. Press Play and a tabla plays a taal — a rhythmic cycle — using the same real recorded bols as Anunād, and every stroke sends a ring rippling outward across the water: a sharper ring from the dayan (right hand) strokes, a deeper one from the bayan (left hand), and the biggest from Dha and Dhin. Choose the taal (Keherwa, Dadra, Teentaal or Jhaptaal) and the layakari (speed), and watch the sea's colour and swell shift gently from a slow indigo calm to a brighter, more energetic turquoise as the pace rises. Nothing to walk to, nowhere to swim — just listen and watch the sea answer. Everything runs in one web page, with nothing to download."},
+*/
  {id:"origami-jungle",added:"2026-10-15",name:"Origami Jungle",line:"A folded-paper hill-forest trek, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/origami-jungle.gif",img:"media/origami-jungle-cover.jpg",sheetImg:"media/origami-jungle-sunrise.jpg",url:"demos/origami-jungle/",
   vr:"inventndiscover.com/demos/origami-jungle",
