@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mars Sky · Invent + Discover</title>
+<meta name="description" content="Stand on the Martian surface at night and look up: a dense star field, a rose-tinted horizon, and Phobos and Deimos drifting overhead. In your browser or in VR on Meta Quest.">
+<link rel="canonical" href="https://inventndiscover.com/demos/mars-sky/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Mars Sky: the night sky from the Martian surface">
+<meta property="og:description" content="No spacecraft, no task — just stand on Mars at night and look up. In your browser, or in VR on Meta Quest.">
+<meta property="og:url" content="https://inventndiscover.com/demos/mars-sky/">
+<meta property="og:image" content="https://inventndiscover.com/media/mars-sky-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{ --bg:#05060a; --panel:rgba(16,14,20,.74); --line:rgba(190,150,255,.22);
+  --ink:#f2ece0; --muted:#9a8fa0; --rose:#d98a6a; --violet:#8a6bd9; color-scheme:dark; }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#stage:active{cursor:grabbing}
+.title{position:fixed;top:16px;left:0;right:0;text-align:center;pointer-events:none;z-index:4}
+.title h1{margin:0;font:600 24px/1.2 "Inter",sans-serif;letter-spacing:.01em}
+.title p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;
+  display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+button{font:500 14px "Inter",system-ui,sans-serif;color:var(--ink);background:#15121c;border:1px solid var(--line);
+  border-radius:999px;padding:9px 16px;cursor:pointer;-webkit-appearance:none;appearance:none}
+button:hover{border-color:var(--violet)}
+button:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+.vr{background:#efe7f6;color:#14100c;font-weight:600}
+.vr[disabled]{opacity:.55;cursor:default}
+.hint{font-size:11.5px;color:var(--muted)}
+#hideUI{position:fixed;top:14px;right:14px;z-index:6;padding:6px 11px;font-size:12px}
+body.clean .dock,body.clean .title{display:none}
+@media (max-width:640px){ .title{top:52px} .title h1{font-size:19px} .title p{display:none} }
+#notice{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:rgba(5,6,10,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto}
+#notice[hidden]{display:none!important}
+#noticeCard{width:min(520px,100%);padding:22px 24px 20px;background:#110f16;border:1px solid var(--line);border-radius:18px;font:400 14px/1.6 "Inter",sans-serif;color:#cfc6d5}
+#noticeCard h2{margin:0 0 12px;font:600 12px "Inter",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+#noticeCard p{margin:0 0 12px}#noticeCard b{color:var(--ink);font-weight:600}
+#noticeGo{margin-top:4px;background:var(--violet);color:#120b1f;font-weight:600;border:0}
+#diag{position:fixed;left:14px;bottom:14px;z-index:7;font:12px/1.5 monospace;color:#cbb7ff;background:rgba(16,14,20,.7);
+  border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:none;white-space:pre}
+#err{position:fixed;inset:0;display:none;place-items:center;padding:24px;text-align:center;color:var(--muted);z-index:50}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+
+<div class="title"><h1>Mars Sky</h1><p>Stand on the surface at night and look up</p></div>
+
+<div class="dock">
+  <button id="vrBtn" class="vr" disabled>Checking VR…</button>
+  <span class="hint">Drag to look around · X for readout · H to hide</span>
+</div>
+<button id="hideUI">Hide</button>
+
+<div id="diag"></div>
+
+<div id="notice">
+  <div id="noticeCard">
+    <h2>Notice before you begin</h2>
+    <p><b>What this is.</b> An imagined view of the night sky as it might look standing on the surface of Mars: a dense star field, a thin rose-tinted horizon glow, and the two real moons of Mars, Phobos and Deimos, drifting past at their own speeds. It is a digital creation built to be plausible, not a photograph or a scientifically exact rendering.</p>
+    <p><b>Comfort.</b> You stay in one spot the whole time — there is no walking or flying, so motion sickness risk is very low. There are no flashing lights.</p>
+    <p><b>In VR.</b> Built for Meta Quest 2 and 3 in a browser. On a laptop or phone, drag to look around instead.</p>
+    <p class="hint">Build 2026-10-20</p>
+    <button id="noticeGo">Begin</button>
+  </div>
+</div>
+
+<div id="err"><div>
+  <p>Something went wrong starting Mars Sky.</p>
+  <p class="hint" id="errMsg"></p>
+</div></div>
+
+<script type="module">
+import * as THREE from "/toolkit/glb-studio/vendor/three.module.min.js";
+
+/* ---------- small deterministic RNG (seeded) ----------
+   Math.random() is only used ONCE, here, to lay out stars and rocks when
+   the page loads. After that, nothing on screen moves from fresh randomness
+   every frame — that is what the WebXR standard calls "per-frame noise,"
+   and it is what causes flicker in a headset. Everything that moves below
+   (star twinkle, the moons) moves from a smooth, repeatable formula based on
+   elapsed time, not from re-rolling dice every frame. */
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rng = mulberry32(19830205);
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.xr.enabled = true;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 600);
+camera.position.set(0, 1.6, 0);
+
+/* ---------- sky: a huge inside-out sphere, painted by hand with a
+   vertex gradient (near-black overhead, fading to dusty rose at the
+   horizon) instead of a texture — cheaper, and no image to load. */
+const skyGeo = new THREE.SphereGeometry(500, 24, 16);
+const skyPos = skyGeo.attributes.position;
+const skyColor = new Float32Array(skyPos.count * 3);
+const top = new THREE.Color(0x05040a), horizon = new THREE.Color(0x3a2230);
+for(let i=0;i<skyPos.count;i++){
+  const y = skyPos.getY(i) / 500; // -1 (down) .. 1 (up)
+  const t = Math.pow(Math.max(0, 1 - Math.max(y,0)*1.6), 2); // 0 overhead, ~1 near horizon
+  const c = top.clone().lerp(horizon, Math.min(1,t));
+  skyColor[i*3]=c.r; skyColor[i*3+1]=c.g; skyColor[i*3+2]=c.b;
+}
+skyGeo.setAttribute('color', new THREE.BufferAttribute(skyColor, 3));
+const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors:true, side:THREE.BackSide, fog:false }));
+scene.add(sky);
+
+/* ---------- stars: one Points object, a few thousand fixed dots on a
+   big shell around the camera. Each star gets a random brightness and a
+   random "phase" so they don't all twinkle in lockstep — but the phase is
+   set ONCE at load, then always driven by Math.sin(time), which is smooth
+   and repeatable, never re-randomised per frame. */
+const STAR_COUNT = 4500;
+const starPos = new Float32Array(STAR_COUNT*3);
+const starPhase = new Float32Array(STAR_COUNT);
+const starBase = new Float32Array(STAR_COUNT);
+for(let i=0;i<STAR_COUNT;i++){
+  const r = 420;
+  const u = rng()*2-1, phi = rng()*Math.PI*2;
+  const sinT = Math.sqrt(1-u*u);
+  starPos[i*3]   = r*sinT*Math.cos(phi);
+  starPos[i*3+1] = Math.abs(r*u)*0.92 + 20; // keep stars mostly above the horizon band
+  starPos[i*3+2] = r*sinT*Math.sin(phi);
+  starPhase[i] = rng()*Math.PI*2;
+  starBase[i] = 0.5 + rng()*0.5;
+}
+const starGeo = new THREE.BufferGeometry();
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos,3));
+starGeo.setAttribute('phase', new THREE.BufferAttribute(starPhase,1));
+starGeo.setAttribute('base', new THREE.BufferAttribute(starBase,1));
+const starMat = new THREE.ShaderMaterial({
+  uniforms: { uTime:{value:0}, uSize:{value:2.4} },
+  vertexShader:`
+    attribute float phase; attribute float base; uniform float uTime; uniform float uSize;
+    varying float vA;
+    void main(){
+      vA = base * (0.6 + 0.4*sin(uTime*0.6 + phase)); // smooth twinkle, no randomness per frame
+      vec4 mv = modelViewMatrix * vec4(position,1.0);
+      gl_Position = projectionMatrix * mv;
+      gl_PointSize = uSize;
+    }`,
+  fragmentShader:`
+    varying float vA;
+    void main(){
+      vec2 c = gl_PointCoord - 0.5;
+      float d = length(c);
+      if(d > 0.5) discard;
+      gl_FragColor = vec4(1.0,0.98,0.94, vA * (1.0 - d*2.0));
+    }`,
+  transparent:true, depthWrite:false
+});
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+/* ---------- ground: a flat dusty-red disc, plus a scatter of about 40
+   low-poly rocks. 40 icosahedrons is a few thousand triangles total —
+   nowhere near the ~1M-per-eye budget, so no distance fading is needed. */
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(70, 48),
+  new THREE.MeshStandardMaterial({ color:0x7a4a3a, roughness:1, metalness:0 })
+);
+ground.rotation.x = -Math.PI/2;
+scene.add(ground);
+
+const rockGeo = new THREE.IcosahedronGeometry(1, 0);
+const rockMat = new THREE.MeshStandardMaterial({ color:0x5c3a30, roughness:1 });
+const rocks = new THREE.InstancedMesh(rockGeo, rockMat, 40);
+const dummy = new THREE.Object3D();
+for(let i=0;i<40;i++){
+  const ang = rng()*Math.PI*2, dist = 3 + rng()*55;
+  const s = 0.15 + rng()*0.55;
+  dummy.position.set(Math.cos(ang)*dist, s*0.4, Math.sin(ang)*dist);
+  dummy.rotation.set(rng()*6, rng()*6, rng()*6);
+  dummy.scale.setScalar(s);
+  dummy.updateMatrix();
+  rocks.setMatrixAt(i, dummy.matrix);
+}
+scene.add(rocks);
+
+/* ---------- Phobos & Deimos: Mars's two real moons. Phobos is the
+   closer, faster one (orbits Mars in about 7.5 hours in real life, so we
+   make it visibly the quicker of the two); Deimos is slower and higher.
+   Both move on a fixed, repeatable arc — angle = speed * elapsed time —
+   never a random jump. */
+function makeMoon(size, color){
+  const m = new THREE.Mesh(new THREE.SphereGeometry(size, 16, 12),
+    new THREE.MeshBasicMaterial({ color }));
+  scene.add(m);
+  return m;
+}
+const phobos = makeMoon(1.6, 0xe8ded0);
+const deimos = makeMoon(0.9, 0xd8cfe8);
+
+/* ---------- a little warm ambient light so the ground and rocks aren't
+   pure silhouettes, like faint reflected starlight. */
+scene.add(new THREE.AmbientLight(0x4a3a50, 1.1));
+const rim = new THREE.DirectionalLight(0xd9a48a, 0.4);
+rim.position.set(10, 20, -5);
+scene.add(rim);
+
+/* ---------- desktop / phone look controls: drag to rotate the camera.
+   No movement, because you stand in one place the whole time. */
+let yaw = 0, pitch = -0.12, dragging = false, lastX = 0, lastY = 0;
+function onDown(x,y){ dragging = true; lastX = x; lastY = y; }
+function onMove(x,y){
+  if(!dragging) return;
+  yaw   -= (x - lastX) * 0.0045;
+  pitch -= (y - lastY) * 0.0045;
+  pitch = Math.max(-1.3, Math.min(1.3, pitch));
+  lastX = x; lastY = y;
+}
+function onUp(){ dragging = false; }
+canvas.addEventListener('pointerdown', e=>onDown(e.clientX,e.clientY));
+canvas.addEventListener('pointermove', e=>onMove(e.clientX,e.clientY));
+window.addEventListener('pointerup', onUp);
+
+/* ---------- VR entry ----------
+   A plain "Enter VR" button: check the browser can do immersive-vr,
+   then hand the session straight to three.js's renderer.xr. */
+const vrBtn = document.getElementById('vrBtn');
+let xrSession = null;
+if(navigator.xr){
+  navigator.xr.isSessionSupported('immersive-vr').then(ok=>{
+    vrBtn.disabled = !ok;
+    vrBtn.textContent = ok ? 'Enter VR' : 'VR not available here';
+  });
+} else {
+  vrBtn.textContent = 'VR not available here';
+}
+vrBtn.addEventListener('click', async ()=>{
+  if(xrSession) return;
+  xrSession = await navigator.xr.requestSession('immersive-vr', { optionalFeatures:['local-floor'] });
+  await renderer.xr.setSession(xrSession);
+  try{ xrSession.updateTargetFrameRate && xrSession.updateTargetFrameRate(72); }catch(e){}
+  // Quest 2 has roughly half the GPU of Quest 3 — render a little smaller on it.
+  const isQuest2 = /Quest\s?2(?!0)/i.test(navigator.userAgent);
+  renderer.xr.setFramebufferScaleFactor(isQuest2 ? 0.8 : 0.9);
+  vrBtn.textContent = 'In VR…';
+  xrSession.addEventListener('end', ()=>{ xrSession = null; vrBtn.textContent = 'Enter VR'; });
+});
+
+/* ---------- controllers: drawn even though there is nothing to press,
+   per the standard — a dark handle plus a short faint beam, so the
+   controllers are never invisible floating hands. */
+function addControllerVisual(i){
+  const grip = renderer.xr.getControllerGrip(i);
+  const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.022,0.11,10),
+    new THREE.MeshStandardMaterial({ color:0x1a1a1a }));
+  handle.rotation.x = Math.PI/2.2;
+  grip.add(handle);
+  scene.add(grip);
+
+  const ray = renderer.xr.getController(i);
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.0015,0.006,0.5,6),
+    new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.3 }));
+  beam.rotation.x = -Math.PI/2; beam.position.z = -0.25;
+  ray.add(beam);
+  scene.add(ray);
+}
+addControllerVisual(0); addControllerVisual(1);
+
+/* ---------- in-headset message panel: a flat canvas texture, angled
+   slightly down, that fades out after a few seconds. */
+function makePanel(text){
+  const cnv = document.createElement('canvas'); cnv.width = 1024; cnv.height = 384;
+  const ctx = cnv.getContext('2d');
+  ctx.fillStyle = 'rgba(16,14,20,0.82)'; ctx.fillRect(0,0,1024,384);
+  ctx.strokeStyle = 'rgba(190,150,255,0.5)'; ctx.lineWidth = 4; ctx.strokeRect(2,2,1020,380);
+  ctx.fillStyle = '#f2ece0'; ctx.font = '600 52px Inter, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(text, 512, 220);
+  const tex = new THREE.CanvasTexture(cnv);
+  const mat = new THREE.MeshBasicMaterial({ map:tex, transparent:true });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(0.84, 0.315), mat);
+  mesh.position.set(0, 1.42, -1.55);
+  mesh.rotation.x = -0.5236; // ~30 degrees, inside the sharp centre of the lens
+  scene.add(mesh);
+  return mesh;
+}
+let panel = null, panelT0 = 0;
+renderer.xr.addEventListener('sessionstart', ()=>{
+  panel = makePanel('Mars at night. Just look up.');
+  panelT0 = performance.now();
+});
+renderer.xr.addEventListener('sessionend', ()=>{ if(panel){ scene.remove(panel); panel = null; } });
+
+/* ---------- diagnostics (X button / X key): build stamp, headset guess,
+   achieved frame rate against target, quality level. */
+const diag = document.getElementById('diag');
+let diagOn = false, lastFrames = [], lastT = performance.now();
+document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='x') diagOn = !diagOn; if(e.key.toLowerCase()==='h') document.body.classList.toggle('clean'); });
+function pollXButtons(){
+  const sources = xrSession ? xrSession.inputSources : [];
+  for(const src of sources){
+    if(src.gamepad && (src.gamepad.buttons[4]?.pressed || src.gamepad.buttons[5]?.pressed)){
+      diagOn = true; return;
+    }
+  }
+}
+document.getElementById('hideUI').addEventListener('click', ()=>document.body.classList.toggle('clean'));
+
+/* ---------- notice modal ---------- */
+const notice = document.getElementById('notice');
+document.getElementById('noticeGo').addEventListener('click', ()=> notice.hidden = true );
+
+/* ---------- resize ---------- */
+function resize(){
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------- main loop ---------- */
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const t = clock.getElapsedTime();
+  starMat.uniforms.uTime.value = t;
+
+  // Phobos: fast and low. Deimos: slow and high. Both on a fixed formula.
+  const pa = t*0.22, da = t*0.05 + 1.4;
+  phobos.position.set(Math.cos(pa)*60, 18 + Math.sin(pa*0.5)*6, Math.sin(pa)*60 - 40);
+  deimos.position.set(Math.cos(da)*90, 34 + Math.sin(da*0.4)*4, Math.sin(da)*90 - 60);
+
+  if(!renderer.xr.isPresenting){
+    camera.rotation.order = 'YXZ';
+    camera.rotation.y = yaw;
+    camera.rotation.x = pitch;
+  }
+
+  if(panel){
+    const age = (performance.now() - panelT0)/1000;
+    panel.material.opacity = Math.max(0, Math.min(1, 1 - (age-6)/2)); // fade out between 6s and 8s
+  }
+
+  pollXButtons();
+  if(diagOn){
+    lastFrames.push(performance.now());
+    if(lastFrames.length>60) lastFrames.shift();
+    const fps = lastFrames.length>1 ? Math.round(1000*(lastFrames.length-1)/(lastFrames[lastFrames.length-1]-lastFrames[0])) : 0;
+    diag.style.display = 'block';
+    diag.textContent = `Mars Sky — Build 2026-10-20\nheadset: ${renderer.xr.isPresenting ? (navigator.userAgent.match(/Quest\s?(3S|3|2|Pro)/)?.[0] || 'XR') : 'desktop'}\nfps: ${fps} / target 72\nquality: fixed (scene is light)`;
+  } else {
+    diag.style.display = 'none';
+  }
+
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('error', e=>{
+  document.getElementById('err').style.display = 'grid';
+  document.getElementById('errMsg').textContent = e.message || 'Unknown error';
+});
+</script>
+</body>
+</html>
