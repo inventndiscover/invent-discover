@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-20T05:27:49+05:30",
+ "REFRESHED": "2026-10-21T05:27:24+05:30",
  "SIGNALS": [
+  {
+   "id": "2112574615318876178",
+   "handle": "MistralAI",
+   "name": "Mistral AI",
+   "url": "https://x.com/MistralAI/status/2112574615318876178",
+   "posted": "2026-10-20T21:30:12+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Mistral introduced Voxtral 3, a family of transcription and speech models that power its new voice agents API."
+  },
+  {
+   "id": "2112573259606884640",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2112573259606884640",
+   "posted": "2026-10-20T21:24:49+05:30",
+   "topic": "Open models",
+   "kind": "Report",
+   "summary": "Artificial Analysis says Bria's Fibo 2.0, an 8B model, ranks first among open-weights models on its image-editing leaderboard."
+  },
+  {
+   "id": "2112496048723669433",
+   "handle": "vikktorrrre",
+   "name": "Veee",
+   "url": "https://x.com/vikktorrrre/status/2112496048723669433",
+   "posted": "2026-10-20T16:18:00+05:30",
+   "topic": "Models",
+   "kind": "Leak",
+   "summary": "Unconfirmed report citing sources says Anthropic may launch Claude Fable 5.5, pitched as better at reasoning and understanding users."
+  },
   {
    "id": "2112245968750145561",
    "handle": "AIatMeta",
@@ -32,26 +62,6 @@
    "summary": "Inception releases Mercury 3, a diffusion LLM it says beats GPT-6 Luna and Claude Haiku 5.5 on several benchmarks while running above 1,000 tokens per second."
   },
   {
-   "id": "2112236457741963639",
-   "handle": "PyTorch",
-   "name": "PyTorch",
-   "url": "https://x.com/PyTorch/status/2112236457741963639",
-   "posted": "2026-10-19T23:06:29+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "PyTorch says it now runs natively on AWS Trainium with no code changes, so existing tools and workflows carry over."
-  },
-  {
-   "id": "2112218661432000694",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2112218661432000694",
-   "posted": "2026-10-19T21:55:46+05:30",
-   "topic": "Open models",
-   "kind": "Report",
-   "summary": "Artificial Analysis scores DeepSeek V4.1 Flash 1017 at 45 on its Intelligence Index, up 6 points, tying it for second among open-weights models."
-  },
-  {
    "id": "2112057367353610546",
    "handle": "internetfreedom",
    "name": "Internet Freedom Foundation",
@@ -72,34 +82,14 @@
    "summary": "Jack Clark says that with earlier commitments, roughly 20% of Anthropic equity will be dedicated to the public good, and the pledge can grow with the company."
   },
   {
-   "id": "2111901377182187746",
-   "handle": "wallstengine",
-   "name": "Wall St Engine",
-   "url": "https://x.com/wallstengine/status/2111901377182187746",
-   "posted": "2026-10-19T00:55:00+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Anthropic announced a Public Benefit Fund backed by 5% of its shares, with extra pledges tied to valuation growth, to support charitable work on AI's societal impact."
-  },
-  {
-   "id": "2111677810788155649",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2111677810788155649",
-   "posted": "2026-10-18T10:06:37+05:30",
-   "topic": "AI",
-   "kind": "Leak",
-   "summary": "Says Andrew Curran reported three undocumented models, aurora-red-alpha, aurora-green-alpha and aurora-blue-alpha, appearing in the OpenAI API on October 18."
-  },
-  {
-   "id": "2111409740467331368",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2111409740467331368",
-   "posted": "2026-10-17T16:21:24+05:30",
+   "id": "2111653496579567903",
+   "handle": "TeksEdge",
+   "name": "David Hendrickson",
+   "url": "https://x.com/TeksEdge/status/2111653496579567903",
+   "posted": "2026-10-18T08:30:00+05:30",
    "topic": "Models",
    "kind": "Report",
-   "summary": "Reports that DeepSeek posted on Oct 17 that V4.1-Flash-1017 is live on its website, app and API, and says it is faster and cheaper than V4.1 Flash."
+   "summary": "Mistral reportedly released Timestral, a 209M-parameter time-series forecasting model that runs on a CPU in about 140 ms."
   }
  ]
 }
