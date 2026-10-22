@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-20T05:20:00+05:30",
+ "REFRESHED": "2026-10-22T05:16:00+05:30",
  "EVENTS_RAW": [
   {
    "id": "code-to-capital",
@@ -882,32 +882,38 @@
     "place": 20,
     "category": 70
    }
+  },
+  {
+   "qid": "q-stackconnect-mumbai",
+   "title": "StackConnect World Tour: Mumbai",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "dev.events",
+   "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
+   "access": "open",
+   "why": "Date appears only in the listing image text (2 Dec); no time, venue or organiser page could be opened.",
+   "conf": {
+    "date": 60,
+    "place": 20,
+    "category": 75
+   },
+   "hint": "2026-12-02"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing plus 6 event pages (Google Data Challenge, Cloud Community Days, Agri AI, Gemma 4, Near Builder's Cafe, Agentic Commerce, Launchpad)",
-   "found": 17,
-   "pub": 0,
-   "review": 2,
-   "dup": 0,
-   "skip": 1,
-   "note": "Luma pages show no dates, so all stay queued. Two new queue items added. Launchpad Mumbai skipped (registration closed). /discover/ai and /discover/tech pages were refused."
-  },
-  {
-   "src": "AllEvents",
-   "what": "allevents.in/mumbai/startup opened; /technology refused",
-   "found": 0,
+   "what": "luma.com/mumbai and discover pages refused; 2 event pages opened via search results",
+   "found": 2,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Startup page showed only past events; technology page unreachable (permission timed out). Existing entries kept."
+   "skip": 2,
+   "note": "Listing pages unreachable. Mumbai Meets AI 5th edition (16 May) and XR Creatives talk (not in Mumbai, past) skipped. Existing Luma queue items unchanged."
   },
   {
-   "src": "dev.events",
-   "what": "fetch refused",
+   "src": "AllEvents",
+   "what": "allevents.in/mumbai/startup refused",
    "found": 0,
    "pub": 0,
    "review": 0,
@@ -916,24 +922,34 @@
    "note": "Unreachable this run; existing entries kept."
   },
   {
+   "src": "dev.events",
+   "what": "/meetups/AS/IN/Mumbai/data and one conference page",
+   "found": 4,
+   "pub": 0,
+   "review": 1,
+   "dup": 0,
+   "skip": 3,
+   "note": "StackConnect World Tour Mumbai (2 Dec) queued: date only in image text. NODES 2026 entries are online, skipped."
+  },
+  {
    "src": "hiddenevents",
-   "what": "fetch refused",
+   "what": "not opened",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable this run; not used."
+   "note": "Not reachable this run."
   },
   {
    "src": "web search",
-   "what": "6 searches (AI meetups, hackathons/XR, design/UX, startups, climate, GDG)",
-   "found": 9,
-   "pub": 1,
+   "what": "2 searches (AI meetup/hackathon Nov 2026; design/UX/XR/climate/student)",
+   "found": 6,
+   "pub": 0,
    "review": 0,
-   "dup": 1,
-   "skip": 7,
-   "note": "Founder's Meetup Mumbai (23 Oct) confirmed on StartupGrants India and published. Global Startups Club already listed. Others were past or outside Mumbai (Design Samvaad in Gurugram, UX event in Pune, GDG AI Labs 2025). AI Tinkerers Mumbai shows no upcoming events."
+   "dup": 0,
+   "skip": 6,
+   "note": "Results were past events (BLITZ Mumbai Jun 2026, Figma meetup, Junglee June) or outside Mumbai. Nothing new confirmed. Existing events not re-verified this run; none ended before today."
   }
  ],
  "COMMUNITIES": [

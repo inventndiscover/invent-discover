@@ -1,6 +1,46 @@
 {
- "REFRESHED": "2026-10-21T05:27:24+05:30",
+ "REFRESHED": "2026-10-22T05:27:29+05:30",
  "SIGNALS": [
+  {
+   "id": "2112984664256241837",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2112984664256241837",
+   "posted": "2026-10-22T00:39:35+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Anthropic opened a research preview of Claude Duet, an app where Claude acts as a proactive agent that surfaces what needs attention and checks before acting."
+  },
+  {
+   "id": "2112774317025165641",
+   "handle": "0xSweep",
+   "name": "Sweep",
+   "url": "https://x.com/0xSweep/status/2112774317025165641",
+   "posted": "2026-10-21T10:43:45+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Sweep reports Anthropic booked an $80.7B net loss over six months while revenue rose to $16.3B from $1.1B a year earlier."
+  },
+  {
+   "id": "2112648445546598873",
+   "handle": "NewsFromGoogle",
+   "name": "News from Google",
+   "url": "https://x.com/NewsFromGoogle/status/2112648445546598873",
+   "posted": "2026-10-21T02:23:35+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Google Public Sector is launching Gemini for government services, aimed at helping federal, state and local agencies streamline complex operations."
+  },
+  {
+   "id": "2112597766333673624",
+   "handle": "ChatGPT",
+   "name": "ChatGPT",
+   "url": "https://x.com/ChatGPT/status/2112597766333673624",
+   "posted": "2026-10-20T23:02:12+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "ChatGPT adds Locked Chats, a protected space outside regular history and search, unlocked by PIN on web and desktop or by biometrics on supported mobile devices."
+  },
   {
    "id": "2112574615318876178",
    "handle": "MistralAI",
@@ -22,16 +62,6 @@
    "summary": "Artificial Analysis says Bria's Fibo 2.0, an 8B model, ranks first among open-weights models on its image-editing leaderboard."
   },
   {
-   "id": "2112496048723669433",
-   "handle": "vikktorrrre",
-   "name": "Veee",
-   "url": "https://x.com/vikktorrrre/status/2112496048723669433",
-   "posted": "2026-10-20T16:18:00+05:30",
-   "topic": "Models",
-   "kind": "Leak",
-   "summary": "Unconfirmed report citing sources says Anthropic may launch Claude Fable 5.5, pitched as better at reasoning and understanding users."
-  },
-  {
    "id": "2112245968750145561",
    "handle": "AIatMeta",
    "name": "AI at Meta",
@@ -40,16 +70,6 @@
    "topic": "Tech",
    "kind": "Official",
    "summary": "Meta says its Muse foundation models, including Muse Wonder, were trained at Prometheus, its gigawatt-scale supercluster in New Albany, Ohio, and describes engineering for host reliability."
-  },
-  {
-   "id": "2112244042658423149",
-   "handle": "Cloudflare",
-   "name": "Cloudflare",
-   "url": "https://x.com/Cloudflare/status/2112244042658423149",
-   "posted": "2026-10-19T23:36:38+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Cloudflare introduces Clairic, an extraction model that pulls, computes, estimates and forecasts data from unstructured inputs."
   },
   {
    "id": "2112236719068369299",
@@ -70,26 +90,6 @@
    "topic": "India",
    "kind": "Report",
    "summary": "IFF says an Oct 10 MeitY advisory to Meta directs suppression of protest reporting on Instagram and Facebook, and calls for it to be withdrawn."
-  },
-  {
-   "id": "2111918212946309445",
-   "handle": "jackclarkSF",
-   "name": "Jack Clark",
-   "url": "https://x.com/jackclarkSF/status/2111918212946309445",
-   "posted": "2026-10-19T02:01:54+05:30",
-   "topic": "Policy",
-   "kind": "Official",
-   "summary": "Jack Clark says that with earlier commitments, roughly 20% of Anthropic equity will be dedicated to the public good, and the pledge can grow with the company."
-  },
-  {
-   "id": "2111653496579567903",
-   "handle": "TeksEdge",
-   "name": "David Hendrickson",
-   "url": "https://x.com/TeksEdge/status/2111653496579567903",
-   "posted": "2026-10-18T08:30:00+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Mistral reportedly released Timestral, a 209M-parameter time-series forecasting model that runs on a CPU in about 140 ms."
   }
  ]
 }
