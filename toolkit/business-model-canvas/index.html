@@ -44,6 +44,7 @@
     --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }   /* "hidden" always wins over display: flex / grid below */
   body {
     margin: 0; color: var(--text);
     font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -193,6 +194,23 @@
   .how h3 { margin: 6px 0 6px; font-size: 16px; }
   .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
 
+  /* ---------- Solo / Team switch and team panel ---------- */
+  .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 12px; padding: 3px; gap: 3px; background: rgba(0,0,0,0.3); }
+  .seg button { border: none; background: transparent; padding: 7px 16px; border-radius: 9px; color: var(--muted); font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: linear-gradient(135deg, var(--violet), var(--pink)); color: #fff; box-shadow: 0 0 16px rgba(139,92,246,0.45); }
+  .team { display: grid; gap: 10px; margin: 0 0 14px; }
+  .team p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 75ch; }
+  .team p b { color: var(--text); }
+  .team form { display: flex; flex-wrap: wrap; gap: 10px; }
+  .team form input { flex: 1 1 240px; width: auto; min-width: 0; }
+  .team .err { color: #F9A8D4; font-size: 13px; min-height: 1em; margin: 0; }
+  .live { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .live .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+  .live code { font-family: inherit; font-weight: 700; color: var(--text); background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 6px; }
+  .mydots { display: inline-flex; gap: 4px; align-items: center; color: var(--muted); font-size: 13px; }
+  .mydots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--violet); }
+  .mydots i.used { background: var(--violet); box-shadow: 0 0 8px rgba(139,92,246,0.7); }
+
   .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
     background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .note { transform: none !important; } }
@@ -228,12 +246,18 @@
   </div>
 
   <div class="bar">
+    <div class="seg" id="modeSeg" role="group" aria-label="Work solo or as a team" hidden>
+      <button type="button" data-m="solo" aria-pressed="true">Solo</button>
+      <button type="button" data-m="team" aria-pressed="false">Team</button>
+    </div>
     <button id="exampleBtn" type="button">Load example</button>
     <button id="clearBtn" type="button">Clear canvas</button>
     <span class="spacer"></span>
     <button id="copyBtn" type="button">Copy as text</button>
     <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print">Save A4 sheet</button>
   </div>
+
+  <div class="card team" id="teamPanel" hidden></div>
 
   <div class="banner" id="banner" hidden></div>
 
@@ -313,6 +337,12 @@ const B = Object.fromEntries(BLOCKS.map(b => [b.id, b]));
 const ORDERED = [...BLOCKS].sort((a, b) => a.order - b.order);
 const COLORS = ['yellow', 'pink', 'mint', 'sky', 'lilac'];
 const SAVE_KEY = 'ind-bmc-v1';
+const TEAM_KEY = 'ind-bmc-team';     // remembers the last team code on this device
+const DOTS_PER_PERSON = 3;           // team mode: each person gets three dots
+
+// Team mode uses a free Google Firebase project to share notes live.
+// Paste the project's web config here; while it's null the Team switch stays hidden.
+const FIREBASE_CONFIG = null;
 
 // ---------- 3b. The example (shown on a first visit) ----------
 // Each row: [block, text, colour, dots]
@@ -345,6 +375,10 @@ const state = {
   confirmDel: null,       // note id waiting for "Confirm delete"
   confirmClear: false,
   openPrompts: new Set(),
+  team: null,             // { code } while working on a team canvas, null when solo
+  teamView: false,        // the Team tab is open (joined or not)
+  uid: null,              // this device's anonymous id in Firebase (for dots)
+  draft: null,            // the half-typed note, kept safe when teammates' notes arrive
 };
 
 // ---------- 3d. Small helpers ----------
@@ -358,6 +392,7 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = fal
 // ---------- 3e. Saving in the browser ----------
 // Nothing leaves this device: we keep the canvas in localStorage.
 function save() {
+  if (state.teamView) return;     // never let a team canvas overwrite the solo one
   try { localStorage.setItem(SAVE_KEY, JSON.stringify({ name: state.name, tagline: state.tagline, notes: state.notes, isExample: state.isExample })); } catch (e) {}
 }
 function load() {
@@ -374,15 +409,17 @@ function claimExample() { if (state.isExample) { state.isExample = false; } }
 // ---------- 3f. Changing notes ----------
 function addNote(block, text, color) {
   text = text.trim(); if (!text) return;
+  if (state.team) return teamAdd(block, text, color);
   claimExample();
   state.notes.push({ id: newId(), block, text, color, dots: 0, at: Date.now() });
   save(); render();
 }
 function patchNote(id, patch) {
   const n = state.notes.find(n => n.id === id); if (!n) return;
+  if (state.team) return teamPatch(id, patch);
   claimExample(); Object.assign(n, patch); save(); render();
 }
-function deleteNote(id) { claimExample(); state.notes = state.notes.filter(n => n.id !== id); save(); render(); }
+function deleteNote(id) { if (state.team) return teamDelete(id); claimExample(); state.notes = state.notes.filter(n => n.id !== id); save(); render(); }
 
 // ---------- 3g. Drawing the canvas ----------
 function buildCanvas() {
@@ -418,7 +455,7 @@ function renderBlock(bid) {
   if (!list.length && state.composing !== bid) box.append(el('p', 'empty', 'No notes yet.'));
   for (const n of list) box.append(state.editing === n.id ? editor(bid, n) : noteCard(n));
   if (state.composing === bid) box.append(editor(bid, null));
-  else {
+  else if (!(state.teamView && !state.team)) {      // no adding until a team canvas is open
     const add = el('button', 'addbtn', '+ Add note'); add.type = 'button';
     add.onclick = () => { state.composing = bid; state.editing = null; render(); focusEditor(bid); };
     box.append(add);
@@ -433,8 +470,10 @@ function noteCard(n) {
   const dots = el('span', 'dots'); dots.setAttribute('aria-label', n.dots + ' dots');
   for (let i = 0; i < n.dots; i++) dots.append(el('i'));
   f.append(dots);
-  const v = el('button', null, '+ dot'); v.type = 'button'; v.title = 'Add a dot vote';
-  v.onclick = () => patchNote(n.id, { dots: n.dots + 1 });
+  // Solo: anyone can keep adding dots. Team: each person toggles their own dot.
+  const v = el('button', null, state.team && n.mine ? '− dot' : '+ dot'); v.type = 'button';
+  v.title = state.team ? (n.mine ? 'Take your dot back' : 'Give this note one of your dots') : 'Add a dot vote';
+  v.onclick = () => state.team ? teamToggleDot(n) : patchNote(n.id, { dots: n.dots + 1 });
   const m = el('button', null, '⋯'); m.type = 'button'; m.setAttribute('aria-label', 'Edit, move or delete');
   m.onclick = () => { state.editing = n.id; state.composing = null; state.confirmDel = null; render(); focusEditor(n.block); };
   f.append(v, m); c.append(f);
@@ -446,17 +485,23 @@ function noteCard(n) {
 
 // One editor for both a new note (n = null) and editing a note
 function editor(bid, n) {
-  let color = n ? n.color : B[bid].color;
+  // A team canvas redraws whenever a teammate adds a note, so we keep
+  // whatever you're typing in state.draft and put it back after each redraw.
+  const key = n ? 'edit-' + n.id : 'new-' + bid;
+  const d = state.draft && state.draft.key === key ? state.draft : null;
+  let color = d ? d.color : (n ? n.color : B[bid].color);
   const ed = el('div', 'editor c-' + color);
-  const ta = document.createElement('textarea'); ta.id = n ? 'edit-' + n.id : 'new-' + bid;
-  ta.maxLength = 280; ta.value = n ? n.text : ''; ta.placeholder = B[bid].q;
+  const ta = document.createElement('textarea'); ta.id = key;
+  ta.maxLength = 280; ta.value = d ? d.text : (n ? n.text : ''); ta.placeholder = B[bid].q;
+  const keepDraft = () => { state.draft = { key, text: ta.value, color }; };
+  ta.addEventListener('input', keepDraft);
   ta.setAttribute('aria-label', n ? 'Edit note' : 'New note in ' + B[bid].name);
   ed.append(ta);
 
   const row1 = el('div', 'row');
   for (const c of COLORS) {
     const s = el('button', 'sw c-' + c); s.type = 'button'; s.setAttribute('aria-label', c + ' note'); s.setAttribute('aria-pressed', String(c === color));
-    s.onclick = () => { color = c; ed.className = 'editor c-' + c; row1.querySelectorAll('.sw').forEach(x => x.setAttribute('aria-pressed', String(x === s))); ta.focus(); };
+    s.onclick = () => { color = c; keepDraft(); ed.className = 'editor c-' + c; row1.querySelectorAll('.sw').forEach(x => x.setAttribute('aria-pressed', String(x === s))); ta.focus(); };
     row1.append(s);
   }
   let move = null;
@@ -468,16 +513,17 @@ function editor(bid, n) {
   ed.append(row1);
 
   const row2 = el('div', 'row');
-  const close = () => { state.composing = state.editing = state.confirmDel = null; render(); };
+  const close = () => { state.composing = state.editing = state.confirmDel = null; state.draft = null; render(); };
   const commit = () => {
     if (n) {
       const patch = {};
       if (ta.value.trim() && ta.value.trim() !== n.text) patch.text = ta.value.trim();
       if (color !== n.color) patch.color = color;
       if (move.value !== n.block) patch.block = move.value;
-      state.editing = null;
+      state.editing = null; state.draft = null;
       Object.keys(patch).length ? patchNote(n.id, patch) : render();
     } else {
+      state.draft = null;
       addNote(bid, ta.value, color);      // stay open for the next idea (fast silent writing)
       state.composing = bid; render(); focusEditor(bid);
     }
@@ -486,7 +532,7 @@ function editor(bid, n) {
   const cancel = el('button', null, n ? 'Cancel' : 'Done'); cancel.type = 'button'; cancel.onclick = close;
   row2.append(go, cancel);
   if (n) {
-    if (n.dots) { const rd = el('button', null, '− dot'); rd.type = 'button'; rd.onclick = () => { state.editing = n.id; patchNote(n.id, { dots: n.dots - 1 }); focusEditor(bid); }; row2.append(rd); }
+    if (n.dots && !state.team) { const rd = el('button', null, '− dot'); rd.type = 'button'; rd.onclick = () => { state.editing = n.id; patchNote(n.id, { dots: n.dots - 1 }); focusEditor(bid); }; row2.append(rd); }
     const sure = state.confirmDel === n.id;
     const del = el('button', 'danger', sure ? 'Confirm delete' : 'Delete'); del.type = 'button';
     del.onclick = () => { if (sure) { state.editing = state.confirmDel = null; deleteNote(n.id); } else { state.confirmDel = n.id; render(); } };
@@ -531,13 +577,24 @@ function renderCoach() {
   const top = state.notes.filter(n => n.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
   const ol = $('#top3'); ol.innerHTML = '';
   if (!top.length) ol.append(el('li', null, 'No dots yet. Each person gets three.'));
+  if (state.team) {
+    const used = state.notes.filter(n => n.mine).length, md = el('li', 'mydots');
+    md.style.listStyle = 'none'; md.style.marginLeft = '-20px';
+    for (let i = 0; i < DOTS_PER_PERSON; i++) md.append(el('i', i < used ? 'used' : ''));
+    md.append(` Your dots: ${DOTS_PER_PERSON - used} of ${DOTS_PER_PERSON} left`);
+    ol.append(md);
+  }
   for (const n of top) { const li = el('li', null, n.text + ' '); li.append(el('em', null, `${B[n.block].name} · ${n.dots} dot${n.dots > 1 ? 's' : ''}`)); ol.append(li); }
 }
 
 function render() {
+  // Remember the cursor in an open note box, so a live redraw doesn't steal it
+  const a = document.activeElement, focusId = a && a.tagName === 'TEXTAREA' ? a.id : null;
+  const sel = focusId ? [a.selectionStart, a.selectionEnd] : null;
+
   const ban = $('#banner'); ban.innerHTML = '';
-  ban.hidden = !state.isExample;
-  if (state.isExample) {
+  ban.hidden = !state.isExample || !!state.team;
+  if (state.isExample && !state.team) {
     ban.append(el('span', null, ''));
     ban.firstChild.append(el('b', null, 'This is an example canvas. '), 'Change any note to make it yours, or start with a blank canvas.');
     const b = el('button', null, 'Start a blank canvas'); b.type = 'button';
@@ -547,10 +604,15 @@ function render() {
   const vn = $('#vname'), tg = $('#tagline');
   if (document.activeElement !== vn) vn.value = state.name;
   if (document.activeElement !== tg) tg.value = state.tagline;
+  vn.disabled = tg.disabled = state.teamView && !state.team;
   $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear canvas';
   $('#clearBtn').className = state.confirmClear ? 'danger' : '';
+  // Team canvases are shared, so no one-click "clear" or "load example" there
+  $('#exampleBtn').hidden = $('#clearBtn').hidden = state.teamView;
+  renderTeamPanel();
   BLOCKS.forEach(b => renderBlock(b.id));
   renderCoach();
+  if (focusId) { const t = document.getElementById(focusId); if (t) { t.focus(); t.setSelectionRange(sel[0], sel[1]); } }
 }
 
 // ---------- 3i. Copy as text ----------
@@ -618,6 +680,7 @@ async function drawSheet() {
   [['Name', M + 60], ['Date', M + 140]].forEach(([label, y]) => {
     x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
   });
+  if (state.team) { x.fillStyle = GREY; x.font = `400 30px ${UI_F}`; x.fillText('Team code: ' + state.team.code, rx, M + 215); }
 
   // The grid: 10 columns; rows split 36 : 36 : 28, like the canvas on screen
   const top = M + 260, bottom = H - M - 40, gw = W - 2 * M, gh = bottom - top, cw = gw / 10;
@@ -682,7 +745,7 @@ async function drawSheet() {
 async function exportSheet() {
   const cv = await drawSheet();
   const link = document.createElement('a');
-  const base = (state.name || 'business-model-canvas').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'business-model-canvas';
+  const base = (state.name || (state.team && state.team.code) || 'business-model-canvas').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'business-model-canvas';
   link.download = base + '-bmc-a4.png';
   link.href = cv.toDataURL('image/png');
   link.click();
@@ -690,8 +753,8 @@ async function exportSheet() {
 }
 
 // ---------- 3k. Wiring up the buttons ----------
-$('#vname').addEventListener('input', e => { state.name = e.target.value; claimExample(); save(); $('#banner').hidden = true; });
-$('#tagline').addEventListener('input', e => { state.tagline = e.target.value; claimExample(); save(); $('#banner').hidden = true; });
+$('#vname').addEventListener('input', e => { state.name = e.target.value; if (state.team) return teamSaveMeta(); claimExample(); save(); $('#banner').hidden = true; });
+$('#tagline').addEventListener('input', e => { state.tagline = e.target.value; if (state.team) return teamSaveMeta(); claimExample(); save(); $('#banner').hidden = true; });
 $('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; save(); render(); };
 $('#clearBtn').onclick = () => {
   if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
@@ -703,11 +766,140 @@ $('#copyBtn').onclick = () => {
 };
 $('#exportBtn').onclick = exportSheet;
 
-// ---------- 3l. Start ----------
+// ---------- 3l. Team mode (live, shared through Firebase) ----------
+// Each team canvas lives at boards/<team code> in Firestore:
+//   boards/swiggy-squad                 { name, tagline, updatedAt }
+//   boards/swiggy-squad/notes/n1abc     { block, text, color, by, at, votes: { <person id>: true } }
+// Everyone signs in anonymously, which gives each device its own id, so
+// each person's dots are counted separately and can't overwrite a teammate's.
+const FB_VER = '10.12.2';
+let fb = null, unsubs = [];
+async function firebaseReady() {
+  if (fb) return fb;
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+  const a = app.initializeApp(FIREBASE_CONFIG);
+  const cred = await auth.signInAnonymously(auth.getAuth(a));
+  fb = { fs, db: fs.getFirestore(a), uid: cred.user.uid };
+  state.uid = fb.uid;
+  return fb;
+}
+const slug = s => String(s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+const teamNotes = () => fb.fs.collection(fb.db, 'boards', state.team.code, 'notes');
+const teamNote = id => fb.fs.doc(fb.db, 'boards', state.team.code, 'notes', id);
+function teamError(e) {
+  console.warn(e);
+  toast(e && e.code === 'permission-denied' ? 'The team canvas refused that change. Check the note is under 280 characters.' : "That didn't save. Check your internet connection.");
+}
+
+async function joinTeam(code) {
+  state.teamView = true; teamMsg = 'Connecting…'; render();
+  try { await firebaseReady(); }
+  catch (e) { console.warn(e); teamMsg = "Couldn't reach the team service. Check your internet connection and try again."; render(); return; }
+  unsubs.forEach(u => u()); unsubs = [];
+  save();                                         // keep the solo canvas safe before we swap it out
+  state.team = { code }; state.notes = []; state.name = state.tagline = ''; state.isExample = false;
+  state.composing = state.editing = state.draft = null; teamMsg = '';
+  try { localStorage.setItem(TEAM_KEY, code); } catch (e) {}
+  history.replaceState(null, '', '?team=' + encodeURIComponent(code));
+  // onSnapshot = "tell me now, and again every time this changes". Each
+  // time a teammate adds, moves, votes on or deletes a note, this runs.
+  unsubs.push(fb.fs.onSnapshot(teamNotes(), snap => {
+    state.notes = snap.docs.map(d => {
+      const n = d.data(), votes = n.votes || {};
+      return { id: d.id, block: n.block, text: n.text, color: n.color, at: n.at || 0,
+               dots: Object.values(votes).filter(Boolean).length, mine: !!votes[fb.uid] };
+    });
+    render();
+  }, teamError));
+  unsubs.push(fb.fs.onSnapshot(fb.fs.doc(fb.db, 'boards', code), snap => {
+    if (snap.exists()) { const m = snap.data(); state.name = m.name || ''; state.tagline = m.tagline || ''; }
+    render();
+  }, teamError));
+  render();
+}
+function leaveTeam(toSolo) {
+  unsubs.forEach(u => u()); unsubs = [];
+  state.team = null; state.composing = state.editing = state.draft = null;
+  history.replaceState(null, '', location.pathname);
+  if (toSolo) { state.teamView = false; state.notes = []; state.name = state.tagline = ''; if (!load()) loadExample(); }
+  else { state.notes = []; state.name = state.tagline = ''; }
+  render();
+}
+
+function teamAdd(block, text, color) {
+  fb.fs.setDoc(teamNote(newId()), { block, text, color, by: fb.uid, at: Date.now(), votes: {} }).catch(teamError);
+}
+function teamPatch(id, patch) {
+  const p = {}; for (const k of ['block', 'text', 'color']) if (k in patch) p[k] = patch[k];
+  if (Object.keys(p).length) fb.fs.updateDoc(teamNote(id), p).catch(teamError);
+}
+function teamDelete(id) { fb.fs.deleteDoc(teamNote(id)).catch(teamError); }
+function teamToggleDot(n) {
+  const used = state.notes.filter(x => x.mine).length;
+  if (!n.mine && used >= DOTS_PER_PERSON) { toast(`You've used all ${DOTS_PER_PERSON} dots. Take one back to move it.`); return; }
+  // "votes.<my id>" changes only my own dot inside the note, never anyone else's
+  fb.fs.updateDoc(teamNote(n.id), { ['votes.' + fb.uid]: n.mine ? fb.fs.deleteField() : true }).catch(teamError);
+}
+let metaTimer;
+function teamSaveMeta() {
+  clearTimeout(metaTimer);   // wait for a pause in typing, then save once
+  metaTimer = setTimeout(() => fb.fs.setDoc(fb.fs.doc(fb.db, 'boards', state.team.code),
+    { name: state.name.slice(0, 60), tagline: state.tagline.slice(0, 140), updatedAt: Date.now() }, { merge: true }).catch(teamError), 700);
+}
+
+let teamMsg = '';
+function renderTeamPanel() {
+  const seg = $('#modeSeg');
+  seg.hidden = !FIREBASE_CONFIG;
+  seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.m === 'team') === state.teamView)));
+  const tp = $('#teamPanel'); tp.hidden = !state.teamView;
+  if (!state.teamView) return;
+  tp.innerHTML = '';
+  if (state.team) {
+    const row = el('div', 'live');
+    row.append(el('span', 'dot'), el('span', null, 'Live team canvas'), el('code', null, state.team.code));
+    const n = el('span', null, `${state.notes.length} note${state.notes.length === 1 ? '' : 's'}`); n.style.color = 'var(--muted)'; row.append(n);
+    row.append(el('span', 'spacer'));
+    const copy = el('button', null, 'Copy invite link'); copy.type = 'button';
+    copy.onclick = () => {
+      const link = `${location.origin}${location.pathname}?team=${encodeURIComponent(state.team.code)}`;
+      navigator.clipboard.writeText(link).then(() => toast('Invite link copied. Send it to your team.'), () => toast('Copy was blocked. The link is ' + link));
+    };
+    const sw = el('button', null, 'Switch team'); sw.type = 'button'; sw.onclick = () => leaveTeam(false);
+    row.append(copy, sw);
+    tp.append(row, el('p', null, 'Everyone who opens this code sees the same canvas and every change as it happens. Anyone with the code can edit, so keep it within your team.'));
+    return;
+  }
+  const p = el('p'); p.append(el('b', null, 'Work on one canvas together. '), 'Pick a team code and share it with your teammates. Choose one that other teams won\'t guess, like ', el('b', null, 'dabbabox-team7'), '.');
+  const f = document.createElement('form'); f.autocomplete = 'off';
+  const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'teamCode'; inp.maxLength = 40; inp.placeholder = 'Team code, e.g. dabbabox-team7'; inp.setAttribute('aria-label', 'Team code');
+  try { inp.value = localStorage.getItem(TEAM_KEY) || ''; } catch (e) {}
+  const go = el('button', 'primary', 'Open team canvas'); go.type = 'submit';
+  const err = el('p', 'err', teamMsg); err.setAttribute('role', 'status');
+  f.append(inp, go);
+  f.onsubmit = e => {
+    e.preventDefault();
+    const c = slug(inp.value);
+    if (c.length < 4) { teamMsg = 'Use at least 4 letters or numbers.'; render(); return; }
+    joinTeam(c);
+  };
+  tp.append(p, f, err);
+}
+$('#modeSeg').addEventListener('click', e => {
+  const m = e.target.closest('button') && e.target.closest('button').dataset.m; if (!m) return;
+  if (m === 'solo') { if (state.teamView) leaveTeam(true); }
+  else if (!state.teamView) { save(); state.teamView = true; state.notes = []; state.name = state.tagline = ''; state.isExample = false; teamMsg = ''; render(); }
+});
+
+// ---------- 3m. Start ----------
 // First visit: show the example. Later visits: bring back your own canvas.
+// A link with ?team=code opens that team's canvas straight away.
 if (!load()) loadExample();
 buildCanvas();
 render();
+const startTeam = slug(new URLSearchParams(location.search).get('team'));
+if (FIREBASE_CONFIG && startTeam.length >= 4) joinTeam(startTeam);
 </script>
 </body>
 </html>
