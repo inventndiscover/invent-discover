@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business Model Canvas tool · Invent + Discover</title>
+<meta name="description" content="Fill in a Business Model Canvas with sticky notes, dot-vote the strongest ideas, check how the nine blocks fit, and save a printable A4 sheet. Free, in your browser. Nothing is uploaded.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/business-model-canvas/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Business Model Canvas tool · Invent + Discover">
+<meta property="og:description" content="Nine blocks, sticky notes, dot votes and a fit check. A free Business Model Canvas in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/business-model-canvas/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Business Model Canvas tool","url":"https://inventndiscover.com/toolkit/business-model-canvas/","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  "Tokens" = named colours we reuse everywhere. The five --note-*
+  colours are the sticky notes. Change --note-yellow to #FFD27A and
+  every yellow note on the canvas changes with it.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --line-2: rgba(255,255,255,0.16);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --blue: #3B82F6;
+    --pink: #EC4899;
+    --ok: #46D69A;
+    --warn: #FFB23F;
+    --note-yellow: #FFE58A; --note-pink: #FFC2D4; --note-mint: #BFEFD6; --note-sky: #BFDCFF; --note-lilac: #D9CCFF;
+    --note-ink: #17141F;
+    --radius: 14px;
+    --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed; min-height: 100vh;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+  /* ---------- Header (same as the other tools) ---------- */
+  header { padding: 40px 0 20px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD; box-shadow: 0 0 18px rgba(139,92,246,0.25); }
+  h1 { margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1; text-wrap: balance;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25); }
+  .lede { color: var(--muted); max-width: 680px; font-size: 17px; line-height: 1.55; }
+  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .credit a, .about a, .how a { color: #C4B5FD; }
+  .about { margin-top: 36px; }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  .sitefoot { margin-top: 36px; }
+  .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  .sitefoot a:hover { color: var(--text); }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(6px); }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text] { width: 100%; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 16px; }
+  input[type=text]:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+  button { font: inherit; font-size: 15px; color: var(--text); cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; }
+  button:hover { border-color: rgba(255,255,255,0.25); }
+  button.primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; }
+  button.danger { border-color: rgba(236,72,153,0.6); color: #F9A8D4; }
+  .spacer { flex: 1; }
+
+  /* ---------- Venture + toolbar ---------- */
+  .setup { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 14px; }
+  @media (max-width: 720px) { .setup { grid-template-columns: 1fr; } }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; }
+  .banner { margin: 0 0 14px; padding: 12px 16px; border: 1px solid rgba(139,92,246,0.45); border-radius: 12px; font-size: 14.5px; color: #DDD6FE; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .banner b { color: var(--text); }
+
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 290px; gap: 16px; align-items: start; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0,1fr); } }
+
+  /* ---------- The canvas: 10 columns, 3 rows, Osterwalder's layout ---------- */
+  .canvas {
+    display: grid; gap: 0; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; background: rgba(11,13,20,0.75);
+    grid-template-columns: repeat(10, minmax(0,1fr));
+    grid-template-rows: minmax(220px,auto) minmax(220px,auto) minmax(170px,auto);
+    grid-template-areas:
+      "kp kp ka ka vp vp cr cr cs cs"
+      "kp kp kr kr vp vp ch ch cs cs"
+      "co co co co co rs rs rs rs rs";
+  }
+  .block { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 12px 12px 10px; display: flex; flex-direction: column; gap: 9px; min-width: 0; transition: background .15s, box-shadow .15s; }
+  .block[data-b="cs"], .block[data-b="rs"] { border-right: none; }
+  .block[data-b="co"], .block[data-b="rs"] { border-bottom: none; }
+  .block.over { background: rgba(139,92,246,0.12); box-shadow: inset 0 0 0 1px var(--violet); }
+  .bhead { display: flex; align-items: flex-start; gap: 8px; }
+  .num { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #C4B5FD;
+    border: 1px solid rgba(139,92,246,0.5); background: rgba(5,6,10,0.7); font-variant-numeric: tabular-nums; }
+  .btitle { min-width: 0; flex: 1; }
+  .btitle h3 { margin: 0; font-size: 14.5px; font-weight: 700; line-height: 1.25; }
+  .btitle p { margin: 3px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .qbtn { flex: none; width: 22px; height: 22px; padding: 0; border-radius: 50%; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .prompts { margin: 0; padding: 8px 10px 8px 24px; font-size: 12.5px; color: var(--muted); background: rgba(0,0,0,0.3); border-radius: 8px; line-height: 1.4; }
+  .notes { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
+  .empty { margin: 0; font-size: 12.5px; color: var(--muted); font-style: italic; }
+
+  /* sticky notes */
+  .note { position: relative; flex: 1 1 150px; max-width: 260px; min-width: 0; min-height: 76px; padding: 8px 9px 6px; border-radius: 3px; color: var(--note-ink);
+    display: flex; flex-direction: column; gap: 6px; transform: rotate(var(--tilt,0deg)); transition: transform .12s;
+    box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 8px 18px -6px rgba(0,0,0,.6); }
+  .note:hover { transform: rotate(0deg) translateY(-1px); }
+  .note[draggable="true"] { cursor: grab; }
+  .note.dragging { opacity: .35; }
+  .note .txt { margin: 0; font-family: var(--hand); font-size: 15.5px; line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
+  .note footer { display: flex; align-items: center; gap: 4px; }
+  .note .dots { margin-right: auto; display: flex; gap: 3px; flex-wrap: wrap; }
+  .note .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--note-ink); }
+  .note button { white-space: nowrap; color: var(--note-ink); border: none; background: rgba(0,0,0,0.08); border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
+  .note button:hover { background: rgba(0,0,0,0.16); }
+  .c-yellow { background: var(--note-yellow); } .c-pink { background: var(--note-pink); } .c-mint { background: var(--note-mint); } .c-sky { background: var(--note-sky); } .c-lilac { background: var(--note-lilac); }
+  .addbtn { align-self: flex-start; padding: 5px 11px; font-size: 13px; color: var(--muted); border-style: dashed; }
+  .addbtn:hover { color: #C4B5FD; border-color: var(--violet); }
+
+  /* the note editor (new + edit) */
+  .editor { width: 100%; display: grid; gap: 8px; padding: 8px; border-radius: 4px; color: var(--note-ink); box-shadow: 0 8px 22px -6px rgba(0,0,0,.7); }
+  .editor textarea { width: 100%; min-height: 64px; resize: vertical; border: none; border-radius: 3px; padding: 6px; background: rgba(255,255,255,0.5); font-family: var(--hand); font-size: 16px; color: var(--note-ink); }
+  .editor .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .editor .sw { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.35); }
+  .editor .sw[aria-pressed="true"] { outline: 2px solid var(--note-ink); outline-offset: 1px; }
+  .editor select { border: 1px solid rgba(0,0,0,0.3); background: rgba(255,255,255,0.55); border-radius: 6px; padding: 4px 6px; font: inherit; font-size: 13px; color: var(--note-ink); max-width: 100%; }
+  .editor button { color: var(--note-ink); background: rgba(255,255,255,0.55); border: 1px solid rgba(0,0,0,0.35); border-radius: 8px; padding: 5px 11px; font-size: 13px; }
+  .editor button.go { background: var(--note-ink); color: #fff; border-color: var(--note-ink); font-weight: 700; }
+  .editor button.danger { color: #9F1239; border-color: #9F1239; }
+  .editor .hint { margin-left: auto; font-size: 11.5px; opacity: .7; }
+
+  /* ---------- Coach rail ---------- */
+  .coach { display: grid; gap: 14px; position: sticky; top: 14px; }
+  @media (max-width: 1100px) { .coach { position: static; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+  .coach h4 { margin: 0 0 10px; font-size: 15px; }
+  .big { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .big small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .meter { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; margin: 10px 0; }
+  .meter span { height: 7px; border-radius: 3px; background: rgba(255,255,255,0.08); }
+  .meter span.on { background: linear-gradient(90deg, var(--violet), var(--pink)); box-shadow: 0 0 10px rgba(139,92,246,0.5); }
+  .next { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .next b { color: var(--text); }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 13px; line-height: 1.4; }
+  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .checks span { color: var(--muted); }
+  .top3 { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 13.5px; }
+  .top3 em { font-style: normal; color: var(--muted); font-size: 12px; }
+  .exp { display: flex; flex-wrap: wrap; gap: 8px; }
+  .exp button { font-size: 14px; padding: 9px 14px; }
+
+  @media (max-width: 860px) {
+    .canvas { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; grid-template-areas: "cs vp" "ch cr" "rs kr" "ka kp" "co co"; }
+    .block { border-right: 1px solid var(--line) !important; border-bottom: 1px solid var(--line) !important; min-height: 180px; }
+  }
+  @media (max-width: 560px) {
+    .canvas { grid-template-columns: minmax(0,1fr); grid-template-areas: "cs" "vp" "ch" "cr" "rs" "kr" "ka" "kp" "co"; }
+    .block { border-right: none !important; }
+    .note { max-width: none; }
+  }
+
+  /* ---------- How-to steps ---------- */
+  .how { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  @media (max-width: 980px) { .how { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 560px) { .how { grid-template-columns: 1fr; } }
+  .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
+  .how h3 { margin: 6px 0 6px; font-size: 16px; }
+  .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
+    background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .note { transform: none !important; } }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  The nine blocks are created by JavaScript from a list, so the
+  canvas below starts empty.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · BUSINESS MODEL CANVAS</span>
+    <h1>Business Model Canvas</h1>
+    <p class="lede">See a whole business on one page. Fill the nine blocks with sticky notes, from who you serve to what it costs, then dot-vote the strongest ideas and let the fit check point out the gaps. Save it as an A4 sheet when you're done.</p>
+    <p class="credit">The Business Model Canvas was created by Alexander Osterwalder and Yves Pigneur. <a href="#where">Where it comes from</a></p>
+  </header>
+
+  <div class="card setup">
+    <div>
+      <label for="vname">Venture name</label>
+      <input type="text" id="vname" maxlength="60" placeholder="e.g. DabbaBox">
+    </div>
+    <div>
+      <label for="tagline">One-line pitch</label>
+      <input type="text" id="tagline" maxlength="140" placeholder="We help [who] do [what] by [how]">
+    </div>
+  </div>
+
+  <div class="bar">
+    <button id="exampleBtn" type="button">Load example</button>
+    <button id="clearBtn" type="button">Clear canvas</button>
+    <span class="spacer"></span>
+    <button id="copyBtn" type="button">Copy as text</button>
+    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print">Save A4 sheet</button>
+  </div>
+
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="layout">
+    <div class="canvas" id="canvas"></div>
+    <aside class="coach" aria-label="Canvas coach">
+      <div class="card">
+        <h4>Coverage</h4>
+        <div class="big" id="covNum">0<small> / 9 blocks</small></div>
+        <div class="meter" id="meter"></div>
+        <div class="next" id="next"></div>
+      </div>
+      <div class="card">
+        <h4>Fit check</h4>
+        <ul class="checks" id="checks"></ul>
+      </div>
+      <div class="card">
+        <h4>Most dots</h4>
+        <ol class="top3" id="top3"></ol>
+      </div>
+    </aside>
+  </div>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1 · 3 MIN</div><h3>Name it</h3><p>One line: what it is and who it's for. Not sure yet? Write a <a href="/toolkit/pov/">POV statement</a> first.</p></div>
+    <div class="card"><div class="step">STEP 2 · 15 MIN</div><h3>Fill 1 to 9</h3><p>Start with customers, end with costs. One idea per note, and no discussion yet.</p></div>
+    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Read and tidy</h3><p>Read every note aloud. Merge duplicates and drag notes into the right block.</p></div>
+    <div class="card"><div class="step">STEP 4 · 5 MIN</div><h3>Dot vote</h3><p>Everyone gets three dots for the strongest or riskiest ideas. Tap a note's dot button to add one.</p></div>
+    <div class="card"><div class="step">STEP 5 · 12 MIN</div><h3>Fit check</h3><p>Work through the warnings on the right, then save the A4 sheet and compare it with other teams.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <h2>Where the Business Model Canvas comes from</h2>
+    <p>The <b>Business Model Canvas</b> was created by Swiss business theorist <b>Alexander Osterwalder</b>, building on his PhD research with <b>Yves Pigneur</b> at the University of Lausanne. It became known worldwide through their 2010 book <i>Business Model Generation</i>, which was co-created with 470 practitioners from 45 countries. Osterwalder's company, Strategyzer, publishes the canvas under a Creative Commons licence, which is why so many free versions of it exist.</p>
+    <p>The canvas breaks any business into nine building blocks: who it serves, what it offers them, how it reaches them, how it keeps them, how it earns money, and what it needs, does, partners with and spends to make that happen. The right side is about customers and value; the left side is about running the business. A good canvas is one where every note on the left supports something on the right.</p>
+    <p>Google lists the canvas as a method in the Define phase of its free <a href="https://designsprintkit.withgoogle.com/methodology/overview" target="_blank" rel="noopener">Design Sprint Kit</a>. The sticky notes, dot vote, fit check and A4 sheet on this page are made by Invent + Discover. Your canvas stays in your browser; nothing is uploaded.</p>
+  </section>
+
+  <footer class="sitefoot">
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+// ---------- 3a. The nine blocks ----------
+// Each block is plain data. `order` is the fill order (customers first,
+// costs last). The block's id is also its name in the CSS grid above,
+// which is what places it on the canvas.
+const BLOCKS = [
+  { id: 'cs', order: 1, name: 'Customer Segments', q: 'Who are we creating value for? Who matters most?', color: 'yellow',
+    prompts: ['Split by need, not by age alone', 'Who pays, and who uses? They may differ', 'Which segment do we serve first?'] },
+  { id: 'vp', order: 2, name: 'Value Propositions', q: 'What problem do we solve, and why would they pick us?', color: 'pink',
+    prompts: ['One proposition per segment', 'Faster, cheaper, safer, easier, more fun?', 'What do they use today instead?'] },
+  { id: 'ch', order: 3, name: 'Channels', q: 'How do we reach them and deliver the value?', color: 'sky',
+    prompts: ['Awareness: how do they hear about us?', 'Purchase: where do they buy?', 'Delivery and after-sales'] },
+  { id: 'cr', order: 4, name: 'Customer Relationships', q: 'What relationship does each segment expect?', color: 'sky',
+    prompts: ['Self-service, community, personal help?', 'How do we keep them coming back?'] },
+  { id: 'rs', order: 5, name: 'Revenue Streams', q: 'What are they willing to pay for, and how?', color: 'mint',
+    prompts: ['One-off sale, subscription, fee, licence, ads?', 'What price feels fair to them?', 'Which stream earns the most?'] },
+  { id: 'kr', order: 6, name: 'Key Resources', q: 'What must we have to make this work?', color: 'lilac',
+    prompts: ['People, skills, tech, brand, money, space', 'What is hard for others to copy?'] },
+  { id: 'ka', order: 7, name: 'Key Activities', q: 'What must we do really well, every day?', color: 'lilac',
+    prompts: ['Making, solving problems, running a platform', 'Which activity delivers the value proposition?'] },
+  { id: 'kp', order: 8, name: 'Key Partners', q: "Who helps us do what we can't or shouldn't do alone?", color: 'lilac',
+    prompts: ['Suppliers, platforms, institutions', 'What do they get from us?'] },
+  { id: 'co', order: 9, name: 'Cost Structure', q: 'What are the biggest costs of running this?', color: 'mint',
+    prompts: ['Fixed costs (rent, salaries) vs variable', 'Which activities and resources cost the most?'] },
+];
+const B = Object.fromEntries(BLOCKS.map(b => [b.id, b]));
+const ORDERED = [...BLOCKS].sort((a, b) => a.order - b.order);
+const COLORS = ['yellow', 'pink', 'mint', 'sky', 'lilac'];
+const SAVE_KEY = 'ind-bmc-v1';
+
+// ---------- 3b. The example (shown on a first visit) ----------
+// Each row: [block, text, colour, dots]
+const EXAMPLE = {
+  name: 'DabbaBox',
+  tagline: 'Home-cooked lunch subscriptions for hostel students in Mumbai, cooked by neighbourhood home chefs.',
+  notes: [
+    ['cs','Hostel & PG students, 18–24, near campus','yellow',3], ['cs','Parents who pay and want their kid eating well','yellow',1],
+    ['vp','Ghar ka khana for ₹120 a meal, delivered by 1 pm','pink',4], ['vp','Weekly menu, veg / Jain / non-veg choice','pink',0], ['vp','Parents see a meal log on WhatsApp','pink',1],
+    ['ch','Campus WhatsApp groups + hostel notice boards','sky',0], ['ch','Delivery runners on cycles, one route per campus','sky',2],
+    ['cr','Pause any day before 9 pm, no questions','sky',0], ['cr',"Rate today's dabba in one tap",'sky',0],
+    ['rs','Monthly plan ₹2,600 (22 meals)','mint',2], ['rs','Add-ons: dessert, extra roti','mint',0],
+    ['kr','Network of 40 vetted home chefs','lilac',1], ['kr','Route-planning sheet + runner team','lilac',0],
+    ['ka','Chef onboarding & hygiene checks','lilac',2], ['ka','Daily route dispatch 11:30–1:00','lilac',0],
+    ['kp','Housing societies for chef kitchens','lilac',0], ['kp','Steel tiffin supplier (returnable)','lilac',0],
+    ['co','Chef payouts (~60% of plan price)','mint',0], ['co','Runner wages, cycles, tiffin washing','mint',0],
+  ],
+};
+
+// ---------- 3c. State: one object that remembers everything ----------
+// We change the state, then call render() to redraw the screen from it.
+// Example: after adding one note, state.notes has one entry like
+//   { id: 'n1abc', block: 'cs', text: 'Hostel students', color: 'yellow', dots: 0, at: 1730000000000 }
+const state = {
+  name: '', tagline: '',
+  notes: [],
+  isExample: false,       // true while the example is on screen
+  composing: null,        // block id with the "new note" box open
+  editing: null,          // note id being edited
+  confirmDel: null,       // note id waiting for "Confirm delete"
+  confirmClear: false,
+  openPrompts: new Set(),
+};
+
+// ---------- 3d. Small helpers ----------
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const newId = () => 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+// A small, steady tilt per note so the canvas looks hand-made (same note = same tilt)
+const tilt = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) | 0; return ((Math.abs(h) % 5) - 2) * 0.6 + 'deg'; };
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
+
+// ---------- 3e. Saving in the browser ----------
+// Nothing leaves this device: we keep the canvas in localStorage.
+function save() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ name: state.name, tagline: state.tagline, notes: state.notes, isExample: state.isExample })); } catch (e) {}
+}
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (d && Array.isArray(d.notes)) { Object.assign(state, d); return true; } } catch (e) {}
+  return false;
+}
+function loadExample() {
+  state.name = EXAMPLE.name; state.tagline = EXAMPLE.tagline; state.isExample = true;
+  state.notes = EXAMPLE.notes.map(([block, text, color, dots], i) => ({ id: 'ex' + i, block, text, color, dots, at: i }));
+}
+// The first change on the example means "this is mine now"
+function claimExample() { if (state.isExample) { state.isExample = false; } }
+
+// ---------- 3f. Changing notes ----------
+function addNote(block, text, color) {
+  text = text.trim(); if (!text) return;
+  claimExample();
+  state.notes.push({ id: newId(), block, text, color, dots: 0, at: Date.now() });
+  save(); render();
+}
+function patchNote(id, patch) {
+  const n = state.notes.find(n => n.id === id); if (!n) return;
+  claimExample(); Object.assign(n, patch); save(); render();
+}
+function deleteNote(id) { claimExample(); state.notes = state.notes.filter(n => n.id !== id); save(); render(); }
+
+// ---------- 3g. Drawing the canvas ----------
+function buildCanvas() {
+  const cv = $('#canvas');
+  for (const b of BLOCKS) {
+    const sec = el('section', 'block'); sec.dataset.b = b.id; sec.style.gridArea = b.id;
+    const head = el('div', 'bhead');
+    head.append(el('span', 'num', b.order));
+    const t = el('div', 'btitle'); t.append(el('h3', null, b.name), el('p', null, b.q)); head.append(t);
+    const q = el('button', 'qbtn', '?'); q.type = 'button'; q.setAttribute('aria-label', 'More prompts for ' + b.name);
+    q.onclick = () => { state.openPrompts.has(b.id) ? state.openPrompts.delete(b.id) : state.openPrompts.add(b.id); renderBlock(b.id); };
+    head.append(q); sec.append(head);
+    const pr = el('ul', 'prompts'); pr.hidden = true; b.prompts.forEach(p => pr.append(el('li', null, p))); sec.append(pr);
+    sec.append(el('div', 'notes'));
+    // Drag and drop: drop a note on a block to move it there
+    sec.addEventListener('dragover', e => { e.preventDefault(); sec.classList.add('over'); });
+    sec.addEventListener('dragleave', () => sec.classList.remove('over'));
+    sec.addEventListener('drop', e => {
+      e.preventDefault(); sec.classList.remove('over');
+      const id = e.dataTransfer.getData('text/plain');
+      const n = state.notes.find(n => n.id === id);
+      if (n && n.block !== b.id) patchNote(id, { block: b.id });
+    });
+    cv.append(sec);
+  }
+}
+
+function renderBlock(bid) {
+  const sec = document.querySelector(`.block[data-b="${bid}"]`);
+  sec.querySelector('.prompts').hidden = !state.openPrompts.has(bid);
+  const box = sec.querySelector('.notes'); box.innerHTML = '';
+  const list = state.notes.filter(n => n.block === bid).sort((a, b) => a.at - b.at);
+  if (!list.length && state.composing !== bid) box.append(el('p', 'empty', 'No notes yet.'));
+  for (const n of list) box.append(state.editing === n.id ? editor(bid, n) : noteCard(n));
+  if (state.composing === bid) box.append(editor(bid, null));
+  else {
+    const add = el('button', 'addbtn', '+ Add note'); add.type = 'button';
+    add.onclick = () => { state.composing = bid; state.editing = null; render(); focusEditor(bid); };
+    box.append(add);
+  }
+}
+
+function noteCard(n) {
+  const c = el('article', 'note c-' + (COLORS.includes(n.color) ? n.color : 'yellow'));
+  c.style.setProperty('--tilt', tilt(n.id));
+  c.append(el('p', 'txt', n.text));
+  const f = el('footer');
+  const dots = el('span', 'dots'); dots.setAttribute('aria-label', n.dots + ' dots');
+  for (let i = 0; i < n.dots; i++) dots.append(el('i'));
+  f.append(dots);
+  const v = el('button', null, '+ dot'); v.type = 'button'; v.title = 'Add a dot vote';
+  v.onclick = () => patchNote(n.id, { dots: n.dots + 1 });
+  const m = el('button', null, '⋯'); m.type = 'button'; m.setAttribute('aria-label', 'Edit, move or delete');
+  m.onclick = () => { state.editing = n.id; state.composing = null; state.confirmDel = null; render(); focusEditor(n.block); };
+  f.append(v, m); c.append(f);
+  c.draggable = true;
+  c.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', n.id); e.dataTransfer.effectAllowed = 'move'; c.classList.add('dragging'); });
+  c.addEventListener('dragend', () => c.classList.remove('dragging'));
+  return c;
+}
+
+// One editor for both a new note (n = null) and editing a note
+function editor(bid, n) {
+  let color = n ? n.color : B[bid].color;
+  const ed = el('div', 'editor c-' + color);
+  const ta = document.createElement('textarea'); ta.id = n ? 'edit-' + n.id : 'new-' + bid;
+  ta.maxLength = 280; ta.value = n ? n.text : ''; ta.placeholder = B[bid].q;
+  ta.setAttribute('aria-label', n ? 'Edit note' : 'New note in ' + B[bid].name);
+  ed.append(ta);
+
+  const row1 = el('div', 'row');
+  for (const c of COLORS) {
+    const s = el('button', 'sw c-' + c); s.type = 'button'; s.setAttribute('aria-label', c + ' note'); s.setAttribute('aria-pressed', String(c === color));
+    s.onclick = () => { color = c; ed.className = 'editor c-' + c; row1.querySelectorAll('.sw').forEach(x => x.setAttribute('aria-pressed', String(x === s))); ta.focus(); };
+    row1.append(s);
+  }
+  let move = null;
+  if (n) {
+    move = document.createElement('select'); move.setAttribute('aria-label', 'Move to block');
+    for (const b of ORDERED) { const o = el('option', null, b.order + '. ' + b.name); o.value = b.id; o.selected = b.id === bid; move.append(o); }
+    row1.append(move);
+  }
+  ed.append(row1);
+
+  const row2 = el('div', 'row');
+  const close = () => { state.composing = state.editing = state.confirmDel = null; render(); };
+  const commit = () => {
+    if (n) {
+      const patch = {};
+      if (ta.value.trim() && ta.value.trim() !== n.text) patch.text = ta.value.trim();
+      if (color !== n.color) patch.color = color;
+      if (move.value !== n.block) patch.block = move.value;
+      state.editing = null;
+      Object.keys(patch).length ? patchNote(n.id, patch) : render();
+    } else {
+      addNote(bid, ta.value, color);      // stay open for the next idea (fast silent writing)
+      state.composing = bid; render(); focusEditor(bid);
+    }
+  };
+  const go = el('button', 'go', n ? 'Save' : 'Add'); go.type = 'button'; go.onclick = commit;
+  const cancel = el('button', null, n ? 'Cancel' : 'Done'); cancel.type = 'button'; cancel.onclick = close;
+  row2.append(go, cancel);
+  if (n) {
+    if (n.dots) { const rd = el('button', null, '− dot'); rd.type = 'button'; rd.onclick = () => { state.editing = n.id; patchNote(n.id, { dots: n.dots - 1 }); focusEditor(bid); }; row2.append(rd); }
+    const sure = state.confirmDel === n.id;
+    const del = el('button', 'danger', sure ? 'Confirm delete' : 'Delete'); del.type = 'button';
+    del.onclick = () => { if (sure) { state.editing = state.confirmDel = null; deleteNote(n.id); } else { state.confirmDel = n.id; render(); } };
+    row2.append(del);
+  }
+  row2.append(el('span', 'hint', 'Enter to save · Esc to close'));
+  ed.append(row2);
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(); }
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+  });
+  return ed;
+}
+function focusEditor(bid) { requestAnimationFrame(() => { const t = document.querySelector(`.block[data-b="${bid}"] textarea`); if (t) { t.focus(); t.selectionStart = t.value.length; } }); }
+
+// ---------- 3h. The coach: coverage, fit check, most dots ----------
+function renderCoach() {
+  const count = id => state.notes.filter(n => n.block === id).length;
+  const filled = ORDERED.filter(b => count(b.id));
+  $('#covNum').firstChild.textContent = filled.length;
+  const meter = $('#meter'); meter.innerHTML = '';
+  ORDERED.forEach(b => { const s = el('span', count(b.id) ? 'on' : ''); s.title = b.order + '. ' + b.name; meter.append(s); });
+  const nxt = ORDERED.find(b => !count(b.id)); const nx = $('#next'); nx.innerHTML = '';
+  if (nxt) { nx.append('Next up: ', el('b', null, nxt.order + '. ' + nxt.name), ' · ' + nxt.q); }
+  else nx.textContent = 'Every block has at least one note. Now check the links between them.';
+
+  // The canvas only works when the blocks agree with each other
+  const c = count;
+  const checks = [
+    [c('cs') && c('vp') ? 'ok' : 'warn', 'Segments and value',
+      c('cs') && c('vp') ? `${c('cs')} segment(s), ${c('vp')} proposition(s). Can you say who each proposition is for?` : 'Name who you serve and what you offer them before anything else.'],
+    [c('ch') ? 'ok' : 'warn', 'Reach', c('ch') ? 'You know how customers hear about you and get the value.' : 'How does a customer first hear about you? Add a channel.'],
+    [c('rs') && c('cs') ? 'ok' : 'warn', 'Money in',
+      !c('rs') ? 'Who pays, and for what? Add at least one revenue stream.' : c('cs') ? 'Check that every revenue stream comes from a segment you listed.' : 'Revenue with no customer segment. Who is paying?'],
+    [(c('ka') || c('kr')) && !c('co') ? 'warn' : c('co') ? 'ok' : 'todo', 'Money out',
+      (c('ka') || c('kr')) && !c('co') ? 'Your activities and resources cost money. List the biggest costs.' : c('co') ? 'Do the biggest costs match your key activities?' : 'Fill Key Activities and Resources, then cost them.'],
+    [ORDERED.some(b => c(b.id) > 8) ? 'warn' : 'ok', 'Focus', ORDERED.some(b => c(b.id) > 8) ? 'A block has more than 8 notes. Use dots to pick the strongest few.' : 'No block is overloaded.'],
+  ];
+  const ul = $('#checks'); ul.innerHTML = '';
+  for (const [s, h, t] of checks) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
+
+  const top = state.notes.filter(n => n.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
+  const ol = $('#top3'); ol.innerHTML = '';
+  if (!top.length) ol.append(el('li', null, 'No dots yet. Each person gets three.'));
+  for (const n of top) { const li = el('li', null, n.text + ' '); li.append(el('em', null, `${B[n.block].name} · ${n.dots} dot${n.dots > 1 ? 's' : ''}`)); ol.append(li); }
+}
+
+function render() {
+  const ban = $('#banner'); ban.innerHTML = '';
+  ban.hidden = !state.isExample;
+  if (state.isExample) {
+    ban.append(el('span', null, ''));
+    ban.firstChild.append(el('b', null, 'This is an example canvas. '), 'Change any note to make it yours, or start with a blank canvas.');
+    const b = el('button', null, 'Start a blank canvas'); b.type = 'button';
+    b.onclick = () => { state.notes = []; state.name = state.tagline = ''; state.isExample = false; save(); render(); };
+    ban.append(b);
+  }
+  const vn = $('#vname'), tg = $('#tagline');
+  if (document.activeElement !== vn) vn.value = state.name;
+  if (document.activeElement !== tg) tg.value = state.tagline;
+  $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear canvas';
+  $('#clearBtn').className = state.confirmClear ? 'danger' : '';
+  BLOCKS.forEach(b => renderBlock(b.id));
+  renderCoach();
+}
+
+// ---------- 3i. Copy as text ----------
+function asText() {
+  let out = `# ${state.name || 'Untitled venture'} · Business Model Canvas\n\n`;
+  if (state.tagline) out += `> ${state.tagline}\n\n`;
+  for (const b of ORDERED) {
+    out += `## ${b.order}. ${b.name}\n`;
+    const list = state.notes.filter(n => n.block === b.id).sort((x, y) => y.dots - x.dots);
+    out += list.length ? list.map(n => `- ${n.text.replace(/\n/g, ' ')}${n.dots ? ` (${n.dots} dot${n.dots > 1 ? 's' : ''})` : ''}`).join('\n') + '\n\n' : '- (empty)\n\n';
+  }
+  return out;
+}
+
+// ---------- 3j. Save A4 sheet ----------
+// We don't screenshot the page. We redraw the canvas from the data onto
+// a white A4 landscape page at 300 dpi (297 × 210 mm = 3508 × 2480 px),
+// in dark ink, so it prints well on a black-and-white printer.
+const PRINT_TINT = { yellow: '#FFF3B8', pink: '#FFE0E7', mint: '#DDF5E7', sky: '#DEEEFD', lilac: '#ECE5FD' };
+const UI_F = 'Geist, Arial, sans-serif', HAND_F = 'Kalam, "Comic Sans MS", cursive';
+
+// Break text into lines that fit a width (very long words are split)
+function wrapText(x, text, maxW) {
+  const out = [];
+  for (const para of String(text).split('\n')) {
+    let line = '';
+    for (let word of para.split(/\s+/).filter(Boolean)) {
+      while (x.measureText(word).width > maxW) {
+        let i = word.length; while (i > 1 && x.measureText(word.slice(0, i)).width > maxW) i--;
+        if (line) { out.push(line); line = ''; }
+        out.push(word.slice(0, i)); word = word.slice(i);
+      }
+      const test = line ? line + ' ' + word : word;
+      if (x.measureText(test).width > maxW && line) { out.push(line); line = word; } else line = test;
+    }
+    out.push(line);
+  }
+  return out;
+}
+function fitOneLine(x, text, maxW) {
+  if (x.measureText(text).width <= maxW) return text;
+  while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1);
+  return text + '…';
+}
+
+async function drawSheet() {
+  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist'), document.fonts.load('400 30px Kalam')]); } catch (e) {}
+  const W = 3508, H = 2480, M = 130;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  const INK = '#111111', GREY = '#555555';
+  x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+
+  // Header (left): label, venture name, pitch
+  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`;
+  x.fillText('BUSINESS MODEL CANVAS  ·  INVENTNDISCOVER.COM', M, M + 28);
+  x.fillStyle = INK; x.font = `800 80px ${UI_F}`;
+  x.fillText(fitOneLine(x, state.name || 'Untitled venture', 2050), M, M + 120);
+  x.fillStyle = GREY; x.font = `400 38px ${UI_F}`;
+  if (state.tagline) x.fillText(fitOneLine(x, state.tagline, 2050), M, M + 180);
+
+  // Header (right): Name and Date lines to write on
+  const rx = W - M - 900;
+  x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK; x.font = `600 34px ${UI_F}`;
+  [['Name', M + 60], ['Date', M + 140]].forEach(([label, y]) => {
+    x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
+  });
+
+  // The grid: 10 columns; rows split 36 : 36 : 28, like the canvas on screen
+  const top = M + 260, bottom = H - M - 40, gw = W - 2 * M, gh = bottom - top, cw = gw / 10;
+  const rh = [gh * 0.36, gh * 0.36, gh * 0.28], ry = [top, top + rh[0], top + rh[0] + rh[1]];
+  const R = { kp: [0,2,0,2], ka: [2,2,0,1], kr: [2,2,1,1], vp: [4,2,0,2], cr: [6,2,0,1], ch: [6,2,1,1], cs: [8,2,0,2], co: [0,5,2,1], rs: [5,5,2,1] };
+  //        block: [first column, columns wide, first row, rows tall]
+
+  for (const b of BLOCKS) {
+    const [c0, cs, r0, rs] = R[b.id];
+    const bx = M + c0 * cw, by = ry[r0], bw = cs * cw, bh = rh.slice(r0, r0 + rs).reduce((a, v) => a + v, 0), pad = 26;
+    x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(bx, by, bw, bh);
+
+    // number badge, title and question
+    x.fillStyle = INK; x.beginPath(); x.arc(bx + pad + 22, by + pad + 22, 22, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#FFFFFF'; x.font = `700 26px ${UI_F}`; x.textAlign = 'center'; x.fillText(String(b.order), bx + pad + 22, by + pad + 31); x.textAlign = 'left';
+    x.fillStyle = INK; x.font = `700 34px ${UI_F}`; x.fillText(fitOneLine(x, b.name, bw - 2 * pad - 60), bx + pad + 58, by + pad + 34);
+    x.fillStyle = GREY; x.font = `400 24px ${UI_F}`;
+    const qLines = wrapText(x, b.q, bw - 2 * pad).slice(0, 2);
+    qLines.forEach((l, i) => x.fillText(l, bx + pad, by + pad + 84 + i * 30));
+    const nTop = by + pad + 84 + qLines.length * 30 + 10, nBottom = by + bh - pad, aw = bw - 2 * pad;
+
+    const list = state.notes.filter(n => n.block === b.id).sort((p, q) => q.dots - p.dots || p.at - q.at);
+    if (!list.length) {          // an empty block gets lines to write on by hand
+      x.strokeStyle = '#999999'; x.lineWidth = 2;
+      for (let y = nTop + 60; y < nBottom - 10; y += 64) { x.beginPath(); x.moveTo(bx + pad, y); x.lineTo(bx + bw - pad, y); x.stroke(); }
+      continue;
+    }
+
+    // Place notes in columns (shortest column first). Try big text first,
+    // then step the size down until every note fits inside the block.
+    const cols = bw > 1000 ? 4 : 2, gap = 16, nw = (aw - gap * (cols - 1)) / cols, np = 14;
+    let plan = null;
+    for (let fs = 34; fs >= 20 && !plan; fs -= 2) {
+      x.font = `400 ${fs}px ${HAND_F}`;
+      const colY = Array(cols).fill(nTop), placed = []; let ok = true;
+      for (const n of list) {
+        const lines = wrapText(x, n.text, nw - 2 * np), lh = fs * 1.15;
+        const h = np * 2 + lines.length * lh + (n.dots ? 26 : 0);
+        const ci = colY.indexOf(Math.min(...colY));
+        if (colY[ci] + h > nBottom) { ok = false; break; }
+        placed.push({ n, lines, lh, h, x: bx + pad + ci * (nw + gap), y: colY[ci] }); colY[ci] += h + gap;
+      }
+      if (ok || fs === 20) plan = { fs, placed, hidden: list.length - placed.length };
+    }
+    for (const p of plan.placed) {
+      x.fillStyle = PRINT_TINT[p.n.color] || PRINT_TINT.yellow; x.fillRect(p.x, p.y, nw, p.h);
+      x.strokeStyle = '#333333'; x.lineWidth = 2; x.strokeRect(p.x, p.y, nw, p.h);
+      x.fillStyle = INK; x.font = `400 ${plan.fs}px ${HAND_F}`;
+      p.lines.forEach((l, i) => x.fillText(l, p.x + np, p.y + np + plan.fs * 0.9 + i * p.lh));
+      for (let i = 0; i < p.n.dots; i++) { x.beginPath(); x.arc(p.x + nw - np - 8 - i * 22, p.y + p.h - np - 4, 8, 0, Math.PI * 2); x.fill(); }
+    }
+    if (plan.hidden) { x.fillStyle = GREY; x.font = `600 26px ${UI_F}`; x.fillText(`+ ${plan.hidden} more note${plan.hidden > 1 ? 's' : ''} on screen`, bx + pad, nBottom); }
+  }
+  x.strokeStyle = INK; x.lineWidth = 6; x.strokeRect(M, top, gw, gh);   // heavier outer frame
+
+  x.fillStyle = GREY; x.font = `400 26px ${UI_F}`;
+  x.fillText('Fill order 1 → 9: customers first, costs last.  ● = dot votes. Notes are sorted by dots.', M, H - M + 10);
+  x.textAlign = 'right'; x.fillText('Canvas: Osterwalder & Pigneur · Sheet: Invent + Discover', W - M, H - M + 10); x.textAlign = 'left';
+  return cv;
+}
+
+async function exportSheet() {
+  const cv = await drawSheet();
+  const link = document.createElement('a');
+  const base = (state.name || 'business-model-canvas').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'business-model-canvas';
+  link.download = base + '-bmc-a4.png';
+  link.href = cv.toDataURL('image/png');
+  link.click();
+  toast('Saved. When printing, choose "Fit to page".');
+}
+
+// ---------- 3k. Wiring up the buttons ----------
+$('#vname').addEventListener('input', e => { state.name = e.target.value; claimExample(); save(); $('#banner').hidden = true; });
+$('#tagline').addEventListener('input', e => { state.tagline = e.target.value; claimExample(); save(); $('#banner').hidden = true; });
+$('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; save(); render(); };
+$('#clearBtn').onclick = () => {
+  if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
+  state.notes = []; state.name = state.tagline = ''; state.isExample = false; state.confirmClear = false; save(); render(); toast('Canvas cleared.');
+};
+$('#copyBtn').onclick = () => {
+  const text = asText();
+  navigator.clipboard.writeText(text).then(() => toast('Copied. Paste it into your sprint doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
+};
+$('#exportBtn').onclick = exportSheet;
+
+// ---------- 3l. Start ----------
+// First visit: show the example. Later visits: bring back your own canvas.
+if (!load()) loadExample();
+buildCanvas();
+render();
+</script>
+</body>
+</html>

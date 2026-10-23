@@ -115,6 +115,16 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-grid .ax{position:absolute;font:500 9px var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .tool-grid .ay{left:-22px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
 .tool-grid .axx{bottom:-18px;left:50%;transform:translateX(-50%)}
+/* Business Model Canvas card: the nine blocks light up in fill order, 1 to 9 */
+.tool-bmc{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.tool-bmc::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
+.tool-bmc .bmc-grid{position:relative;width:196px;height:124px;display:grid;gap:3px;grid-template-columns:repeat(10,1fr);grid-template-rows:1fr 1fr .8fr;
+  grid-template-areas:"kp kp ka ka vp vp cr cr cs cs" "kp kp kr kr vp vp ch ch cs cs" "co co co co co rs rs rs rs rs"}
+.tool-bmc b{display:grid;place-items:center;border-radius:5px;font-size:12px;font-weight:700;color:var(--c);
+  background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  animation:id-lit 9s ease-in-out infinite,id-ink 9s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
+.tool-bmc .hub{display:flex;align-items:baseline;gap:6px;font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.tool-bmc .hub strong{font:700 26px var(--sans,inherit);letter-spacing:0;background-clip:text;-webkit-background-clip:text;color:transparent}
 /* GLB studio card: a glowing wireframe cube turning in 3D */
 .tool-cube{position:relative;width:200px;height:200px;flex:none;display:grid;place-items:center;perspective:600px}
 .tool-cube::before{content:"";position:absolute;inset:30px;border-radius:50%;background:radial-gradient(circle,rgba(47,209,197,.22),rgba(165,139,255,.12) 55%,transparent 70%)}
@@ -162,7 +172,7 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-madlib b{min-width:var(--w);padding:7px 10px;border-radius:8px;font:700 13px var(--sans);letter-spacing:0;text-transform:none;color:var(--c);
   background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px dashed color-mix(in srgb,var(--c) 55%,transparent);
   animation:id-lit 3s ease-in-out infinite,id-ink 3s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube{animation:none}}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube,.tool-bmc b{animation:none}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}
