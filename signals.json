@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-10-22T05:27:29+05:30",
+ "REFRESHED": "2026-10-23T05:27:18+05:30",
  "SIGNALS": [
+  {
+   "id": "2112988118471295323",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2112988118471295323",
+   "posted": "2026-10-22T00:53:19+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI says its frontier models and Codex agentic workflows are coming to Google Cloud's Model Garden so enterprises can use them where they already build."
+  },
   {
    "id": "2112984664256241837",
    "handle": "claudeai",
@@ -12,14 +22,54 @@
    "summary": "Anthropic opened a research preview of Claude Duet, an app where Claude acts as a proactive agent that surfaces what needs attention and checks before acting."
   },
   {
-   "id": "2112774317025165641",
-   "handle": "0xSweep",
-   "name": "Sweep",
-   "url": "https://x.com/0xSweep/status/2112774317025165641",
-   "posted": "2026-10-21T10:43:45+05:30",
-   "topic": "Tech",
+   "id": "2112961069526249973",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2112961069526249973",
+   "posted": "2026-10-21T23:05:50+05:30",
+   "topic": "Models",
    "kind": "Report",
-   "summary": "Sweep reports Anthropic booked an $80.7B net loss over six months while revenue rose to $16.3B from $1.1B a year earlier."
+   "summary": "Artificial Analysis says HeyGen Voice Turbo now ranks first on its Controlled Voice text-to-speech arena leaderboard, ahead of the earlier HeyGen Voice at second."
+  },
+  {
+   "id": "2112947469826896151",
+   "handle": "Recursive_SI",
+   "name": "Recursive",
+   "url": "https://x.com/Recursive_SI/status/2112947469826896151",
+   "posted": "2026-10-21T22:11:48+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Recursive released Flint, its first model, built with its automated research system. It targets fast local coding, and open weights are on Hugging Face."
+  },
+  {
+   "id": "2112945805686604033",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2112945805686604033",
+   "posted": "2026-10-21T22:05:11+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "OpenAI packaged a Codex skill that guides site owners through checking whether their website is affected by the recently disclosed web security issue."
+  },
+  {
+   "id": "2112917601387249767",
+   "handle": "dip_goa",
+   "name": "DIP Goa",
+   "url": "https://x.com/dip_goa/status/2112917601387249767",
+   "posted": "2026-10-21T20:13:06+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Goa's information department says the two-day Goa AI Tech Conclave 2026 opens in Panaji, bringing together academia, tech leaders and entrepreneurs."
+  },
+  {
+   "id": "2112875860206162322",
+   "handle": "arthurmensch",
+   "name": "Arthur Mensch",
+   "url": "https://x.com/arthurmensch/status/2112875860206162322",
+   "posted": "2026-10-21T17:27:15+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Mistral CEO Arthur Mensch says AI for industrial engineering is a key research pillar and that Mistral is deepening its partnership with NVIDIA for manufacturing."
   },
   {
    "id": "2112648445546598873",
@@ -40,56 +90,6 @@
    "topic": "AI",
    "kind": "Official",
    "summary": "ChatGPT adds Locked Chats, a protected space outside regular history and search, unlocked by PIN on web and desktop or by biometrics on supported mobile devices."
-  },
-  {
-   "id": "2112574615318876178",
-   "handle": "MistralAI",
-   "name": "Mistral AI",
-   "url": "https://x.com/MistralAI/status/2112574615318876178",
-   "posted": "2026-10-20T21:30:12+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Mistral introduced Voxtral 3, a family of transcription and speech models that power its new voice agents API."
-  },
-  {
-   "id": "2112573259606884640",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2112573259606884640",
-   "posted": "2026-10-20T21:24:49+05:30",
-   "topic": "Open models",
-   "kind": "Report",
-   "summary": "Artificial Analysis says Bria's Fibo 2.0, an 8B model, ranks first among open-weights models on its image-editing leaderboard."
-  },
-  {
-   "id": "2112245968750145561",
-   "handle": "AIatMeta",
-   "name": "AI at Meta",
-   "url": "https://x.com/AIatMeta/status/2112245968750145561",
-   "posted": "2026-10-19T23:44:17+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "Meta says its Muse foundation models, including Muse Wonder, were trained at Prometheus, its gigawatt-scale supercluster in New Albany, Ohio, and describes engineering for host reliability."
-  },
-  {
-   "id": "2112236719068369299",
-   "handle": "_inception_ai",
-   "name": "Inception",
-   "url": "https://x.com/_inception_ai/status/2112236719068369299",
-   "posted": "2026-10-19T23:07:31+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Inception releases Mercury 3, a diffusion LLM it says beats GPT-6 Luna and Claude Haiku 5.5 on several benchmarks while running above 1,000 tokens per second."
-  },
-  {
-   "id": "2112057367353610546",
-   "handle": "internetfreedom",
-   "name": "Internet Freedom Foundation",
-   "url": "https://x.com/internetfreedom/status/2112057367353610546",
-   "posted": "2026-10-19T11:14:51+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "IFF says an Oct 10 MeitY advisory to Meta directs suppression of protest reporting on Instagram and Facebook, and calls for it to be withdrawn."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-22T05:16:00+05:30",
+ "REFRESHED": "2026-10-23T05:22:14+05:30",
  "EVENTS_RAW": [
   {
    "id": "code-to-capital",
@@ -740,7 +740,7 @@
    "src": "Luma",
    "url": "https://luma.com/w8n2jaa4",
    "access": "approval",
-   "why": "Free, invite-only 10:30-13:00 workshop with Google for Developers; no date on the page and venue shown only after approval.",
+   "why": "Free, approval-only workshop (10:30-13:00); the page shows no calendar date.",
    "conf": {
     "date": 0,
     "place": 20,
@@ -861,7 +861,7 @@
    "src": "Luma",
    "url": "https://luma.com/h3hq02qb",
    "access": "approval",
-   "why": "Launch evening (7:30-9:30 pm) has no date on the page; the online challenge itself runs 26 Oct-9 Nov 2026.",
+   "why": "Invite-only launch evening for the Google Mumbai Data Challenge (online challenge 26 Oct-9 Nov); calendar date of the evening is not shown on the page.",
    "conf": {
     "date": 0,
     "place": 30,
@@ -903,53 +903,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai and discover pages refused; 2 event pages opened via search results",
-   "found": 2,
-   "pub": 0,
+   "what": "mumbai listing (17 events, no dates) + individual event pages",
+   "found": 17,
+   "pub": 2,
    "review": 0,
    "dup": 0,
-   "skip": 2,
-   "note": "Listing pages unreachable. Mumbai Meets AI 5th edition (16 May) and XR Creatives talk (not in Mumbai, past) skipped. Existing Luma queue items unchanged."
+   "skip": 1,
+   "note": "Re-confirmed Structuring the AI Way (24 Oct) and Monad Blitz Mumbai (4 Nov). Gemma 4, Agri-AI, Google Data Challenge, Near Builder's Cafe, Cloud Community Days still show no date (kept in queue). EVA Symposium III (4 Nov) skipped: invite-only, Ethereum staking audience. Several event pages could not be opened this run (fetch permission timeouts)."
   },
   {
    "src": "AllEvents",
-   "what": "allevents.in/mumbai/startup refused",
+   "what": "technology/startup listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable this run; existing entries kept."
+   "note": "Unreachable this run (fetch permission timed out); existing AllEvents entries kept unchanged, not re-verified."
   },
   {
    "src": "dev.events",
-   "what": "/meetups/AS/IN/Mumbai/data and one conference page",
-   "found": 4,
+   "what": "Mumbai meetups listing",
+   "found": 13,
    "pub": 0,
-   "review": 1,
+   "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "StackConnect World Tour Mumbai (2 Dec) queued: date only in image text. NODES 2026 entries are online, skipped."
+   "skip": 13,
+   "note": "Listing contained only online or non-Mumbai events (Angular en Espanol, NODES, etc.); nothing Mumbai-based to add."
   },
   {
    "src": "hiddenevents",
-   "what": "not opened",
+   "what": "Luma mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run."
+   "note": "Not fetched this run (time limit before 5:50 sync)."
   },
   {
    "src": "web search",
-   "what": "2 searches (AI meetup/hackathon Nov 2026; design/UX/XR/climate/student)",
-   "found": 6,
+   "what": "Mumbai AI meetup, design/UX/hackathon, AI Tinkerers",
+   "found": 4,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 6,
-   "note": "Results were past events (BLITZ Mumbai Jun 2026, Figma meetup, Junglee June) or outside Mumbai. Nothing new confirmed. Existing events not re-verified this run; none ended before today."
+   "skip": 4,
+   "note": "Mumbai Meets AI editions and AI Tinkerers Mumbai are past events with no upcoming date; Design Samvaad is in Gurugram (not Mumbai)."
   }
  ],
  "COMMUNITIES": [
