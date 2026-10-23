@@ -793,7 +793,7 @@ const TOOLS=[
   letters:["+","−","⇄","◐","?"],colors:["#A58BFF","#EC4899","#3D9BFF","#2FD1C5","#FFB23F"],cta:"Start framing"},
  {id:"pov",added:"2026-10-19",name:"POV Statement",line:"Say who you're designing for, what they need and why, in four short steps. Then turn it into How Might We questions.",url:"/toolkit/pov/",
   credit:"The POV Madlib, Stanford d.school (Hasso Plattner Institute of Design)",time:"5 minutes · nothing uploaded",tag:"Problem framing",visual:"madlib",cta:"Write my POV"},
- {id:"business-model-canvas",added:"2026-10-23",name:"Business Model Canvas",line:"Map a whole business on one page: nine blocks of sticky notes, a dot vote and a fit check, then save a printable A4 sheet.",url:"/toolkit/business-model-canvas/",
+ {id:"business-model-canvas",added:"2026-10-23",name:"Business Model Canvas",line:"Map a whole business on one page, solo or live with your team: nine blocks of sticky notes, a dot vote and a fit check, then save a printable A4 sheet.",url:"/toolkit/business-model-canvas/",
   credit:"Alexander Osterwalder and Yves Pigneur (Business Model Generation, 2010)",time:"30–45 minutes · nothing uploaded",tag:"Business models",visual:"bmc",cta:"Open the canvas"},
  {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",shape:"diamond",
   credit:"Shishir Mehrotra, created at Google (YouTube)",time:"5–10 minutes",letters:["P","S","H","E"],

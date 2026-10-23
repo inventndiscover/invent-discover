@@ -5,7 +5,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Business Model Canvas tool · Invent + Discover</title>
-<meta name="description" content="Fill in a Business Model Canvas with sticky notes, dot-vote the strongest ideas, check how the nine blocks fit, and save a printable A4 sheet. Free, in your browser. Nothing is uploaded.">
+<meta name="description" content="Fill in a Business Model Canvas with sticky notes, dot-vote the strongest ideas, check how the nine blocks fit, and save a printable A4 sheet. Work solo in your browser or live with your team. Free.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/business-model-canvas/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="Business Model Canvas tool · Invent + Discover">
@@ -230,7 +230,7 @@
     <a class="back" href="/#tools">← All tools</a><br>
     <span class="pill">TOOL · BUSINESS MODEL CANVAS</span>
     <h1>Business Model Canvas</h1>
-    <p class="lede">See a whole business on one page. Fill the nine blocks with sticky notes, from who you serve to what it costs, then dot-vote the strongest ideas and let the fit check point out the gaps. Save it as an A4 sheet when you're done.</p>
+    <p class="lede">See a whole business on one page. Fill the nine blocks with sticky notes, from who you serve to what it costs, then dot-vote the strongest ideas and let the fit check point out the gaps. Work solo, or open a team canvas and fill it in together, live. Save it as an A4 sheet when you're done.</p>
     <p class="credit">The Business Model Canvas was created by Alexander Osterwalder and Yves Pigneur. <a href="#where">Where it comes from</a></p>
   </header>
 
@@ -293,7 +293,7 @@
     <h2>Where the Business Model Canvas comes from</h2>
     <p>The <b>Business Model Canvas</b> was created by Swiss business theorist <b>Alexander Osterwalder</b>, building on his PhD research with <b>Yves Pigneur</b> at the University of Lausanne. It became known worldwide through their 2010 book <i>Business Model Generation</i>, which was co-created with 470 practitioners from 45 countries. Osterwalder's company, Strategyzer, publishes the canvas under a Creative Commons licence, which is why so many free versions of it exist.</p>
     <p>The canvas breaks any business into nine building blocks: who it serves, what it offers them, how it reaches them, how it keeps them, how it earns money, and what it needs, does, partners with and spends to make that happen. The right side is about customers and value; the left side is about running the business. A good canvas is one where every note on the left supports something on the right.</p>
-    <p>Google lists the canvas as a method in the Define phase of its free <a href="https://designsprintkit.withgoogle.com/methodology/overview" target="_blank" rel="noopener">Design Sprint Kit</a>. The sticky notes, dot vote, fit check and A4 sheet on this page are made by Invent + Discover. Your canvas stays in your browser; nothing is uploaded.</p>
+    <p>Google lists the canvas as a method in the Define phase of its free <a href="https://designsprintkit.withgoogle.com/methodology/overview" target="_blank" rel="noopener">Design Sprint Kit</a>. The sticky notes, dot vote, fit check and A4 sheet on this page are made by Invent + Discover. <b>Solo</b> canvases stay in your browser and are never uploaded. <b>Team</b> canvases are stored on Google Firebase so teammates can see each other's notes; anyone with the team code can view and edit that canvas, so don't put anything private on it.</p>
   </section>
 
   <footer class="sitefoot">
@@ -342,7 +342,14 @@ const DOTS_PER_PERSON = 3;           // team mode: each person gets three dots
 
 // Team mode uses a free Google Firebase project to share notes live.
 // Paste the project's web config here; while it's null the Team switch stays hidden.
-const FIREBASE_CONFIG = null;
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAm_boRIJOnn-Pd8dN2IZAFhGCzZtDetrE",
+  authDomain: "inventndiscover-tools.firebaseapp.com",
+  projectId: "inventndiscover-tools",
+  storageBucket: "inventndiscover-tools.firebasestorage.app",
+  messagingSenderId: "254396865975",
+  appId: "1:254396865975:web:013e6c0e559424c620dc32",
+};
 
 // ---------- 3b. The example (shown on a first visit) ----------
 // Each row: [block, text, colour, dots]

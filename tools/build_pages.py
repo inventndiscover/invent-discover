@@ -379,7 +379,7 @@ def llms_txt(upcoming, today):
     lines += ["", "## Other", f"- [Home]({SITE}/): events, demos, tutorials, insights and communities in one page",
               f"- [SCAMPER idea tool]({SITE}/toolkit/scamper/): free browser tool that walks through the seven SCAMPER questions (Bob Eberle, 1971, from Alex Osborn's checklist)",
               f"- [Crazy 8s sketching tool]({SITE}/toolkit/crazy-8s/): free browser timer and sketch pad for eight ideas in eight minutes, a core Design Sprint method (Jake Knapp, Google); sketches are never uploaded",
-              f"- [Business Model Canvas tool]({SITE}/toolkit/business-model-canvas/): free browser canvas with sticky notes, dot voting, a fit check and a printable A4 sheet (Alexander Osterwalder and Yves Pigneur, 2010); nothing is uploaded",
+              f"- [Business Model Canvas tool]({SITE}/toolkit/business-model-canvas/): free browser canvas, solo or live with a team, with sticky notes, dot voting, a fit check and a printable A4 sheet (Alexander Osterwalder and Yves Pigneur, 2010); nothing is uploaded",
               f"- [PSHE career ladder tool]({SITE}/toolkit/pshe/): free browser self-check and project worksheet for the Problem, Solution, How, Execution framework (Shishir Mehrotra, Google/YouTube)",
               f"- [Stakeholder power/interest matrix]({SITE}/toolkit/stakeholder-map/): free browser tool to map stakeholders by power and interest (Mendelow 1981; popularised by Johnson and Scholes)",
               f"- [GLB to Three.js Studio]({SITE}/toolkit/glb-studio/): free in-browser 3D model viewer and converter (.glb, .gltf, .fbx, .obj, .stl to Three.js code, standalone HTML or .glb); files are never uploaded; built on three.js",
