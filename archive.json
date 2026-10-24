@@ -1017,6 +1017,36 @@
   "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked.",
   "firstSeen": "2026-10-19"
  },
+ "swift-bharat-2026": {
+  "id": "swift-bharat-2026",
+  "title": "Swift Bharat 2026",
+  "cat": "Tech",
+  "tags": [
+   "Swift",
+   "iOS",
+   "Developers"
+  ],
+  "area": "Nariman Point",
+  "venue": "Yashwantrao Chavan Centre",
+  "start": "2026-11-19",
+  "end": null,
+  "endDate": "2026-11-20",
+  "timeNote": "Times not stated on the organiser page",
+  "fmt": "Offline",
+  "price": 4999,
+  "priceNote": "Passes start at ₹4,999",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "Swift Bharat",
+  "also": "dev.events",
+  "url": "https://swiftbharat.org",
+  "org": "Swift Bharat",
+  "access": "open",
+  "desc": "A two-day conference for Swift and Apple-platform developers at the Yashwantrao Chavan Centre in Mumbai.",
+  "firstSeen": "2026-10-25"
+ },
  "swift-mumbai-assemble": {
   "id": "swift-mumbai-assemble",
   "title": "Swift Mumbai Assemble!",

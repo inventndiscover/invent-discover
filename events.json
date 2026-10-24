@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-24T05:12:00+05:30",
+ "REFRESHED": "2026-10-24T21:42:37+05:30",
  "EVENTS_RAW": [
   {
    "id": "ai-leadership-playbook",
@@ -406,6 +406,35 @@
    "org": "MCEXPERT",
    "access": "open",
    "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops."
+  },
+  {
+   "id": "swift-bharat-2026",
+   "title": "Swift Bharat 2026",
+   "cat": "Tech",
+   "tags": [
+    "Swift",
+    "iOS",
+    "Developers"
+   ],
+   "area": "Nariman Point",
+   "venue": "Yashwantrao Chavan Centre",
+   "start": "2026-11-19",
+   "end": null,
+   "endDate": "2026-11-20",
+   "timeNote": "Times not stated on the organiser page",
+   "fmt": "Offline",
+   "price": 4999,
+   "priceNote": "Passes start at ₹4,999",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "Swift Bharat",
+   "also": "dev.events",
+   "url": "https://swiftbharat.org",
+   "org": "Swift Bharat",
+   "access": "open",
+   "desc": "A two-day conference for Swift and Apple-platform developers at the Yashwantrao Chavan Centre in Mumbai."
   }
  ],
  "QUEUE_RAW": [
@@ -787,22 +816,6 @@
    }
   },
   {
-   "qid": "q-swift-bharat",
-   "title": "Swift Bharat",
-   "cat": "Tech",
-   "area": "Around Mumbai",
-   "src": "dev.events",
-   "url": "https://swiftbharat.org",
-   "access": "open",
-   "why": "dev.events suggests 19-20 Nov 2026 only via image text; organiser page not verified.",
-   "conf": {
-    "date": 55,
-    "place": 50,
-    "category": 90
-   },
-   "hint": "2026-11-19"
-  },
-  {
    "qid": "q-google-data-challenge",
    "title": "Building Mumbai's AI Talent | Launch of the Google Mumbai Data Challenge",
    "cat": "Climate",
@@ -852,53 +865,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "not reachable this run (fetch blocked)",
-   "found": 0,
+   "what": "mumbai listing + 13 event pages checked",
+   "found": 17,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
+   "skip": 1,
+   "note": "No queue item gained a visible date. EVA Symposium III shows 4 Nov but is invite-only with unclear topic, skipped. Durable DevOps and Agent Builders registrations are closed."
   },
   {
    "src": "AllEvents",
-   "what": "not reachable this run (fetch blocked)",
-   "found": 0,
+   "what": "technology listing",
+   "found": 15,
    "pub": 0,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
+   "dup": 3,
+   "skip": 11,
+   "note": "Mostly expos, finance summits and parties skipped; existing entries already cover Unchained, HealthTech Mixer, AICD, IFP."
   },
   {
    "src": "dev.events",
-   "what": "not reachable this run (fetch blocked)",
-   "found": 0,
-   "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
+   "what": "Mumbai conferences list",
+   "found": 6,
+   "pub": 1,
+   "review": 1,
+   "dup": 2,
+   "skip": 2,
+   "note": "Swift Bharat confirmed on organiser page and published. Devfest Mumbai (5 Dec) has no venue or organiser page, left out."
   },
   {
    "src": "hiddenevents",
-   "what": "not reachable this run (fetch blocked)",
+   "what": "not opened this run",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
+   "note": "Skipped to finish before the sync."
   },
   {
    "src": "web search",
-   "what": "2 searches; results had no confirmable upcoming dates",
-   "found": 0,
+   "what": "1 search",
+   "found": 1,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Removed ended events: code-to-capital, founders-meetup-mumbai-oct23"
+   "skip": 1,
+   "note": "Only past Mumbai Meets AI editions found."
   }
  ],
  "COMMUNITIES": [
@@ -1056,6 +1069,17 @@
    ],
    "area": "Mumbai",
    "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-12"
+  },
+  {
+   "id": "swift-bharat",
+   "name": "Swift Bharat",
+   "org": "Swift Bharat",
+   "focus": "Organises a conference for Swift and Apple-platform developers in Mumbai.",
+   "cats": [
+    "Tech"
+   ],
+   "area": "Nariman Point",
+   "url": "https://swiftbharat.org"
   }
  ]
 }

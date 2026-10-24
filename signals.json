@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-10-24T05:26:55+05:30",
+ "REFRESHED": "2026-10-24T21:51:46+05:30",
  "SIGNALS": [
+  {
+   "id": "2113680701770068067",
+   "handle": "Kimi_Moonshot",
+   "name": "Kimi.ai",
+   "url": "https://x.com/Kimi_Moonshot/status/2113680701770068067",
+   "posted": "2026-10-23T22:45:24+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Moonshot introduces Kimi K3.1 Pro, an open-weight multimodal MoE model with 2.8T total and 104B active parameters, a 1M-token context, and upgrades for coding and 3D work."
+  },
   {
    "id": "2113677471417819386",
    "handle": "blocks",
@@ -12,74 +22,74 @@
    "summary": "Block introduced Dessa, a speech model it says was trained from scratch on human conversation, and shared a link where people can hear it."
   },
   {
-   "id": "2113231142362964234",
-   "handle": "pengsonal",
-   "name": "Peng",
-   "url": "https://x.com/pengsonal/status/2113231142362964234",
-   "posted": "2026-10-22T16:59:00+05:30",
+   "id": "2113658964365971681",
+   "handle": "UnslothAI",
+   "name": "Unsloth AI",
+   "url": "https://x.com/UnslothAI/status/2113658964365971681",
+   "posted": "2026-10-23T21:19:01+05:30",
    "topic": "Open models",
-   "kind": "Leak",
-   "summary": "Unconfirmed: two mystery models on an arena battle page are said to be Kimi K3.1 and Qwen 4, with early results shared. Treat as unverified."
+   "kind": "Report",
+   "summary": "Unsloth notes NVIDIA released Nemotron-3.5-Bolt-E4B, a small vision-capable model built on Gemma 4 that can run locally on about 6GB of RAM; GGUF files are available."
   },
   {
-   "id": "2112988118471295323",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2112988118471295323",
-   "posted": "2026-10-22T00:53:19+05:30",
-   "topic": "AI",
+   "id": "2113390212911083894",
+   "handle": "AnthropicAI",
+   "name": "Anthropic",
+   "url": "https://x.com/AnthropicAI/status/2113390212911083894",
+   "posted": "2026-10-23T03:31:06+05:30",
+   "topic": "Research",
    "kind": "Official",
-   "summary": "OpenAI says its frontier models and Codex agentic workflows are coming to Google Cloud's Model Garden so enterprises can use them where they already build."
+   "summary": "Anthropic's Frontier Red Team blog describes using Claude to formally verify software at large scale, aiming to prove code free of certain bugs without heavy expert time."
   },
   {
-   "id": "2112984664256241837",
+   "id": "2113360845409583307",
    "handle": "claudeai",
    "name": "Claude",
-   "url": "https://x.com/claudeai/status/2112984664256241837",
-   "posted": "2026-10-22T00:39:35+05:30",
+   "url": "https://x.com/claudeai/status/2113360845409583307",
+   "posted": "2026-10-23T01:34:24+05:30",
    "topic": "AI",
    "kind": "Official",
-   "summary": "Anthropic opened a research preview of Claude Duet, an app where Claude acts as a proactive agent that surfaces what needs attention and checks before acting."
+   "summary": "Claude says that starting next week its web, desktop and mobile sessions will default to auto mode on Pro, Max and Team plans, with an automated check blocking risky actions."
   },
   {
-   "id": "2112945805686604033",
+   "id": "2113328526413996100",
+   "handle": "ClaudeDevs",
+   "name": "ClaudeDevs",
+   "url": "https://x.com/ClaudeDevs/status/2113328526413996100",
+   "posted": "2026-10-22T23:25:59+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Anthropic is donating Agent Skills to the Agentic AI Foundation, home of MCP, noting 70+ agent platforms including ChatGPT, Cursor, GitHub Copilot and VS Code have adopted the standard."
+  },
+  {
+   "id": "2113300317584720259",
+   "handle": "ideogram_ai",
+   "name": "Ideogram",
+   "url": "https://x.com/ideogram_ai/status/2113300317584720259",
+   "posted": "2026-10-22T21:33:53+05:30",
+   "topic": "Design",
+   "kind": "Official",
+   "summary": "Ideogram introduces its first vector model, which generates clean editable SVGs from a text prompt or converts an existing image into a scalable vector. Live in the app and API."
+  },
+  {
+   "id": "2113298833392496746",
    "handle": "OpenAI",
    "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2112945805686604033",
-   "posted": "2026-10-21T22:05:11+05:30",
-   "topic": "Tech",
+   "url": "https://x.com/OpenAI/status/2113298833392496746",
+   "posted": "2026-10-22T21:27:59+05:30",
+   "topic": "Research",
    "kind": "Official",
-   "summary": "OpenAI packaged a Codex skill that guides site owners through checking whether their website is affected by the recently disclosed web security issue."
+   "summary": "OpenAI says METR and Redwood Research piloted an embedded evaluation of its internal monitoring system over three weeks, with findings used to strengthen safeguards."
   },
   {
-   "id": "2112923288506663121",
-   "handle": "WIRED",
-   "name": "WIRED",
-   "url": "https://x.com/WIRED/status/2112923288506663121",
-   "posted": "2026-10-21T20:35:42+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "WIRED reported that at NVIDIA GTC Berlin, Jensen Huang unveiled the DSX Pod plug-in data center for Europe and showed autonomous humanoid robotics."
-  },
-  {
-   "id": "2112917601387249767",
-   "handle": "dip_goa",
-   "name": "DIP Goa",
-   "url": "https://x.com/dip_goa/status/2112917601387249767",
-   "posted": "2026-10-21T20:13:06+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Goa's information department says the two-day Goa AI Tech Conclave 2026 opens in Panaji, bringing together academia, tech leaders and entrepreneurs."
-  },
-  {
-   "id": "2112875860206162322",
-   "handle": "arthurmensch",
-   "name": "Arthur Mensch",
-   "url": "https://x.com/arthurmensch/status/2112875860206162322",
-   "posted": "2026-10-21T17:27:15+05:30",
-   "topic": "AI",
+   "id": "2113214040516268126",
+   "handle": "_lewtun",
+   "name": "Lewis Tunstall",
+   "url": "https://x.com/_lewtun/status/2113214040516268126",
+   "posted": "2026-10-22T15:51:03+05:30",
+   "topic": "Open models",
    "kind": "Official",
-   "summary": "Mistral CEO Arthur Mensch says AI for industrial engineering is a key research pillar and that Mistral is deepening its partnership with NVIDIA for manufacturing."
+   "summary": "Hugging Face researcher announces Carbon-X, a 14B model combining DNA and natural language, reporting it beats open language models on DNA benchmarks at far lower inference cost."
   }
  ]
 }
