@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-10-23T05:27:18+05:30",
+ "REFRESHED": "2026-10-24T05:26:55+05:30",
  "SIGNALS": [
+  {
+   "id": "2113677471417819386",
+   "handle": "blocks",
+   "name": "Block",
+   "url": "https://x.com/blocks/status/2113677471417819386",
+   "posted": "2026-10-23T22:32:34+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Block introduced Dessa, a speech model it says was trained from scratch on human conversation, and shared a link where people can hear it."
+  },
+  {
+   "id": "2113231142362964234",
+   "handle": "pengsonal",
+   "name": "Peng",
+   "url": "https://x.com/pengsonal/status/2113231142362964234",
+   "posted": "2026-10-22T16:59:00+05:30",
+   "topic": "Open models",
+   "kind": "Leak",
+   "summary": "Unconfirmed: two mystery models on an arena battle page are said to be Kimi K3.1 and Qwen 4, with early results shared. Treat as unverified."
+  },
   {
    "id": "2112988118471295323",
    "handle": "OpenAI",
@@ -22,26 +42,6 @@
    "summary": "Anthropic opened a research preview of Claude Duet, an app where Claude acts as a proactive agent that surfaces what needs attention and checks before acting."
   },
   {
-   "id": "2112961069526249973",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2112961069526249973",
-   "posted": "2026-10-21T23:05:50+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Artificial Analysis says HeyGen Voice Turbo now ranks first on its Controlled Voice text-to-speech arena leaderboard, ahead of the earlier HeyGen Voice at second."
-  },
-  {
-   "id": "2112947469826896151",
-   "handle": "Recursive_SI",
-   "name": "Recursive",
-   "url": "https://x.com/Recursive_SI/status/2112947469826896151",
-   "posted": "2026-10-21T22:11:48+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Recursive released Flint, its first model, built with its automated research system. It targets fast local coding, and open weights are on Hugging Face."
-  },
-  {
    "id": "2112945805686604033",
    "handle": "OpenAI",
    "name": "OpenAI",
@@ -50,6 +50,16 @@
    "topic": "Tech",
    "kind": "Official",
    "summary": "OpenAI packaged a Codex skill that guides site owners through checking whether their website is affected by the recently disclosed web security issue."
+  },
+  {
+   "id": "2112923288506663121",
+   "handle": "WIRED",
+   "name": "WIRED",
+   "url": "https://x.com/WIRED/status/2112923288506663121",
+   "posted": "2026-10-21T20:35:42+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "WIRED reported that at NVIDIA GTC Berlin, Jensen Huang unveiled the DSX Pod plug-in data center for Europe and showed autonomous humanoid robotics."
   },
   {
    "id": "2112917601387249767",
@@ -70,26 +80,6 @@
    "topic": "AI",
    "kind": "Official",
    "summary": "Mistral CEO Arthur Mensch says AI for industrial engineering is a key research pillar and that Mistral is deepening its partnership with NVIDIA for manufacturing."
-  },
-  {
-   "id": "2112648445546598873",
-   "handle": "NewsFromGoogle",
-   "name": "News from Google",
-   "url": "https://x.com/NewsFromGoogle/status/2112648445546598873",
-   "posted": "2026-10-21T02:23:35+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Google Public Sector is launching Gemini for government services, aimed at helping federal, state and local agencies streamline complex operations."
-  },
-  {
-   "id": "2112597766333673624",
-   "handle": "ChatGPT",
-   "name": "ChatGPT",
-   "url": "https://x.com/ChatGPT/status/2112597766333673624",
-   "posted": "2026-10-20T23:02:12+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "ChatGPT adds Locked Chats, a protected space outside regular history and search, unlocked by PIN on web and desktop or by biometrics on supported mobile devices."
   }
  ]
 }

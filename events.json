@@ -1,57 +1,6 @@
 {
- "REFRESHED": "2026-10-23T05:22:14+05:30",
+ "REFRESHED": "2026-10-24T05:12:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "code-to-capital",
-   "title": "Code to Capital Summit",
-   "cat": "Startup",
-   "tags": [
-    "LegalTech",
-    "IP"
-   ],
-   "area": "Vile Parle East",
-   "venue": "70-C Nehru Road, near Mumbai airport T1",
-   "start": "2026-10-23T08:00",
-   "end": "19:00",
-   "fmt": "Offline",
-   "price": 4999,
-   "priceNote": "₹4,999 to ₹6,999",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/code-to-capital-summit-tickets/80003201845282",
-   "org": "LegalTechMeet",
-   "access": "open",
-   "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers."
-  },
-  {
-   "id": "founders-meetup-mumbai-oct23",
-   "title": "Founder's Meetup Mumbai 2026",
-   "cat": "Startup",
-   "tags": [
-    "Networking",
-    "Founders",
-    "Investors"
-   ],
-   "area": "Vidyavihar",
-   "venue": "Somaiya Vidyavihar University, Vidyavihar",
-   "start": "2026-10-23T11:00",
-   "end": "14:00",
-   "fmt": "Offline",
-   "price": 749,
-   "priceNote": "₹749 per attendee",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "StartupGrants India",
-   "url": "https://www.startupgrantsindia.com/events/founders-meetup-mumbai-2026",
-   "org": "StartupNews.fyi (DOTFYI Media Ventures)",
-   "access": "open",
-   "desc": "A small, curated networking morning where Mumbai startup founders meet investors, accelerators and mentors face to face. It is part of a two-city October series with Pune."
-  },
   {
    "id": "ai-leadership-playbook",
    "title": "The AI Leadership Playbook",
@@ -903,53 +852,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai listing (17 events, no dates) + individual event pages",
-   "found": 17,
-   "pub": 2,
+   "what": "not reachable this run (fetch blocked)",
+   "found": 0,
+   "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 1,
-   "note": "Re-confirmed Structuring the AI Way (24 Oct) and Monad Blitz Mumbai (4 Nov). Gemma 4, Agri-AI, Google Data Challenge, Near Builder's Cafe, Cloud Community Days still show no date (kept in queue). EVA Symposium III (4 Nov) skipped: invite-only, Ethereum staking audience. Several event pages could not be opened this run (fetch permission timeouts)."
+   "skip": 0,
+   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
   },
   {
    "src": "AllEvents",
-   "what": "technology/startup listing pages",
+   "what": "not reachable this run (fetch blocked)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable this run (fetch permission timed out); existing AllEvents entries kept unchanged, not re-verified."
+   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups listing",
-   "found": 13,
-   "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 13,
-   "note": "Listing contained only online or non-Mumbai events (Angular en Espanol, NODES, etc.); nothing Mumbai-based to add."
-  },
-  {
-   "src": "hiddenevents",
-   "what": "Luma mirror",
+   "what": "not reachable this run (fetch blocked)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not fetched this run (time limit before 5:50 sync)."
+   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
   },
   {
-   "src": "web search",
-   "what": "Mumbai AI meetup, design/UX/hackathon, AI Tinkerers",
-   "found": 4,
+   "src": "hiddenevents",
+   "what": "not reachable this run (fetch blocked)",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 4,
-   "note": "Mumbai Meets AI editions and AI Tinkerers Mumbai are past events with no upcoming date; Design Samvaad is in Gurugram (not Mumbai)."
+   "skip": 0,
+   "note": "WebFetch was blocked (permission prompts unanswered, unattended run) for listing and event pages; only removal of ended events done, other data carried over from the previous verified run."
+  },
+  {
+   "src": "web search",
+   "what": "2 searches; results had no confirmable upcoming dates",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Removed ended events: code-to-capital, founders-meetup-mumbai-oct23"
   }
  ],
  "COMMUNITIES": [
