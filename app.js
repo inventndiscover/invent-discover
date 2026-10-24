@@ -65,7 +65,7 @@ const DEMOS = [
   vr:"inventndiscover.com/demos/fish-in-a-jar",
   needs:"On a laptop: drag to look, V switches between the fish and the table, L changes the lens, M for sound, H to hide the controls. On a phone: drag to look and use the buttons. Call visitor brings someone in at once. In VR on Meta Quest: B or Y switches view, the right stick turns and X shows a performance readout. Best in a recent Chrome, Edge or Safari.",
   desc:"A round glass goldfish bowl on an oak table in a sunlit living room. Switch between sitting at the table and being the goldfish inside. From inside, the room is ray-traced through the water and the curved glass, so it bends and swims as you move, and looking up shows Snell's window: the whole room squeezed into one bright circle on the water surface. Visitors walk in through the archway, crouch until their eyes are level with the bowl, blink and smile at you. Slide how strongly water bends light (1.00 is air, with no bending at all), swap to a 180-degree photographer's fisheye lens, and set the swimming, the bubbles and the TV sound. Everything runs in one web page, with nothing to download."},
- {id:"honey-bee-flight",added:"2026-10-20",name:"Honey Bee Flight",line:"Be a honey bee in the Hanging Gardens on Malabar Hill, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
+ {id:"honey-bee-flight",added:"2026-10-24",name:"Honey Bee Flight",line:"Be a honey bee in the Hanging Gardens on Malabar Hill, in your browser or in VR",cat:"XR",status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["WebGL 2","WebXR","Web Audio"],
   gif:"media/honey-bee-flight.gif",img:"media/honey-bee-flight-cover.jpg",sheetImg:"media/honey-bee-flight-visitor.jpg",url:"demos/honey-bee-flight/",cta:"Take flight",
   vr:"inventndiscover.com/demos/honey-bee-flight",
   needs:"On a laptop: drag to look, F to fly yourself (W A S D, Space and Q to rise and sink, Shift faster), T for the guided tour, V for first or third person, R back to the hive, M for sound, H to hide the controls. On a phone: drag to look, tap Fly, two-finger drag to fly. In VR on Meta Quest: B switches tour and free flight, Y first or third person, the left stick flies where you point, the right stick turns and rises, A changes time and weather, X shows a performance readout. Best in a recent Chrome, Edge or Safari.",
@@ -645,7 +645,7 @@ function inventBanner(){
 }
 
 function viewInvent(){
-  const inv=DEMOS.filter(d=>d.kind!=="tutorial");
+  const inv=DEMOS.filter(d=>d.kind!=="tutorial").sort((a,b)=>(b.added||"").localeCompare(a.added||""));  // newest "added" date first; dates are YYYY-MM-DD so text order = date order, same convention as the banner above
   const cats=["all",...new Set(inv.flatMap(d=>[d.cat,...(d.also||[])]))];  // "also": extra categories a demo is filed under
   const list=inv.filter(d=>(state.demoCat==="all"||d.cat===state.demoCat||(d.also||[]).includes(state.demoCat))&&(state.demoStatus==="all"||d.status===state.demoStatus));
   return `
