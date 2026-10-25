@@ -593,6 +593,20 @@ const PHOTO_CREDIT={
 function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
   return `<span class="photo-credit">${c.place?c.place+" · ":""}Photo${c.name?` by <a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`:""} on <a href="https://unsplash.com/?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></span>`}
 
+/* Discover stories — analog stories that explain today's tech through an older one.
+   Held back on purpose: STORIES holds them, but discoverStoryBanner() isn't called
+   from viewDiscover() yet. To publish the newest one, add ${discoverStoryBanner()}
+   just after the page-head in viewDiscover() below. */
+const STORIES=[
+ {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26",title:"The Lunch That Finds Its Own Way",
+  line:"How Mumbai's dabbawalas route 200,000 lunches a day with almost no errors — and what it has in common with how the internet moves a packet.",
+  url:"discover/the-lunch-that-finds-its-own-way/"}
+];
+function discoverStoryBanner(){
+  const s=STORIES[0]; if(!s) return "";
+  return `<div class="wrap"><div class="banner"><span aria-hidden="true">✦</span><span><b>Story: <a href="${s.url}" style="color:inherit">${esc(s.title)}</a></b> — ${esc(s.line)}</span></div></div>`;
+}
+
 function viewDiscover(){
   const f=state.f, list=filterEvents();
   const opt=(v,cur,label)=>`<option value="${v}" ${v===cur?"selected":""}>${label??v}</option>`;
