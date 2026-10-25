@@ -76,6 +76,14 @@ p { margin: 0 0 1.15rem; }
 .listen[aria-pressed="true"] .switch { background: rgba(244,114,182,.35); }
 .listen[aria-pressed="true"] .switch::after { transform: translateX(16px); background: var(--pink); box-shadow: 0 0 10px var(--pink); }
 .listen-note { font-size: .72rem; color: var(--muted); }
+.speed {
+  font-family: var(--mono); font-size: .8rem; letter-spacing: .06em;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 14px; cursor: pointer;
+}
+.speed:hover { border-color: var(--violet); }
+.speed:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+.speed:disabled { opacity: .4; cursor: default; }
 
 figure { margin: 2.4rem 0; }
 figure svg { display: block; width: 100%; height: auto; max-width: 100%; }
@@ -173,6 +181,7 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
       <button class="listen" id="listen" type="button" aria-pressed="false">
         <span class="switch" aria-hidden="true"></span><span id="listen-label">Listen: off</span>
       </button>
+      <button class="speed" id="speed" type="button" aria-label="Reading speed, click to change">1x</button>
       <span class="listen-note" id="listen-note" hidden>Your browser can't read this page aloud.</span>
     </div>
   </header>
@@ -353,15 +362,22 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
   /* Listen switch: off by default, never autoplays. Reads every element tagged data-read, in page order. */
   var btn = document.getElementById("listen");
   var label = document.getElementById("listen-label");
+  var speedBtn = document.getElementById("speed");
   var synth = window.speechSynthesis;
   if (!synth || typeof SpeechSynthesisUtterance === "undefined") {
     btn.disabled = true;
+    speedBtn.disabled = true;
     label.textContent = "Listen: unavailable";
     document.getElementById("listen-note").hidden = false;
     return;
   }
   var parts = Array.prototype.slice.call(document.querySelectorAll("[data-read]"));
   var idx = 0, on = false;
+  // Playback speed: a multiplier on top of the base narration pace (below),
+  // cycled by the "1x" button the same way a podcast app's speed control
+  // works. speedSteps[speedIdx] is always what's showing on the button.
+  var speedSteps = [1, 1.5, 2];
+  var speedIdx = 0;
   function pickVoice() {
     // Browsers ship several built-in voices; quality varies a lot between them.
     // On Chrome, voices whose name contains "Google" are the higher-quality
@@ -384,11 +400,12 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
     var u = new SpeechSynthesisUtterance(el.getAttribute("data-say") || el.textContent.trim());
     var v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; }
     // rate: speed of speech (1 = normal). pitch: how high/low the voice
-    // sits (1 = the voice's natural pitch). A touch slower and a touch
-    // lower than default reads less like a robot reading a manual and
-    // more like someone telling a story — the same trick radio narrators
-    // use to sound warmer rather than rushed.
-    u.rate = 0.92;
+    // sits (1 = the voice's natural pitch). 0.92 is the base storytelling
+    // pace (a touch slower and lower than default, so it reads less like
+    // a robot reading a manual); the speed button then multiplies that
+    // base pace by 1x, 1.5x or 2x, the same way a podcast player's speed
+    // control scales normal playback rather than replacing it.
+    u.rate = 0.92 * speedSteps[speedIdx];
     u.pitch = 0.95;
     u.onend = function () { idx++; next(); };
     u.onerror = function () { idx++; next(); };
@@ -403,6 +420,14 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
     on = true; idx = 0;
     btn.setAttribute("aria-pressed", "true"); label.textContent = "Listen: on";
     synth.cancel(); next();
+  });
+  speedBtn.addEventListener("click", function () {
+    // Just move to the next step and relabel the button; next() reads
+    // speedSteps[speedIdx] fresh for every new chunk it speaks, so the
+    // new pace takes effect from the next sentence or panel onward
+    // (we don't interrupt whatever is being read right now).
+    speedIdx = (speedIdx + 1) % speedSteps.length;
+    speedBtn.textContent = speedSteps[speedIdx] + "x";
   });
   window.addEventListener("pagehide", stop);
 })();
