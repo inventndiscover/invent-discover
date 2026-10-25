@@ -1,32 +1,6 @@
 {
- "REFRESHED": "2026-10-24T21:42:37+05:30",
+ "REFRESHED": "2026-10-25T21:45:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "ai-leadership-playbook",
-   "title": "The AI Leadership Playbook",
-   "cat": "AI",
-   "tags": [
-    "Leadership",
-    "Product",
-    "Operators"
-   ],
-   "area": "Andheri East",
-   "venue": "Paytm campus, Marol (exact address after registration)",
-   "start": "2026-10-24T10:00",
-   "end": "13:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · curated, host approval needed",
-   "aud": [
-    "Professional",
-    "Founder"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/6igqwui2",
-   "org": "The Operators Collective",
-   "access": "approval",
-   "desc": "A curated morning session for product leaders and operators on leading teams through AI adoption, hosted at Paytm."
-  },
   {
    "id": "ifp-festival-16",
    "title": "IFP Festival Season 16",
@@ -54,58 +28,6 @@
    "org": "IFP",
    "access": "open",
    "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper."
-  },
-  {
-   "id": "structuring-ai-openarrow",
-   "title": "Structuring the AI Way (OpenArrow)",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Automation",
-    "Workflows"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue shared after registration (Gulmohar Road listing)",
-   "start": "2026-10-24T10:00",
-   "end": "13:00",
-   "fmt": "In person",
-   "price": null,
-   "priceNote": "Price not stated on the page; attendees get a one-week trial of OpenArrow",
-   "aud": [
-    "Founder",
-    "Developer"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/c6v1qjx0",
-   "org": "OpenArrow",
-   "access": "approval",
-   "desc": "A live walkthrough of OpenArrow's AI tools for speeding up structured-products workflows, followed by Q&A. Registration is subject to host approval and only one spot was left when checked."
-  },
-  {
-   "id": "global-startups-club-oct24",
-   "title": "Global Startups Club | Startup Networking Mumbai",
-   "cat": "Startup",
-   "tags": [
-    "Networking",
-    "Founders",
-    "Pitching"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue shared after registration",
-   "start": "2026-10-24T10:30",
-   "end": "13:30",
-   "fmt": "Offline",
-   "price": 475,
-   "priceNote": "₹475",
-   "aud": [
-    "Founder",
-    "Student"
-   ],
-   "src": "StartupGrantsIndia",
-   "url": "https://www.startupgrantsindia.com/events/global-startups-club-l-startup-networking-mumbai-2026-12",
-   "org": "Global Startups Club",
-   "access": "open",
-   "desc": "A morning networking meetup for founders and aspiring entrepreneurs with speed-networking rounds and short elevator pitches."
   },
   {
    "id": "enterprise-ai-summit",
@@ -865,53 +787,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai listing + 13 event pages checked",
-   "found": 17,
+   "what": "Listing pages blocked by session allowlist; searched for event pages",
+   "found": 2,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 1,
-   "note": "No queue item gained a visible date. EVA Symposium III shows 4 Nov but is invite-only with unclear topic, skipped. Durable DevOps and Agent Builders registrations are closed."
+   "skip": 2,
+   "note": "Only past Mumbai Meets AI editions surfaced; listing pages unreachable this run."
   },
   {
    "src": "AllEvents",
-   "what": "technology listing",
-   "found": 15,
-   "pub": 0,
-   "review": 0,
-   "dup": 3,
-   "skip": 11,
-   "note": "Mostly expos, finance summits and parties skipped; existing entries already cover Unchained, HealthTech Mixer, AICD, IFP."
-  },
-  {
-   "src": "dev.events",
-   "what": "Mumbai conferences list",
-   "found": 6,
-   "pub": 1,
-   "review": 1,
-   "dup": 2,
-   "skip": 2,
-   "note": "Swift Bharat confirmed on organiser page and published. Devfest Mumbai (5 Dec) has no venue or organiser page, left out."
-  },
-  {
-   "src": "hiddenevents",
-   "what": "not opened this run",
+   "what": "Technology and startup listings",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Skipped to finish before the sync."
+   "note": "Unreachable (not on allowlist)."
   },
   {
-   "src": "web search",
-   "what": "1 search",
+   "src": "dev.events",
+   "what": "Mumbai meetups listing",
    "found": 1,
    "pub": 0,
    "review": 0,
+   "dup": 1,
+   "skip": 0,
+   "note": "Only StackConnect Mumbai (2 Dec) already in queue; rest online or elsewhere."
+  },
+  {
+   "src": "hiddenevents",
+   "what": "Luma mirror",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
    "dup": 0,
-   "skip": 1,
-   "note": "Only past Mumbai Meets AI editions found."
+   "skip": 0,
+   "note": "Not fetched (not on allowlist)."
+  },
+  {
+   "src": "web search",
+   "what": "AI, hackathon, design/UX, XR, climate queries",
+   "found": 4,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 4,
+   "note": "Results were past, outside Mumbai or lacking confirmed dates. Retained events could not be re-verified this run; only expired ones removed: ai-leadership-playbook, structuring-ai-openarrow, global-startups-club-oct24."
   }
  ],
  "COMMUNITIES": [
