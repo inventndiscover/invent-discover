@@ -804,12 +804,13 @@ const TOOLS=[
   credit:"Built on three.js by Ricardo Cabello (mrdoob) and contributors",time:"2–5 minutes · nothing uploaded",visual:"cube",tag:"3D & XR",cta:"Open the studio"}
 ];
 function viewTools(){
+  const toolsSorted=[...TOOLS].sort((a,b)=>(b.added||"").localeCompare(a.added||""));  // newest "added" date first, same convention as viewInvent()
   return `
   <div class="page-head has-img"><img class="ph-img" src="${img("skyline")}" alt="" style="object-position:30% 50%">${photoCredit("skyline")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Tools</span></div><h1 class="mega">Tools</h1><p>Free tools for design thinking, new ideas, career growth and 3D. They work in your browser with nothing to sign up for, and every framework is credited to the people who created it.</p></div>
   </div></div>
   <div class="wrap" style="padding-top:28px">
-    ${TOOLS.map(t=>`<a class="tool-card" href="${t.url}">
+    ${toolsSorted.map(t=>`<a class="tool-card" href="${t.url}">
       ${t.visual==="madlib"?`<div class="tool-madlib" aria-hidden="true">
         <p><b style="--c:#A58BFF;--i:0;--w:64px">who</b>needs a way to</p><p><b style="--c:#3D9BFF;--i:1;--w:84px">need</b>because</p><p><b style="--c:#FF7BB8;--i:2;--w:112px">insight</b></p></div>`:t.visual==="funnel"?`<div class="tool-funnel" aria-hidden="true"><span class="fn-in">Your problem</span><i class="fn-ln"></i>
         <div class="fn-row">${t.letters.map((l,i)=>`<b style="--c:${t.colors[i]};--i:${i}">${l}</b>`).join("")}</div><em class="fn-cap">5 lenses</em><i class="fn-ln"></i>
