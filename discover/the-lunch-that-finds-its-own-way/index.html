@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../listen.css">
 <style>
 /* Layout: narrow reading column on a near-black neon grid; illustrations and the comic strip break out wider. Single dark theme by design. */
 :root {
@@ -63,27 +64,9 @@ h3 {
 h3 small { display: block; font-family: var(--mono); font-weight: 400; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--pink); margin-bottom: .35rem; }
 p { margin: 0 0 1.15rem; }
 .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; font-family: var(--mono); font-size: .8rem; color: var(--muted); }
-.listen {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono); font-size: .8rem; letter-spacing: .06em;
-  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
-  padding: 8px 16px 8px 10px; cursor: pointer;
-}
-.listen:hover { border-color: var(--violet); }
-.listen:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
-.switch { width: 34px; height: 18px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
-.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: transform .2s, background .2s; }
-.listen[aria-pressed="true"] .switch { background: rgba(244,114,182,.35); }
-.listen[aria-pressed="true"] .switch::after { transform: translateX(16px); background: var(--pink); box-shadow: 0 0 10px var(--pink); }
-.listen-note { font-size: .72rem; color: var(--muted); }
-.speed {
-  font-family: var(--mono); font-size: .8rem; letter-spacing: .06em;
-  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
-  padding: 8px 14px; cursor: pointer;
-}
-.speed:hover { border-color: var(--violet); }
-.speed:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
-.speed:disabled { opacity: .4; cursor: default; }
+/* .listen / .switch / .speed / [data-read] styling now lives in the
+   shared ../listen.css, linked in <head>, so every Discover story uses
+   the same rules without pasting them in here. */
 
 figure { margin: 2.4rem 0; }
 figure svg { display: block; width: 100%; height: auto; max-width: 100%; }
@@ -139,8 +122,6 @@ section { margin-bottom: 2.4rem; }
 .ask { margin-top: 2.4rem; padding: 26px 24px; border-radius: 16px; text-align: center; border: 1px solid rgba(244,114,182,.35); background: radial-gradient(ellipse at top, rgba(244,114,182,.12), transparent 70%); }
 .ask p { font-family: var(--display); font-weight: 600; font-size: 1.25rem; line-height: 1.35; margin: .4rem 0 0; text-wrap: balance; }
 
-[data-read] { transition: color .3s, text-shadow .3s, border-color .3s; }
-[data-read].speaking { color: #fff; text-shadow: 0 0 12px rgba(167,139,250,.45); }
 .panel.speaking { border-color: var(--pink); }
 
 footer { border-top: 1px solid var(--line); padding-top: 1.4rem; font-family: var(--mono); font-size: .74rem; color: var(--muted); line-height: 1.7; }
@@ -357,80 +338,5 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
   </footer>
 </div>
 
-<script>
-(function () {
-  /* Listen switch: off by default, never autoplays. Reads every element tagged data-read, in page order. */
-  var btn = document.getElementById("listen");
-  var label = document.getElementById("listen-label");
-  var speedBtn = document.getElementById("speed");
-  var synth = window.speechSynthesis;
-  if (!synth || typeof SpeechSynthesisUtterance === "undefined") {
-    btn.disabled = true;
-    speedBtn.disabled = true;
-    label.textContent = "Listen: unavailable";
-    document.getElementById("listen-note").hidden = false;
-    return;
-  }
-  var parts = Array.prototype.slice.call(document.querySelectorAll("[data-read]"));
-  var idx = 0, on = false;
-  // Playback speed: a multiplier on top of the base narration pace (below),
-  // cycled by the "1x" button the same way a podcast app's speed control
-  // works. speedSteps[speedIdx] is always what's showing on the button.
-  var speedSteps = [1, 1.5, 2];
-  var speedIdx = 0;
-  function pickVoice() {
-    // Browsers ship several built-in voices; quality varies a lot between them.
-    // On Chrome, voices whose name contains "Google" are the higher-quality
-    // ones (closer to a real narrator) rather than the flat default system
-    // voice, so we try those first, still preferring an Indian-English
-    // accent, before falling back to whatever plain English voice exists.
-    var v = synth.getVoices();
-    return v.find(function (x) { return /en-IN/i.test(x.lang) && /Google/i.test(x.name); }) ||
-           v.find(function (x) { return /en-IN/i.test(x.lang); }) ||
-           v.find(function (x) { return /^en/i.test(x.lang) && /Google/i.test(x.name); }) ||
-           v.find(function (x) { return /^en/i.test(x.lang); }) || null;
-  }
-  function clear() { parts.forEach(function (p) { p.classList.remove("speaking"); }); }
-  function next() {
-    if (!on) return;
-    if (idx >= parts.length) { stop(); return; }
-    var el = parts[idx];
-    clear(); el.classList.add("speaking");
-    try { el.scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
-    var u = new SpeechSynthesisUtterance(el.getAttribute("data-say") || el.textContent.trim());
-    var v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; }
-    // rate: speed of speech (1 = normal). pitch: how high/low the voice
-    // sits (1 = the voice's natural pitch). 0.92 is the base storytelling
-    // pace (a touch slower and lower than default, so it reads less like
-    // a robot reading a manual); the speed button then multiplies that
-    // base pace by 1x, 1.5x or 2x, the same way a podcast player's speed
-    // control scales normal playback rather than replacing it.
-    u.rate = 0.92 * speedSteps[speedIdx];
-    u.pitch = 0.95;
-    u.onend = function () { idx++; next(); };
-    u.onerror = function () { idx++; next(); };
-    synth.speak(u);
-  }
-  function stop() {
-    on = false; synth.cancel(); clear(); idx = 0;
-    btn.setAttribute("aria-pressed", "false"); label.textContent = "Listen: off";
-  }
-  btn.addEventListener("click", function () {
-    if (on) { stop(); return; }
-    on = true; idx = 0;
-    btn.setAttribute("aria-pressed", "true"); label.textContent = "Listen: on";
-    synth.cancel(); next();
-  });
-  speedBtn.addEventListener("click", function () {
-    // Just move to the next step and relabel the button; next() reads
-    // speedSteps[speedIdx] fresh for every new chunk it speaks, so the
-    // new pace takes effect from the next sentence or panel onward
-    // (we don't interrupt whatever is being read right now).
-    speedIdx = (speedIdx + 1) % speedSteps.length;
-    speedBtn.textContent = speedSteps[speedIdx] + "x";
-  });
-  window.addEventListener("pagehide", stop);
-})();
-</script>
-
+<script src="../listen-engine.js" defer></script>
 </body></html>

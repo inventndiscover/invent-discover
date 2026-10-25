@@ -1,0 +1,32 @@
+/* Shared "Listen" + speed-control styling for Discover analog stories.
+   One copy, used by every story, instead of pasting this into each
+   story's own <style> block. If the look needs a tweak later, change
+   it here once and every story picks it up next time it's loaded.
+
+   Requires each story's own page to already define these CSS custom
+   properties on :root (the site's standard neon palette):
+   --mono, --fg, --panel, --line, --violet, --pink, --muted */
+
+.listen {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: .8rem; letter-spacing: .06em;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 16px 8px 10px; cursor: pointer;
+}
+.listen:hover { border-color: var(--violet); }
+.listen:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+.switch { width: 34px; height: 18px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: transform .2s, background .2s; }
+.listen[aria-pressed="true"] .switch { background: rgba(244,114,182,.35); }
+.listen[aria-pressed="true"] .switch::after { transform: translateX(16px); background: var(--pink); box-shadow: 0 0 10px var(--pink); }
+.listen-note { font-size: .72rem; color: var(--muted); }
+.speed {
+  font-family: var(--mono); font-size: .8rem; letter-spacing: .06em;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 14px; cursor: pointer;
+}
+.speed:hover { border-color: var(--violet); }
+.speed:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+.speed:disabled { opacity: .4; cursor: default; }
+[data-read] { transition: color .3s, text-shadow .3s, border-color .3s; }
+[data-read].speaking { color: #fff; text-shadow: 0 0 12px rgba(167,139,250,.45); }
