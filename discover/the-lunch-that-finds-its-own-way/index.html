@@ -363,8 +363,15 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
   var parts = Array.prototype.slice.call(document.querySelectorAll("[data-read]"));
   var idx = 0, on = false;
   function pickVoice() {
+    // Browsers ship several built-in voices; quality varies a lot between them.
+    // On Chrome, voices whose name contains "Google" are the higher-quality
+    // ones (closer to a real narrator) rather than the flat default system
+    // voice, so we try those first, still preferring an Indian-English
+    // accent, before falling back to whatever plain English voice exists.
     var v = synth.getVoices();
-    return v.find(function (x) { return /en-IN/i.test(x.lang); }) ||
+    return v.find(function (x) { return /en-IN/i.test(x.lang) && /Google/i.test(x.name); }) ||
+           v.find(function (x) { return /en-IN/i.test(x.lang); }) ||
+           v.find(function (x) { return /^en/i.test(x.lang) && /Google/i.test(x.name); }) ||
            v.find(function (x) { return /^en/i.test(x.lang); }) || null;
   }
   function clear() { parts.forEach(function (p) { p.classList.remove("speaking"); }); }
@@ -376,7 +383,13 @@ footer ul { padding-left: 1.1rem; margin: .4rem 0 0; }
     try { el.scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
     var u = new SpeechSynthesisUtterance(el.getAttribute("data-say") || el.textContent.trim());
     var v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; }
-    u.rate = 0.95;
+    // rate: speed of speech (1 = normal). pitch: how high/low the voice
+    // sits (1 = the voice's natural pitch). A touch slower and a touch
+    // lower than default reads less like a robot reading a manual and
+    // more like someone telling a story — the same trick radio narrators
+    // use to sound warmer rather than rushed.
+    u.rate = 0.92;
+    u.pitch = 0.95;
     u.onend = function () { idx++; next(); };
     u.onerror = function () { idx++; next(); };
     synth.speak(u);
