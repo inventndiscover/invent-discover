@@ -614,6 +614,7 @@ function viewDiscover(){
   <div class="page-head has-img"><img class="ph-img" src="${img("train")}" alt="">${photoCredit("train")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Discover</span></div><h1 class="mega">Discover</h1><p>Upcoming events around Mumbai, each checked on its source page. You register on the organiser's own page.</p><div style="margin-top:14px">${freshLine()}</div></div>
   </div></div>
+  ${discoverStoryBanner()}
   <div class="filters"><div class="wrap">
     <div class="frow">
       <form class="search-in" data-sentence role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
