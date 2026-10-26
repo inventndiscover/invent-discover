@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-26T21:50:00+05:30",
+ "REFRESHED": "2026-10-26T22:59:08+05:30",
  "EVENTS_RAW": [
   {
    "id": "enterprise-ai-summit",
@@ -329,6 +329,32 @@
    "org": "Swift Bharat",
    "access": "open",
    "desc": "A two-day conference for Swift and Apple-platform developers at the Yashwantrao Chavan Centre in Mumbai."
+  },
+  {
+   "id": "eva-symposium-3",
+   "title": "EVA Symposium III",
+   "cat": "Tech",
+   "tags": [
+    "Ethereum",
+    "Staking",
+    "Devcon week"
+   ],
+   "area": "Mumbai",
+   "venue": "Address shown after approval",
+   "start": "2026-11-04T17:00",
+   "end": "23:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "No ticket price shown · invitation-only, host approval needed, capacity 75",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/ai6owvhz",
+   "org": "Ethereum Validators Association",
+   "access": "approval",
+   "desc": "An invitation-only Devcon-week evening for Ethereum validators, staking operators and infrastructure researchers, with a symposium followed by dinner."
   }
  ],
  "QUEUE_RAW": [
@@ -415,7 +441,7 @@
    "src": "Luma",
    "url": "https://luma.com/solana-summit-india",
    "access": "approval",
-   "why": "No date on the page; one day, 10:00 to 17:00.",
+   "why": "No calendar date on the page; one day, onsite registration 10:00 to 17:00; 259 people going.",
    "conf": {
     "date": 0,
     "place": 60,
@@ -754,58 +780,104 @@
     "category": 75
    },
    "hint": "2026-12-02"
+  },
+  {
+   "qid": "q-mev-sangam",
+   "title": "MeV Sangam: Mumbai",
+   "cat": "Tech",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/tzvdnkkj",
+   "access": "approval",
+   "why": "Page says only 'this November' around Solana Summit and Devcon; no calendar date; invite-only MEV evening in BKC.",
+   "conf": {
+    "date": 10,
+    "place": 70,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-zyhperpunks",
+   "title": "Zyhperpunks Dinner @Devcon",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/jlisaxzz",
+   "access": "approval",
+   "why": "Zcash community dinner in Devcon week; no date or address on the page.",
+   "conf": {
+    "date": 0,
+    "place": 20,
+    "category": 65
+   }
+  },
+  {
+   "qid": "q-devfest-mumbai",
+   "title": "Devfest Mumbai 2026",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "dev.events",
+   "url": "https://dev.events/conferences/devfest-mumbai-2026-qo08wdku",
+   "access": "open",
+   "why": "Listing shows 5 Dec only in image text; no venue or organiser page could be opened.",
+   "conf": {
+    "date": 60,
+    "place": 20,
+    "category": 80
+   },
+   "hint": "2026-12-05"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "Listing and event pages",
-   "found": 0,
-   "pub": 0,
-   "review": 0,
+   "what": "luma.com/mumbai listing and ~20 event pages",
+   "found": 20,
+   "pub": 1,
+   "review": 3,
    "dup": 0,
-   "skip": 0,
-   "note": "luma.com listing and event pages are not on the session allowlist this run; only pages surfaced by search were fetchable (past Mumbai Meets AI editions)."
+   "skip": 2,
+   "note": "Listing and event pages open now. Discover/ai page was blocked. Added EVA Symposium III (4 Nov). Skipped a run club and a past 24 Oct session. Several event pages (e.g. HackAMatch, ProductTank) still blocked; most queued pages show no date."
   },
   {
    "src": "AllEvents",
-   "what": "Technology and startup listings",
+   "what": "technology and startup pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable (not on allowlist)."
+   "note": "Blocked: not on session allowlist. Existing entries kept."
   },
   {
    "src": "dev.events",
    "what": "Mumbai meetups and conferences",
-   "found": 0,
+   "found": 16,
    "pub": 0,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Unreachable (not on allowlist)."
+   "review": 1,
+   "dup": 4,
+   "skip": 11,
+   "note": "Opened. Online events skipped. Devfest Mumbai 2026 queued; organiser sites blocked."
   },
   {
    "src": "hiddenevents",
-   "what": "Luma mirror",
+   "what": "Mumbai mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Unreachable (not on allowlist)."
+   "note": "Blocked: not on session allowlist."
   },
   {
    "src": "web search",
-   "what": "AI, hackathon, design/UX, XR, founders queries",
-   "found": 6,
+   "what": "Earlier searches (AI, hackathon, design/UX, XR, startups)",
+   "found": 4,
    "pub": 0,
    "review": 0,
    "dup": 1,
-   "skip": 5,
-   "note": "StartupLive Mumbai (20-21 Nov) re-confirmed via Startup Grants India. Others were past, outside Mumbai, or already listed. Retained events not re-verified; removed only expired: ifp-festival-16."
+   "skip": 3,
+   "note": "No new Mumbai items; Design Samvaad is in Gurugram."
   }
  ],
  "COMMUNITIES": [

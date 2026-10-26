@@ -353,6 +353,33 @@
   "also": "StartupGrantsIndia",
   "firstSeen": "2026-09-28"
  },
+ "eva-symposium-3": {
+  "id": "eva-symposium-3",
+  "title": "EVA Symposium III",
+  "cat": "Tech",
+  "tags": [
+   "Ethereum",
+   "Staking",
+   "Devcon week"
+  ],
+  "area": "Mumbai",
+  "venue": "Address shown after approval",
+  "start": "2026-11-04T17:00",
+  "end": "23:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "No ticket price shown · invitation-only, host approval needed, capacity 75",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/ai6owvhz",
+  "org": "Ethereum Validators Association",
+  "access": "approval",
+  "desc": "An invitation-only Devcon-week evening for Ethereum validators, staking operators and infrastructure researchers, with a symposium followed by dinner.",
+  "firstSeen": "2026-10-27"
+ },
  "evm-capital-hackathon": {
   "id": "evm-capital-hackathon",
   "title": "EVM Capital Hackathon: Mumbai edition",
