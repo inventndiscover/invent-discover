@@ -386,18 +386,21 @@ const INTERVIEWS=[
  {id:"iv-patrick",name:"Patrick Henz",board:"PATRICK HENZ",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/02/05/ai-agents-in-design-part-2-patrick-henz-on-ethics-governance-and-keeping-humans-in-charge/"},
  {id:"iv-kumar",name:"Kumar Gaurav",board:"KUMAR GAURAV",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/01/31/ai-agents-in-design-part-1-kumar-gaurav-on-designing-for-intent/"}
 ];
-const ARR_TYPES=[["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["interview","INTERVIEW","#FF7BB8"]];
+const ARR_TYPES=[["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["story","DISCOVER","#FF7BB8"],["interview","INTERVIEW","#FF7BB8"]];
 function arrivals(){
   const now=Date.now(), fresh=x=>x.added&&(now-Date.parse(x.added))/864e5<=NEW_DAYS;
   const pool=[
     ...TOOLS.filter(fresh).map(t=>({type:"tool",title:t.name,added:t.added,href:t.url})),
     ...DEMOS.filter(d=>d.kind==="tutorial"&&fresh(d)).map(d=>({type:"origami",title:d.name,added:d.added,open:d.id})),
     ...DEMOS.filter(d=>d.kind!=="tutorial"&&(d.cat==="XR"||(d.also||[]).includes("XR"))&&fresh(d)).map(d=>({type:"vr",title:d.name,added:d.added,open:d.id})),
-    ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
+    // Discover stories took the fourth row (26 Oct 2026). Only stories already live (go-live time passed).
+    ...STORIES.filter(x=>Date.parse(x.added)<=now&&fresh(x)).map(x=>({type:"story",title:x.board||x.title,added:x.added,href:x.url}))
+    // Interviews are off the board for now. To bring them back, add this line again:
+    // ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
   ];
   // newest of each type, then the rows newest first
-  const best={}; for(const it of pool){ if(!best[it.type]||it.added>best[it.type].added) best[it.type]=it; }
-  return Object.values(best).sort((a,b)=>b.added.localeCompare(a.added));
+  const best={}; for(const it of pool){ if(!best[it.type]||Date.parse(it.added)>Date.parse(best[it.type].added)) best[it.type]=it; }
+  return Object.values(best).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added));
 }
 const ARR_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 function arrivalsHTML(){
@@ -609,11 +612,11 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
    and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
- {id:"ones-zeros-and-zari",added:"2026-11-02T12:30:00+05:30",title:"Ones, Zeros and Zari",
+ {id:"ones-zeros-and-zari",added:"2026-11-02T12:30:00+05:30",title:"Ones, Zeros and Zari",board:"ONES ZEROS ZARI",
   line:"How 1800s punch cards told handlooms which threads to lift to weave a Banarasi saree — and how that same idea can hide a secret message inside a photo today.",
   url:"discover/ones-zeros-and-zari/", img:"media/stories/ones-zeros-and-zari.jpg",
   alt:"A Varanasi lane where a long glowing chain of punched cards flows into a weaver's handloom", read:"9 min read"},
- {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26T12:30:00+05:30",title:"The Lunch That Finds Its Own Way",
+ {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26T12:30:00+05:30",title:"The Lunch That Finds Its Own Way",board:"DABBAWALA LUNCH",
   line:"How Mumbai's dabbawalas route 200,000 lunches a day with almost no errors — and what it has in common with how the internet moves a packet.",
   url:"discover/the-lunch-that-finds-its-own-way/", img:"media/stories/the-lunch-that-finds-its-own-way.jpg",
   alt:"A neon stacked tiffin beside a lid marked with the dabbawala code VLP, E, 3, 9, AI, 12", read:"7 min read"}
