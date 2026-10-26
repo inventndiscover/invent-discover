@@ -594,16 +594,28 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
   return `<span class="photo-credit">${c.place?c.place+" · ":""}Photo${c.name?` by <a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`:""} on <a href="https://unsplash.com/?utm_source=inventndiscover&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></span>`}
 
 /* Discover stories — analog stories that explain today's tech through an older one.
-   Held back on purpose: STORIES holds them, but discoverStoryBanner() isn't called
-   from viewDiscover() yet. To publish the newest one, add ${discoverStoryBanner()}
-   just after the page-head in viewDiscover() below. */
+   Self-scheduling: "added" is a full date+time (with the IST offset), not just a
+   date, and discoverStoryBanner() only shows a story once that moment has passed
+   for the visitor loading the page right now — comparing real timestamps, not
+   just calendar dates, so a story can be queued for an exact time (e.g. "go live
+   at lunchtime on publish day") and nothing needs editing or pushing again when
+   that time arrives. To queue a future story: build its page, push it to this
+   repo, and add it here with the "added" time you want it to go live — that's
+   the whole publish step from then on, no separate scheduled trigger needed.
+   Newest-first by "added" for display; if more than one story's time has
+   already passed, the latest one wins the banner. */
 const STORIES=[
- {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26",title:"The Lunch That Finds Its Own Way",
+ {id:"ones-zeros-and-zari",added:"2026-11-02T12:30:00+05:30",title:"Ones, Zeros and Zari",
+  line:"How 1800s punch cards told handlooms which threads to lift to weave a Banarasi saree — and how that same idea can hide a secret message inside a photo today.",
+  url:"discover/ones-zeros-and-zari/"},
+ {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26T12:30:00+05:30",title:"The Lunch That Finds Its Own Way",
   line:"How Mumbai's dabbawalas route 200,000 lunches a day with almost no errors — and what it has in common with how the internet moves a packet.",
   url:"discover/the-lunch-that-finds-its-own-way/"}
 ];
 function discoverStoryBanner(){
-  const s=STORIES[0]; if(!s) return "";
+  const now=Date.now();
+  const live=STORIES.filter(x=>Date.parse(x.added)<=now).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added));
+  const s=live[0]; if(!s) return "";
   return `<div class="wrap"><div class="banner"><span aria-hidden="true">✦</span><span><b>Story: <a href="${s.url}" style="color:inherit">${esc(s.title)}</a></b> — ${esc(s.line)}</span></div></div>`;
 }
 
