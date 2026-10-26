@@ -1,34 +1,6 @@
 {
- "REFRESHED": "2026-10-25T21:45:00+05:30",
+ "REFRESHED": "2026-10-26T21:50:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "ifp-festival-16",
-   "title": "IFP Festival Season 16",
-   "cat": "Art",
-   "tags": [
-    "Festival",
-    "Film",
-    "Music",
-    "Design"
-   ],
-   "area": "Bandra West",
-   "venue": "Mehboob Studios, Hill Road",
-   "start": "2026-10-24T10:00",
-   "endDate": "2026-10-25",
-   "end": "21:00",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Student and citizen passes; prices go up in phases from 1 Oct",
-   "aud": [
-    "Student",
-    "Open to All"
-   ],
-   "src": "IFP",
-   "url": "https://ifp.world/festival/",
-   "org": "IFP",
-   "access": "open",
-   "desc": "A two-day creative festival with talks, classes and showcases from about 150 artists across film, music, design, writing, photography and performance. Student passes are cheaper."
-  },
   {
    "id": "enterprise-ai-summit",
    "title": "Enterprise AI Summit Mumbai 2026",
@@ -787,13 +759,13 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "Listing pages blocked by session allowlist; searched for event pages",
-   "found": 2,
+   "what": "Listing and event pages",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 2,
-   "note": "Only past Mumbai Meets AI editions surfaced; listing pages unreachable this run."
+   "skip": 0,
+   "note": "luma.com listing and event pages are not on the session allowlist this run; only pages surfaced by search were fetchable (past Mumbai Meets AI editions)."
   },
   {
    "src": "AllEvents",
@@ -807,13 +779,13 @@
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups listing",
-   "found": 1,
+   "what": "Mumbai meetups and conferences",
+   "found": 0,
    "pub": 0,
    "review": 0,
-   "dup": 1,
+   "dup": 0,
    "skip": 0,
-   "note": "Only StackConnect Mumbai (2 Dec) already in queue; rest online or elsewhere."
+   "note": "Unreachable (not on allowlist)."
   },
   {
    "src": "hiddenevents",
@@ -823,17 +795,17 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not fetched (not on allowlist)."
+   "note": "Unreachable (not on allowlist)."
   },
   {
    "src": "web search",
-   "what": "AI, hackathon, design/UX, XR, climate queries",
-   "found": 4,
+   "what": "AI, hackathon, design/UX, XR, founders queries",
+   "found": 6,
    "pub": 0,
    "review": 0,
-   "dup": 0,
-   "skip": 4,
-   "note": "Results were past, outside Mumbai or lacking confirmed dates. Retained events could not be re-verified this run; only expired ones removed: ai-leadership-playbook, structuring-ai-openarrow, global-startups-club-oct24."
+   "dup": 1,
+   "skip": 5,
+   "note": "StartupLive Mumbai (20-21 Nov) re-confirmed via Startup Grants India. Others were past, outside Mumbai, or already listed. Retained events not re-verified; removed only expired: ifp-festival-16."
   }
  ],
  "COMMUNITIES": [
