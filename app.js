@@ -546,6 +546,8 @@ function viewHome(){
     <a class="door dis has-img" href="#discover" data-go="discover"><img class="door-img" src="${img("train")}" alt="" loading="lazy"><div><h3>Discover</h3><p>Events and people around the city, sorted by what you care about and when you're free.</p></div><span class="go">${upcoming.length} upcoming events →</span></a>
   </div></section>
 
+  ${storiesBlock("home")}
+
   <section class="block"><div class="wrap">
     <div class="sec-head"><div><h2 class="sec-title">This weekend</h2><p class="sec-sub">${fmtDay(dayDiff(ws,TODAY)<0?TODAY:ws)} to ${fmtDay(we)}</p></div><a class="more" href="#discover" data-when="weekend">All weekend events</a></div>
     ${weekend.length?`<div class="grid">${weekend.slice(0,4).map(eventCard).join("")}</div>`:`<div class="empty">Nothing listed for this weekend yet. <a href="#discover" data-go="discover">See what's coming up</a>.</div>`}
@@ -603,20 +605,54 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    repo, and add it here with the "added" time you want it to go live — that's
    the whole publish step from then on, no separate scheduled trigger needed.
    Newest-first by "added" for display; if more than one story's time has
-   already passed, the latest one wins the banner. */
+   already passed, the latest one wins the banner.
+   Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
+   and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
  {id:"ones-zeros-and-zari",added:"2026-11-02T12:30:00+05:30",title:"Ones, Zeros and Zari",
   line:"How 1800s punch cards told handlooms which threads to lift to weave a Banarasi saree — and how that same idea can hide a secret message inside a photo today.",
-  url:"discover/ones-zeros-and-zari/"},
+  url:"discover/ones-zeros-and-zari/", img:"media/stories/ones-zeros-and-zari.jpg",
+  alt:"A Varanasi lane where a long glowing chain of punched cards flows into a weaver's handloom", read:"9 min read"},
  {id:"the-lunch-that-finds-its-own-way",added:"2026-10-26T12:30:00+05:30",title:"The Lunch That Finds Its Own Way",
   line:"How Mumbai's dabbawalas route 200,000 lunches a day with almost no errors — and what it has in common with how the internet moves a packet.",
-  url:"discover/the-lunch-that-finds-its-own-way/"}
+  url:"discover/the-lunch-that-finds-its-own-way/", img:"media/stories/the-lunch-that-finds-its-own-way.jpg",
+  alt:"A neon stacked tiffin beside a lid marked with the dabbawala code VLP, E, 3, 9, AI, 12", read:"7 min read"}
 ];
 function discoverStoryBanner(){
   const now=Date.now();
   const live=STORIES.filter(x=>Date.parse(x.added)<=now).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added));
   const s=live[0]; if(!s) return "";
   return `<div class="wrap"><div class="banner"><span aria-hidden="true">✦</span><span><b>Story: <a href="${s.url}" style="color:inherit">${esc(s.title)}</a></b> — ${esc(s.line)}</span></div></div>`;
+}
+// A big story card: thumbnail on the left, words on the right (stacked on phones).
+// Newest story = STORIES[0]. A "New" tag shows for 30 days after its `added` date.
+function storyFeature(s){
+  const day=s.added.slice(0,10), isNew=dayDiff(day,TODAY)>-31 && dayDiff(day,TODAY)<=0;
+  return `<a class="story-feat${s.img?"":" no-img"}" href="${s.url}">
+    ${s.img?`<div class="story-img"><img src="${s.img}" alt="${esc(s.alt||"")}" loading="lazy" width="1280" height="720"></div>`:""}
+    <div class="story-body">
+      <div class="story-kick"><span class="label">Discover · Story</span>${isNew?`<span class="story-new">New</span>`:""}</div>
+      <h3>${esc(s.title)}</h3>
+      <p>${esc(s.line)}</p>
+      <div class="story-meta label">${esc(s.read||"")}${s.read?" · ":""}${fmtDay(day)}</div>
+      <span class="btn small story-cta">Read the story →</span>
+    </div></a>`;
+}
+// Smaller cards for older stories (shown once there are two or more).
+function storyCard(s){
+  return `<a class="story-card" href="${s.url}"><div class="story-img"><img src="${s.img}" alt="${esc(s.alt||"")}" loading="lazy" width="1280" height="720"></div>
+    <div class="story-body"><span class="label">${esc(s.read||"Story")}</span><h3>${esc(s.title)}</h3></div></a>`;
+}
+// Only stories whose go-live time has passed, newest first (same rule as the banner).
+const liveStories=()=>{ const now=Date.now(); return STORIES.filter(x=>Date.parse(x.added)<=now).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added)); };
+function storiesBlock(where){
+  const L=liveStories(); if(!L.length) return "";
+  const [first,...rest]=L;
+  const head= where==="home"
+    ? `<div class="sec-head"><div><h2 class="sec-title">Stories</h2><p class="sec-sub">Today's tech, explained through an older Indian craft or system.</p></div>${L.length>1?`<a class="more" href="#discover" data-go="discover">All stories</a>`:""}</div>`
+    : `<div class="sec-head" style="margin-bottom:16px"><div><h2 class="sec-title" style="font-size:clamp(26px,3.4vw,38px)">Stories</h2></div></div>`;
+  return `<section class="block stories ${where}"><div class="wrap">${head}${storyFeature(first)}
+    ${rest.length?`<div class="grid" style="margin-top:18px">${rest.slice(0,where==="home"?3:12).map(storyCard).join("")}</div>`:""}</div></section>`;
 }
 
 function viewDiscover(){
@@ -626,7 +662,7 @@ function viewDiscover(){
   <div class="page-head has-img"><img class="ph-img" src="${img("train")}" alt="">${photoCredit("train")}<div class="wrap head-row">
     <div><div class="kicker"><span class="pill">Discover</span></div><h1 class="mega">Discover</h1><p>Upcoming events around Mumbai, each checked on its source page. You register on the organiser's own page.</p><div style="margin-top:14px">${freshLine()}</div></div>
   </div></div>
-  ${discoverStoryBanner()}
+  ${storiesBlock("discover")}
   <div class="filters"><div class="wrap">
     <div class="frow">
       <form class="search-in" data-sentence role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
