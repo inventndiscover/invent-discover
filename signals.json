@@ -1,95 +1,85 @@
 {
- "REFRESHED": "2026-10-25T21:51:56+05:30",
+ "REFRESHED": "2026-10-27T21:52:07+05:30",
  "SIGNALS": [
   {
-   "id": "2113878165281997137",
-   "handle": "Reuters",
-   "name": "Reuters",
-   "url": "https://x.com/Reuters/status/2113878165281997137",
-   "posted": "2026-10-24T11:50:03+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "Reuters reports the UK government has set out about $800 million of funding for AI security."
-  },
-  {
-   "id": "2113757802011480286",
-   "handle": "TheTranscript_",
-   "name": "The Transcript",
-   "url": "https://x.com/TheTranscript_/status/2113757802011480286",
-   "posted": "2026-10-24T03:51:46+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Quotes Amazon CEO Andy Jassy saying AWS capacity is largely sold out through 2027, with much of 2028 already committed, citing limits on data center space, power and memory."
-  },
-  {
-   "id": "2113698001889927608",
-   "handle": "ClaudeDevs",
-   "name": "ClaudeDevs",
-   "url": "https://x.com/ClaudeDevs/status/2113698001889927608",
-   "posted": "2026-10-23T23:54:08+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Claude adds support for MCP Tasks, letting plugins run long jobs like deep research and report back, and Elicitations, which let plugins ask users for input mid-task. Live in Claude Code CLI first."
-  },
-  {
-   "id": "2113680701770068067",
-   "handle": "Kimi_Moonshot",
-   "name": "Kimi.ai",
-   "url": "https://x.com/Kimi_Moonshot/status/2113680701770068067",
-   "posted": "2026-10-23T22:45:24+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Moonshot introduces Kimi K3.1 Pro, an open-weight multimodal MoE model with 2.8T total and 104B active parameters, a 1M-token context, and upgrades for coding and 3D work."
-  },
-  {
-   "id": "2113677471417819386",
-   "handle": "blocks",
-   "name": "Block",
-   "url": "https://x.com/blocks/status/2113677471417819386",
-   "posted": "2026-10-23T22:32:34+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Block introduced Dessa, a speech model it says was trained from scratch on human conversation, and shared a link where people can hear it."
-  },
-  {
-   "id": "2113390212911083894",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2113390212911083894",
-   "posted": "2026-10-23T03:31:06+05:30",
+   "id": "2114930095009968506",
+   "handle": "__alpoge__",
+   "name": "levent",
+   "url": "https://x.com/__alpoge__/status/2114930095009968506",
+   "posted": "2026-10-27T09:30:02+05:30",
    "topic": "Research",
    "kind": "Official",
-   "summary": "Anthropic's Frontier Red Team blog describes using Claude to formally verify software at large scale, aiming to prove code free of certain bugs without heavy expert time."
+   "summary": "Levent Alpöge says an internal Claude research model found the core algorithm for a new paper on 16 October, using 14M output tokens with no human input, and Anthropic researchers helped polish the paper."
   },
   {
-   "id": "2113360845409583307",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2113360845409583307",
-   "posted": "2026-10-23T01:34:24+05:30",
-   "topic": "AI",
+   "id": "2114875562623635783",
+   "handle": "fortnow",
+   "name": "Lance Fortnow",
+   "url": "https://x.com/fortnow/status/2114875562623635783",
+   "posted": "2026-10-27T05:53:21+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Complexity theorist Lance Fortnow notes OpenAI's claim that the Exponential Time Hypothesis is false: 3SAT solvable in 2^{o(n)} time, with a Lean formalization of the proof."
+  },
+  {
+   "id": "2114859504219087176",
+   "handle": "LechMazur",
+   "name": "Lech Mazur",
+   "url": "https://x.com/LechMazur/status/2114859504219087176",
+   "posted": "2026-10-27T04:49:32+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Says OpenAI's new results would resolve six entries in ProofAtlas's Top 500 open problems and notes partial progress on Yang-Mills existence and mass gap."
+  },
+  {
+   "id": "2114836071028785289",
+   "handle": "AndrewCurran_",
+   "name": "Andrew Curran",
+   "url": "https://x.com/AndrewCurran_/status/2114836071028785289",
+   "posted": "2026-10-27T03:16:25+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Summarizes OpenAI's three announced discoveries: local smoothing and the Kakeya conjecture, the Exponential Time Hypothesis being false, and existence of quantum chromodynamics."
+  },
+  {
+   "id": "2114833682469122314",
+   "handle": "danintheory",
+   "name": "Dan Roberts",
+   "url": "https://x.com/danintheory/status/2114833682469122314",
+   "posted": "2026-10-27T03:06:56+05:30",
+   "topic": "Research",
    "kind": "Official",
-   "summary": "Claude says that starting next week its web, desktop and mobile sessions will default to auto mode on Pro, Max and Team plans, with an automated check blocking risky actions."
+   "summary": "OpenAI's Dan Roberts announces three new discoveries in mathematics, computer science and physics, covering harmonic analysis, complexity theory and quantum field theory."
   },
   {
-   "id": "2113328526413996100",
-   "handle": "ClaudeDevs",
-   "name": "ClaudeDevs",
-   "url": "https://x.com/ClaudeDevs/status/2113328526413996100",
-   "posted": "2026-10-22T23:25:59+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Anthropic is donating Agent Skills to the Agentic AI Foundation, home of MCP, noting 70+ agent platforms including ChatGPT, Cursor, GitHub Copilot and VS Code have adopted the standard."
-  },
-  {
-   "id": "2113324291307811158",
-   "handle": "TheRundownAI",
-   "name": "The Rundown AI",
-   "url": "https://x.com/TheRundownAI/status/2113324291307811158",
-   "posted": "2026-10-22T23:09:09+05:30",
+   "id": "2114711193302737072",
+   "handle": "minchoi",
+   "name": "Min Choi",
+   "url": "https://x.com/minchoi/status/2114711193302737072",
+   "posted": "2026-10-26T19:00:12+05:30",
    "topic": "AI",
    "kind": "Report",
-   "summary": "Reports that ex-OpenAI product chief Kevin Weil raised $215M for Warp Sciences, which builds labs where AI designs experiments and robots run them, starting with drug discovery."
+   "summary": "Reports that Anthropic filed for its IPO, planning to list on Nasdaq under the ticker ANT, with the IPO price and date still to be determined."
+  },
+  {
+   "id": "2114611210800754995",
+   "handle": "OfficialINDIAai",
+   "name": "IndiaAI",
+   "url": "https://x.com/OfficialINDIAai/status/2114611210800754995",
+   "posted": "2026-10-26T12:22:54+05:30",
+   "topic": "India",
+   "kind": "Official",
+   "summary": "IndiaAI says its Cohort II wrapped up in August 2026, with 10 high-growth startups already past 16.7M euros in global funding."
+  },
+  {
+   "id": "2114297852948091174",
+   "handle": "wallstengine",
+   "name": "Wall St Engine",
+   "url": "https://x.com/wallstengine/status/2114297852948091174",
+   "posted": "2026-10-25T15:37:44+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Reports Nvidia and TCV joined an extension of Higgsfield's Series B, following its $400 million raise at a $5.4 billion valuation in August."
   }
  ]
 }
