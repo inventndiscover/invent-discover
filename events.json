@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-10-26T22:59:08+05:30",
+ "REFRESHED": "2026-10-28T21:35:19+05:30",
  "EVENTS_RAW": [
   {
    "id": "enterprise-ai-summit",
@@ -355,6 +355,64 @@
    "org": "Ethereum Validators Association",
    "access": "approval",
    "desc": "An invitation-only Devcon-week evening for Ethereum validators, staking operators and infrastructure researchers, with a symposium followed by dinner."
+  },
+  {
+   "id": "cloud-community-days-mumbai-26",
+   "title": "Cloud Community Days Mumbai 2026",
+   "cat": "Tech",
+   "tags": [
+    "Cloud",
+    "AI",
+    "Developers"
+   ],
+   "area": "Mumbai",
+   "venue": "The LaLiT Mumbai",
+   "start": "2026-11-15T09:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticket price not shown on the sources checked",
+   "aud": [
+    "Developer",
+    "Student",
+    "Professional"
+   ],
+   "src": "Sessionize",
+   "also": "StartupGrantsIndia",
+   "url": "https://sessionize.com/ccd-mumbai-26",
+   "org": "GDG Cloud Mumbai",
+   "access": "open",
+   "desc": "A community-run day of talks on Google Cloud, cloud engineering and AI, organised by the GDG Cloud Mumbai and GDG MAD chapters."
+  },
+  {
+   "id": "devfest-mumbai-2026",
+   "title": "DevFest Mumbai 2026",
+   "cat": "Tech",
+   "tags": [
+    "Android",
+    "Firebase",
+    "AI/ML",
+    "Web"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue to be announced",
+   "start": "2026-12-05",
+   "timeNote": "Time not listed",
+   "end": null,
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free; register on the official event site",
+   "aud": [
+    "Developer",
+    "Student",
+    "Designer",
+    "Founder"
+   ],
+   "src": "StartupGrantsIndia",
+   "url": "https://www.startupgrantsindia.com/events/devfest-mumbai-2026",
+   "org": "GDG Mumbai",
+   "access": "open",
+   "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies."
   }
  ],
  "QUEUE_RAW": [
@@ -501,13 +559,13 @@
    "src": "ETHGlobal",
    "url": "https://ethglobal.com/events/mumbai",
    "access": "approval",
-   "why": "Only the submission deadline (8 Nov) is visible; main event page returned an error.",
+   "why": "Dates differ between sources (5-7 Nov vs 6 Nov); official page is not reachable here.",
    "conf": {
     "date": 50,
     "place": 60,
     "category": 90
    },
-   "hint": "2026-11-06"
+   "hint": "2026-11-05"
   },
   {
    "qid": "q-allin1-ai",
@@ -691,21 +749,6 @@
    }
   },
   {
-   "qid": "q-cloud-days",
-   "title": "Cloud Community Days 2026 Mumbai",
-   "cat": "Tech",
-   "area": "Andheri East",
-   "src": "Luma",
-   "url": "https://luma.com/tsbs46dq",
-   "access": "approval",
-   "why": "No date on the page; at The LaLiT Mumbai, GDG Cloud Mumbai.",
-   "conf": {
-    "date": 0,
-    "place": 95,
-    "category": 80
-   }
-  },
-  {
    "qid": "q-odyssey",
    "title": "Odyssey Mumbai '26",
    "cat": "Startup",
@@ -810,34 +853,18 @@
     "place": 20,
     "category": 65
    }
-  },
-  {
-   "qid": "q-devfest-mumbai",
-   "title": "Devfest Mumbai 2026",
-   "cat": "Tech",
-   "area": "Mumbai",
-   "src": "dev.events",
-   "url": "https://dev.events/conferences/devfest-mumbai-2026-qo08wdku",
-   "access": "open",
-   "why": "Listing shows 5 Dec only in image text; no venue or organiser page could be opened.",
-   "conf": {
-    "date": 60,
-    "place": 20,
-    "category": 80
-   },
-   "hint": "2026-12-05"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing and ~20 event pages",
-   "found": 20,
-   "pub": 1,
-   "review": 3,
+   "what": "luma.com/mumbai and discover pages",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
    "dup": 0,
-   "skip": 2,
-   "note": "Listing and event pages open now. Discover/ai page was blocked. Added EVA Symposium III (4 Nov). Skipped a run club and a past 24 Oct session. Several event pages (e.g. HackAMatch, ProductTank) still blocked; most queued pages show no date."
+   "skip": 0,
+   "note": "Listing pages blocked (not on session allowlist). Existing Luma entries kept; search surfaced only past Mumbai Meets AI editions."
   },
   {
    "src": "AllEvents",
@@ -852,12 +879,12 @@
   {
    "src": "dev.events",
    "what": "Mumbai meetups and conferences",
-   "found": 16,
-   "pub": 0,
-   "review": 1,
-   "dup": 4,
-   "skip": 11,
-   "note": "Opened. Online events skipped. Devfest Mumbai 2026 queued; organiser sites blocked."
+   "found": 2,
+   "pub": 2,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Listing blocked; found Cloud Community Days (date on organiser's Sessionize page) and DevFest Mumbai (listing states 5 Dec). Both published."
   },
   {
    "src": "hiddenevents",
@@ -871,13 +898,13 @@
   },
   {
    "src": "web search",
-   "what": "Earlier searches (AI, hackathon, design/UX, XR, startups)",
-   "found": 4,
+   "what": "AI, hackathon, design/UX, XR, startup, developer searches",
+   "found": 8,
    "pub": 0,
-   "review": 0,
-   "dup": 1,
-   "skip": 3,
-   "note": "No new Mumbai items; Design Samvaad is in Gurugram."
+   "review": 1,
+   "dup": 2,
+   "skip": 5,
+   "note": "ETHGlobal Mumbai kept in queue (dates conflict). Skipped past events, Mumbai Builds 2027 (finale 7 Feb, outside window), Design Samvaad (not Mumbai), Pune event."
   }
  ],
  "COMMUNITIES": [

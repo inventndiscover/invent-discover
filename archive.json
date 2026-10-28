@@ -158,6 +158,35 @@
   "desc": "A working dialogue where people from vulnerable Mumbai communities describe the climate problems they face, and the audience works with them on practical responses. Part of Climate Week India.",
   "firstSeen": "2026-09-28"
  },
+ "cloud-community-days-mumbai-26": {
+  "id": "cloud-community-days-mumbai-26",
+  "title": "Cloud Community Days Mumbai 2026",
+  "cat": "Tech",
+  "tags": [
+   "Cloud",
+   "AI",
+   "Developers"
+  ],
+  "area": "Mumbai",
+  "venue": "The LaLiT Mumbai",
+  "start": "2026-11-15T09:00",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticket price not shown on the sources checked",
+  "aud": [
+   "Developer",
+   "Student",
+   "Professional"
+  ],
+  "src": "Sessionize",
+  "also": "StartupGrantsIndia",
+  "url": "https://sessionize.com/ccd-mumbai-26",
+  "org": "GDG Cloud Mumbai",
+  "access": "open",
+  "desc": "A community-run day of talks on Google Cloud, cloud engineering and AI, organised by the GDG Cloud Mumbai and GDG MAD chapters.",
+  "firstSeen": "2026-10-28"
+ },
  "code-to-capital": {
   "id": "code-to-capital",
   "title": "Code to Capital Summit",
@@ -238,6 +267,37 @@
   "access": "approval",
   "desc": "A local gathering around OpenAI's DevDay announcements, to share projects, swap ideas and find collaborators. Selected attendees are offered Codex credits.",
   "firstSeen": "2026-09-28"
+ },
+ "devfest-mumbai-2026": {
+  "id": "devfest-mumbai-2026",
+  "title": "DevFest Mumbai 2026",
+  "cat": "Tech",
+  "tags": [
+   "Android",
+   "Firebase",
+   "AI/ML",
+   "Web"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue to be announced",
+  "start": "2026-12-05",
+  "timeNote": "Time not listed",
+  "end": null,
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free; register on the official event site",
+  "aud": [
+   "Developer",
+   "Student",
+   "Designer",
+   "Founder"
+  ],
+  "src": "StartupGrantsIndia",
+  "url": "https://www.startupgrantsindia.com/events/devfest-mumbai-2026",
+  "org": "GDG Mumbai",
+  "access": "open",
+  "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies.",
+  "firstSeen": "2026-10-28"
  },
  "earthshot-prize-mumbai": {
   "id": "earthshot-prize-mumbai",

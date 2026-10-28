@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-27T21:52:07+05:30",
+ "REFRESHED": "2026-10-28T21:57:25+05:30",
  "SIGNALS": [
+  {
+   "id": "2115249113050784013",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2115249113050784013",
+   "posted": "2026-10-28T06:37:42+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "Reports Anthropic extended its 40% government discount for Claude to every level of U.S. government under a new OneGov agreement with the GSA."
+  },
+  {
+   "id": "2115129045453344866",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2115129045453344866",
+   "posted": "2026-10-27T22:40:36+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Reports Google DeepMind announced Genie 4 on October 27, a world model for real-time interactive simulation of generated environments."
+  },
+  {
+   "id": "2114956014512730231",
+   "handle": "TheDCIndia",
+   "name": "Defence Chronicle India",
+   "url": "https://x.com/TheDCIndia/status/2114956014512730231",
+   "posted": "2026-10-27T11:13:02+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Reports that HQ Integrated Defence Staff signed an MoU with Sarvam AI for AI applications across the Army, Navy and Air Force, focused on secure, sovereign AI."
+  },
   {
    "id": "2114930095009968506",
    "handle": "__alpoge__",
@@ -20,26 +50,6 @@
    "topic": "Research",
    "kind": "Report",
    "summary": "Complexity theorist Lance Fortnow notes OpenAI's claim that the Exponential Time Hypothesis is false: 3SAT solvable in 2^{o(n)} time, with a Lean formalization of the proof."
-  },
-  {
-   "id": "2114859504219087176",
-   "handle": "LechMazur",
-   "name": "Lech Mazur",
-   "url": "https://x.com/LechMazur/status/2114859504219087176",
-   "posted": "2026-10-27T04:49:32+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "Says OpenAI's new results would resolve six entries in ProofAtlas's Top 500 open problems and notes partial progress on Yang-Mills existence and mass gap."
-  },
-  {
-   "id": "2114836071028785289",
-   "handle": "AndrewCurran_",
-   "name": "Andrew Curran",
-   "url": "https://x.com/AndrewCurran_/status/2114836071028785289",
-   "posted": "2026-10-27T03:16:25+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "Summarizes OpenAI's three announced discoveries: local smoothing and the Kakeya conjecture, the Exponential Time Hypothesis being false, and existence of quantum chromodynamics."
   },
   {
    "id": "2114833682469122314",
@@ -70,16 +80,6 @@
    "topic": "India",
    "kind": "Official",
    "summary": "IndiaAI says its Cohort II wrapped up in August 2026, with 10 high-growth startups already past 16.7M euros in global funding."
-  },
-  {
-   "id": "2114297852948091174",
-   "handle": "wallstengine",
-   "name": "Wall St Engine",
-   "url": "https://x.com/wallstengine/status/2114297852948091174",
-   "posted": "2026-10-25T15:37:44+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Reports Nvidia and TCV joined an extension of Higgsfield's Series B, following its $400 million raise at a $5.4 billion valuation in August."
   }
  ]
 }
