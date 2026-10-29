@@ -1,34 +1,6 @@
 {
- "REFRESHED": "2026-10-28T21:35:19+05:30",
+ "REFRESHED": "2026-10-29T21:46:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "enterprise-ai-summit",
-   "title": "Enterprise AI Summit Mumbai 2026",
-   "cat": "AI",
-   "tags": [
-    "Enterprise",
-    "Agents",
-    "DPI"
-   ],
-   "area": "BKC",
-   "venue": "Jio World Convention Centre",
-   "start": "2026-10-26T09:00",
-   "endDate": "2026-10-28",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free on Eventbrite; no ticket price shown on Luma",
-   "aud": [
-    "Professional",
-    "Founder"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/y2o1cuts",
-   "org": "stage-x",
-   "access": "open",
-   "desc": "A three-day summit on running autonomous AI systems on top of India's digital public infrastructure, aimed at enterprise leaders and technologists.",
-   "also": "StartupGrantsIndia"
-  },
   {
    "id": "healthtech-founders-mixer",
    "title": "HealthTech Founder's Mixer (Mumbai)",
@@ -858,13 +830,13 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai and discover pages",
+   "what": "luma.com/mumbai and discover pages; sampled event pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Listing pages blocked (not on session allowlist). Existing Luma entries kept; search surfaced only past Mumbai Meets AI editions."
+   "note": "Listing and event pages blocked (not on session allowlist). Existing Luma entries kept; search surfaced only past Mumbai Meets AI editions."
   },
   {
    "src": "AllEvents",
@@ -879,32 +851,32 @@
   {
    "src": "dev.events",
    "what": "Mumbai meetups and conferences",
-   "found": 2,
-   "pub": 2,
-   "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Listing blocked; found Cloud Community Days (date on organiser's Sessionize page) and DevFest Mumbai (listing states 5 Dec). Both published."
-  },
-  {
-   "src": "hiddenevents",
-   "what": "Mumbai mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Blocked: not on session allowlist."
+   "note": "Blocked: not on session allowlist. Existing entries kept."
+  },
+  {
+   "src": "hiddenevents",
+   "what": "hiddenevents.online/mumbai",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Not attempted; Luma mirror and not usable as sole proof."
   },
   {
    "src": "web search",
-   "what": "AI, hackathon, design/UX, XR, startup, developer searches",
-   "found": 8,
+   "what": "Mumbai AI meetup Nov 2026; Mumbai hackathon students Nov 2026; AI Tinkerers Mumbai",
+   "found": 0,
    "pub": 0,
-   "review": 1,
-   "dup": 2,
-   "skip": 5,
-   "note": "ETHGlobal Mumbai kept in queue (dates conflict). Skipped past events, Mumbai Builds 2027 (finale 7 Feb, outside window), Design Samvaad (not Mumbai), Pune event."
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "No new confirmed upcoming events; results were past editions. Removed ended: Enterprise AI Summit Mumbai 2026."
   }
  ],
  "COMMUNITIES": [

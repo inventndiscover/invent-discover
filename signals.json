@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-10-28T21:57:25+05:30",
+ "REFRESHED": "2026-10-29T21:58:06+05:30",
  "SIGNALS": [
+  {
+   "id": "2115583698074755078",
+   "handle": "OpenAIDevs",
+   "name": "OpenAI Developers",
+   "url": "https://x.com/OpenAIDevs/status/2115583698074755078",
+   "posted": "2026-10-29T04:47:13+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI Developers says eligible ChatGPT Pro and Business subscribers can now claim up to $500 per month in API credits to build apps and agents."
+  },
+  {
+   "id": "2115490265972543786",
+   "handle": "NewsFromGoogle",
+   "name": "News from Google",
+   "url": "https://x.com/NewsFromGoogle/status/2115490265972543786",
+   "posted": "2026-10-28T22:35:57+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google introduces Gemini 4 Carbon from DeepMind, calling it its strongest model, with state-of-the-art cybersecurity and long-horizon abilities for sustained agentic workflows."
+  },
+  {
+   "id": "2115261081425957307",
+   "handle": "BusinessTodayM1",
+   "name": "BusinessToday Malaysia",
+   "url": "https://x.com/BusinessTodayM1/status/2115261081425957307",
+   "posted": "2026-10-28T07:25:16+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Cites The Information reporting that OpenAI plans to buy AI chips from Google, which could deepen ties between the two companies as AI compute demand grows."
+  },
   {
    "id": "2115249113050784013",
    "handle": "AGTPinsights",
@@ -12,14 +42,14 @@
    "summary": "Reports Anthropic extended its 40% government discount for Claude to every level of U.S. government under a new OneGov agreement with the GSA."
   },
   {
-   "id": "2115129045453344866",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2115129045453344866",
-   "posted": "2026-10-27T22:40:36+05:30",
+   "id": "2115114428987273251",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2115114428987273251",
+   "posted": "2026-10-27T21:42:31+05:30",
    "topic": "Models",
-   "kind": "Report",
-   "summary": "Reports Google DeepMind announced Genie 4 on October 27, a world model for real-time interactive simulation of generated environments."
+   "kind": "Official",
+   "summary": "Google says Genie 4 builds on the Gemini family, with Gemini Omni grounding simulations in real-world appearance and behavior, and adds live steering by text prompts."
   },
   {
    "id": "2114956014512730231",
@@ -42,16 +72,6 @@
    "summary": "Levent Alpöge says an internal Claude research model found the core algorithm for a new paper on 16 October, using 14M output tokens with no human input, and Anthropic researchers helped polish the paper."
   },
   {
-   "id": "2114875562623635783",
-   "handle": "fortnow",
-   "name": "Lance Fortnow",
-   "url": "https://x.com/fortnow/status/2114875562623635783",
-   "posted": "2026-10-27T05:53:21+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "Complexity theorist Lance Fortnow notes OpenAI's claim that the Exponential Time Hypothesis is false: 3SAT solvable in 2^{o(n)} time, with a Lean formalization of the proof."
-  },
-  {
    "id": "2114833682469122314",
    "handle": "danintheory",
    "name": "Dan Roberts",
@@ -62,24 +82,14 @@
    "summary": "OpenAI's Dan Roberts announces three new discoveries in mathematics, computer science and physics, covering harmonic analysis, complexity theory and quantum field theory."
   },
   {
-   "id": "2114711193302737072",
-   "handle": "minchoi",
-   "name": "Min Choi",
-   "url": "https://x.com/minchoi/status/2114711193302737072",
-   "posted": "2026-10-26T19:00:12+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Reports that Anthropic filed for its IPO, planning to list on Nasdaq under the ticker ANT, with the IPO price and date still to be determined."
-  },
-  {
-   "id": "2114611210800754995",
-   "handle": "OfficialINDIAai",
-   "name": "IndiaAI",
-   "url": "https://x.com/OfficialINDIAai/status/2114611210800754995",
-   "posted": "2026-10-26T12:22:54+05:30",
-   "topic": "India",
+   "id": "2114780711664398349",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2114780711664398349",
+   "posted": "2026-10-26T23:36:27+05:30",
+   "topic": "Models",
    "kind": "Official",
-   "summary": "IndiaAI says its Cohort II wrapped up in August 2026, with 10 high-growth startups already past 16.7M euros in global funding."
+   "summary": "OpenAI introduces GPT-6.1 Terra, a model for fast computer use at a lower price that understands the screen and takes actions across apps."
   }
  ]
 }
