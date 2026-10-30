@@ -1,32 +1,6 @@
 {
- "REFRESHED": "2026-10-29T21:46:00+05:30",
+ "REFRESHED": "2026-10-30T22:40:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "healthtech-founders-mixer",
-   "title": "HealthTech Founder's Mixer (Mumbai)",
-   "cat": "Startup",
-   "tags": [
-    "Health tech",
-    "D2C",
-    "Networking"
-   ],
-   "area": "Mumbai",
-   "venue": "Shared with approved attendees",
-   "start": "2026-10-29T16:00",
-   "end": "19:00",
-   "fmt": "Offline",
-   "price": 750,
-   "priceNote": "₹750 · application-based, limited slots",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/healthtech-founders-mixer-mumbai/100002001776961779",
-   "org": "Bhavik Jain",
-   "access": "approval",
-   "desc": "A small, screened evening for founders and senior operators of consumer businesses at MVP stage or beyond, especially in health, D2C and e-commerce."
-  },
   {
    "id": "mobile-architecture-lab-4",
    "title": "Hackathon @ Mobile Architecture Lab 4",
@@ -385,6 +359,33 @@
    "org": "GDG Mumbai",
    "access": "open",
    "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies."
+  },
+  {
+   "id": "opentechsummit-india-2026",
+   "title": "OpenTechSummit India 2026",
+   "cat": "Tech",
+   "tags": [
+    "Open source",
+    "Developers",
+    "Ethereum"
+   ],
+   "area": "BKC",
+   "venue": "Jio World Centre, BKC",
+   "start": "2026-11-05T09:00",
+   "end": "18:00",
+   "fmt": "Offline",
+   "price": 1500,
+   "priceNote": "From ₹1,500 (Community Pass); free contributor pass via voucher; entry also needs a Devcon 8 ticket or Day Pass",
+   "aud": [
+    "Developer",
+    "Student",
+    "Founder"
+   ],
+   "src": "Eventyay",
+   "url": "https://eventyay.com/fossasia/ots2026/",
+   "org": "FOSSASIA",
+   "access": "open",
+   "desc": "A one-day open-source and community gathering held alongside Devcon 8, with talks, workshops and project showcases for contributors, developers, researchers and startups."
   }
  ],
  "QUEUE_RAW": [
@@ -825,58 +826,73 @@
     "place": 20,
     "category": 65
    }
+  },
+  {
+   "qid": "q-road-to-devcon-mumbai",
+   "title": "Road to Devcon India | Mumbai Edition",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma (search result)",
+   "url": "https://luma.com/6sp22vxd",
+   "access": "open",
+   "why": "Page could not be opened this run, so date and venue are unconfirmed.",
+   "conf": {
+    "date": 0,
+    "place": 40,
+    "category": 80
+   }
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai and discover pages; sampled event pages",
-   "found": 0,
+   "what": "Listing pages not fetchable; single event pages via search",
+   "found": 4,
    "pub": 0,
-   "review": 0,
+   "review": 1,
    "dup": 0,
    "skip": 0,
-   "note": "Listing and event pages blocked (not on session allowlist). Existing Luma entries kept; search surfaced only past Mumbai Meets AI editions."
+   "note": "Listing pages blocked by fetch allowlist; mobile-architecture-lab-4 page also unreachable, kept from last run unverified."
   },
   {
    "src": "AllEvents",
-   "what": "technology and startup pages",
+   "what": "Listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Blocked: not on session allowlist. Existing entries kept."
+   "note": "Not reachable this run."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups and conferences",
+   "what": "Listing pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Blocked: not on session allowlist. Existing entries kept."
+   "note": "Not reachable this run."
   },
   {
    "src": "hiddenevents",
-   "what": "hiddenevents.online/mumbai",
+   "what": "Not attempted",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not attempted; Luma mirror and not usable as sole proof."
+   "note": "Skipped; same allowlist limits."
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup Nov 2026; Mumbai hackathon students Nov 2026; AI Tinkerers Mumbai",
-   "found": 0,
-   "pub": 0,
-   "review": 0,
+   "what": "AI, design, XR, hackathon, startup, climate, Devcon queries",
+   "found": 6,
+   "pub": 1,
+   "review": 1,
    "dup": 0,
-   "skip": 0,
-   "note": "No new confirmed upcoming events; results were past editions. Removed ended: Enterprise AI Summit Mumbai 2026."
+   "skip": 4,
+   "note": "Added OpenTechSummit India (Eventyay); most other hits were past or outside the window."
   }
  ],
  "COMMUNITIES": [

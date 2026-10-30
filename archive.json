@@ -995,6 +995,34 @@
   "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup.",
   "firstSeen": "2026-09-28"
  },
+ "opentechsummit-india-2026": {
+  "id": "opentechsummit-india-2026",
+  "title": "OpenTechSummit India 2026",
+  "cat": "Tech",
+  "tags": [
+   "Open source",
+   "Developers",
+   "Ethereum"
+  ],
+  "area": "BKC",
+  "venue": "Jio World Centre, BKC",
+  "start": "2026-11-05T09:00",
+  "end": "18:00",
+  "fmt": "Offline",
+  "price": 1500,
+  "priceNote": "From ₹1,500 (Community Pass); free contributor pass via voucher; entry also needs a Devcon 8 ticket or Day Pass",
+  "aud": [
+   "Developer",
+   "Student",
+   "Founder"
+  ],
+  "src": "Eventyay",
+  "url": "https://eventyay.com/fossasia/ots2026/",
+  "org": "FOSSASIA",
+  "access": "open",
+  "desc": "A one-day open-source and community gathering held alongside Devcon 8, with talks, workshops and project showcases for contributors, developers, researchers and startups.",
+  "firstSeen": "2026-10-30"
+ },
  "servicenow-world-forum-mumbai": {
   "id": "servicenow-world-forum-mumbai",
   "title": "ServiceNow World Forum Mumbai 2026",
