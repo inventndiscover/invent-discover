@@ -182,7 +182,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const BUILD = 'Mumbai Local · v1 (build r)';
+const BUILD = 'Mumbai Local · v1.1 (build s)';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -506,7 +506,8 @@ new GLTFLoader().load(MODEL, (gltf) => {
     buildRig();   // measure the sides again now that he faces forward
   }
   if (P.has('debug')) window.__bhau = { rig, holo, THREE, VC, vx, SCENES, speak, get mixer() { return mixer; },
-                     freeze: (phase, e) => { show = { phase, start: 0, freezeAt: e }; } };   // build k: for testing only
+                     freeze: (phase, e) => { show = { phase, start: 0, freezeAt: e }; },
+                     playGesture, camera, get controls() { return controls; } };   // build k: for testing only
 
   // build k: one material per kind of part. The model file names its parts:
   // "skin" (face, hands, carries the beard map) and "clothes". Older models with
@@ -866,19 +867,30 @@ window.addEventListener('pointerup', () => { dragX = null; });
 /* Both avatars name their bones differently, so each part lists both names:
    Rocketbox first ("Bip01_L_UpperArm"), then Avaturn/Mixamo ("LeftArm").     */
 let rig = null;
+const straight = new Map();   // build s: finger bone → its straight pose
 function buildRig() {
   const pick = (...names) => names.map(bone).find(Boolean);
   const arm = (r, a) => ({
     up:   pick(`Bip01_${r}_UpperArm`, `${a}Arm`),
     fore: pick(`Bip01_${r}_Forearm`,  `${a}ForeArm`),
     hand: pick(`Bip01_${r}_Hand`,     `${a}Hand`),
-    tip:  pick(`Bip01_${r}_Finger2`,  `${a}HandMiddle1`)     // middle finger: shows where the hand points
+    tip:  pick(`Bip01_${r}_Finger2`,  `${a}HandMiddle1`),    // middle finger: shows where the hand points
+    // build s: index and little-finger bases, to know which way the palm faces
+    index: pick(`Bip01_${r}_Finger1`, `${a}HandIndex1`),
+    pinky: pick(`Bip01_${r}_Finger4`, `${a}HandPinky1`),
+    // build s: the four fingers' joints (not the thumb), to straighten them for namaste
+    fingers: [1, 2, 3, 4].flatMap((f) => ['', '1', '2'].map((j) => bone(`Bip01_${r}_Finger${f}${j}`)))
+      .concat(['Index', 'Middle', 'Ring', 'Pinky'].flatMap((f) => [1, 2, 3].map((j) => bone(`${a}Hand${f}${j}`))))
+      .filter(Boolean)
   });
   rig = { L: arm('L', 'Left'), R: arm('R', 'Right'),
           neck: pick('Bip01_Neck', 'Neck'), head: pick('Bip01_Head', 'Head'),
           hips: pick('Bip01_Pelvis', 'Hips') };
   // Remember every gesture bone's resting turn, so we can start from it each frame
-  rig.bones = [rig.L.up, rig.L.fore, rig.L.hand, rig.R.up, rig.R.fore, rig.R.hand, rig.neck, rig.head].filter(Boolean);
+  rig.bones = [rig.L.up, rig.L.fore, rig.L.hand, rig.R.up, rig.R.fore, rig.R.hand, rig.neck, rig.head,
+               ...rig.L.fingers, ...rig.R.fingers].filter(Boolean);
+  // build s: the fingers' turn in the model's own pose (straight). Saved once, before any animation bends them.
+  for (const f of [...rig.L.fingers, ...rig.R.fingers]) if (!straight.has(f)) straight.set(f, f.quaternion.clone());
   rig.rest = rig.bones.map((b) => b.quaternion.clone());
   rig.base = rig.rest.map((q) => q.clone());   // build l: the pose the idle animation last set
   // Which side is "his left"? Measure where each shoulder sits (+1 or -1 across his body)
@@ -934,6 +946,23 @@ function reach(s, T, out) {
   aimAt(s.fore, s.hand, T);   // forearm → wrist
 }
 
+/* build s: rollPalm() turns the hand around its own finger direction (like turning a key),
+   until the little-finger edge points forward (away from his chest). With the fingers
+   pointing up, that leaves the palm facing the other hand: a proper namaste.            */
+function rollPalm(s, fingerDir, fwd) {
+  if (!s.index || !s.pinky) return;
+  s.hand.updateWorldMatrix(true, true);
+  const f = fingerDir.clone().normalize();
+  const v = s.pinky.getWorldPosition(new THREE.Vector3()).sub(s.index.getWorldPosition(new THREE.Vector3()));
+  v.addScaledVector(f, -v.dot(f)).normalize();                     // index → little finger, across the palm
+  const t = fwd.clone().addScaledVector(f, -fwd.dot(f)).normalize();  // where it should point: forward
+  const angle = Math.atan2(new THREE.Vector3().crossVectors(v, t).dot(f), v.dot(t));
+  _q.setFromAxisAngle(f, angle);
+  s.hand.getWorldQuaternion(_wq);
+  s.hand.parent.getWorldQuaternion(_pq).invert();
+  s.hand.quaternion.copy(_pq.multiply(_q.multiply(_wq)));
+}
+
 /* tilt(): bend a bone around one of his body axes, by an angle (radians).
    axis (1,0,0) = nod forward/back, (0,1,0) = turn left/right.             */
 function tilt(b, ax, ay, az, angle) {
@@ -978,11 +1007,13 @@ function posePose(name, e) {
       .addScaledVector(up, -0.25 * sc)                                     // …down to mid-chest…
       .addScaledVector(fwd, 0.22 * sc);                                    // …and out in front
     for (const [s, side] of [[rig.L, 1], [rig.R, -1]]) {
-      const T = C.clone().addScaledVector(across, 0.028 * sc * side);     // wrists just either side of centre
+      const T = C.clone().addScaledVector(across, 0.017 * sc * side);     // build s: closer, so the palms touch
       const out = across.clone().multiplyScalar(side).addScaledVector(up, -1.2).addScaledVector(fwd, -0.3);
       reach(s, T, out);                                                    // elbows down and out
-      const fingers = up.clone().addScaledVector(fwd, 0.25).addScaledVector(across, -0.15 * side).normalize();
+      const fingers = up.clone().addScaledVector(fwd, 0.2).addScaledVector(across, -0.04 * side).normalize();
       aimAt(s.hand, s.tip, s.hand.getWorldPosition(new V()).add(fingers)); // fingers point up
+      rollPalm(s, fingers, fwd);                                           // build s: palms face each other
+      s.fingers.forEach((f) => f.quaternion.copy(straight.get(f)));       // build s: fingers straight
     }
     tilt(rig.neck, 1, 0, 0, 0.12);                      // a small respectful bow
     tilt(rig.head, 1, 0, 0, 0.18);
@@ -1029,7 +1060,7 @@ function resetBody() {
    ===================================================================== */
 // What he says. These show as captions, so they should match what was recorded.
 const LINES = [
-  "Namaste! I'm Bhau. First time on a Mumbai local? Don't worry. Five quick things, and you'll ride like a regular. Chalo, let's start!",
+  "Namaste! I'm your Bhau. First time on a Mumbai local? Don't worry. Five quick things, and you'll ride like a regular. Chalo, let's start!",
   "First, the ticket. You can buy one at the ticket window, from a ticket machine, or on your phone. Pick whatever suits you, but always buy it before you board.",
   "This board is your best friend. It shows the time, where the train is going, whether it's fast or slow, and how many coaches it has. Fast trains skip the smaller stations. So, which train would you take?",
   "Bilkul sahi! The fast one gets you there sooner. Just check that it stops at your station.",
