@@ -55,6 +55,10 @@ async function sendForm(data){
 
 // Demos in Invent; kind:"tutorial" cards show in Learn instead. inst:"Example" marks sample cards that only show the format; real demos have a gif (card) and video (sheet).
 const DEMOS = [
+ {id:"mumbai-local",added:"2026-10-30",name:"Mumbai Local, First Ride",board:"MUMBAI LOCAL",line:"A hologram guide appears in your room and shows you how to ride a Mumbai local",cat:"Civic",also:["XR","Sound"],status:"Prototype",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio","Avaturn","Rhubarb Lip Sync"],
+  gif:"media/mumbai-local.gif",img:"media/mumbai-local-cover.jpg",sheetImg:"media/mumbai-local-arrival.jpg",url:"demos/mumbai-local/",cta:"Meet Bhau",
+  needs:"Best on a phone, with sound on. On Android in Chrome: tap View in your room, point at the floor and tap to place Bhau; tap Move or Size to change where and how big he stands. On iPhone: tap Open camera view (turn the silent switch off for sound). On a laptop: View in 3D, or scan the QR code with your phone. Tap ▶ to hear each of the five steps. Please use it at home, not on a platform or while walking.",
+  desc:"First time on a Mumbai local? Bhau, a hologram guide in Mohit's own voice and likeness, rises out of a glowing circle in your room and walks you through five quick things: getting a ticket, reading the indicator board (is it fast or slow?), which coach to board, getting on and off safely, and what to do if anything ever feels wrong. Neon drawings appear as he speaks, captions run a few words at a time, a faint train rumbles in the background, and when he's done he says Shubh yatra and sinks back into the circle. The helpline numbers on screen (112, 139 and 1512) were checked against public sources on 30 October 2026; please confirm them before relying on them. Avatar made with Avaturn (avaturn.me), modified for this experience (hologram style, pose), used with permission for educational purposes; Avaturn does not endorse this site."},
  {id:"pumpkin-lane",added:"2026-10-27",name:"Pumpkin Lane",line:"Trick-or-treat down a lantern-lit lane in Rajouri Garden on Halloween night, in your browser or in VR",cat:"XR",also:["Games","Sound"],status:"Concept",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Three.js","WebXR","Web Audio"],
   gif:"media/pumpkin-lane.gif?v=2",img:"media/pumpkin-lane-cover.jpg",sheetImg:"media/pumpkin-lane-visitor.jpg",url:"demos/pumpkin-lane/",cta:"Walk the lane",
   vr:"inventndiscover.com/demos/pumpkin-lane",
@@ -401,7 +405,7 @@ function arrivals(){
   const pool=[
     ...TOOLS.filter(fresh).map(t=>({type:"tool",title:t.name,added:t.added,href:t.url})),
     ...DEMOS.filter(d=>d.kind==="tutorial"&&fresh(d)).map(d=>({type:"origami",title:d.name,added:d.added,open:d.id})),
-    ...DEMOS.filter(d=>d.kind!=="tutorial"&&(d.cat==="XR"||(d.also||[]).includes("XR"))&&fresh(d)).map(d=>({type:"vr",title:d.name,added:d.added,open:d.id})),
+    ...DEMOS.filter(d=>d.kind!=="tutorial"&&(d.cat==="XR"||(d.also||[]).includes("XR"))&&fresh(d)).map(d=>({type:"vr",title:d.board||d.name,added:d.added,open:d.id})),   // board: short name (15 chars max) for long demo titles
     // Discover stories took the fourth row (26 Oct 2026). Only stories already live (go-live time passed).
     ...STORIES.filter(x=>Date.parse(x.added)<=now&&fresh(x)).map(x=>({type:"story",title:x.board||x.title,added:x.added,href:x.url}))
     // Interviews are off the board for now. To bring them back, add this line again:

@@ -1,0 +1,1901 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mumbai Local, First Ride</title>
+<meta name="description" content="Bhau, a hologram guide, appears in your room and shows you how to ride a Mumbai local in five quick steps. AR on Android, camera view on iPhone, 3D on a laptop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Neon theme colours (same family as the site) ---------- */
+  :root{
+    --bg:#05060A; --violet:#9b6bff; --blue:#4cc9ff; --pink:#ff4fd8;
+    --text:#ecebff; --muted:#8d8aab; --ok:#5dffb0; --no:#ff6b8a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font-family:Geist,system-ui,-apple-system,sans-serif;overflow:hidden}
+  body{background-image:
+      linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px);
+    background-size:32px 32px}
+
+  /* Layers, bottom to top: camera video → 3D canvas → HUD → home panel */
+  #cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}
+  #stage{position:fixed;inset:0;z-index:1}
+  #stage canvas{display:block}
+
+  /* ---------- Home panel ---------- */
+  #home{position:fixed;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;padding:16px;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 15%,rgba(155,107,255,.18),transparent 45%),
+      radial-gradient(circle at 85% 85%,rgba(255,79,216,.12),transparent 45%),
+      linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px);
+    background-size:auto,auto,32px 32px,32px 32px}
+  .card{width:100%;max-width:420px;border:1px solid rgba(155,107,255,.35);border-radius:18px;padding:24px 20px;
+    background:rgba(10,11,20,.85);box-shadow:0 0 40px rgba(155,107,255,.18)}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+  h1{margin:6px 0 4px;font-size:28px;font-weight:700;text-shadow:0 0 18px rgba(155,107,255,.6)}
+  .sub{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.5}
+  .checks{list-style:none;margin:0 0 20px;padding:0;font-size:14px}
+  .checks li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .yes{color:var(--ok)} .noo{color:var(--no)} .wait{color:var(--muted)}
+  .btn{display:block;width:100%;margin:0 0 10px;padding:14px;border-radius:12px;font:500 16px Geist,system-ui,sans-serif;
+    color:var(--text);background:transparent;border:1px solid rgba(155,107,255,.5);cursor:pointer}
+  .btn.main{background:linear-gradient(90deg,rgba(155,107,255,.35),rgba(76,201,255,.3));
+    border-color:var(--violet);box-shadow:0 0 22px rgba(155,107,255,.45)}
+  .btn[hidden]{display:none}
+  .note{margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+  #err{color:var(--no);font-size:13px;min-height:1em;margin:6px 0 0}
+  /* build h: credit line under the buttons */
+  /* build l: neon visuals panel, fixed at the top of the screen so it's always in view */
+  #vis{position:absolute;top:calc(56px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+    width:min(calc(100vw - 32px), 300px);aspect-ratio:10/7;
+    border-radius:16px;background:rgba(5,6,10,.6);border:1px solid rgba(155,107,255,.35);
+    box-shadow:0 0 22px rgba(155,107,255,.25);opacity:0;pointer-events:none;transition:none}
+  /* build l: helpline card (line 7) */
+  #help{position:absolute;top:calc(60px + env(safe-area-inset-top));left:16px;right:16px;max-width:320px;margin:0 auto;
+    pointer-events:auto;padding:12px 14px;border-radius:14px;background:rgba(5,6,10,.82);
+    border:1px solid var(--pink);box-shadow:0 0 18px rgba(255,79,216,.35);font-size:13px}
+  #help[hidden]{display:none}
+  #help h3{margin:0 0 6px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink)}
+  #help .num{display:flex;align-items:baseline;gap:10px;padding:6px 0;color:var(--text);text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,.06)}
+  #help .num b{font-size:22px;min-width:58px;color:var(--orange,#ff9a4d);text-shadow:0 0 10px rgba(255,154,77,.6)}
+  #help small{display:block;margin-top:8px;color:var(--muted);font-size:11px;line-height:1.5}
+  #help small a{color:var(--blue)}
+  /* build l: QR code for computers */
+  #qrbox{margin:14px 0 0;display:flex;gap:14px;align-items:center}
+  #qrbox[hidden]{display:none}
+  #qr{width:110px;height:110px;border-radius:10px;border:2px solid var(--violet);box-shadow:0 0 18px rgba(155,107,255,.5);image-rendering:pixelated}
+  #qrbox p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+  #qrbox b{color:var(--text)}
+  #credit{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);
+    font-size:11.5px;color:var(--muted);line-height:1.55}
+  #credit a{color:var(--blue);text-decoration:none}
+  #credit a:hover{text-decoration:underline}
+
+  /* ---------- HUD (shown while viewing; also the AR overlay) ---------- */
+  #hud{position:fixed;inset:0;z-index:2;display:none;pointer-events:none}
+  /* build j: buttons and caption live in one column at the bottom, so a long caption
+     pushes the buttons up instead of covering them */
+  #bottom{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;gap:10px}
+  /* build n: running captions — a few words at a time, a little bigger */
+  #hint.cap{font-size:20px;font-weight:600;letter-spacing:.01em;padding:14px;animation:capIn .22s ease-out}
+  @keyframes capIn{from{opacity:.25;transform:translateY(6px)}to{opacity:1;transform:none}}
+  #hint{text-align:center;font-size:15px;padding:12px 14px;border-radius:12px;
+    background:rgba(5,6,10,.7);border:1px solid rgba(155,107,255,.4)}
+  .pill{pointer-events:auto;padding:8px 14px;border-radius:999px;font:500 14px Geist,system-ui,sans-serif;
+    color:var(--text);background:rgba(5,6,10,.75)}
+  #exit{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;
+    border:1px solid var(--pink);box-shadow:0 0 14px rgba(255,79,216,.4)}
+  /* build q: a small notice (e.g. "voice didn't load") */
+  #toast{position:absolute;top:calc(48px + env(safe-area-inset-top));left:16px;right:16px;max-width:420px;margin:0 auto;
+    padding:8px 12px;border-radius:10px;font-size:12.5px;line-height:1.45;color:var(--text);
+    background:rgba(5,6,10,.85);border:1px solid var(--orange,#ff9a4d)}
+  #toast[hidden]{display:none}
+  #stamp{position:absolute;top:calc(20px + env(safe-area-inset-top));left:16px;font-size:11px;color:#c9c6e6;
+    padding:4px 10px;border-radius:999px;background:rgba(5,6,10,.7);border:1px solid rgba(155,107,255,.3)}
+  /* bottom row of buttons above the hint */
+  #row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  #row .pill{padding:10px 18px;border:1px solid var(--violet);box-shadow:0 0 14px rgba(155,107,255,.45)}
+  #fallback{border-color:var(--blue)!important;box-shadow:0 0 14px rgba(76,201,255,.45)!important}
+  .pill[hidden]{display:none}
+</style>
+</head>
+<body>
+
+<video id="cam" playsinline muted></video>
+<div id="stage"></div>
+
+<div id="hud">
+  <div id="stamp"></div>
+  <div id="toast" hidden></div>
+  <button id="exit" class="pill">Exit</button>
+  <canvas id="vis" width="800" height="560"></canvas>
+  <div id="help" hidden>
+    <h3>Helplines · save these numbers</h3>
+    <!-- build p: shown as information only — nothing here dials a call -->
+    <div class="num"><b>112</b><span>Emergency: police, fire, ambulance (all India)</span></div>
+    <div class="num"><b>139</b><span>Rail Madad: railway help; press 1 for security &amp; medical</span></div>
+    <div class="num"><b>1512</b><span>Mumbai Railway Police (GRP) helpline</span></div>
+    <small>Checked 30 Oct 2026. Sources:
+      <a href="https://factly.in/explainer-what-is-emergency-response-support-system-erss-or-112" target="_blank" rel="noopener">112</a> ·
+      <a href="https://www.business-standard.com/article/indian-railways/indian-railways-announces-integrated-rail-madad-helpline-number-139-121030801478_1.html" target="_blank" rel="noopener">139</a> ·
+      <a href="https://navbharatlive.com/maharashtra/mumbai/mumbai-local-train-1512-helpline-passenger-safety-boost-1686396.html" target="_blank" rel="noopener">1512</a></small>
+  </div>
+  <div id="bottom">
+  <div id="row">
+    <button id="move" class="pill" hidden>Move</button>
+    <button id="size" class="pill" hidden>Size: life</button>
+    <button id="fallback" class="pill" hidden>Use camera view instead</button>
+    <button id="closeup" class="pill" hidden>Close-up</button>
+    <button id="speak" class="pill" hidden>▶ Line 1</button>
+  </div>
+  <div id="hint"></div>
+  </div>
+</div>
+
+<div id="home">
+  <div class="card">
+    <div class="eyebrow">Invent · AR · Civic</div>
+    <h1>Mumbai Local, First Ride</h1>
+    <p class="sub">Meet Bhau, your hologram guide. He appears in your room and shows you how to ride a Mumbai local in five quick steps.</p>
+
+    <ul class="checks">
+      <li><span>Bhau</span><span id="c-model" class="wait">Loading…</span></li>
+      <li><span>Bhau's voice</span><span id="c-voice" class="wait">Checking…</span></li>
+      <li><span>Secure page (https)</span><span id="c-secure">…</span></li>
+      <li><span>WebXR in this browser</span><span id="c-xr">…</span></li>
+      <li><span>Real AR (place in room)</span><span id="c-ar">…</span></li>
+      <li><span>Camera access</span><span id="c-cam">…</span></li>
+    </ul>
+
+    <button class="btn" id="b-ar" hidden>View in your room</button>
+    <button class="btn" id="b-cam" hidden>Open camera view</button>
+    <button class="btn" id="b-3d">View in 3D</button>
+    <p id="err"></p>
+    <p class="note"><b>Notice before you begin.</b> A digital creation for learning, not official railway guidance. Use it at home, not on a platform or while walking. It has glowing and flickering light effects, and sound (turn it on; on iPhone, turn the silent switch off).<br><span id="stamp-home"></span></p>
+    <div id="qrbox" hidden>
+      <canvas id="qr"></canvas>
+      <p><b>On a computer?</b><br>Scan with your phone to see Bhau in your room.</p>
+    </div>
+    <p id="credit"></p>
+  </div>
+</div>
+
+<!-- build l: tiny QR-code maker (draws the code for the "scan with your phone" box) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const BUILD = 'Mumbai Local · v1 (build r)';
+const $ = (id) => document.getElementById(id);
+$('stamp').textContent = BUILD;
+$('stamp-home').textContent = BUILD;
+
+/* =====================================================================
+   PART 1 — Find out what this device can do
+   ===================================================================== */
+async function detect() {
+  const secure = window.isSecureContext;
+  const hasXR  = 'xr' in navigator;
+  let ar = false;
+  if (hasXR) {
+    try { ar = await navigator.xr.isSessionSupported('immersive-ar'); } catch (e) { ar = false; }
+  }
+  const cam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  return { secure, hasXR, ar, cam };
+}
+function mark(id, ok, yes = 'Yes', no = 'No') {
+  $(id).textContent = ok ? yes : no;
+  $(id).className = ok ? 'yes' : 'noo';
+}
+const caps = await detect();
+mark('c-secure', caps.secure);
+mark('c-xr', caps.hasXR);
+mark('c-ar', caps.ar);
+mark('c-cam', caps.cam && caps.secure);
+if (caps.ar) { $('b-ar').hidden = false; $('b-ar').classList.add('main'); }
+if (caps.cam && caps.secure) {
+  $('b-cam').hidden = false;
+  if (!caps.ar) $('b-cam').classList.add('main');
+}
+if (!caps.ar && !(caps.cam && caps.secure)) $('b-3d').classList.add('main');
+
+/* =====================================================================
+   PART 2 — The 3D scene
+   ===================================================================== */
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+renderer.xr.enabled = true;
+$('stage').appendChild(renderer.domElement);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 50);
+camera.rotation.order = 'YXZ';
+
+/* ---------- build d: the hologram shader, now for a moving body ----------
+   Bhau has a skeleton (skinning) and face shapes (morph targets). The #include
+   lines pull in three.js's own ready-made code for both, so the hologram skin
+   bends with his bones and his face can move. Our own lines add the look:
+     fresnel → edges glow
+     scan    → drifting stripes
+     flicker → occasional dim
+     reveal  → he "builds up" from the feet when he appears              */
+const holoMaterials = [];
+/* build e: depthOnly = true makes an invisible "mask" version of the same skin.
+   It draws nothing you can see, but it records how far away his FRONT surface is.
+   The glowing pass then only shows the front surface, so the inside of his mouth,
+   the backs of his eyes and the back of his head stop showing through his face. */
+/* build k: opts = { dark: colour for beard/eyebrows, rim: edge colour, mask: beard map }
+   The beard map is a small black-and-white picture wrapped onto his face:
+   white = beard / eyebrows, black = skin.                                    */
+/* build m: two kinds of pass from the same recipe:
+     fill = false → the GLOW (light: scan lines, edge glow), drawn with "additive" blending
+     fill = true  → the FILL (a see-through tint in his real colours, drawn first).
+   The fill is what lets DARK colours like navy show up: light can't be dark,
+   but a tint can. It also records depth, so only his front surface glows.
+   opts.alt + opts.mask: a second colour painted where the map is white
+   (beard on the skin, shirt on the suit).                                     */
+function hologramMaterial(hex, depthOnly = false, opts = {}) {
+  const m = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime:   { value: 0 },
+      uColor:  { value: new THREE.Color(hex) },
+      uBaseY:  { value: 0 },    // where his feet are (world height)
+      uScale:  { value: 1 },    // his current size, so the stripes scale with him
+      uReveal: { value: 1 },    // 0 = invisible, 1 = fully built
+      uVoice:  { value: 0 },    // build g: how loud his voice is right now (0–1)
+      uColor2: { value: new THREE.Color(opts.alt ?? opts.dark ?? hex) }, // build k/m: beard or shirt colour
+      uPass:   { value: depthOnly ? 0 : 1 },                     // build m: 0 = fill, 1 = glow
+      uFill:   { value: 0.55 },                                  // build m: how solid the tint is
+      uRim:    { value: new THREE.Color(opts.rim ?? 0xff73e6) }, // build k: edge colour
+      uMask:   { value: opts.mask ?? null },                     // build k: beard map
+      uUseMask:{ value: opts.mask ? 1 : 0 }
+    },
+    vertexShader: /* glsl */`
+      #include <common>
+      #include <morphtarget_pars_vertex>
+      #include <skinning_pars_vertex>
+      varying vec3 vWorldPos;
+      varying vec3 vViewNormal;
+      varying vec3 vViewPos;
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;                          // build k: where on the beard map this point is
+        #include <beginnormal_vertex>
+        #include <morphnormal_vertex>
+        #include <skinbase_vertex>
+        #include <skinnormal_vertex>
+        #include <defaultnormal_vertex>
+        #include <begin_vertex>
+        #include <morphtarget_vertex>
+        #include <skinning_vertex>
+        #include <project_vertex>
+        vViewNormal = normalize(transformedNormal);
+        vViewPos    = -mvPosition.xyz;
+        vWorldPos   = (modelMatrix * vec4(transformed, 1.0)).xyz;
+      }`,
+    fragmentShader: /* glsl */`
+      uniform float uTime, uBaseY, uScale, uReveal, uVoice;
+      uniform vec3  uColor, uColor2, uRim;
+      uniform sampler2D uMask;
+      uniform float uUseMask, uPass, uFill;
+      varying vec2  vUv;
+      varying vec3  vWorldPos;
+      varying vec3  vViewNormal;
+      varying vec3  vViewPos;
+      float hash(float n) { return fract(sin(n) * 43758.5453); }
+      void main() {
+        float h = (vWorldPos.y - uBaseY) / uScale;          // height on his body, in metres
+        float edge = uReveal * 1.95;                         // the build-up line
+        if (h > edge) discard;                               // above the line: not built yet
+        // build k/m: the map → 1 where the second colour goes (beard, shirt), 0 elsewhere
+        float dk  = uUseMask > 0.5 ? texture2D(uMask, vUv).r : 0.0;
+        vec3  col = mix(uColor, uColor2, dk);
+        float flick = hash(floor(uTime * 12.0)) > 0.94 ? 0.6 : 1.0;
+        if (uPass < 0.5) { gl_FragColor = vec4(col, uFill * flick); return; }   // build m: the tint
+        vec3 N = normalize(vViewNormal);
+        vec3 V = normalize(vViewPos);
+        float fresnel = pow(1.0 - abs(dot(N, V)), 2.0);
+        // build e: a soft "key light" from above-front, so the nose, brows,
+        // lips and cheeks catch light and the face has shape, not just an outline
+        float lit     = max(dot(N, normalize(vec3(0.25, 0.55, 1.0))), 0.0);
+        float form    = pow(lit, 3.0) * (1.0 - fresnel);
+        float scan    = 0.7 + 0.3 * sin(h * 160.0 - uTime * (6.0 + 10.0 * uVoice)); // build g: stripes speed up as he speaks
+        float flicker = hash(floor(uTime * 12.0)) > 0.94 ? 0.4 : 1.0;
+        float band    = smoothstep(0.06, 0.0, edge - h) * step(uReveal, 0.999); // bright line while building
+        float glow    = (0.16 + 1.05 * fresnel + 0.45 * form) * (1.0 + 0.7 * uVoice); // build g: brighter with each syllable
+        float alpha   = glow * scan * flicker + band;
+        // build m: dark colours (navy) glow in a brighter version of themselves,
+        // so the suit keeps its scan lines; light colours (shirt, skin) are left as they are
+        float lum = dot(col, vec3(0.299, 0.587, 0.114));
+        vec3  gcol = col + (1.0 - lum) * 0.45 * normalize(col + 0.001);
+        gl_FragColor  = vec4(gcol * (0.7 + 1.9 * fresnel) + uRim * fresnel * fresnel * 0.6
+                             + mix(vec3(1.0), gcol, 0.6) * form * 0.5 * (1.0 - 0.8 * dk)
+                             + vec3(0.6, 0.8, 1.0) * band, alpha);
+      }`,
+    transparent: true,
+    depthWrite: depthOnly,            // the fill records depth; the glow does not
+    side: THREE.FrontSide,            // build e: front faces only
+    blending: depthOnly ? THREE.NormalBlending : THREE.AdditiveBlending
+  });
+  holoMaterials.push(m);
+  return m;
+}
+
+/* ---------- The hologram group: everything that moves together ---------- */
+const holo = new THREE.Group();
+scene.add(holo);
+
+// Projector pad on the floor: a glowing ring plus a soft flat glow
+function radialTexture(inner, outer) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, inner);
+  grad.addColorStop(1, outer);
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(c);
+}
+const ring = new THREE.Mesh(
+  new THREE.RingGeometry(0.34, 0.38, 64).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ color: 0xff4fd8, transparent: true, opacity: 0.9,
+                                blending: THREE.AdditiveBlending, depthWrite: false })
+);
+ring.position.y = 0.003;
+const pad = new THREE.Mesh(
+  new THREE.PlaneGeometry(0.8, 0.8).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ map: radialTexture('rgba(155,107,255,0.55)', 'rgba(155,107,255,0)'),
+                                transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })
+);
+pad.position.y = 0.002;
+holo.add(ring, pad);
+
+// Dark halo behind him, so he stays visible against bright walls
+const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: radialTexture('rgba(5,6,10,0.5)', 'rgba(5,6,10,0)'), transparent: true, depthWrite: false
+}));
+halo.scale.set(1.2, 2.3, 1);
+halo.position.y = 0.95;
+halo.renderOrder = -1;
+halo.material.depthTest = false;   // build e: the mask must not hide the halo behind him
+holo.add(halo);
+
+// Violet glow under his feet, for the iPhone floating style
+const underGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: radialTexture('rgba(155,107,255,0.9)', 'rgba(155,107,255,0)'),
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+}));
+underGlow.scale.set(0.9, 0.18, 1);
+underGlow.position.y = -0.04;
+underGlow.visible = false;
+holo.add(underGlow);
+
+/* build n: the light BEAM that rises from the base circle when he arrives
+   (and sinks back into it when he leaves). It's an open tube, glowing at the
+   bottom and fading toward the top, with soft vertical streaks.            */
+const beamMat = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uOpacity: { value: 0 } },
+  vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform float uTime, uOpacity; varying vec3 vP;
+    void main(){
+      float up = clamp(vP.y, 0.0, 1.0);                         // 0 at the circle, 1 at the top
+      float a = atan(vP.z, vP.x);
+      float streak = 0.55 + 0.45 * sin(a * 22.0 + uTime * 3.0) * sin(a * 7.0 - uTime * 1.7);
+      float fade = pow(1.0 - up, 1.6);
+      vec3 col = mix(vec3(1.0, 0.31, 0.85), vec3(0.61, 0.42, 1.0), up);
+      gl_FragColor = vec4(col, fade * streak * uOpacity);
+    }`,
+  transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+});
+const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 1, 48, 1, true).translate(0, 0.5, 0), beamMat);
+beam.scale.y = 0.001;
+beam.renderOrder = 3;
+holo.add(beam);
+
+function setLook(look) {
+  const grounded = look === 'grounded';
+  ring.visible = grounded;
+  pad.visible = grounded;
+  underGlow.visible = !grounded;
+}
+
+/* ---------- build d: load Bhau ---------- */
+let bhau = null;          // his body (a SkinnedMesh)
+let face = null;          // his face shapes: name → number
+const bone = (name) => bhauRoot && bhauRoot.getObjectByName(name);
+let bhauRoot = null;
+
+/* His arms come out of Blender straight sideways (the "T-pose").
+   pointLimb() turns a bone so the limb points where we want:
+   1. measure where the arm points now (shoulder → elbow)
+   2. work out the turn from "now" to "down by his side"
+   3. apply that turn to the shoulder bone                          */
+function pointLimb(upper, lower, sideOut, down) {
+  upper.updateWorldMatrix(true, true);
+  const a = upper.getWorldPosition(new THREE.Vector3());
+  const b = lower.getWorldPosition(new THREE.Vector3());
+  const now = b.sub(a).normalize();
+  const want = new THREE.Vector3(Math.sign(now.x) * sideOut, -down, 0).normalize();
+  const turn = new THREE.Quaternion().setFromUnitVectors(now, want);
+  const worldQ  = upper.getWorldQuaternion(new THREE.Quaternion());
+  const parentQ = upper.parent.getWorldQuaternion(new THREE.Quaternion());
+  upper.quaternion.copy(parentQ.invert().multiply(turn.multiply(worldQ)));
+  upper.updateWorldMatrix(false, true);
+}
+
+/* build f: pick the model from the address, e.g. ?model=bhau03.glb (default bhau.glb).
+   Only plain file names ending in .glb are accepted. */
+const asked = new URLSearchParams(location.search).get('model') || '';
+// build h: Mohit's own Avaturn avatar is now the default (permission from Avaturn, 30 Oct 2026)
+const MODEL = /^[\w-]+\.glb$/.test(asked) ? asked : 'bhau03-slim.glb';
+
+/* build h: the right credit for whichever avatar is showing.
+   Avaturn asked for: credit + link, a note that it was modified, and no implied endorsement.
+   Rocketbox's MIT licence asks for the copyright notice to travel with it. */
+const CREDITS = {
+  avaturn: 'Avatar made with <a href="https://avaturn.me" target="_blank" rel="noopener">Avaturn</a>, ' +
+           'modified for this experience (hologram style, pose). Used with permission for educational purposes. ' +
+           'Avaturn does not endorse this site.',
+  rocketbox: 'Avatar from the <a href="https://github.com/microsoft/Microsoft-Rocketbox" target="_blank" rel="noopener">Microsoft Rocketbox</a> ' +
+             'library, © Microsoft, MIT licence. Modified for this experience (hologram style, pose, trimmed face shapes).'
+};
+$('credit').innerHTML = MODEL === 'bhau.glb' ? CREDITS.rocketbox : CREDITS.avaturn;
+/* build k: colours. Try others from the address, e.g. ?skin=ff7a2e&beard=5a1a6e&clothes=9b6bff */
+const P = new URLSearchParams(location.search);
+const hex = (k, d) => (/^[0-9a-fA-F]{6}$/.test(P.get(k) || '') ? parseInt(P.get(k), 16) : d);
+const COL = {
+  clothes: hex('clothes', 0x03254C),   // build m: navy suit and tie
+  shirt:   hex('shirt',   0xffffff),   // build m: pure white shirt
+  shoes:   hex('shoes',   0x0d0d10),   // build r: black shoes
+  skin:    hex('skin',    0xE5AF90),   // build m: lighter orange face and hands
+  beard:   hex('beard',   0x6B6C70)    // build n: salt-and-pepper grey
+};
+let mixer = null;          // plays a built-in movement (e.g. Avaturn's idle) if the file has one
+let faceY = 1.6;           // height of his face, for the Close-up button
+
+new GLTFLoader().load(MODEL, (gltf) => {
+  bhauRoot = gltf.scene;
+  holo.add(bhauRoot);
+  holo.updateMatrixWorld(true);
+
+  if (gltf.animations.length) {
+    // build f: the file has its own movement (Avaturn "Idle"): play it on a loop
+    mixer = new THREE.AnimationMixer(bhauRoot);
+    mixer.clipAction(gltf.animations[0]).play();
+  } else {
+    // Arms down. Rocketbox calls the bones "Bip01 L UpperArm" (three.js turns
+    // spaces into underscores); Avaturn and Mixamo call them "LeftArm".
+    const L = [bone('Bip01_L_UpperArm') || bone('LeftArm'), bone('Bip01_L_Forearm') || bone('LeftForeArm')];
+    const R = [bone('Bip01_R_UpperArm') || bone('RightArm'), bone('Bip01_R_Forearm') || bone('RightForeArm')];
+    if (L[0] && L[1]) pointLimb(L[0], L[1], 0.18, 1);
+    if (R[0] && R[1]) pointLimb(R[0], R[1], 0.18, 1);
+  }
+  const head = bone('Bip01_Head') || bone('Head');
+  if (head) faceY = head.getWorldPosition(new THREE.Vector3()).y + 0.08;
+  buildRig();   // build j: find the bones for gestures
+  /* build k: Avaturn's idle animation stands him turned about 36° to one side.
+     Measure the line between his shoulders and turn the whole model back,
+     so his chest faces you (and a namaste in front of his chest is in front of YOU). */
+  if (mixer && rig.L.up && rig.R.up) {
+    mixer.update(0);
+    holo.updateMatrixWorld(true);
+    const across = holo.worldToLocal(rig.L.up.getWorldPosition(new THREE.Vector3()))
+      .sub(holo.worldToLocal(rig.R.up.getWorldPosition(new THREE.Vector3())));
+    bhauRoot.rotation.y += Math.atan2(across.z, across.x);   // angle of the shoulder line → undo it
+    holo.updateMatrixWorld(true);
+    buildRig();   // measure the sides again now that he faces forward
+  }
+  if (P.has('debug')) window.__bhau = { rig, holo, THREE, VC, vx, SCENES, speak, get mixer() { return mixer; },
+                     freeze: (phase, e) => { show = { phase, start: 0, freezeAt: e }; } };   // build k: for testing only
+
+  // build k: one material per kind of part. The model file names its parts:
+  // "skin" (face, hands, carries the beard map) and "clothes". Older models with
+  // no names (Rocketbox) get the single clothes colour, as before.
+  // build m: each part gets a PAIR: glow (light) + fill (tint in its real colour)
+  // build m: three layers per part, drawn in this order:
+  //   0. depth — invisible; records only his FRONT-most surface
+  //   1. fill  — the colour tint, only on that front surface (so a navy tie isn't mixed with the shirt behind it)
+  //   2. glow  — the hologram light on top
+  const pair = (hex, opts) => {
+    const depth = hologramMaterial(hex, true, opts); depth.colorWrite = false;
+    const fill  = hologramMaterial(hex, true, opts); fill.depthWrite = false;
+    return { depth, fill, glow: hologramMaterial(hex, false, opts) };
+  };
+  const plainMap = (t) => { if (t) { t.colorSpace = THREE.NoColorSpace; t.needsUpdate = true; } return t; }; // read maps as plain numbers
+  const made = {};
+  const bodies = [];
+  bhauRoot.traverse((o) => { if (o.isMesh) bodies.push(o); });
+  bodies.forEach((o) => {
+    const part = (o.material && o.material.name) || 'clothes';
+    const map = plainMap(o.material && o.material.map) || null;
+    made[part] = made[part] || (
+      part === 'skin'  ? pair(COL.skin,  { alt: COL.beard, rim: 0xffc27a, mask: map }) :
+      part === 'shoes' ? pair(COL.shoes, { rim: 0x6b6c78 }) :      // black, with a soft grey edge
+                         pair(COL.clothes, { alt: COL.shirt, rim: 0xff73e6, mask: map }));
+    o.material = made[part].glow;
+    o.frustumCulled = false;     // skinned bodies can be wrongly hidden at screen edges otherwise
+    o.renderOrder = 2;           // glow last
+    // build e/m: twins of the body for the depth and fill layers. They share the same
+    // skeleton and face-shape values, so they always match the glowing body exactly.
+    for (const [layer, order] of [['depth', 0], ['fill', 1]]) {
+      const twin = o.clone();
+      twin.material = made[part][layer];
+      twin.renderOrder = order;
+      if (o.morphTargetInfluences) twin.morphTargetInfluences = o.morphTargetInfluences;
+      o.parent.add(twin);
+    }
+    if (o.morphTargetDictionary) { bhau = o; face = o.morphTargetDictionary; }
+  });
+  if (bhau && face['AK_44_MouthSmileLeft'] !== undefined) {           // a slight friendly smile
+    bhau.morphTargetInfluences[face['AK_44_MouthSmileLeft']]  = 0.25;
+    bhau.morphTargetInfluences[face['AK_45_MouthSmileRight']] = 0.25;
+  }
+  mark('c-model', true, 'Ready');
+}, undefined, (e) => {
+  // build i: name the exact file that failed
+  mark('c-model', false, '', 'Missing');
+  addErr(`Bhau's file "${MODEL}" didn't load. Check it's uploaded next to index.html (same folder, same spelling).`);
+});
+
+/* ---------- AR reticle ---------- */
+const reticle = new THREE.Mesh(
+  new THREE.RingGeometry(0.1, 0.12, 48).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ color: 0x9b6bff })
+);
+reticle.matrixAutoUpdate = false;
+reticle.visible = false;
+scene.add(reticle);
+
+const grid = new THREE.GridHelper(4, 20, 0x9b6bff, 0x2a2350);
+grid.material.transparent = true;
+grid.material.opacity = 0.5;
+grid.visible = false;
+scene.add(grid);
+
+let controls = null;
+
+/* =====================================================================
+   PART 3 — The three modes
+   ===================================================================== */
+let mode = 'home';
+let hitSource = null;
+let stream = null;
+let placing = false;
+let tipTimer = null;
+let tipsShown = false;
+let switchToCamera = false;
+let revealStart = -1;       // build d: time the build-up began (-1 = not building)
+
+const SIZES = [1, 0.5, 0.25];             // build d: life size, half, quarter (table top)
+const SIZE_NAMES = ['life', 'half', 'table'];
+let sizeIdx = 0;
+
+function hint(t) { $('hint').textContent = t; }
+function showErr(t) { $('err').textContent = t; }
+function addErr(t) { $('err').textContent = ($('err').textContent ? $('err').textContent + ' ' : '') + t; } // build i: keep both messages
+function enterViewing() {
+  $('home').style.display = 'none';
+  $('hud').style.display = 'block';
+}
+let greeted = false;   // build j: has he waved hello since appearing?
+/* build n: the show has four phases
+     intro → circle opens, beam rises, he builds up inside it (3.5 s)
+     idle  → he's here
+     outro → he dissolves from the head down, beam sinks into the circle, circle closes (3.5 s)
+     gone  → nothing left; "↺ Bring Bhau back" replays the intro                  */
+let show = { phase: 'idle', start: 0 };
+function startReveal() {
+  show = { phase: 'intro', start: clock.getElapsedTime() }; greeted = false;
+  revealStart = show.start;
+  sfxArrive();
+  startAmbience();                       // build r: the moving-train background fades in
+}
+function startOutro() {
+  show = { phase: 'outro', start: clock.getElapsedTime() };
+  sfxDepart();
+  stopAmbience();                        // build r: the train fades away with him
+}
+const sm = (a, b, x) => { const k = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1); return k * k * (3 - 2 * k); };
+function showState(t) {
+  const e = show.freezeAt ?? (t - show.start);      // freezeAt: testing only (?debug)
+  if (show.phase === 'intro') {
+    if (e > 3.5) show.phase = 'idle';
+    return { ring: sm(0, 0.7, e), flash: sm(0.45, 0.7, e) * (1 - sm(0.7, 1.3, e)),
+             beamH: 2.05 * sm(0.35, 1.1, e), beamA: sm(0.35, 0.6, e) * (1 - sm(2.7, 3.5, e)),
+             reveal: sm(1.0, 2.7, e) };
+  }
+  if (show.phase === 'outro') {
+    if (e > 3.5) { show.phase = 'gone'; onGone(); }
+    return { ring: 1 - sm(2.7, 3.4, e), flash: sm(2.5, 2.8, e) * (1 - sm(2.8, 3.2, e)),
+             beamH: 2.05 * (1 - sm(1.9, 2.8, e)), beamA: sm(0, 0.4, e) * (1 - sm(2.4, 3.0, e)),
+             reveal: 1 - sm(0.3, 2.0, e) };
+  }
+  if (show.phase === 'gone') return { ring: 0, flash: 0, beamH: 0, beamA: 0, reveal: 0 };
+  return { ring: 1, flash: 0, beamH: 0, beamA: 0, reveal: 1 };
+}
+function onGone() {
+  stopSpeaking();
+  $('speak').textContent = '↺ Bring Bhau back';
+  $('hint').classList.remove('cap');
+  hint('Shubh yatra! Tap ↺ to bring Bhau back.');
+}
+
+/* ---------- Mode A: real AR (Android Chrome) ---------- */
+async function startAR() {
+  try {
+    $('hud').style.display = 'block';
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test'],
+      optionalFeatures: ['dom-overlay'],
+      domOverlay: { root: $('hud') }
+    });
+    renderer.xr.setReferenceSpaceType('local');
+    await renderer.xr.setSession(session);
+
+    mode = 'ar';
+    enterViewing();
+    setLook('grounded');
+    holo.scale.setScalar(SIZES[sizeIdx]);
+    holo.position.set(0, 0, 0);
+    startPlacing();
+
+    const viewerSpace = await session.requestReferenceSpace('viewer');
+    hitSource = await session.requestHitTestSource({ space: viewerSpace });
+
+    session.addEventListener('select', () => {
+      if (!placing || !reticle.visible) return;
+      holo.position.setFromMatrixPosition(reticle.matrix);
+      // build d: turn Bhau to face you
+      const me = new THREE.Vector3().setFromMatrixPosition(renderer.xr.getCamera().matrixWorld);
+      holo.rotation.set(0, Math.atan2(me.x - holo.position.x, me.z - holo.position.z), 0);
+      holo.visible = true;
+      startReveal();
+      placing = false;
+      reticle.visible = false;
+      stopTipTimer();
+      $('move').hidden = false;
+      $('size').hidden = false;
+      $('speak').hidden = false;
+      hint('Walk around him. Tap ▶ to hear Bhau.');
+    });
+    session.addEventListener('end', () => {
+      hitSource = null;
+      placing = false;
+      reticle.visible = false;
+      stopTipTimer();
+      backHome();
+      if (switchToCamera) {
+        switchToCamera = false;
+        setTimeout(startCamera, 300);
+      }
+    });
+  } catch (e) {
+    $('hud').style.display = 'none';
+    showErr('Could not start AR: ' + e.message);
+  }
+}
+
+function startPlacing() {
+  placing = true;
+  holo.visible = false;
+  $('move').hidden = true;
+  $('size').hidden = true;
+  hint('Move your phone slowly over the floor, then tap to place Bhau.');
+  stopTipTimer();
+  tipTimer = setTimeout(showTips, 8000);
+}
+$('move').addEventListener('click', startPlacing);
+
+function showTips() {
+  tipTimer = null;
+  if (!placing) return;
+  tipsShown = true;
+  hint("Can't find a surface yet. Turn on a light, point at a textured floor or rug (shiny floors are tricky), and move slowly side to side.");
+  $('fallback').hidden = false;
+}
+function stopTipTimer() {
+  clearTimeout(tipTimer);
+  tipTimer = null;
+  tipsShown = false;
+  $('fallback').hidden = true;
+}
+$('fallback').addEventListener('click', () => {
+  switchToCamera = true;
+  const s = renderer.xr.getSession();
+  if (s) s.end();
+});
+
+// build d: Size button cycles life → half → table
+$('size').addEventListener('click', () => {
+  sizeIdx = (sizeIdx + 1) % SIZES.length;
+  holo.scale.setScalar(SIZES[sizeIdx]);
+  $('size').textContent = 'Size: ' + SIZE_NAMES[sizeIdx];
+});
+
+['exit', 'move', 'size', 'fallback', 'speak'].forEach((id) =>
+  $(id).addEventListener('beforexrselect', (e) => e.preventDefault()));
+
+/* ---------- Mode B: camera view fallback (iPhone and others) ---------- */
+let baseOrient = null;
+const targetRot = { x: 0, y: 0 };
+function onOrient(e) {
+  if (e.beta == null || e.alpha == null) return;
+  if (!baseOrient) baseOrient = { a: e.alpha, b: e.beta };
+  const dYaw   = ((e.alpha - baseOrient.a + 540) % 360) - 180;
+  const dPitch = e.beta - baseOrient.b;
+  targetRot.y = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(dYaw, -60, 60));
+  targetRot.x = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(dPitch, -40, 40));
+}
+
+async function startCamera() {
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+      try { await DeviceOrientationEvent.requestPermission(); } catch (e) {}
+    }
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } }, audio: false
+    });
+    const v = $('cam');
+    v.srcObject = stream;
+    v.style.display = 'block';
+    await v.play();
+
+    mode = 'camera';
+    enterViewing();
+    baseOrient = null;
+    targetRot.x = targetRot.y = 0;
+    camera.position.set(0, 0, 0);
+    camera.rotation.set(0, 0, 0);
+    // Floating style: a small Bhau hanging in the air about 1 m ahead
+    setLook('floating');
+    // build r: a little smaller and higher, so his feet sit clear of the buttons
+    // (feet ≈ 70% down the screen, head ≈ 27% down)
+    holo.scale.setScalar(0.26);
+    holo.position.set(0, -0.22, -1.0);
+    holo.rotation.set(0, 0, 0);
+    holo.visible = true;
+    startReveal();
+    window.addEventListener('deviceorientation', onOrient);
+    $('speak').hidden = false;
+    hint('Tilt your phone gently. Drag to turn Bhau. Tap ▶ to hear him.');
+  } catch (e) {
+    showErr('Camera not available: ' + e.message);
+    stopCamera();
+  }
+}
+function stopCamera() {
+  window.removeEventListener('deviceorientation', onOrient);
+  if (stream) stream.getTracks().forEach((t) => t.stop());
+  stream = null;
+  $('cam').style.display = 'none';
+}
+
+/* ---------- Mode C: plain 3D view (desktop) ---------- */
+function start3D() {
+  mode = '3d';
+  enterViewing();
+  grid.visible = true;
+  setLook('grounded');
+  holo.scale.setScalar(1);
+  holo.rotation.set(0, 0, 0);
+  holo.position.set(0, 0, 0);
+  holo.visible = true;
+  startReveal();
+  camera.position.set(0, 1.35, 3.6);   // build l: framed lower, clear of the top panel
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 1.2, 0);
+  controls.enableDamping = true;
+  controls.update();
+  closeup = false;
+  $('closeup').textContent = 'Close-up';
+  $('closeup').hidden = false;
+  $('speak').hidden = false;
+  hint('Drag to walk around Bhau. Scroll or pinch to zoom.');
+}
+
+/* build e: Close-up button (3D view) jumps between full body and face */
+let closeup = false;
+$('closeup').addEventListener('click', () => {
+  if (!controls) return;
+  closeup = !closeup;
+  if (closeup) { camera.position.set(0, faceY + 0.02, 0.7); controls.target.set(0, faceY, 0); }
+  else         { camera.position.set(0, 1.35, 3.6); controls.target.set(0, 1.2, 0); }
+  controls.update();
+  $('closeup').textContent = closeup ? 'Full body' : 'Close-up';
+});
+
+function backHome() {
+  stopCamera();
+  if (controls) { controls.dispose(); controls = null; }
+  grid.visible = false;
+  $('move').hidden = true;
+  $('size').hidden = true;
+  $('closeup').hidden = true;
+  $('speak').hidden = true;
+  stopSpeaking();
+  hideVisuals();
+  stopAmbience(true);                    // build r: quick fade on Exit
+  $('help').hidden = true;
+  holo.rotation.set(0, 0, 0);
+  mode = 'home';
+  $('hud').style.display = 'none';
+  $('home').style.display = 'flex';
+}
+$('exit').addEventListener('click', () => {
+  const s = renderer.xr.getSession();
+  if (s) s.end(); else backHome();
+});
+// build n: ensureAudio() on each tap: browsers only allow sound after the person taps
+$('b-ar').addEventListener('click', () => { ensureAudio(); showErr(''); startAR(); });
+$('b-cam').addEventListener('click', () => { ensureAudio(); showErr(''); startCamera(); });
+$('b-3d').addEventListener('click', () => { ensureAudio(); showErr(''); start3D(); });
+
+let dragX = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { if (mode === 'camera') dragX = e.clientX; });
+window.addEventListener('pointermove', (e) => {
+  if (dragX === null) return;
+  holo.rotation.y += (e.clientX - dragX) * 0.01;
+  dragX = e.clientX;
+});
+window.addEventListener('pointerup', () => { dragX = null; });
+
+/* =====================================================================
+   PART 3¼ — build j: body language (wave, namaste, nodding)
+   ===================================================================== */
+/* Both avatars name their bones differently, so each part lists both names:
+   Rocketbox first ("Bip01_L_UpperArm"), then Avaturn/Mixamo ("LeftArm").     */
+let rig = null;
+function buildRig() {
+  const pick = (...names) => names.map(bone).find(Boolean);
+  const arm = (r, a) => ({
+    up:   pick(`Bip01_${r}_UpperArm`, `${a}Arm`),
+    fore: pick(`Bip01_${r}_Forearm`,  `${a}ForeArm`),
+    hand: pick(`Bip01_${r}_Hand`,     `${a}Hand`),
+    tip:  pick(`Bip01_${r}_Finger2`,  `${a}HandMiddle1`)     // middle finger: shows where the hand points
+  });
+  rig = { L: arm('L', 'Left'), R: arm('R', 'Right'),
+          neck: pick('Bip01_Neck', 'Neck'), head: pick('Bip01_Head', 'Head'),
+          hips: pick('Bip01_Pelvis', 'Hips') };
+  // Remember every gesture bone's resting turn, so we can start from it each frame
+  rig.bones = [rig.L.up, rig.L.fore, rig.L.hand, rig.R.up, rig.R.fore, rig.R.hand, rig.neck, rig.head].filter(Boolean);
+  rig.rest = rig.bones.map((b) => b.quaternion.clone());
+  rig.base = rig.rest.map((q) => q.clone());   // build l: the pose the idle animation last set
+  // Which side is "his left"? Measure where each shoulder sits (+1 or -1 across his body)
+  const side = (b) => Math.sign(holo.worldToLocal(b.getWorldPosition(new THREE.Vector3())).x) || 1;
+  rig.L.sx = side(rig.L.up);
+  rig.R.sx = side(rig.R.up);
+}
+
+/* aim(): turn a bone so it points along a direction.
+   Same idea as pointLimb(), but the direction is given in HIS body space:
+   x = across his body, y = up, z = forward (toward the viewer).          */
+const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _q = new THREE.Quaternion(),
+      _wq = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _hq = new THREE.Quaternion();
+function aim(b, child, x, y, z) {
+  if (!b || !child) return;
+  b.updateWorldMatrix(true, true);
+  const now  = child.getWorldPosition(_a).sub(b.getWorldPosition(_b)).normalize();
+  const want = new THREE.Vector3(x, y, z).normalize().applyQuaternion(_hq);   // body space → world
+  _q.setFromUnitVectors(now, want);
+  b.getWorldQuaternion(_wq);
+  b.parent.getWorldQuaternion(_pq).invert();
+  b.quaternion.copy(_pq.multiply(_q.multiply(_wq)));
+}
+/* build k: aimAt(): turn a bone so its child lands on the line toward a POINT in the room */
+function aimAt(b, child, point) {
+  if (!b || !child) return;
+  b.updateWorldMatrix(true, true);
+  const now  = child.getWorldPosition(_a).sub(b.getWorldPosition(_b)).normalize();
+  const want = point.clone().sub(_b).normalize();
+  _q.setFromUnitVectors(now, want);
+  b.getWorldQuaternion(_wq);
+  b.parent.getWorldQuaternion(_pq).invert();
+  b.quaternion.copy(_pq.multiply(_q.multiply(_wq)));
+}
+/* build k: reach(): put the WRIST exactly on a target point ("two-bone IK").
+   We know three things: the shoulder position, the upper-arm length (a) and the
+   forearm length (b). With the target T, that's a triangle shoulder–elbow–wrist
+   with known sides, so school geometry (the cosine rule) tells us where the
+   elbow must be. "out" says which way the elbow should stick out.            */
+function reach(s, T, out) {
+  s.up.updateWorldMatrix(true, true);
+  const S  = s.up.getWorldPosition(new THREE.Vector3());
+  const E0 = s.fore.getWorldPosition(new THREE.Vector3());
+  const W0 = s.hand.getWorldPosition(new THREE.Vector3());
+  const a = S.distanceTo(E0), b = E0.distanceTo(W0);
+  const n = T.clone().sub(S); let d = n.length(); n.normalize();
+  d = THREE.MathUtils.clamp(d, Math.abs(a - b) + 1e-3, (a + b) * 0.999);  // can't reach further than the arm
+  const x = (a * a - b * b + d * d) / (2 * d);          // how far along shoulder→target the elbow sits
+  const h = Math.sqrt(Math.max(a * a - x * x, 0));     // how far the elbow bends out from that line
+  const pole = out.clone().addScaledVector(n, -out.dot(n)).normalize();
+  const E = S.clone().addScaledVector(n, x).addScaledVector(pole, h);
+  aimAt(s.up, s.fore, E);     // upper arm → elbow
+  aimAt(s.fore, s.hand, T);   // forearm → wrist
+}
+
+/* tilt(): bend a bone around one of his body axes, by an angle (radians).
+   axis (1,0,0) = nod forward/back, (0,1,0) = turn left/right.             */
+function tilt(b, ax, ay, az, angle) {
+  if (!b || !angle) return;
+  b.updateWorldMatrix(true, false);
+  const axis = new THREE.Vector3(ax, ay, az).applyQuaternion(_hq);
+  _q.setFromAxisAngle(axis, angle);
+  b.getWorldQuaternion(_wq);
+  b.parent.getWorldQuaternion(_pq).invert();
+  b.quaternion.copy(_pq.multiply(_q.multiply(_wq)));
+}
+
+/* The gesture "timeline": which gesture, when it started, how long it lasts */
+const gesture = { name: null, start: 0, dur: 0 };
+function playGesture(name, dur) {
+  gesture.name = name; gesture.start = clock.getElapsedTime(); gesture.dur = dur;
+}
+/* Ease in over 0.5 s, hold, ease out over 0.5 s → a weight from 0 to 1 */
+function envelope(e, dur) {
+  if (e < 0 || e > dur) return 0;
+  const smooth = (x) => x * x * (3 - 2 * x);
+  return smooth(Math.min(1, e / 0.5, (dur - e) / 0.5));
+}
+
+/* The poses. Each one aims upper arm → forearm → hand, in that order,
+   because moving a parent bone carries its children along.           */
+function posePose(name, e) {
+  if (name === 'namaste') {
+    // build k: measure HIS chest as it is right now (the idle animation sways it),
+    // then put both wrists either side of its centre.
+    const V = THREE.Vector3;
+    const Ls = rig.L.up.getWorldPosition(new V()), Rs = rig.R.up.getWorldPosition(new V());
+    const across = Ls.clone().sub(Rs).normalize();                       // toward his left
+    let up = rig.hips && rig.neck
+      ? rig.neck.getWorldPosition(new V()).sub(rig.hips.getWorldPosition(new V()))
+      : new V(0, 1, 0).applyQuaternion(_hq);
+    up.addScaledVector(across, -up.dot(across)).normalize();
+    const fwd = new V().crossVectors(across, up).normalize();             // left × up = forward
+    if (fwd.dot(new V(0, 0, 1).applyQuaternion(_hq)) < 0) fwd.negate();   // make sure it's his front
+    const sc = holo.scale.x;
+    const C = Ls.clone().add(Rs).multiplyScalar(0.5)                       // between the shoulders…
+      .addScaledVector(up, -0.25 * sc)                                     // …down to mid-chest…
+      .addScaledVector(fwd, 0.22 * sc);                                    // …and out in front
+    for (const [s, side] of [[rig.L, 1], [rig.R, -1]]) {
+      const T = C.clone().addScaledVector(across, 0.028 * sc * side);     // wrists just either side of centre
+      const out = across.clone().multiplyScalar(side).addScaledVector(up, -1.2).addScaledVector(fwd, -0.3);
+      reach(s, T, out);                                                    // elbows down and out
+      const fingers = up.clone().addScaledVector(fwd, 0.25).addScaledVector(across, -0.15 * side).normalize();
+      aimAt(s.hand, s.tip, s.hand.getWorldPosition(new V()).add(fingers)); // fingers point up
+    }
+    tilt(rig.neck, 1, 0, 0, 0.12);                      // a small respectful bow
+    tilt(rig.head, 1, 0, 0, 0.18);
+  }
+  if (name === 'wave') {
+    const s = rig.R;
+    const sway = Math.sin(e * 9) * 0.45;                // hand swings side to side
+    aim(s.up,   s.fore, 0.95 * s.sx, 0.10, 0.25);       // arm out to the side
+    aim(s.fore, s.hand, 0.20 * s.sx + sway, 1.0, 0.15); // forearm up
+    aim(s.hand, s.tip,  0.20 * s.sx + sway * 1.3, 1.0, 0.10);
+    tilt(rig.head, 0, 0, 1, -0.10 * s.sx);              // head tilts slightly toward the wave
+  }
+}
+
+const _base = [];
+function updateBody(t) {
+  if (!rig) return;
+  holo.getWorldQuaternion(_hq);
+  // A gesture blends from his normal pose (idle or rest) to the gesture pose
+  const w = gesture.name ? envelope(t - gesture.start, gesture.dur) : 0;
+  if (gesture.name && t - gesture.start > gesture.dur) gesture.name = null;
+  if (w > 0) {
+    rig.bones.forEach((b, i) => { _base[i] = (_base[i] || new THREE.Quaternion()).copy(b.quaternion); });
+    posePose(gesture.name, t - gesture.start);
+    // keep the gesture pose first, THEN go back to the base and blend toward it
+    rig.bones.forEach((b, i) => { const target = b.quaternion.clone(); b.quaternion.copy(_base[i]).slerp(target, w); });
+  }
+  // Nodding while he talks: louder syllables = a slightly bigger nod
+  tilt(rig.head, 1, 0, 0, voice * 0.10 + (speaking ? Math.sin(t * 2.3) * 0.025 : 0));
+  tilt(rig.neck, 0, 1, 0, speaking ? Math.sin(t * 0.9) * 0.05 : 0);   // and a gentle look around
+}
+/* Before the idle animation runs each frame, put the gesture bones back to rest.
+   The animation then sets the bones it moves; the others stay at rest
+   instead of piling up last frame's gesture.                           */
+function resetBody() {
+  // build l: restore what the ANIMATION last set (not a fixed pose). three.js only
+  // writes a bone when its animated value changes, so if we restored a fixed
+  // T-pose here, any frame where the animation held still would show that T-pose.
+  if (rig) rig.bones.forEach((b, i) => b.quaternion.copy(rig.base[i]));
+}
+
+/* =====================================================================
+   PART 3½ — build g: Bhau speaks (your voice + lip-sync)
+   ===================================================================== */
+// What he says. These show as captions, so they should match what was recorded.
+const LINES = [
+  "Namaste! I'm Bhau. First time on a Mumbai local? Don't worry. Five quick things, and you'll ride like a regular. Chalo, let's start!",
+  "First, the ticket. You can buy one at the ticket window, from a ticket machine, or on your phone. Pick whatever suits you, but always buy it before you board.",
+  "This board is your best friend. It shows the time, where the train is going, whether it's fast or slow, and how many coaches it has. Fast trains skip the smaller stations. So, which train would you take?",
+  "Bilkul sahi! The fast one gets you there sooner. Just check that it stops at your station.",
+  "Next, which coach. Some coaches are for ladies, some are first class, and the rest are general. Coach positions can change from train to train, so always check the signs and markings on your platform.",
+  "Now the most important part. Let people get off first, then step in. Never board or get off a moving train, and don't hang at the door. Listen to the announcement for which side the platform will be.",
+  "If anything ever feels wrong, move toward other people, a guard, or the help point, and call for help. The helpline numbers are on your screen. Save them in your phone right now.",
+  "That's it, you're ready for your first ride. Save your cheat sheet, and take care of yourself. Shubh yatra!"
+];
+
+/* Lip-sync timings, made in advance by a tool called Rhubarb.
+   For each line it lists moments like [0.42, "D"] = "at 0.42 s, mouth shape D".
+   Rhubarb's letters → the face shapes Bhau has:                         */
+const VISEME = {
+  A: 'AA_VI_01_PP',   // lips closed: P, B, M
+  B: 'AA_VI_04_DD',   // slightly open: most consonants (K, S, T…)
+  C: 'AA_VI_11_E',    // open: "eh", "ae"
+  D: 'AA_VI_10_aa',   // wide open: "aa"
+  E: 'AA_VI_13_O',    // rounded: "o", "er"
+  F: 'AA_VI_14_U',    // puckered: "oo", "w"
+  G: 'AA_VI_02_FF',   // teeth on lip: F, V
+  H: 'AA_VI_08_nn',   // tongue up: L, N
+  X: null             // resting, mouth closed
+};
+let cues = {};
+fetch('audio/lipsync.json').then((r) => r.json()).then((j) => { cues = j; }).catch(() => {});
+
+/* build i: check the voice files exist before anyone taps ▶.
+   fetch() asks the server for each file; r.ok is true when it's there (not a 404). */
+Promise.all(LINES.map((_, i) =>
+  fetch(`audio/line${i + 1}.mp3`, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)
+)).then((found) => {
+  const missing = found.map((ok, i) => (ok ? null : `line${i + 1}.mp3`)).filter(Boolean);
+  if (!missing.length) { mark('c-voice', true, 'Ready'); return; }
+  mark('c-voice', false, '', `Missing ${missing.length}`);
+  addErr(`Voice files missing: audio/${missing.join(', ')}. Upload the "audio" folder next to index.html.`);
+});
+
+let lineIdx = 0;          // which line plays next (0 = line 1)
+let speaking = null;      // the audio that's playing right now, or null
+let audioCtx = null, analyser = null, levelData = null;
+let voice = 0;            // smoothed loudness 0–1, drives the glow
+const mouth = {};         // current strength of each mouth shape (for smooth blending)
+
+function speak(i) {
+  stopSpeaking();
+  const audio = new Audio(`audio/line${i + 1}.mp3`);
+  // The "analyser" listens to the sound as it plays, so the glow can follow your voice.
+  // Browsers only allow this after a tap, which is why it's set up here, not at load.
+  try {
+    ensureAudio();                                           // build n: shared with the sound effects
+    audioCtx.createMediaElementSource(audio).connect(analyser);
+  } catch (e) { /* no analyser: he still speaks, the glow just won't pulse */ }
+
+  duckAmbience(true);                                        // build r: train dips while he talks
+  speaking = { audio, key: `line${i + 1}`, i, chunks: null, shown: -1 };   // build n: + caption state
+  // build i: say WHY it didn't play
+  /* build q: if the voice file fails —
+     1st time: try again with a fresh address (?r=…), in case the browser remembered an old failure
+     2nd time: carry on WITHOUT sound — cards and captions follow a clock instead — and say why */
+  audio.addEventListener('error', () => {
+    if (!audio._retried) {
+      audio._retried = true;
+      audio.src = `audio/line${i + 1}.mp3?r=${Date.now()}`;
+      audio.load();
+      audio.play().catch(() => {});
+      return;
+    }
+    const why = { 1: 'loading was stopped', 2: 'network problem', 3: "the file couldn't be decoded",
+                  4: 'file not found on the site (or wrong format)' }[audio.error && audio.error.code] || 'unknown reason';
+    audio._failed = true;
+    audio._t0 = clock.getElapsedTime();
+    toast(`Voice for line ${i + 1} didn't load (${why}). Showing captions and cards without sound. ` +
+          `Check that audio/line${i + 1}.mp3 opens on your site.`);
+  });
+  audio.play().catch((e) => {
+    if (e.name === 'NotAllowedError') hint('The phone blocked the sound. Tap ▶ again.');
+    // other errors are reported by the 'error' listener above
+  });
+  hint('…');                                                 // build n: captions take over as he speaks
+  $('help').hidden = true;
+  showVisuals(i, audio);                                    // build l: neon drawings for this line
+  if (i === 0) playGesture('namaste', 4.5);                 // build r: a longer namaste on "Namaste!"
+  if (i === 7) audio.addEventListener('timeupdate', function bye() {
+    if (audio.duration && audio.currentTime > audio.duration - 3.2) {   // "Shubh yatra!"
+      playGesture('namaste', 4.8);                                       // build r: held into his goodbye
+      audio.removeEventListener('timeupdate', bye);
+    }
+  });
+  $('speak').textContent = '■ Stop';
+  audio.addEventListener('ended', () => {
+    lineIdx = (i + 1) % LINES.length;
+    stopSpeaking();
+    $('hint').classList.remove('cap');
+    if (i === 7) setTimeout(startOutro, 700);               // build n: after "Shubh yatra!", he leaves
+    else hint(`Tap ▶ for line ${lineIdx + 1}`);
+  });
+}
+function stopSpeaking() {
+  duckAmbience(false);                                       // build r: train back up between lines
+  if (speaking) { speaking.audio.pause(); speaking = null; }
+  $('speak').textContent = `▶ Line ${lineIdx + 1}`;
+}
+$('speak').addEventListener('click', () => {
+  ensureAudio();
+  if (show.phase === 'gone') {                                // build n: bring him back
+    lineIdx = 0; startReveal(); stopSpeaking(); hint('Tap ▶ to hear Bhau.'); return;
+  }
+  if (show.phase === 'outro') return;
+  if (speaking) { lineIdx = (lineIdx + 1) % LINES.length; stopSpeaking(); $('hint').classList.remove('cap'); }
+  else speak(lineIdx);
+});
+
+/* Called every frame: work out the mouth shape and loudness for this moment */
+function updateSpeech(dt) {
+  // 1. Which mouth shape should be showing now?
+  let target = null;
+  if (speaking) {
+    const list = cues[speaking.key] || [];
+    const t = speaking.audio.currentTime;
+    for (const [start, shape] of list) {        // the last cue that has started wins
+      if (start <= t) target = VISEME[shape]; else break;
+    }
+  }
+  // 2. Blend smoothly toward it (real mouths don't snap between shapes)
+  if (bhau) {
+    const k = 1 - Math.exp(-dt * 22);            // about 0.05 s to catch up
+    for (const name of Object.values(VISEME)) {
+      if (!name || face[name] === undefined) continue;
+      const want = name === target ? 1 : 0;
+      mouth[name] = (mouth[name] || 0) + (want - (mouth[name] || 0)) * k;
+      bhau.morphTargetInfluences[face[name]] = mouth[name];
+    }
+  }
+  // 3. Loudness for the glow (works for every model, even without face shapes)
+  let level = 0;
+  if (speaking && analyser) {
+    analyser.getByteTimeDomainData(levelData);
+    let sum = 0;
+    for (const v of levelData) { const s = (v - 128) / 128; sum += s * s; }
+    level = Math.min(Math.sqrt(sum / levelData.length) * 4, 1);
+  }
+  voice += (level - voice) * (1 - Math.exp(-dt * 15));
+}
+
+/* =====================================================================
+   PART 3¾ — build l: neon visuals beside Bhau while he speaks
+   ===================================================================== */
+/* How it works:
+   1. A small neon "holo-screen" sits at the top of the phone screen.
+   2. It's a 2D canvas we draw on with neon lines and words.
+   3. Each line of speech has a list of drawings, each tied to a KEY WORD.
+      We estimate when that word is spoken, and draw it in at that moment.  */
+
+const NEON = { violet: '#9b6bff', blue: '#4cc9ff', pink: '#ff4fd8', orange: '#ff9a4d', green: '#5dffb0', white: '#ecebff' };
+
+// The panel is a <canvas> at the top of the screen (see #vis in the CSS).
+// It stays in view in every mode: AR at life size, camera view, and 3D.
+const VC = $('vis');                                   // 800 × 560 pixels inside, 10 : 7 shape
+const vx = VC.getContext('2d');
+
+/* ---------- the neon "pen" ---------- */
+// p = drawing progress 0 → 1. Lines draw themselves on; words fade in with a flicker.
+function pen(color, width, p) {
+  vx.strokeStyle = color; vx.fillStyle = color;
+  vx.lineWidth = width; vx.lineJoin = 'round'; vx.lineCap = 'round';
+  vx.shadowColor = color; vx.shadowBlur = 16;
+  // "dash" trick: a dash as long as the drawing, slid along, so the line appears to draw itself
+  // build r: once finished (p = 1) draw SOLID, so long outlines (the indicator board) are never cut short
+  if (p >= 1) { vx.setLineDash([]); return; }
+  vx.setLineDash([1400, 1400]);
+  vx.lineDashOffset = 1400 * (1 - p);
+}
+function glowStroke(color, width, p) {
+  pen(color, width, p);
+  vx.stroke();                                          // the coloured glow
+  vx.shadowBlur = 0; vx.lineWidth = Math.max(1.2, width * 0.3);
+  vx.strokeStyle = 'rgba(255,255,255,0.8)';
+  vx.stroke();                                          // a thin bright core, like a neon tube
+}
+function word(str, x, y, size, color, p, align = 'center') {
+  if (p <= 0) return;
+  const flick = p < 0.6 ? (Math.random() < 0.3 ? 0.3 : 1) : 1;   // flickers on, like a neon sign
+  vx.save();
+  vx.globalAlpha = Math.min(1, p * 1.6) * flick;
+  vx.setLineDash([]);
+  vx.font = `700 ${size}px Geist, "Noto Sans Devanagari", system-ui, sans-serif`;
+  vx.textAlign = align; vx.textBaseline = 'middle';
+  vx.shadowColor = color; vx.shadowBlur = 18; vx.fillStyle = color;
+  vx.fillText(str, x, y);
+  vx.shadowBlur = 0; vx.fillStyle = 'rgba(255,255,255,0.55)';
+  vx.fillText(str, x, y);
+  vx.restore();
+}
+// Draw a shape in its own little box: (x, y) = top-left, s = size scale
+function shape(x, y, s, color, width, p, build) {
+  if (p <= 0) return;
+  vx.save(); vx.translate(x, y); vx.scale(s, s);
+  vx.beginPath(); build(); vx.restore();
+  vx.save(); vx.translate(x, y); vx.scale(s, s);
+  vx.beginPath(); build();
+  glowStroke(color, width / s, p);
+  vx.restore();
+}
+const rr = (x, y, w, h, r) => { vx.roundRect ? vx.roundRect(x, y, w, h, r) : vx.rect(x, y, w, h); };
+const circle = (x, y, r) => { vx.moveTo(x + r, y); vx.arc(x, y, r, 0, Math.PI * 2); };
+
+/* ---------- the drawings (each drawn in a 100 × 100 box, then scaled) ---------- */
+const ICON = {
+  train() {      // side view of a local: 3 coaches, windows, doors, wheels
+    for (let c = 0; c < 3; c++) {
+      const x = c * 100;
+      rr(x + 2, 10, 96, 60, c === 0 ? 14 : 6);
+      for (let w = 0; w < 3; w++) rr(x + 10 + w * 28, 22, 18, 14, 3);
+      vx.moveTo(x + 44, 44); vx.lineTo(x + 44, 70); vx.moveTo(x + 56, 44); vx.lineTo(x + 56, 70);
+      circle(x + 22, 78, 7); circle(x + 78, 78, 7);
+    }
+    vx.moveTo(0, 90); vx.lineTo(300, 90);              // the track
+  },
+  ticket() {
+    vx.moveTo(10, 20); vx.lineTo(90, 20); vx.lineTo(90, 40);
+    vx.arc(90, 50, 10, -Math.PI / 2, Math.PI / 2, true);
+    vx.lineTo(90, 80); vx.lineTo(10, 80); vx.lineTo(10, 60);
+    vx.arc(10, 50, 10, Math.PI / 2, -Math.PI / 2, true); vx.closePath();
+    for (let y = 26; y < 78; y += 9) { vx.moveTo(68, y); vx.lineTo(68, y + 4); }   // perforation
+    vx.moveTo(22, 40); vx.lineTo(56, 40); vx.moveTo(22, 58); vx.lineTo(48, 58);
+  },
+  counter() {    // ticket window: roof, opening with bars
+    vx.moveTo(8, 30); vx.lineTo(50, 8); vx.lineTo(92, 30);
+    rr(14, 30, 72, 62, 4);
+    rr(28, 44, 44, 30, 4);
+    for (let x = 36; x < 72; x += 10) { vx.moveTo(x, 44); vx.lineTo(x, 74); }
+    vx.moveTo(20, 84); vx.lineTo(80, 84);
+  },
+  machine() {    // ticket machine: tall box, screen, buttons, slot
+    rr(22, 4, 56, 92, 8);
+    rr(32, 14, 36, 28, 3);
+    circle(38, 54, 3); circle(50, 54, 3); circle(62, 54, 3);
+    circle(38, 64, 3); circle(50, 64, 3); circle(62, 64, 3);
+    vx.moveTo(36, 82); vx.lineTo(64, 82);
+  },
+  phone() {      // phone with a little ticket on screen
+    rr(28, 4, 44, 92, 9);
+    vx.moveTo(44, 12); vx.lineTo(56, 12);
+    rr(36, 30, 28, 22, 3); vx.moveTo(41, 38); vx.lineTo(58, 38); vx.moveTo(41, 45); vx.lineTo(52, 45);
+    circle(50, 84, 4);
+  },
+  guard() {      // person with a cap and a whistle cord
+    circle(50, 24, 12);
+    vx.moveTo(34, 14); vx.lineTo(66, 14); vx.moveTo(38, 14); vx.lineTo(42, 6); vx.lineTo(58, 6); vx.lineTo(62, 14);
+    vx.moveTo(50, 36); vx.lineTo(50, 70);
+    vx.moveTo(50, 44); vx.lineTo(30, 60); vx.moveTo(50, 44); vx.lineTo(70, 58);
+    vx.moveTo(50, 70); vx.lineTo(36, 96); vx.moveTo(50, 70); vx.lineTo(64, 96);
+    vx.moveTo(50, 44); vx.quadraticCurveTo(58, 52, 66, 48); circle(70, 47, 4);
+  },
+  helpPoint() {  // a pillar with a big button and a light
+    rr(30, 6, 40, 90, 6);
+    circle(50, 22, 6);
+    circle(50, 52, 13); circle(50, 52, 6);
+    vx.moveTo(38, 78); vx.lineTo(62, 78);
+  },
+  phoneList() {  // phone with a list on screen
+    rr(28, 4, 44, 92, 9);
+    for (let i = 0; i < 3; i++) { circle(40, 30 + i * 16, 3); vx.moveTo(48, 30 + i * 16); vx.lineTo(62, 30 + i * 16); }
+    circle(50, 84, 4);
+  },
+  doc() {        // cheat sheet with a tick
+    vx.moveTo(22, 6); vx.lineTo(64, 6); vx.lineTo(80, 22); vx.lineTo(80, 94); vx.lineTo(22, 94); vx.closePath();
+    vx.moveTo(64, 6); vx.lineTo(64, 22); vx.lineTo(80, 22);
+    for (let y = 36; y < 70; y += 11) { vx.moveTo(32, y); vx.lineTo(68, y); }
+    vx.moveTo(34, 80); vx.lineTo(42, 87); vx.lineTo(56, 74);
+  },
+  speaker() {
+    vx.moveTo(14, 38); vx.lineTo(30, 38); vx.lineTo(50, 20); vx.lineTo(50, 80); vx.lineTo(30, 62); vx.lineTo(14, 62); vx.closePath();
+    vx.moveTo(62, 36); vx.quadraticCurveTo(72, 50, 62, 64);
+    vx.moveTo(72, 26); vx.quadraticCurveTo(88, 50, 72, 74);
+  },
+  noEntry() {    // circle with a slash over a moving train
+    circle(50, 50, 44);
+    vx.moveTo(19, 19); vx.lineTo(81, 81);
+    rr(28, 38, 44, 26, 5); vx.moveTo(18, 44); vx.lineTo(8, 44); vx.moveTo(18, 54); vx.lineTo(4, 54);
+  },
+  sparkle() {
+    vx.moveTo(50, 10); vx.lineTo(56, 44); vx.lineTo(90, 50); vx.lineTo(56, 56);
+    vx.lineTo(50, 90); vx.lineTo(44, 56); vx.lineTo(10, 50); vx.lineTo(44, 44); vx.closePath();
+  }
+};
+// small arrow helper (from → to)
+function arrow(x1, y1, x2, y2) {
+  vx.moveTo(x1, y1); vx.lineTo(x2, y2);
+  const a = Math.atan2(y2 - y1, x2 - x1);
+  vx.moveTo(x2, y2); vx.lineTo(x2 - 14 * Math.cos(a - 0.5), y2 - 14 * Math.sin(a - 0.5));
+  vx.moveTo(x2, y2); vx.lineTo(x2 - 14 * Math.cos(a + 0.5), y2 - 14 * Math.sin(a + 0.5));
+}
+// fast vs slow: stations on a line; FAST jumps over the small ones
+function stationLine(x, y, w, p, showSlow, showFast) {
+  const st = [0, 0.2, 0.4, 0.6, 0.8, 1];
+  const big = [true, false, true, false, false, true];
+  shape(x, y, 1, NEON.blue, 4, p, () => {
+    vx.moveTo(0, 0); vx.lineTo(w, 0);
+    st.forEach((f, i) => circle(f * w, 0, big[i] ? 11 : 6));
+  });
+  if (showFast > 0) shape(x, y, 1, NEON.green, 4, showFast, () => {
+    vx.moveTo(0, -14); vx.quadraticCurveTo(0.2 * w, -60, 0.4 * w, -14);
+    vx.moveTo(0.4 * w, -14); vx.quadraticCurveTo(0.7 * w, -76, w, -14);
+  });
+  if (showSlow > 0) shape(x, y, 1, NEON.violet, 3, showSlow, () => {
+    for (let i = 0; i < 5; i++) { vx.moveTo(st[i] * w, 18); vx.quadraticCurveTo((st[i] + 0.1) * w, 40, st[i + 1] * w, 18); }
+  });
+}
+
+/* ---------- the scenes: one per line. "key" = the word that triggers each drawing ---------- */
+const SCENES = [
+  [ // line 1
+    { key: 'Mumbai local', draw: (p) => { word('MUMBAI LOCAL', 400, 90, 68, NEON.pink, p);
+                                          shape(100, 170, 2.0, NEON.blue, 5, p, ICON.train); } },
+    { key: 'Five quick', draw: (p) => { for (let i = 0; i < 5; i++) {
+                                          const q = Math.min(1, Math.max(0, p * 5 - i));
+                                          shape(230 + i * 70, 430, 1, NEON.violet, 4, q, () => circle(0, 0, 22));
+                                          word(String(i + 1), 230 + i * 70, 431, 26, NEON.white, q); }
+                                        word('5 QUICK THINGS', 400, 505, 30, NEON.violet, p); } }
+  ],
+  [ // line 2
+    { key: 'the ticket', draw: (p) => { shape(290, 10, 2.2, NEON.orange, 5, p, ICON.ticket);
+                                        word('TICKET', 400, 240, 40, NEON.orange, p); } },
+    { key: 'ticket window', draw: (p) => { shape(80, 290, 1.5, NEON.blue, 4, p, ICON.counter); word('COUNTER', 155, 470, 26, NEON.blue, p); } },
+    { key: 'ticket machine', draw: (p) => { shape(325, 290, 1.5, NEON.blue, 4, p, ICON.machine); word('MACHINE', 400, 470, 26, NEON.blue, p); } },
+    { key: 'phone', draw: (p) => { shape(570, 290, 1.5, NEON.blue, 4, p, ICON.phone); word('PHONE', 645, 470, 26, NEON.blue, p); } },
+    { key: 'before you board', draw: (p) => word('✓ BUY BEFORE YOU BOARD', 400, 525, 30, NEON.green, p) }
+  ],
+  [ // line 3
+    { key: 'board', draw: (p) => {
+        shape(60, 30, 1, NEON.blue, 4, p, () => { rr(0, 0, 680, 290, 14); vx.moveTo(0, 60); vx.lineTo(680, 60); });
+        const cols = [[128, 'TIME'], [335, 'TO'], [530, 'F / S'], [640, 'CARS']];
+        cols.forEach(([x, t]) => word(t, x, 58, 24, NEON.violet, p));
+        [['09:14', 'CHURCHGATE', 'F', '12'], ['09:17', 'BORIVALI', 'S', '12'], ['09:21', 'VIRAR', 'F', '15']]
+          .forEach((r, i) => r.forEach((t, j) => word(t, cols[j][0], 135 + i * 62, 32, NEON.orange, p)));
+        word('EXAMPLE', 700, 345, 16, NEON.violet, p, 'right'); } },
+    { key: 'fast or slow', draw: (p) => { shape(485, 95, 1, NEON.pink, 4, p, () => rr(0, 0, 90, 215, 10));
+                                          word('F = FAST    S = SLOW', 400, 385, 34, NEON.pink, p); } },
+    { key: 'coaches', draw: (p) => shape(598, 95, 1, NEON.green, 4, p, () => rr(0, 0, 84, 215, 10)) },
+    { key: 'skip the smaller', draw: (p) => stationLine(130, 480, 540, p, p, p) },
+    { key: 'which train', draw: (p) => word('?', 720, 470, 70, NEON.white, p) }
+  ],
+  [ // line 4
+    { key: 'Bilkul', draw: (p) => word('BILKUL SAHI! ✓', 400, 70, 52, NEON.green, p) },
+    { key: 'fast one', draw: (p) => { stationLine(110, 280, 580, p, p * 0.6, p);
+                                      word('FAST', 400, 180, 36, NEON.green, p); word('SLOW', 580, 345, 28, NEON.violet, p * 0.7); } },
+    { key: 'stops at your station', draw: (p) => {
+        // a pin under a BIG station (one the fast train stops at)
+        shape(342, 300, 1, NEON.orange, 4, p, () => { vx.moveTo(0, 0); vx.lineTo(0, 74); circle(0, 92, 16); });
+        word('YOUR STATION?', 342, 450, 30, NEON.orange, p); word('CHECK IT STOPS THERE', 342, 492, 22, NEON.orange, p); } }
+  ],
+  [ // line 5
+    { key: 'which coach', draw: (p) => word('WHICH COACH?', 400, 60, 50, NEON.white, p) },
+    { key: 'ladies', draw: (p) => { shape(220, 150, 1, NEON.pink, 5, p, () => rr(0, 0, 170, 110, 12)); word('LADIES', 305, 205, 30, NEON.pink, p); } },
+    { key: 'first class', draw: (p) => { shape(410, 150, 1, NEON.violet, 5, p, () => rr(0, 0, 170, 110, 12)); word('1ST CLASS', 495, 205, 28, NEON.violet, p); } },
+    { key: 'general', draw: (p) => { shape(30, 150, 1, NEON.blue, 5, p, () => rr(0, 0, 170, 110, 12)); word('GENERAL', 115, 205, 28, NEON.blue, p);
+                                     shape(600, 150, 1, NEON.blue, 5, p, () => rr(0, 0, 170, 110, 12)); word('GENERAL', 685, 205, 28, NEON.blue, p); } },
+    { key: 'can change', draw: (p) => { shape(30, 300, 1, NEON.orange, 3, p, () => { arrow(320, 0, 470, 0); arrow(470, 0, 320, 0); });
+                                        word('POSITIONS CAN CHANGE', 400, 345, 26, NEON.orange, p); } },
+    { key: 'signs and markings', draw: (p) => { shape(30, 410, 1, NEON.green, 4, p, () => { vx.moveTo(0, 30); vx.lineTo(740, 30);
+                                                  for (let x = 40; x < 740; x += 120) rr(x, 0, 60, 22, 4); });
+                                                word('CHECK THE PLATFORM SIGNS', 400, 505, 30, NEON.green, p); } }
+  ],
+  [ // line 6
+    { key: 'get off first', draw: (p) => { shape(40, 30, 1, NEON.blue, 4, p, () => { rr(0, 0, 120, 190, 8); vx.moveTo(60, 0); vx.lineTo(60, 190); });
+                                           shape(40, 30, 1, NEON.green, 5, p, () => { arrow(60, 95, 230, 60); });
+                                           word('1  OFF', 300, 70, 32, NEON.green, p, 'left'); } },
+    { key: 'step in', draw: (p) => { shape(40, 30, 1, NEON.orange, 5, p, () => { arrow(230, 140, 70, 120); });
+                                     word('2  ON', 300, 160, 32, NEON.orange, p, 'left'); } },
+    { key: 'moving train', draw: (p) => { shape(560, 20, 1.8, NEON.pink, 3, p, ICON.noEntry); word('NEVER WHEN MOVING', 650, 215, 22, NEON.pink, p); } },
+    { key: 'which side', draw: (p) => {
+        shape(100, 270, 1, NEON.violet, 4, p, () => { rr(250, 0, 100, 200, 14);                   // train from above
+                                                       vx.moveTo(150, -10); vx.lineTo(150, 210); vx.moveTo(450, -10); vx.lineTo(450, 210); });
+        shape(100, 270, 1, NEON.orange, 5, p, () => { arrow(240, 100, 60, 100); arrow(360, 100, 540, 100); });
+        word('LEFT', 170, 420, 34, NEON.orange, p); word('RIGHT', 630, 420, 34, NEON.orange, p);
+        shape(300, 460, 0.7, NEON.green, 4, p, ICON.speaker); word('LISTEN', 380, 495, 28, NEON.green, p, 'left'); } }
+  ],
+  [ // line 7
+    { key: 'other people', draw: (p) => { for (let i = 0; i < 3; i++) shape(250 + i * 90, 20, 0.9, NEON.violet, 4, p, ICON.guard);
+                                          word('STAY NEAR PEOPLE', 400, 135, 30, NEON.violet, p); } },
+    { key: 'guard', draw: (p) => { shape(60, 190, 1.7, NEON.blue, 4, p, ICON.guard); word('GUARD', 145, 380, 28, NEON.blue, p); } },
+    { key: 'help point', draw: (p) => { shape(315, 190, 1.7, NEON.orange, 4, p, ICON.helpPoint); word('HELP POINT', 400, 380, 28, NEON.orange, p); } },
+    { key: 'helpline numbers', draw: (p) => { shape(570, 190, 1.7, NEON.pink, 4, p, ICON.phoneList); word('HELPLINES', 655, 380, 28, NEON.pink, p);
+                                              word('112 · 139 · 1512', 400, 450, 40, NEON.white, p);
+                                              word('SAVE THEM IN YOUR PHONE', 400, 510, 26, NEON.green, p); } }
+  ],
+  [ // line 8 — build r: just "Shubh yatra!", in Hindi and English
+    { key: 'Shubh yatra', draw: (p) => {
+        word('शुभ यात्रा!', 400, 230, 120, NEON.orange, p);
+        word('SHUBH YATRA!', 400, 375, 58, NEON.pink, p); } }
+  ]
+];
+
+/* ---------- WHEN is a key word spoken? ----------
+   Rhubarb gave us mouth-shape timings. "X" means the mouth is resting (a pause).
+   We add up only the TALKING time, then place the word at the same fraction
+   of the talking time as its position in the sentence.
+   Example: a word 40% of the way through the text ≈ 40% of the way through the talking. */
+function wordTime(i, key, duration) {
+  const text = LINES[i];
+  const at = text.toLowerCase().indexOf(key.toLowerCase());
+  return timeAt(i, at < 0 ? 0 : at / text.length, duration);
+}
+// build n: the time at which a point f (0–1 through the text) is spoken
+function timeAt(i, f, duration) {
+  const list = cues[`line${i + 1}`];
+  if (!list || !list.length) return f * (duration || 10);
+  const segs = [];                                   // [start, end] of each talking stretch
+  for (let k = 0; k < list.length; k++) {
+    const end = k + 1 < list.length ? list[k + 1][0] : (duration || list[k][0]);
+    if (list[k][1] !== 'X') segs.push([list[k][0], end]);
+  }
+  const total = segs.reduce((s, [a, b]) => s + (b - a), 0);
+  let want = f * total;
+  for (const [a, b] of segs) { if (want <= b - a) return a + want; want -= b - a; }
+  return f * (duration || 10);
+}
+
+/* ---------- playing a scene ---------- */
+let vis = null;          // { line, audio, times[] } while a scene is showing
+let visFade = 0;         // panel brightness 0–1
+function showVisuals(i, audio) {
+  vis = { line: i, audio, times: null, endedAt: null };
+  audio.addEventListener('loadedmetadata', () => { vis && vis.audio === audio && (vis.times = null); });
+  audio.addEventListener('ended', () => { if (vis && vis.audio === audio) vis.endedAt = clock.getElapsedTime(); });
+}
+function hideVisuals() { vis = null; }
+
+function updateVisuals(dt) {
+  const t = clock.getElapsedTime();
+  // keep the scene up for 4 s after the line ends, then fade.
+  // build r: and only once its first drawing has appeared (no empty card)
+  const started = !!vis && !!vis.times && (vis.endedAt !== null || lineNow(vis.audio) >= Math.min(...vis.times));
+  const on = !!vis && started && (vis.endedAt === null || t - vis.endedAt < 4);
+  visFade += ((on ? 1 : 0) - visFade) * (1 - Math.exp(-dt * 6));
+  // the helpline card takes the panel's place when it's showing
+  VC.style.opacity = $('help').hidden ? visFade.toFixed(3) : '0';
+  if (visFade > 0.01) placePanel();
+  if (!vis) return;
+  const scene = SCENES[vis.line];
+  const now = vis.endedAt === null ? lineNow(vis.audio) : 99;                 // build q: works without sound too
+  if (!vis.times && (vis.audio.duration > 0 || vis.audio._failed))
+    vis.times = scene.map((s) => Math.max(0, wordTime(vis.line, s.key, lineDur(vis.audio, vis.line)) - 0.15));
+  if (!vis.times) return;
+  // redraw only while something is still drawing in (saves battery)
+  const progress = vis.times.map((st) => THREE.MathUtils.clamp((now - st) / 0.7, 0, 1));
+  const key = progress.map((v) => v.toFixed(2)).join();
+  if (key === vis.lastKey) return;
+  vis.lastKey = key;
+  vx.clearRect(0, 0, VC.width, VC.height);
+  scene.forEach((s, k) => { if (progress[k] > 0) s.draw(progress[k]); });
+  // build n: a soft blip as each drawing appears; a chime for "Bilkul sahi!" and the helplines
+  vis.fired = vis.fired || [];
+  progress.forEach((v, k) => {
+    if (v > 0 && !vis.fired[k] && vis.endedAt === null) {
+      vis.fired[k] = true;
+      ((vis.line === 3 && k === 0) || (vis.line === 6 && k === 3)) ? sfxChime() : sfxBlip();
+    }
+  });
+  // line 7: show the helpline card once "helpline numbers" is said
+  if (vis.line === 6 && progress[3] > 0) $('help').hidden = false;
+}
+
+// in AR, taps on the card must not also count as "place Bhau"
+$('help').addEventListener('beforexrselect', (e) => e.preventDefault());
+
+/* ---------- build m: keep the card BELOW his face ----------
+   Every frame: find his shoulders in the room, turn that 3D point into a
+   point on your screen ("projection"), and start the card just below it.
+   If there's not enough room below his shoulders (he's very low on screen),
+   the card goes back to the top of the screen.                              */
+const _sh = new THREE.Vector3();
+function placePanel() {
+  const cam = renderer.xr.isPresenting ? renderer.xr.getCamera() : camera;
+  const maxW = Math.min(innerWidth - 32, 300);             // build r: smaller cards (was 440)
+  const topMin = 56;
+  const bottomTop = $('bottom').getBoundingClientRect().top - 10;
+  const natural = maxW * 0.7;                              // the card's natural height (10 : 7)
+  const toScreenY = (v) => { v.project(cam); return v.z < 1 ? (1 - v.y) / 2 * innerHeight : null; };
+  /* build r: his FACE runs from just above his head down to his shoulders.
+     The card may go fully BELOW the shoulders or fully ABOVE the head — never across the face.
+     It shrinks to fit; if even a small card won't fit, it fades out for now
+     (the captions still carry the words).                                       */
+  let shY = null, headY = null;
+  if (rig && rig.L.up && rig.R.up && rig.head && holo.visible) {
+    shY = toScreenY(rig.L.up.getWorldPosition(_sh).add(rig.R.up.getWorldPosition(new THREE.Vector3())).multiplyScalar(0.5));
+    rig.head.getWorldPosition(_sh); _sh.y += 0.16 * holo.scale.x;
+    headY = toScreenY(_sh);
+  }
+  let top = topMin, h = natural, fits = true;
+  if (shY !== null && headY !== null) {
+    const below = { top: Math.max(topMin, shY + 10), room: bottomTop - Math.max(topMin, shY + 10) };
+    const above = { top: topMin, room: headY - 8 - topMin };
+    const pick = below.room >= natural ? below : above.room >= natural ? above : (below.room >= above.room ? below : above);
+    top = pick.top; h = Math.min(natural, pick.room);
+    fits = h >= 80;                                          // smaller than this is unreadable
+  }
+  VC.style.top = top + 'px';
+  VC.style.height = Math.max(h, 80) + 'px';
+  VC.style.width = (Math.max(h, 80) / 0.7) + 'px';
+  if (!fits) VC.style.opacity = '0';
+}
+
+/* ---------- build l: QR code to open this page on a phone (shown on computers) ---------- */
+function makeQR() {
+  if (typeof qrcode === 'undefined') return;            // QR library didn't load: skip quietly
+  const url = new URL(location.href);
+  ['debug', 'v'].forEach((k) => url.searchParams.delete(k));
+  const qr = qrcode(0, 'M');                            // 0 = pick the size automatically, M = medium error correction
+  qr.addData(url.toString()); qr.make();
+  const n = qr.getModuleCount(), cell = 6, quiet = 4;   // quiet = blank border scanners need
+  const c = $('qr'); c.width = c.height = (n + quiet * 2) * cell;
+  const g = c.getContext('2d');
+  g.fillStyle = '#ecebff'; g.fillRect(0, 0, c.width, c.height);   // light background: every scanner can read it
+  g.fillStyle = '#05060A';
+  for (let r = 0; r < n; r++) for (let q = 0; q < n; q++)
+    if (qr.isDark(r, q)) g.fillRect((q + quiet) * cell, (r + quiet) * cell, cell, cell);
+  $('qrbox').hidden = false;
+}
+// Computers: mouse pointer and no touch screen
+if (matchMedia('(pointer: fine)').matches && !('ontouchstart' in window)) makeQR();
+
+/* =====================================================================
+   PART 3⅞ — build n: sound effects, made live with the Web Audio API
+   ===================================================================== */
+/* No sound files: every effect is built from two raw ingredients —
+     • an OSCILLATOR: a pure tone at a frequency (Hz) we can glide up or down
+     • NOISE: random hiss, which a "bandpass" filter turns into a whoosh
+   A GAIN is a volume knob we can turn over time (an "envelope").
+   All effects go into sfxBus (the effects' master volume) and a little echo ("space"). */
+let sfxBus = null, space = null, noiseBuf = null;
+
+function ensureAudio() {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();               // listens to Bhau's voice (for the glow)
+      analyser.fftSize = 512;
+      levelData = new Uint8Array(analyser.fftSize);
+      analyser.connect(audioCtx.destination);
+    }
+    if (!sfxBus) {
+      sfxBus = audioCtx.createGain(); sfxBus.gain.value = 1.6;    // effects volume: clearly heard, still below his voice
+      sfxBus.connect(audioCtx.destination);
+      // "space": a short echo that repeats softer each time (delay + feedback)
+      space = audioCtx.createDelay(1); space.delayTime.value = 0.21;
+      const fb = audioCtx.createGain(); fb.gain.value = 0.38;
+      const tone = audioCtx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 3200;
+      space.connect(tone); tone.connect(fb); fb.connect(space); tone.connect(sfxBus);
+      // one second of random numbers = white noise, reused for every whoosh
+      noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    audioCtx.resume();
+    return audioCtx;
+  } catch (e) { return null; }
+}
+// send a sound to the speakers, dry + a little into the echo
+function out(node, wet = 0.5, pan = 0) {
+  let n = node;
+  if (audioCtx.createStereoPanner && pan) { const p = audioCtx.createStereoPanner(); p.pan.value = pan; n.connect(p); n = p; }
+  n.connect(sfxBus);
+  const w = audioCtx.createGain(); w.gain.value = wet; n.connect(w); w.connect(space);
+}
+// an envelope: silent → peak (attack) → hold → silent (release)
+function env(g, t0, peak, attack, hold, release) {
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(peak, t0 + attack);
+  g.gain.setValueAtTime(peak, t0 + attack + hold);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + attack + hold + release);
+}
+function tone(type, f0, f1, t0, dur, peak, attack = 0.01, pan = 0, wet = 0.5) {
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f0, t0);
+  if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+  env(g, t0, peak, attack, 0, Math.max(0.02, dur - attack));
+  o.connect(g); out(g, wet, pan); o.start(t0); o.stop(t0 + dur + 0.05);
+}
+function whoosh(f0, f1, t0, dur, peak) {
+  const s = audioCtx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const bp = audioCtx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.4;
+  bp.frequency.setValueAtTime(f0, t0); bp.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+  const g = audioCtx.createGain(); env(g, t0, peak, dur * 0.35, dur * 0.2, dur * 0.45);
+  s.connect(bp); bp.connect(g); out(g, 0.6); s.start(t0); s.stop(t0 + dur + 0.05);
+}
+// rising "power-up" hum: two slightly out-of-tune saw waves through an opening filter
+function sweep(f0, f1, t0, dur, peak) {
+  const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(f0 < f1 ? 300 : 5000, t0);
+  lp.frequency.exponentialRampToValueAtTime(f0 < f1 ? 5000 : 250, t0 + dur);
+  const g = audioCtx.createGain(); env(g, t0, peak, 0.25, dur - 0.65, 0.4);
+  for (const det of [-9, 9]) {
+    const o = audioCtx.createOscillator(); o.type = 'sawtooth'; o.detune.value = det;
+    o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    o.connect(lp); o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  lp.connect(g); out(g, 0.4);
+}
+// glitter: many tiny bell pings from a pleasant scale, scattered left and right
+const GLITTER = [1046.5, 1174.7, 1318.5, 1568, 1760, 2093, 2349.3, 2637, 3136, 3520];
+function glitter(t0, dur, count, falling = false) {
+  for (let i = 0; i < count; i++) {
+    const f = i / count;
+    const at = t0 + dur * (falling ? f : Math.sqrt(f));              // rising: denser toward the end
+    const k = falling ? GLITTER.length - 1 - Math.floor(f * GLITTER.length) : Math.floor(Math.random() * GLITTER.length);
+    tone('sine', GLITTER[k], GLITTER[k], at + Math.random() * 0.05, 0.28, 0.035 + Math.random() * 0.03, 0.004,
+         Math.random() * 1.6 - 0.8, 0.7);
+  }
+}
+
+/* The two big moments — timed to match the visuals in the animation loop */
+function sfxArrive() {
+  if (!ensureAudio() || !sfxBus) return;
+  const t0 = audioCtx.currentTime + 0.02;
+  whoosh(300, 7000, t0, 1.9, 0.20);            // the beam rushing up
+  sweep(110, 880, t0 + 0.1, 1.8, 0.07);         // power-up hum
+  glitter(t0 + 0.7, 2.2, 34);                   // digital shimmer while he builds up
+  for (const [f, g] of [[1046.5, 0.06], [1568, 0.045], [2093, 0.03]])   // a soft "ding" as he completes
+    tone('sine', f, f, t0 + 2.7, 1.6, g, 0.01, 0, 0.6);
+}
+function sfxDepart() {
+  if (!ensureAudio() || !sfxBus) return;
+  const t0 = audioCtx.currentTime + 0.02;
+  glitter(t0, 2.0, 30, true);                   // shimmer, falling in pitch
+  sweep(1100, 90, t0 + 0.3, 2.4, 0.07);         // power-down
+  whoosh(6500, 250, t0 + 0.4, 2.2, 0.18);       // the beam sinking
+  tone('sine', 150, 42, t0 + 2.85, 0.45, 0.30, 0.005, 0, 0.2);   // soft thump into the circle
+}
+function sfxBlip() {                            // a card drawing appears
+  if (!sfxBus) return;
+  const t0 = audioCtx.currentTime;
+  tone('sine', 1318.5, 1760, t0, 0.09, 0.035, 0.004, 0.3, 0.4);
+}
+function sfxChime() {                           // "Bilkul sahi!" and the helpline card
+  if (!sfxBus) return;
+  const t0 = audioCtx.currentTime;
+  tone('triangle', 1046.5, 1046.5, t0, 0.5, 0.06, 0.005, 0, 0.5);
+  tone('triangle', 1568, 1568, t0 + 0.12, 0.7, 0.06, 0.005, 0, 0.5);
+}
+
+/* =====================================================================
+   build r: a very subtle MOVING-TRAIN background, made live with Web Audio
+   ===================================================================== */
+/* Three layers, all from noise and tones — no sound files:
+     1. RUMBLE — deep noise through a "lowpass" filter (only the low notes get through),
+                 slowly swelling up and down like a moving coach
+     2. HISS   — a faint band of noise in the middle range: steel wheels on rails
+     3. CLACKS — "da-dum … da-dum": wheels crossing the joints between rails.
+                 Each clack = a tiny burst of low noise + a quick low thud.
+   Everything goes through ambBus, which we fade in, fade out, and dip ("duck")
+   while Bhau is speaking so his voice stays clear.                          */
+let ambBus = null, ambTimer = null, ambNext = 0, ambSources = [];
+const AMB_LEVEL = 0.20;            // overall loudness of the background: subtle (raised from 0.10 after listening)
+
+function ambBuild(ctx, dest) {
+  const bus = ctx.createGain(); bus.gain.value = 0.0001; bus.connect(dest);
+  const noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+  const d = noise.getChannelData(0); let last = 0;
+  for (let i = 0; i < d.length; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }  // "brown" noise: deep, soft
+  const loopNoise = () => { const s = ctx.createBufferSource(); s.buffer = noise; s.loop = true; return s; };
+  // 1. rumble
+  const r = loopNoise(), lp = ctx.createBiquadFilter(), rg = ctx.createGain();
+  lp.type = 'lowpass'; lp.frequency.value = 230; rg.gain.value = 0.9;   // a touch brighter, so phone speakers can play it
+  const lfo = ctx.createOscillator(), lfoG = ctx.createGain();         // slow swell (one every ~7 s)
+  lfo.frequency.value = 0.14; lfoG.gain.value = 0.35; lfo.connect(lfoG); lfoG.connect(rg.gain);
+  r.connect(lp); lp.connect(rg); rg.connect(bus);
+  // 2. hiss
+  const h = loopNoise(), bp = ctx.createBiquadFilter(), hg = ctx.createGain();
+  bp.type = 'bandpass'; bp.frequency.value = 1100; bp.Q.value = 0.7; hg.gain.value = 0.14;
+  h.connect(bp); bp.connect(hg); hg.connect(bus);
+  [r, h, lfo].forEach((n) => n.start());
+  return { bus, noise, stops: [r, h, lfo] };
+}
+// one "clack": a short low thud
+function ambClack(ctx, bus, noise, t, loud) {
+  const s = ctx.createBufferSource(); s.buffer = noise;
+  const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 750;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1.6 * loud, t + 0.006);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+  s.connect(f); f.connect(g); g.connect(bus); s.start(t, Math.random()); s.stop(t + 0.12);
+  const o = ctx.createOscillator(), og = ctx.createGain();
+  o.frequency.setValueAtTime(95, t); o.frequency.exponentialRampToValueAtTime(48, t + 0.08);
+  og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(0.5 * loud, t + 0.004);
+  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+  o.connect(og); og.connect(bus); o.start(t); o.stop(t + 0.12);
+}
+// schedule the "da-dum … da-dum" pattern between two times
+function ambSchedule(ctx, bus, noise, from, to) {
+  let t = from;
+  while (t < to) {
+    const jitter = () => (Math.random() - 0.5) * 0.012;               // tiny human-ish unevenness
+    ambClack(ctx, bus, noise, t + jitter(), 1.0);                     // da-
+    ambClack(ctx, bus, noise, t + 0.14 + jitter(), 0.8);              //    -dum
+    ambClack(ctx, bus, noise, t + 0.62 + jitter(), 0.9);              // da-
+    ambClack(ctx, bus, noise, t + 0.76 + jitter(), 0.7);              //    -dum
+    t += 1.25;                                                        // the next rail joint
+  }
+  return t;
+}
+// live use in the page
+function startAmbience() {
+  if (!ensureAudio() || !sfxBus) return;
+  if (!ambBus) {
+    const a = ambBuild(audioCtx, audioCtx.destination);
+    ambBus = a.bus; ambBus._noise = a.noise; ambSources = a.stops;
+    ambNext = audioCtx.currentTime + 0.5;
+    // "lookahead": every 0.25 s, book the clacks for the next second (smooth timing even if the page is busy)
+    ambTimer = setInterval(() => {
+      if (audioCtx.currentTime + 1.0 > ambNext) ambNext = ambSchedule(audioCtx, ambBus, ambBus._noise, ambNext, audioCtx.currentTime + 1.5);
+    }, 250);
+  }
+  ambBus.gain.cancelScheduledValues(audioCtx.currentTime);
+  ambBus.gain.setTargetAtTime(AMB_LEVEL, audioCtx.currentTime, 1.0);  // fade in over ~3 s
+}
+function stopAmbience(fast) {
+  if (!ambBus) return;
+  const now = audioCtx.currentTime, bus = ambBus, srcs = ambSources;
+  bus.gain.cancelScheduledValues(now);
+  bus.gain.setTargetAtTime(0.0001, now, fast ? 0.1 : 0.8);           // fade out
+  clearInterval(ambTimer); ambTimer = null; ambBus = null;
+  setTimeout(() => { srcs.forEach((s) => { try { s.stop(); } catch (e) {} }); bus.disconnect(); }, fast ? 600 : 4000);
+}
+// dip under Bhau's voice: 35% while he talks, back to full when he stops
+function duckAmbience(talking) {
+  if (!ambBus) return;
+  ambBus.gain.setTargetAtTime(talking ? AMB_LEVEL * 0.35 : AMB_LEVEL, audioCtx.currentTime, 0.25);
+}
+
+/* ---------- build q: the line's clock ----------
+   Normally the cards and captions follow the audio's own clock (currentTime).
+   If the audio failed, they follow a stopwatch started at the failure instead,
+   and the line's length comes from the lip-sync timings.                    */
+function lineDur(audio, i) {
+  if (isFinite(audio.duration) && audio.duration > 0 && !audio._failed) return audio.duration;
+  const list = cues[`line${i + 1}`];
+  return list && list.length ? list[list.length - 1][0] + 0.6 : 10;
+}
+function lineNow(audio) {
+  return audio._failed ? clock.getElapsedTime() - audio._t0 : audio.currentTime;
+}
+let toastTimer = null;
+function toast(msg) {
+  $('toast').textContent = msg; $('toast').hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; }, 9000);
+}
+
+/* ---------- build n: running captions ----------
+   The line is cut into short pieces (up to 4 words, or at a comma / full stop),
+   each timed the same way as the drawings: by its place in the talking time. */
+function chunksFor(i) {
+  const text = LINES[i], words = text.split(' ');
+  const out = []; let cur = [], startChar = 0, pos = 0;
+  for (const w of words) {
+    if (!cur.length) startChar = pos;
+    cur.push(w); pos += w.length + 1;
+    if (cur.length >= 4 || /[,.?!]$/.test(w)) { out.push({ text: cur.join(' '), f: startChar / text.length }); cur = []; }
+  }
+  if (cur.length) out.push({ text: cur.join(' '), f: startChar / text.length });
+  return out;
+}
+function updateCaption() {
+  if (!speaking) return;
+  const a = speaking.audio;
+  if (!speaking.chunks) {
+    if (!(a.duration > 0) && !a._failed) return;    // wait until we know how long the line is
+    const d = lineDur(a, speaking.i);
+    speaking.chunks = chunksFor(speaking.i).map((c) => ({ ...c, t: timeAt(speaking.i, c.f, d) - 0.1 }));
+  }
+  let n = 0;
+  const now = lineNow(a);
+  speaking.chunks.forEach((c, k) => { if (c.t <= now) n = k; });
+  // build q: with no sound there's no 'ended' event, so end the line ourselves on time
+  if (a._failed && now > lineDur(a, speaking.i) && !a._fakeEnded) { a._fakeEnded = true; a.dispatchEvent(new Event('ended')); return; }
+  if (n === speaking.shown) return;
+  speaking.shown = n;
+  const h = $('hint');
+  h.classList.remove('cap'); void h.offsetWidth; h.classList.add('cap');   // restart the little pop-in
+  h.textContent = speaking.chunks[n].text;
+}
+
+/* =====================================================================
+   PART 4 — The animation loop
+   ===================================================================== */
+const clock = new THREE.Clock();
+let nextBlink = 2;
+let lastT = 0;
+
+renderer.setAnimationLoop((time, frame) => {
+  const t = clock.getElapsedTime();
+  const dt = Math.min(t - lastT, 0.1);   // seconds since the last frame
+  lastT = t;
+  resetBody();                           // build j: bones back to rest
+  if (mixer) mixer.update(dt);           // build f: move the idle animation forward
+  if (mixer && rig) rig.bones.forEach((b, i) => rig.base[i].copy(b.quaternion));   // build l: remember it
+  updateSpeech(dt);                      // build g: lips and voice glow
+  // build j: wave hello once he has finished building up
+  // build r: greet with a namaste (the wave twisted his arm, so it's gone)
+  if (show.phase === 'intro' && !greeted && t - show.start > 2.8) { greeted = true; playGesture('namaste', 4.5); }
+  updateBody(t);                         // build j: gestures and nodding
+  updateVisuals(dt);                     // build l: neon drawings beside him
+
+  // build n: arrival / departure — circle, beam and build-up all follow the show state
+  const st = showState(t);
+  const reveal = st.reveal;
+  const k = Math.max(0.001, st.ring);
+  ring.scale.set(k, 1, k);
+  ring.material.opacity = Math.min(1, 0.9 * st.ring + 0.8 * st.flash);
+  pad.material.opacity = st.ring;
+  underGlow.scale.set(0.9 * k, 0.18 * k, 1);
+  beam.scale.y = Math.max(0.001, st.beamH);
+  beamMat.uniforms.uOpacity.value = st.beamA;
+  beamMat.uniforms.uTime.value = t;
+  halo.material.opacity = reveal;
+  updateCaption();                       // build n: running captions
+  holoMaterials.forEach((m) => {
+    m.uniforms.uTime.value = t;
+    m.uniforms.uReveal.value = reveal;
+    m.uniforms.uBaseY.value = holo.getWorldPosition(new THREE.Vector3()).y;
+    m.uniforms.uScale.value = holo.scale.x;
+    m.uniforms.uVoice.value = voice;
+  });
+
+  // Blink every 2–5 seconds: eyelids close and open over 0.15 s
+  if (bhau && face['AK_09_EyeBlinkLeft'] !== undefined) {   // only models with blink shapes
+    const L = face['AK_09_EyeBlinkLeft'], R = face['AK_10_EyeBlinkRight'];
+    let b = 0;
+    if (t > nextBlink) {
+      const p = (t - nextBlink) / 0.15;              // 0 → 1 over the blink
+      b = p < 1 ? Math.sin(p * Math.PI) : 0;          // close, then open
+      if (p >= 1) nextBlink = t + 2 + Math.random() * 3;
+    }
+    bhau.morphTargetInfluences[L] = b;
+    bhau.morphTargetInfluences[R] = b;
+  }
+
+  if (mode === 'ar' && placing && frame && hitSource) {
+    const results = frame.getHitTestResults(hitSource);
+    if (results.length) {
+      const pose = results[0].getPose(renderer.xr.getReferenceSpace());
+      reticle.visible = true;
+      reticle.matrix.fromArray(pose.transform.matrix);
+      if (tipTimer) { clearTimeout(tipTimer); tipTimer = null; }
+      if (tipsShown) { stopTipTimer(); hint('Surface found! Tap to place Bhau.'); }
+    } else {
+      reticle.visible = false;
+    }
+  }
+
+  if (mode === 'camera') {
+    camera.rotation.y += (targetRot.y - camera.rotation.y) * 0.15;
+    camera.rotation.x += (targetRot.x - camera.rotation.x) * 0.15;
+  }
+
+  if (controls) controls.update();
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('resize', () => {
+  if (renderer.xr.isPresenting) return;
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
