@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-10-30T21:52:10+05:30",
+ "REFRESHED": "2026-10-31T21:52:25+05:30",
  "SIGNALS": [
+  {
+   "id": "2116528634894905484",
+   "handle": "TheHackersNews",
+   "name": "The Hacker News",
+   "url": "https://x.com/TheHackersNews/status/2116528634894905484",
+   "posted": "2026-10-31T19:22:04+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Microsoft says a malicious extension version (2.1.313) never reached its VS Code Marketplace; Cursor rotated keys and rebuilt its marketplace. How attackers published under Anthropic's name is unclear."
+  },
+  {
+   "id": "2116337365744525543",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2116337365744525543",
+   "posted": "2026-10-31T06:42:02+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Cites the Financial Times: OpenAI has cut its funding target to about $20 billion from $30 billion, with a lower target valuation."
+  },
   {
    "id": "2116186265095663708",
    "handle": "DeItaone",
@@ -70,26 +90,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Google DeepMind introduces Gemini 4 Carbon as its next frontier model, state-of-the-art in cybersecurity and long-horizon capabilities."
-  },
-  {
-   "id": "2115414903578349651",
-   "handle": "OfficialINDIAai",
-   "name": "IndiaAI",
-   "url": "https://x.com/OfficialINDIAai/status/2115414903578349651",
-   "posted": "2026-10-28T17:36:30+05:30",
-   "topic": "India",
-   "kind": "Official",
-   "summary": "Shares the Prime Minister remarks at ESTIC 2026 on India moving beyond adopting emerging technologies to creating them for India and the world."
-  },
-  {
-   "id": "2115261081425957307",
-   "handle": "BusinessTodayM1",
-   "name": "BusinessToday Malaysia",
-   "url": "https://x.com/BusinessTodayM1/status/2115261081425957307",
-   "posted": "2026-10-28T07:25:16+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Cites The Information reporting that OpenAI plans to buy AI chips from Google, which could deepen ties between the two companies as AI compute demand grows."
   }
  ]
 }
