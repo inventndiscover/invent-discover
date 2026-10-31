@@ -5,7 +5,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Affinity Map tool · Invent + Discover</title>
-<meta name="description" content="Sort research notes into groups, name each group as an insight, dot-vote the strongest and save a printable A4 sheet. Work solo in your browser or live with your team. Free.">
+<meta name="description" content="Three columns: Generate ideas, Organise them into clusters, Prioritise with dot votes. Work solo or live with your team, then save a printable A4 sheet. Free.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/affinity-map/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="Affinity Map tool · Invent + Discover">
@@ -24,6 +24,14 @@
   like one set. The five --note-* colours are the sticky notes.
   ============================================================
 -->
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same tokens as the other tools. The board is three columns,
+  like a wall: Generate | Organise | Prioritise.
+  ============================================================
+-->
 <style>
   :root {
     --bg: #05060A;
@@ -38,6 +46,8 @@
     --ok: #46D69A;
     --warn: #FFB23F;
     --note-yellow: #FFE58A; --note-pink: #FFC2D4; --note-mint: #BFEFD6; --note-sky: #BFDCFF; --note-lilac: #D9CCFF;
+    --label: #D3B6FF;          /* the cluster label sticky, like the purple notes in NN/g's pictures */
+    --dot: #3B8CFF;            /* dot-vote stickers */
     --note-ink: #17141F;
     --radius: 14px;
     --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
@@ -57,7 +67,7 @@
     background-size: auto, auto, auto, 40px 40px, 40px 40px;
     background-attachment: fixed; min-height: 100vh;
   }
-  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 16px 64px; }
+  .wrap { max-width: 1480px; margin: 0 auto; padding: 0 16px 64px; }
   :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
 
   /* ---------- Header (same as the other tools) ---------- */
@@ -68,7 +78,8 @@
     font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD; box-shadow: 0 0 18px rgba(139,92,246,0.25); }
   h1 { margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1; text-wrap: balance;
     text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25); }
-  .lede { color: var(--muted); max-width: 700px; font-size: 17px; line-height: 1.55; }
+  .lede { color: var(--muted); max-width: 720px; font-size: 17px; line-height: 1.55; }
+  .lede b { color: var(--text); }
   .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
   .credit a, .about a, .how a { color: #C4B5FD; }
   .about { margin-top: 36px; }
@@ -113,86 +124,48 @@
   .banner.warn { border-color: rgba(255,178,63,0.55); color: #FFE2B0; }
   .banner b { color: var(--text); }
 
-  .layout { display: grid; grid-template-columns: minmax(0,1fr) 290px; gap: 16px; align-items: start; }
-  @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0,1fr); } }
-  .board { display: grid; gap: 14px; min-width: 0; }
+  /* ---------- The three columns ---------- */
+  .board { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(0, 2.1fr) minmax(260px, 1fr); gap: 14px; align-items: start; }
+  @media (max-width: 1080px) { .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); } .col.pri { grid-column: 1 / -1; } }
+  @media (max-width: 720px) { .board { grid-template-columns: minmax(0, 1fr); } }
+  .col { border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.72); padding: 14px; display: grid; gap: 12px; align-content: start; min-width: 0; transition: background .15s, box-shadow .15s; }
+  .chead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chead .n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #fff; background: linear-gradient(135deg, var(--violet), var(--pink)); box-shadow: 0 0 14px rgba(139,92,246,0.45); flex: none; }
+  .chead h2 { margin: 0; font-size: 19px; }
+  .chead .count { margin-left: auto; }
+  .count { font-size: 12px; font-weight: 700; color: #C4B5FD; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px; padding: 2px 9px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .count.full { color: var(--warn); border-color: rgba(255,178,63,0.6); }
+  .hint { margin: -4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+  .over { background: rgba(139,92,246,0.14) !important; box-shadow: inset 0 0 0 1px var(--violet); }
+  .empty { margin: 0; font-size: 13px; color: var(--muted); font-style: italic; }
 
-  /* ---------- The three stages: Generate · Organise · Prioritise ---------- */
-  .stages { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
-  @media (max-width: 640px) { .stages { grid-template-columns: 1fr; } }
-  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: center; background: rgba(0,0,0,0.25); text-align: left; color: var(--text); font: inherit; }
-  button.stage:hover:not(:disabled) { border-color: rgba(139,92,246,0.6); }
-  button.stage:disabled { opacity: 1; cursor: default; }
-  button.stage[data-s="todo"]:disabled { opacity: .55; cursor: not-allowed; }
-  .stagebar { display: grid; gap: 8px; }
-  .stagego { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-  .stagego p { margin: 0; color: var(--muted); font-size: 13px; flex: 1 1 260px; }
-  .stage .n { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; border: 1px solid var(--line-2); color: var(--muted); }
-  .stage b { font-size: 15px; }
-  .stage span { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
-  .stage[data-s="now"] { border-color: var(--violet); box-shadow: 0 0 18px rgba(139,92,246,0.3); background: rgba(139,92,246,0.10); }
-  .stage[data-s="now"] .n { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; color: #fff; }
-  .stage[data-s="done"] .n { background: var(--ok); border: none; color: #05130C; }
-  .stage[data-s="todo"] b { color: var(--muted); }
-
-  /* ---------- Unsorted tray ---------- */
-  .tray { border: 1px dashed var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.6); padding: 14px; display: grid; gap: 12px; transition: background .15s, box-shadow .15s; }
-  .thead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
-  .thead h2 { margin: 0; font-size: 17px; }
-  .count { font-size: 12px; font-weight: 700; color: #C4B5FD; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums; }
-  .thead p { margin: 0; color: var(--muted); font-size: 13px; flex-basis: 100%; }
+  /* composer (Generate) */
   .composer { display: grid; gap: 8px; }
   .composer textarea { width: 100%; min-height: 48px; resize: vertical; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-family: var(--hand); font-size: 17px; line-height: 1.3; }
   .composer textarea:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
   .composer .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .composer .hint { color: var(--muted); font-size: 12px; margin-left: auto; }
   .link { background: none; border: none; padding: 4px 2px; color: #C4B5FD; font-size: 13px; text-decoration: underline; }
   .sw { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.35); flex: none; }
   .sw[aria-pressed="true"] { outline: 2px solid #fff; outline-offset: 2px; }
-  .empty { margin: 0; font-size: 13px; color: var(--muted); font-style: italic; }
-
-  /* ---------- Groups ---------- */
-  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 12px; align-items: start; }
-  .group { border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.78); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; transition: background .15s, box-shadow .15s; }
-  .over { background: rgba(139,92,246,0.14) !important; box-shadow: inset 0 0 0 1px var(--violet); }
-  .ghead { display: flex; align-items: flex-start; gap: 8px; }
-  .gtitle { flex: 1; min-width: 0; background: transparent; border: none; border-bottom: 1px dashed transparent; border-radius: 0; color: var(--text); font: inherit; font-size: 15.5px; font-weight: 700; line-height: 1.3; padding: 2px 0 4px; resize: none; overflow: hidden; field-sizing: content; min-height: 1.6em; }
-  .gtitle::placeholder { color: var(--warn); font-weight: 500; }
-  .gtitle:hover { border-bottom-color: var(--line-2); }
-  .gtitle:focus { outline: none; border-bottom-color: var(--violet); }
-  .gtitle:disabled { opacity: 1; }
-  .gfoot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line); }
-  .gdots { display: inline-flex; gap: 3px; margin-right: 2px; }
-  .gdots i { width: 9px; height: 9px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 8px rgba(139,92,246,0.7); }
-  .gnext { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.55fr); gap: 6px; }
-  .gnext label { grid-column: 1 / -1; margin: 0; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .gnext input { width: 100%; min-width: 0; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 13.5px; }
-  .gnext input:focus { outline: none; border-color: var(--violet); }
-  .gnext input.missing { border-color: rgba(255,178,63,0.55); }
-  .top3 .nx { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-  .gfoot a { color: #C4B5FD; font-size: 13px; text-decoration: none; margin-left: auto; }
-  .gfoot a:hover { text-decoration: underline; }
-  .newgroup { border: 1.5px dashed var(--line-2); border-radius: var(--radius); min-height: 120px; display: grid; place-items: center; text-align: center; padding: 14px; gap: 6px; transition: background .15s, box-shadow .15s; }
-  .newgroup p { margin: 0; color: var(--muted); font-size: 13px; }
 
   /* sticky notes */
-  .notes { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
-  .group .notes { flex-direction: column; flex-wrap: nowrap; }
-  .note { position: relative; flex: 0 1 180px; min-width: 0; min-height: 64px; padding: 8px 9px 6px; border-radius: 3px; color: var(--note-ink);
-    display: flex; flex-direction: column; gap: 4px; transform: rotate(var(--tilt,0deg)); transition: transform .12s;
-    box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 8px 18px -6px rgba(0,0,0,.6); }
-  .group .note { flex: none; min-height: 0; }
+  .notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+  .note { position: relative; min-width: 0; min-height: 76px; padding: 8px 9px 22px; border-radius: 2px; color: var(--note-ink);
+    transform: rotate(var(--tilt,0deg)); transition: transform .12s; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 8px 18px -6px rgba(0,0,0,.6); }
   .note:hover { transform: rotate(0deg) translateY(-1px); }
   .note[draggable="true"] { cursor: grab; }
   .note.dragging { opacity: .35; }
-  .note .txt { margin: 0; font-family: var(--hand); font-size: 15.5px; line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
-  .note .more { position: absolute; right: 4px; bottom: 3px; border: none; background: rgba(0,0,0,0.08); color: var(--note-ink); border-radius: 999px; padding: 0 8px; font-size: 13px; font-weight: 800; line-height: 1.5; }
-  .note .more:hover { background: rgba(0,0,0,0.18); }
-  .note .txt { padding-right: 26px; }
+  .note .txt { margin: 0; font-family: var(--hand); font-size: 14.5px; line-height: 1.18; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .note .more, .note .x { position: absolute; bottom: 3px; border: none; background: rgba(0,0,0,0.08); color: var(--note-ink); border-radius: 999px; padding: 0 7px; font-size: 12px; font-weight: 800; line-height: 1.5; }
+  .note .more { right: 4px; } .note .x { right: 4px; font-size: 13px; }
+  .note .more:hover, .note .x:hover { background: rgba(0,0,0,0.18); }
+  .note .used { position: absolute; left: 7px; bottom: 4px; font-size: 11px; font-weight: 700; color: rgba(23,20,31,0.7); }
+  .note.copy { min-height: 0; padding-bottom: 8px; padding-right: 26px; }
+  .note.copy .x { top: 4px; bottom: auto; }
   .c-yellow { background: var(--note-yellow); } .c-pink { background: var(--note-pink); } .c-mint { background: var(--note-mint); } .c-sky { background: var(--note-sky); } .c-lilac { background: var(--note-lilac); }
 
   /* note editor */
-  .editor { width: 100%; flex: 1 1 100%; display: grid; gap: 8px; padding: 8px; border-radius: 4px; color: var(--note-ink); box-shadow: 0 8px 22px -6px rgba(0,0,0,.7); }
+  .editor { grid-column: 1 / -1; display: grid; gap: 8px; padding: 8px; border-radius: 4px; color: var(--note-ink); box-shadow: 0 8px 22px -6px rgba(0,0,0,.7); }
   .editor textarea { width: 100%; min-height: 60px; resize: vertical; border: none; border-radius: 3px; padding: 6px; background: rgba(255,255,255,0.5); font-family: var(--hand); font-size: 16px; color: var(--note-ink); }
   .editor .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .editor .sw[aria-pressed="true"] { outline-color: var(--note-ink); }
@@ -201,33 +174,65 @@
   .editor button.go { background: var(--note-ink); color: #fff; border-color: var(--note-ink); font-weight: 700; }
   .editor button.danger { color: #9F1239; border-color: #9F1239; }
 
-  /* ---------- Coach rail ---------- */
-  .coach { display: grid; gap: 14px; position: sticky; top: 14px; }
-  @media (max-width: 1100px) { .coach { position: static; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
-  .coach h4 { margin: 0 0 10px; font-size: 15px; }
-  .big { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-  .big small { font-size: 14px; font-weight: 500; color: var(--muted); }
-  .bar2 { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.08); margin: 10px 0; overflow: hidden; }
-  .bar2 span { display: block; height: 100%; background: linear-gradient(90deg, var(--violet), var(--pink)); box-shadow: 0 0 10px rgba(139,92,246,0.5); transition: width .3s; }
-  .next { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
-  .next b { color: var(--text); }
-  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
-  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 13px; line-height: 1.4; }
-  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  /* Organise: new cluster, dot tool, clusters */
+  .newc { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border: 1.5px dashed var(--line-2); border-radius: 12px; transition: background .15s, box-shadow .15s; }
+  .newc input { flex: 1 1 200px; width: auto; min-width: 0; padding: 9px 12px; font-size: 15px; }
+  .newc p { margin: 0; flex-basis: 100%; color: var(--muted); font-size: 12.5px; }
+  .dotbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .dotbtn { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
+  .dotbtn i { width: 14px; height: 14px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 10px var(--dot); }
+  .dotbtn[aria-pressed="true"] { border-color: var(--dot); background: rgba(59,140,255,0.16); box-shadow: 0 0 16px rgba(59,140,255,0.35); }
+  .mydots { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 13px; }
+  .mydots i { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--dot); }
+  .mydots i.used { background: var(--dot); }
+  .clusters { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 12px; align-items: start; }
+  .cluster { border: 1px solid var(--line-2); border-radius: 12px; background: rgba(0,0,0,0.28); padding: 10px; display: grid; gap: 8px; min-width: 0; transition: background .15s, box-shadow .15s; }
+  .dotting .cluster { cursor: crosshair; }
+  .dotting .cluster:hover { box-shadow: inset 0 0 0 2px var(--dot); }
+  .ctop { display: flex; gap: 8px; align-items: flex-start; }
+  .clabel { flex: 1; min-width: 0; background: var(--label); color: var(--note-ink); border-radius: 2px; padding: 8px 9px; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 8px 18px -6px rgba(0,0,0,.6); }
+  .clabel textarea { display: block; width: 100%; border: none; background: transparent; color: var(--note-ink); font: inherit; font-size: 14.5px; font-weight: 700; line-height: 1.25; resize: none; overflow: hidden; padding: 0; }
+  .clabel textarea::placeholder { color: rgba(23,20,31,0.55); font-weight: 600; }
+  .clabel textarea:focus { outline: none; }
+  .clabel:focus-within { outline: 2px solid #fff; outline-offset: 2px; }
+  .cdots { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-height: 14px; }
+  .cdots i { width: 16px; height: 16px; border-radius: 50%; background: var(--dot); box-shadow: 0 1px 0 rgba(0,0,0,.4), 0 0 8px rgba(59,140,255,0.5); }
+  .cdots i.mine { outline: 2px solid #fff; outline-offset: 1px; }
+  .cdots em { font-style: normal; font-size: 12px; color: var(--muted); margin-left: 4px; }
+  .cnotes { display: grid; gap: 6px; min-height: 40px; align-content: start; }
+  .cnotes .empty { padding: 10px; border: 1px dashed var(--line); border-radius: 8px; text-align: center; font-size: 12.5px; }
+  .cfoot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .cfoot .meta { color: var(--muted); font-size: 12px; margin-right: auto; }
+
+  /* Prioritise: the ranking */
+  .rank { display: grid; gap: 10px; }
+  .ritem { border: 1px solid var(--line-2); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 38px 1fr; gap: 4px 10px; background: rgba(0,0,0,0.28); }
+  .ritem.first { border-color: rgba(59,140,255,0.7); box-shadow: 0 0 22px rgba(59,140,255,0.25); background: rgba(59,140,255,0.08); }
+  .ritem > :not(.r) { grid-column: 2; min-width: 0; }
+  .ritem .r { grid-row: 1 / span 4; font-size: 26px; font-weight: 800; line-height: 1; color: #C4B5FD; font-variant-numeric: tabular-nums; }
+  .ritem.first .r { color: #9CC5FF; }
+  .ritem h3 { margin: 0; font-size: 15px; line-height: 1.3; }
+  .ritem .meta { color: var(--muted); font-size: 12.5px; display: flex; align-items: center; gap: 8px; }
+  .ritem .bar3 { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; max-width: 140px; }
+  .ritem .bar3 span { display: block; height: 100%; background: var(--dot); box-shadow: 0 0 8px var(--dot); }
+  .gnext { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.55fr); gap: 6px; }
+  .gnext input { width: 100%; min-width: 0; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 13px; }
+  .gnext input:focus { outline: none; border-color: var(--violet); }
+  .gnext input.missing { border-color: rgba(255,178,63,0.55); }
+  .ritem a { color: #C4B5FD; font-size: 12.5px; text-decoration: none; }
+  .ritem a:hover { text-decoration: underline; }
+  .unvoted { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; display: grid; gap: 3px; }
+  .subh { margin: 4px 0 0; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 12.5px; line-height: 1.4; }
+  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); }
   .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
   .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
   .checks span { color: var(--muted); }
-  .top3 { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 13.5px; }
-  .top3 em { font-style: normal; color: var(--muted); font-size: 12px; }
-  .top3 a { color: #C4B5FD; font-size: 12.5px; }
-  .mydots { display: flex; gap: 5px; align-items: center; color: var(--muted); font-size: 13px; margin-top: 10px; }
-  .mydots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--violet); }
-  .mydots i.used { background: var(--violet); box-shadow: 0 0 8px rgba(139,92,246,0.7); }
 
-  /* ---------- How-to steps ---------- */
+  /* ---------- How-to ---------- */
   .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
-  @media (max-width: 980px) { .how { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-  @media (max-width: 560px) { .how { grid-template-columns: 1fr; } .note { flex-basis: 100%; } }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
   .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
   .how h3 { margin: 6px 0 6px; font-size: 16px; }
   .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
@@ -242,8 +247,7 @@
 <!--
   ============================================================
   PART 2 — HTML (what's on the page)
-  The tray, the groups and the coach are drawn by JavaScript
-  from the data, so most boxes below start empty.
+  The three columns are drawn by JavaScript from the data.
   ============================================================
 -->
 <div class="wrap">
@@ -251,8 +255,8 @@
     <a class="back" href="/#tools">← All tools</a><br>
     <span class="pill">TOOL · AFFINITY MAP</span>
     <h1>Affinity Map</h1>
-    <p class="lede">Turn a pile of research notes into a few clear insights, in three stages. <b style="color:var(--text)">Generate</b>: everyone adds notes on their own. <b style="color:var(--text)">Organise</b>: drag similar notes together and name each group with what you learned. <b style="color:var(--text)">Prioritise</b>: dot-vote the groups that matter most and agree who does what next. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
-    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three stages follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
+    <p class="lede">Turn a pile of research notes into a few clear priorities, in three columns. <b>Generate</b>: everyone adds ideas as sticky notes. <b>Organise</b>: name clusters and drag a copy of each note into one. <b>Prioritise</b>: put dots on the clusters, and they rank themselves, most dots first. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
+    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
   </header>
 
   <div class="card">
@@ -275,31 +279,12 @@
   <div class="card team" id="teamPanel" hidden></div>
   <div class="banner" id="banner" hidden></div>
 
-  <div class="layout">
-    <div class="board" id="board"></div>
-    <aside class="coach" aria-label="Board coach">
-      <div class="card">
-        <h4>Progress</h4>
-        <div class="big" id="sortNum">0<small> / 0 notes sorted</small></div>
-        <div class="bar2"><span id="sortBar" style="width:0%"></span></div>
-        <div class="next" id="next"></div>
-      </div>
-      <div class="card">
-        <h4>Group check</h4>
-        <ul class="checks" id="checks"></ul>
-      </div>
-      <div class="card">
-        <h4>Most dots</h4>
-        <ol class="top3" id="top3"></ol>
-        <div class="mydots" id="myDots" hidden></div>
-      </div>
-    </aside>
-  </div>
+  <div class="board" id="board"></div>
 
   <section class="how">
-    <div class="card"><div class="step">STAGE 1 · GENERATE · 12 MIN</div><h3>Generate</h3><p>Write your research question at the top. Then everyone adds notes on their own, without talking: one quote, fact or observation per note. Paste a list if you have interview notes. When everyone's done, click <b>Next: Organise</b>.</p></div>
-    <div class="card"><div class="step">STAGE 2 · ORGANISE · 18 MIN</div><h3>Organise</h3><p>Drag notes next to similar ones. You can move anyone's note, and start a new group whenever nothing fits. Then name each group with what you learned, as a sentence: “I plan my day around train timings”, not “Timing”. Then click <b>Next: Prioritise</b>.</p></div>
-    <div class="card"><div class="step">STAGE 3 · PRIORITISE · 10 MIN</div><h3>Prioritise</h3><p>Each person gives three dots to the groups that matter most. For the top groups, write the next step and who owns it. Then turn them into <a href="/toolkit/how-might-we/">How Might We</a> questions.</p></div>
+    <div class="card"><div class="step">COLUMN 1 · 10 MIN</div><h3>Generate</h3><p>Write the research question at the top. Then everyone adds ideas on their own, without talking: one quote, fact or observation per note, between 1 and 30 notes. Paste a list if you have interview notes.</p></div>
+    <div class="card"><div class="step">COLUMN 2 · 15 MIN</div><h3>Organise</h3><p>Type a cluster name and press Enter. Drag notes from Generate into clusters: each drag adds a copy, so the original stays in Generate with a tick. Name clusters with what you learned: “I plan my day around train timings”, not “Timing”.</p></div>
+    <div class="card"><div class="step">COLUMN 3 · 10 MIN</div><h3>Prioritise</h3><p>Pick the dot tool and click the clusters that matter most. Each person on a team has five dots. The clusters rank themselves in the Prioritise column. Agree a next step and an owner for the top ones, then try <a href="/toolkit/how-might-we/">How Might We</a>.</p></div>
   </section>
 
   <section class="card about" id="where">
@@ -313,7 +298,7 @@
     <p>Because notes cluster by how similar they are, the practice became widely known as the <b>affinity diagram</b> or <b>affinity mapping</b>. It's one of the seven management and planning tools in quality management, and a standard step in UX research and design sprints, where teams use it to sort interview notes, observations and How Might We notes.</p>
     <p>The steps on this page follow how <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> describes affinity diagramming for UX teams (Rachel Krause and Kara Pernice, 2024): write ideas on notes on your own first, cluster and label them together, then prioritise the clusters with dot voting and agree on next steps.</p>
     <p class="sources">Sources: <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> · <a href="https://asq.org/quality-resources/affinity" target="_blank" rel="noopener">ASQ, Affinity diagram</a> · <a href="https://www.designreview.byu.edu/collections/ideation-techniques-affinity-mapping" target="_blank" rel="noopener">BYU Design Review</a> · <a href="https://storyflow.so/blog/what-is-affinity-mapping-complete-guide" target="_blank" rel="noopener">StoryFlow</a> · <a href="https://velonova.io/blog/vol-12-affinity-diagram-k-j-method/" target="_blank" rel="noopener">Velonova</a></p>
-    <p>The board, dot vote, group check and A4 sheet on this page are made by Invent + Discover. <b>Solo</b> boards stay in your browser and are never uploaded. <b>Team</b> boards are stored on Google Firebase so teammates can see each other's notes; anyone with the team code can view and edit that board, so don't put names or anything private on it.</p>
+    <p>The three-column board, dot tool, ranking and A4 sheet on this page are made by Invent + Discover. <b>Solo</b> boards stay in your browser and are never uploaded. <b>Team</b> boards are stored on Google Firebase so teammates can see each other's notes; anyone with the team code can view and edit that board, so don't put names or anything private on it.</p>
   </section>
 
   <footer class="sitefoot">
@@ -331,14 +316,15 @@
 <script>
 // ---------- 3a. Settings ----------
 const COLORS = ['yellow', 'pink', 'mint', 'sky', 'lilac'];
-const SAVE_KEY = 'ind-affinity-v1';    // where a solo board is kept in this browser
+const SAVE_KEY = 'ind-affinity-v2';    // where a solo board is kept in this browser
+const OLD_KEY = 'ind-affinity-v1';     // boards saved by the first version of this page
 const TEAM_KEY = 'ind-affinity-team';  // the last team code used on this device
-const DOTS_PER_PERSON = 3;             // team mode: each person gets three dots
+const MAX_IDEAS = 30;                  // Generate takes 1 to 30 notes
+const DOTS_PER_PERSON = 5;             // team mode: each person gets five dots
 const MAX_PEOPLE = 30;                 // a team board takes up to 30 people
-const MAX_NOTES = 400;                 // and up to 400 notes
 const MAX_TEXT = 200;                  // characters per note
 
-// Team mode shares notes live through a free Google Firebase project.
+// Team mode shares the board live through a free Google Firebase project.
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAm_boRIJOnn-Pd8dN2IZAFhGCzZtDetrE",
   authDomain: "inventndiscover-tools.firebaseapp.com",
@@ -349,45 +335,47 @@ const FIREBASE_CONFIG = {
 };
 
 // ---------- 3b. The example (shown on a first visit) ----------
-// Each group: [name, dots, [next step, owner] or null, [notes]]. The names are written as insights,
-// in the user's voice, which is what a good affinity map ends up with.
+// 20 ideas; 5 clusters, each listing which ideas (by number) were copied in,
+// with its dots and, for the top two, a next step and an owner.
 const EXAMPLE = {
   question: 'How do students who commute by Mumbai local use their travel time?',
-  groups: [
-    ['The crowd decides what I can do on the train', 4, ['Test a one-handed “commute mode” with 5 riders', 'Riya'], [
-      ["Can't take my phone out in the 9 am rush", 'yellow'], ["Stands near the door so she doesn't miss her stop", 'pink'],
-      ['Only gets a seat after Dadar', 'sky'], ['Holds his bag in front so it doesn’t get pushed', 'yellow'], ['In first class he can actually read', 'mint']]],
-    ['Travel time is my me-time', 3, ['Interview 5 more riders about evening trips', 'Arjun'], [
-      ['Watches one episode per trip, timed to the ride', 'pink'], ['Calls her mom every evening from the train', 'yellow'],
-      ['Podcasts, never music', 'sky'], ['Naps if he gets a window seat', 'mint']]],
-    ['I plan my day around train timings', 2, null, [
-      ['Leaves home for the 8:14 fast, never the slow', 'yellow'], ['Checks the train app before leaving class', 'sky'],
-      ['Lets a train go if it looks too full', 'pink']]],
-    ['Bad network breaks whatever I was doing', 1, null, [
-      ['Downloads episodes at home on Wi-Fi', 'mint'], ['Videos buffer in the same stretch every day', 'yellow']]],
-    ['', 0, null, [['Revises flashcards on the way to exams', 'lilac']]],
+  ideas: [
+    "Can't take my phone out in the 9 am rush", "Stands near the door so she doesn't miss her stop", 'Only gets a seat after Dadar',
+    'In first class he can actually read', 'Watches one episode per trip, timed to the ride', 'Calls her mom every evening from the train',
+    'Podcasts, never music', 'Naps if he gets a window seat', 'Leaves home for the 8:14 fast, never the slow',
+    'Checks the train app before leaving class', 'Lets a train go if it looks too full', 'Downloads episodes at home on Wi-Fi',
+    'Videos buffer in the same stretch every day', 'Revises flashcards on the way to exams', 'Buys vada pav at the station on the way home',
+    'Friends from college travel together on Fridays', 'Avoids the last train home if travelling alone', 'Holds his bag in front so it doesn’t get pushed',
+    'Reads class notes on the phone in exam week', 'Calls drop between the same two stations',
   ],
-  unsorted: [['Buys vada pav at the station on the way home', 'yellow'], ['Friends from college travel together on Fridays', 'pink'], ['Avoids the last train home if travelling alone', 'sky']],
+  colors: 'yyyypyyysyyymlyysyly',
+  clusters: [
+    ['The crowd decides what I can do on the train', 10, [1, 2, 3, 4, 18], ['Test a one-handed “commute mode” with 5 riders', 'Riya']],
+    ['Travel time is my me-time', 8, [5, 6, 7, 8], ['Interview 5 more riders about evening trips', 'Arjun']],
+    ['I plan my day around train timings', 3, [9, 10, 11, 17], null],
+    ['Bad network breaks whatever I was doing', 2, [12, 13, 20], null],
+    ['I use the ride to study', 0, [14, 19], null],
+  ],
 };
 
 // ---------- 3c. State: one object that remembers everything ----------
 // We change the state, then call render() to redraw the screen from it.
-// After adding one note and one group, it looks like:
-//   notes:  [{ id: 'n1abc', text: 'Naps on the train', color: 'yellow', group: 'g9xyz', at: 1730… }]
-//   groups: [{ id: 'g9xyz', title: 'Travel time is my me-time', dots: 0, at: 1730… }]
-// A note with group '' is still in the Unsorted tray.
+//   ideas:  the notes in Generate      { id: 'n1abc', text: 'Naps on the train', color: 'yellow', at: … }
+//   groups: the clusters in Organise   { id: 'g9xyz', title: 'Travel time is my me-time', votes: { me: 3 }, next: '', owner: '', at: … }
+//   copies: notes copied into clusters { id: 'c_g9xyz_n1abc', orig: 'n1abc', group: 'g9xyz', text: …, color: … }
+// A copy's id joins its cluster and its idea, so one idea can be in a cluster only once.
 const state = {
-  question: '', notes: [], groups: [], isExample: false,
-  stage: 0,               // 0 Generate, 1 Organise, 2 Prioritise (the team moves it on)
-  editing: null,          // note id being edited
-  focusGroup: null,       // a new group whose name box should get the cursor
-  confirmDel: null,       // note id waiting for "Confirm delete"
-  confirmUngroup: null,   // group id waiting for "Confirm ungroup"
+  question: '', ideas: [], groups: [], copies: [], isExample: false,
+  dotTool: false,         // the dot tool is picked up
+  editing: null,          // idea id being edited
+  confirmDel: null,       // idea id waiting for "Confirm delete"
+  confirmDrop: null,      // cluster id waiting for "Confirm delete"
   confirmClear: false,
   listMode: false,        // the composer takes a pasted list, one note per line
   compColor: 'yellow',
   drafts: {},             // half-typed text, kept safe when teammates' changes arrive
-  titleDrafts: {},        // group names being typed
+  fieldDrafts: {},        // cluster names, next steps and owners being typed
+  focusId: null,          // a box that should get the cursor after the next redraw
   team: null,             // { code } while on a team board, null when solo
   teamView: false,        // the Team tab is open (joined or not)
   uid: null,              // this device's anonymous id in Firebase
@@ -401,18 +389,29 @@ const tilt = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0
 const slug = s => String(s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
 
+const me = () => state.team ? state.uid : 'me';
+const copyId = (gid, nid) => `c_${gid}_${nid}`;
+const ideaById = id => state.ideas.find(n => n.id === id);
 const groupById = id => state.groups.find(g => g.id === id);
-// A note whose group was deleted (say, by a teammate) falls back to Unsorted
-const isSorted = n => !!(n.group && groupById(n.group));
-const notesIn = gid => state.notes.filter(n => gid ? n.group === gid : !isSorted(n)).sort((a, b) => a.at - b.at);
-const groupLabel = (g, i) => g.title.trim() || `Unnamed group ${i + 1}`;
+// Dots on a cluster: each person's count added up (a plain "true" counts as one)
+const dotsOf = g => Object.values(g.votes || {}).reduce((s, v) => s + (v === true ? 1 : Number(v) || 0), 0);
+const myDotsOn = g => { const v = (g.votes || {})[me()]; return v === true ? 1 : Number(v) || 0; };
+const myDotsUsed = () => state.groups.reduce((s, g) => s + myDotsOn(g), 0);
+const copiesIn = gid => state.copies.filter(c => c.group === gid && groupById(c.group)).sort((a, b) => a.at - b.at);
+const clustersOf = nid => state.copies.filter(c => c.orig === nid && groupById(c.group)).length;
+const copyText = c => { const o = ideaById(c.orig); return o ? o.text : c.text; };
+const copyColor = c => { const o = ideaById(c.orig); return o ? o.color : c.color; };
 const orderedGroups = () => [...state.groups].sort((a, b) => a.at - b.at);
+const groupLabel = (g, i) => g.title.trim() || `Unnamed cluster ${i + 1}`;
+// The ranking for Prioritise: most dots first; a tie keeps the older cluster first
+const ranked = () => orderedGroups().map((g, i) => ({ g, label: groupLabel(g, i), dots: dotsOf(g) })).sort((a, b) => b.dots - a.dots || a.g.at - b.g.at);
 
-// Everyone who has written a note, made a group or voted counts towards the 30
+// Everyone who has added, organised or voted counts towards the 30
 function people() {
   const s = new Set();
-  for (const n of state.notes) if (n.by) s.add(n.by);
-  for (const g of state.groups) { if (g.by) s.add(g.by); for (const v of g.voters || []) s.add(v); }
+  for (const n of state.ideas) if (n.by) s.add(n.by);
+  for (const c of state.copies) if (c.by) s.add(c.by);
+  for (const g of state.groups) { if (g.by) s.add(g.by); for (const k of Object.keys(g.votes || {})) s.add(k); }
   return s;
 }
 const boardFull = () => !!state.team && state.uid && people().size >= MAX_PEOPLE && !people().has(state.uid);
@@ -421,68 +420,109 @@ const canWrite = () => !(state.teamView && !state.team) && !boardFull();
 // ---------- 3e. Saving a solo board in the browser ----------
 function save() {
   if (state.teamView) return;     // never let a team board overwrite the solo one
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ question: state.question, notes: state.notes, groups: state.groups, stage: state.stage, isExample: state.isExample })); } catch (e) {}
+  const { question, ideas, groups, copies, isExample } = state;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ question, ideas, groups, copies, isExample })); } catch (e) {}
 }
 function load() {
   try {
     const d = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (d && Array.isArray(d.notes) && Array.isArray(d.groups)) {
-      const groups = d.groups.map(g => ({ next: '', owner: '', ...g }));   // boards saved before next steps existed
-      // boards saved before stages could be clicked: start in Organise if there are groups
-      const st = Number.isInteger(d.stage) ? d.stage : groups.length ? 1 : 0;
-      Object.assign(state, { question: d.question || '', notes: d.notes, groups, stage: st, isExample: !!d.isExample }); return true;
+    if (d && Array.isArray(d.ideas)) { Object.assign(state, { question: d.question || '', ideas: d.ideas, groups: d.groups || [], copies: d.copies || [], isExample: !!d.isExample }); return true; }
+    // A board from the first version: notes sat inside groups. Keep every
+    // note in Generate and put a copy in its group.
+    const o = JSON.parse(localStorage.getItem(OLD_KEY));
+    if (o && Array.isArray(o.notes) && !o.isExample) {
+      state.question = o.question || '';
+      state.ideas = o.notes.map(n => ({ id: n.id, text: n.text, color: n.color, at: n.at }));
+      state.groups = (o.groups || []).map(g => ({ id: g.id, title: g.title || '', next: g.next || '', owner: g.owner || '', at: g.at, votes: { me: g.dots || 0 } }));
+      state.copies = o.notes.filter(n => n.group && state.groups.some(g => g.id === n.group)).map(n => ({ id: copyId(n.group, n.id), orig: n.id, group: n.group, text: n.text, color: n.color, at: n.at }));
+      return true;
     }
   } catch (e) {}
   return false;
 }
 function loadExample() {
-  state.question = EXAMPLE.question; state.isExample = true; state.notes = []; state.groups = []; state.stage = 1;
-  let t = 0;
-  EXAMPLE.groups.forEach(([title, dots, next, notes], i) => {
-    const id = 'g' + i; state.groups.push({ id, title, dots, at: i, next: next ? next[0] : '', owner: next ? next[1] : '' });
-    notes.forEach(([text, color]) => state.notes.push({ id: 'ex' + t, text, color, group: id, at: t++ }));
+  const C = { y: 'yellow', p: 'pink', m: 'mint', s: 'sky', l: 'lilac' };
+  state.question = EXAMPLE.question; state.isExample = true;
+  state.ideas = EXAMPLE.ideas.map((text, i) => ({ id: 'ex' + (i + 1), text, color: C[EXAMPLE.colors[i]], at: i }));
+  state.groups = []; state.copies = [];
+  EXAMPLE.clusters.forEach(([title, dots, nums, next], i) => {
+    const id = 'g' + i;
+    state.groups.push({ id, title, at: i, votes: dots ? { example: dots } : {}, next: next ? next[0] : '', owner: next ? next[1] : '' });
+    nums.forEach((k, j) => { const n = state.ideas[k - 1]; state.copies.push({ id: copyId(id, n.id), orig: n.id, group: id, text: n.text, color: n.color, at: i * 100 + j }); });
   });
-  EXAMPLE.unsorted.forEach(([text, color]) => state.notes.push({ id: 'ex' + t, text, color, group: '', at: t++ }));
 }
 function claimExample() { state.isExample = false; }   // the first change makes it yours
 
 // ---------- 3f. Changing the board ----------
-// Every change goes through one of these. In Team mode each one sends the
-// change to Firebase instead, and the screen updates when it comes back.
-function addNotes(texts, color) {
+// Every change goes through one of these. In Team mode each one is sent to
+// Firebase instead, and the screen updates when it comes back.
+function addIdeas(texts, color) {
   texts = texts.map(t => t.trim().slice(0, MAX_TEXT)).filter(Boolean);
   if (!texts.length) return 0;
-  if (state.notes.length + texts.length > MAX_NOTES) { toast(`A board holds up to ${MAX_NOTES} notes. Merge or delete a few first.`); return 0; }
-  if (state.team) { teamAddNotes(texts, color); return texts.length; }
+  const room = MAX_IDEAS - state.ideas.length;
+  if (room <= 0) { toast(`Generate holds up to ${MAX_IDEAS} notes. Merge or delete one first.`); return 0; }
+  state.leftOut = 0;
+  if (texts.length > room) { state.leftOut = texts.length - room; texts = texts.slice(0, room); }
+  if (state.team) { teamAddIdeas(texts, color); return texts.length; }
   claimExample();
   const now = Date.now();
-  texts.forEach((text, i) => state.notes.push({ id: newId('n'), text, color, group: '', at: now + i }));
+  texts.forEach((text, i) => state.ideas.push({ id: newId('n'), text, color, at: now + i }));
   save(); render();
   return texts.length;
 }
-function patchNote(id, patch) {
-  if (state.team) return teamPatchNote(id, patch);
-  const n = state.notes.find(n => n.id === id); if (!n) return;
-  claimExample(); Object.assign(n, patch); save(); render();
-}
-function deleteNote(id) {
-  if (state.team) return teamDeleteNote(id);
-  claimExample(); state.notes = state.notes.filter(n => n.id !== id); save(); render();
-}
-// Make a new group, optionally moving one note into it straight away
-function newGroup(noteId) {
-  const id = newId('g');
-  if (state.stage === 0) setStage(1);   // starting a group means organising has begun
-  state.focusGroup = id;      // put the cursor in its name as soon as it's drawn
-  if (state.team) { teamNewGroup(id, noteId); return id; }
+// Editing an idea also updates its copies in the clusters
+function editIdea(id, patch) {
+  if (state.team) return teamEditIdea(id, patch);
   claimExample();
-  state.groups.push({ id, title: '', next: '', owner: '', dots: 0, at: Date.now() });
-  if (noteId) { const n = state.notes.find(n => n.id === noteId); if (n) n.group = id; }
+  const n = ideaById(id); if (!n) return; Object.assign(n, patch);
+  state.copies.forEach(c => { if (c.orig === id) Object.assign(c, patch); });
+  save(); render();
+}
+function deleteIdea(id) {
+  if (state.team) return teamDeleteIdea(id);
+  claimExample();
+  state.ideas = state.ideas.filter(n => n.id !== id);
+  state.copies = state.copies.filter(c => c.orig !== id);
+  save(); render();
+}
+// Make a cluster, optionally with the first copy in it
+function newCluster(title, firstIdea) {
+  const id = newId('g');
+  if (!title) state.focusId = 'gt-' + id;     // an unnamed cluster gets the cursor in its name
+  if (state.team) { teamNewCluster(id, title || '', firstIdea); return id; }
+  claimExample();
+  state.groups.push({ id, title: (title || '').slice(0, 80), next: '', owner: '', votes: {}, at: Date.now() });
+  if (firstIdea) addCopyLocal(firstIdea, id);
   save(); render();
   return id;
 }
-// Change a group's name, next step or owner, e.g. patchGroup('g1', { owner: 'Riya' })
+function addCopyLocal(nid, gid) {
+  const n = ideaById(nid); if (!n || state.copies.some(c => c.id === copyId(gid, nid))) return false;
+  state.copies.push({ id: copyId(gid, nid), orig: nid, group: gid, text: n.text, color: n.color, at: Date.now() });
+  return true;
+}
+// Drag an idea from Generate into a cluster: a copy goes in, the idea stays
+function copyTo(nid, gid) {
+  if (state.copies.some(c => c.id === copyId(gid, nid))) { toast('That note is already in this cluster.'); return; }
+  if (state.team) return teamCopy(nid, gid);
+  claimExample(); addCopyLocal(nid, gid); save(); render();
+}
+// Drag a copy from one cluster to another
+function moveCopy(cid, gid) {
+  const c = state.copies.find(c => c.id === cid); if (!c || c.group === gid) return;
+  if (state.copies.some(x => x.id === copyId(gid, c.orig))) { removeCopy(cid); return; }   // already there: just tidy up
+  if (state.team) return teamMoveCopy(c, gid);
+  claimExample();
+  state.copies = state.copies.filter(x => x.id !== cid);
+  state.copies.push({ ...c, id: copyId(gid, c.orig), group: gid, at: Date.now() });
+  save(); render();
+}
+function removeCopy(cid) {
+  if (state.team) return teamRemoveCopy(cid);
+  claimExample(); state.copies = state.copies.filter(c => c.id !== cid); save(); render();
+}
 const GROUP_LIMITS = { title: 80, next: 140, owner: 40 };
+// Change a cluster's name, next step or owner, e.g. patchGroup('g1', { owner: 'Riya' })
 function patchGroup(gid, patch) {
   const g = groupById(gid); if (!g) return;
   const p = {};
@@ -491,27 +531,31 @@ function patchGroup(gid, patch) {
   if (state.team) return teamPatchGroup(gid, p);
   claimExample(); Object.assign(g, p); save(); render();
 }
-// Ungroup: the group goes, its notes go back to Unsorted
-function ungroup(gid) {
-  if (state.team) return teamUngroup(gid);
+// Deleting a cluster removes its copies; the ideas stay in Generate
+function deleteCluster(gid) {
+  if (state.team) return teamDeleteCluster(gid);
   claimExample();
-  state.notes.forEach(n => { if (n.group === gid) n.group = ''; });
   state.groups = state.groups.filter(g => g.id !== gid);
+  state.copies = state.copies.filter(c => c.group !== gid);
   save(); render();
 }
-function vote(g, remove) {
-  if (state.team) return teamToggleDot(g);
-  claimExample(); g.dots = Math.max(0, g.dots + (remove ? -1 : 1)); save(); render();
+// The dot tool: one click adds one of your dots to a cluster
+function addDot(g) {
+  if (state.team && myDotsUsed() >= DOTS_PER_PERSON) { toast(`You've used all ${DOTS_PER_PERSON} dots. Take one back to move it.`); return; }
+  if (state.team) return teamDot(g, +1);
+  claimExample(); g.votes = { ...(g.votes || {}), me: myDotsOn(g) + 1 }; save(); render();
 }
-// Move a note: to a group id, to '' (Unsorted) or to '__new' (a new group)
-function moveNote(noteId, target) {
-  const n = state.notes.find(n => n.id === noteId); if (!n) return;
-  if (target === '__new') return newGroup(noteId);
-  if ((n.group || '') === target && (target === '' || isSorted(n))) return;
-  patchNote(noteId, { group: target });
+function takeDot(g) {
+  if (!myDotsOn(g) && !(dotsOf(g) && !state.team)) return;
+  if (state.team) return teamDot(g, -1);
+  claimExample();
+  // Solo: take back your own dot first, then any example dot
+  const v = { ...(g.votes || {}) }, k = v.me ? 'me' : Object.keys(v).find(x => v[x]);
+  if (k) { const n = (v[k] === true ? 1 : v[k]) - 1; if (n > 0) v[k] = n; else delete v[k]; }
+  g.votes = v; save(); render();
 }
 
-// ---------- 3g. Drawing the board ----------
+// ---------- 3g. Drawing the three columns ----------
 function swatches(current, onPick) {
   const row = el('span'); row.style.display = 'inline-flex'; row.style.gap = '6px';
   for (const c of COLORS) {
@@ -521,73 +565,87 @@ function swatches(current, onPick) {
   }
   return row;
 }
-
-// Drag and drop: any element with a target group can take a dropped note
-function dropZone(elem, target) {
+// What is being dragged: "idea:<id>" from Generate, or "copy:<id>" from a cluster
+function dropZone(elem, onDrop) {
   elem.addEventListener('dragover', e => { if (!canWrite()) return; e.preventDefault(); elem.classList.add('over'); });
   elem.addEventListener('dragleave', e => { if (!elem.contains(e.relatedTarget)) elem.classList.remove('over'); });
   elem.addEventListener('drop', e => {
     elem.classList.remove('over'); if (!canWrite()) return; e.preventDefault(); e.stopPropagation();
-    const id = e.dataTransfer.getData('text/plain'); if (id) moveNote(id, target);
+    const [kind, id] = (e.dataTransfer.getData('text/plain') || '').split(':');
+    if (id) onDrop(kind, id);
   });
 }
+function draggable(node, payload) {
+  node.draggable = true;
+  node.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', payload); e.dataTransfer.effectAllowed = 'copyMove'; node.classList.add('dragging'); });
+  node.addEventListener('dragend', () => node.classList.remove('dragging'));
+}
+// A box that keeps what you're typing safe through live redraws, and saves
+// when you press Enter or click away
+function draftField(tag, id, value, onSave) {
+  const i = document.createElement(tag); i.id = id;
+  if (tag === 'input') i.type = 'text';
+  i.value = state.fieldDrafts[id] != null ? state.fieldDrafts[id] : value;
+  i.addEventListener('input', () => { state.fieldDrafts[id] = i.value.replace(/\n/g, ' '); if (tag === 'textarea') fit(i); });
+  i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } });
+  i.addEventListener('blur', () => { if (rendering) return; const v = state.fieldDrafts[id]; delete state.fieldDrafts[id]; if (v != null) onSave(v); });
+  return i;
+}
+function fit(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
-function noteCard(n) {
+function ideaCard(n) {
   if (state.editing === n.id) return editor(n);
   const c = el('article', 'note c-' + (COLORS.includes(n.color) ? n.color : 'yellow'));
   c.style.setProperty('--tilt', tilt(n.id));
   c.append(el('p', 'txt', n.text));
+  const k = clustersOf(n.id);
+  if (k) { const u = el('span', 'used', k > 1 ? `✓ ${k} clusters` : '✓ in a cluster'); c.append(u); }
   if (canWrite()) {
-    const m = el('button', 'more', '⋯'); m.type = 'button'; m.setAttribute('aria-label', 'Edit, move or delete this note');
-    m.onclick = () => { state.editing = n.id; state.confirmDel = null; render(); focusById('edit-' + n.id); };
+    const m = el('button', 'more', '⋯'); m.type = 'button'; m.setAttribute('aria-label', 'Edit, copy to a cluster or delete');
+    m.onclick = () => { state.editing = n.id; state.confirmDel = null; state.focusId = 'edit-' + n.id; render(); };
     c.append(m);
-    c.draggable = true;
-    c.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', n.id); e.dataTransfer.effectAllowed = 'move'; c.classList.add('dragging'); });
-    c.addEventListener('dragend', () => c.classList.remove('dragging'));
+    draggable(c, 'idea:' + n.id);
   }
   return c;
 }
-
-// Edit a note: change the text or colour, move it to a group, or delete it
+// Edit an idea: text, colour, copy it into a cluster (handy on phones), or delete it
 function editor(n) {
   const key = 'edit-' + n.id, d = state.drafts[key];
   let color = d ? d.color : n.color;
   const ed = el('div', 'editor c-' + color);
   const ta = document.createElement('textarea'); ta.id = key; ta.maxLength = MAX_TEXT; ta.value = d ? d.text : n.text;
   ta.setAttribute('aria-label', 'Edit note');
-  const keep = () => { state.drafts[key] = { text: ta.value, color, move: move.value }; };
+  const keep = () => { state.drafts[key] = { text: ta.value, color }; };
   ta.addEventListener('input', keep);
   ed.append(ta);
-
   const row1 = el('div', 'row');
   row1.append(swatches(color, c => { color = c; keep(); ed.className = 'editor c-' + c; row1.querySelectorAll('.sw').forEach(x => x.setAttribute('aria-pressed', String(x.classList.contains('c-' + c)))); }));
-  const move = document.createElement('select'); move.setAttribute('aria-label', 'Move to group');
-  const opt = (v, t) => { const o = el('option', null, t); o.value = v; move.append(o); };
-  opt('', 'Unsorted');
-  orderedGroups().forEach((g, i) => opt(g.id, groupLabel(g, i).slice(0, 40)));
-  opt('__new', '+ New group');
-  move.value = d && d.move != null ? d.move : (isSorted(n) ? n.group : '');
-  move.addEventListener('change', keep);
-  row1.append(move);
+  const sel = document.createElement('select'); sel.setAttribute('aria-label', 'Copy to a cluster');
+  const opt = (v, t) => { const o = el('option', null, t); o.value = v; sel.append(o); };
+  opt('', 'Copy to cluster…');
+  orderedGroups().forEach((g, i) => { if (!state.copies.some(c => c.id === copyId(g.id, n.id))) opt(g.id, groupLabel(g, i).slice(0, 40)); });
+  opt('__new', '+ New cluster');
+  row1.append(sel);
   ed.append(row1);
-
   const row2 = el('div', 'row');
   const close = () => { state.editing = state.confirmDel = null; delete state.drafts[key]; render(); };
   const commit = () => {
     const text = ta.value.trim(), patch = {};
     if (text && text !== n.text) patch.text = text.slice(0, MAX_TEXT);
     if (color !== n.color) patch.color = color;
-    const target = move.value;
+    const target = sel.value;
     state.editing = null; delete state.drafts[key];
-    if (target === '__new') { if (Object.keys(patch).length) patchNote(n.id, patch); newGroup(n.id); return; }
-    if (target !== (isSorted(n) ? n.group : '')) patch.group = target;
-    Object.keys(patch).length ? patchNote(n.id, patch) : render();
+    if (Object.keys(patch).length) editIdea(n.id, patch);
+    if (target === '__new') newCluster('', n.id);
+    else if (target) copyTo(n.id, target);
+    if (!Object.keys(patch).length && !target) render();
   };
   const go = el('button', 'go', 'Save'); go.type = 'button'; go.onclick = commit;
   const cancel = el('button', null, 'Cancel'); cancel.type = 'button'; cancel.onclick = close;
   const sure = state.confirmDel === n.id;
   const del = el('button', 'danger', sure ? 'Confirm delete' : 'Delete'); del.type = 'button';
-  del.onclick = () => { if (sure) { state.editing = state.confirmDel = null; delete state.drafts[key]; deleteNote(n.id); } else { state.confirmDel = n.id; render(); } };
+  del.title = 'Deletes the note and its copies in clusters';
+  del.onclick = () => { if (sure) { state.editing = state.confirmDel = null; delete state.drafts[key]; deleteIdea(n.id); } else { state.confirmDel = n.id; render(); } };
   row2.append(go, cancel, del);
   ed.append(row2);
   ta.addEventListener('keydown', e => {
@@ -596,261 +654,217 @@ function editor(n) {
   });
   return ed;
 }
-
-// The box at the top of the tray for adding notes
 function composer() {
   const box = el('div', 'composer');
   const ta = document.createElement('textarea'); ta.id = 'compose'; ta.rows = state.listMode ? 6 : 2;
-  ta.maxLength = state.listMode ? 8000 : MAX_TEXT;
-  ta.placeholder = state.listMode ? 'Paste your notes here, one note per line' : 'One quote, fact or observation, then press Enter';
+  ta.maxLength = state.listMode ? 6000 : MAX_TEXT;
+  ta.placeholder = state.listMode ? 'Paste your notes, one per line' : 'One idea, then press Enter';
   ta.setAttribute('aria-label', state.listMode ? 'Paste a list of notes, one per line' : 'New note');
   ta.value = state.drafts.compose || '';
   ta.addEventListener('input', () => { state.drafts.compose = ta.value; });
   const submit = () => {
-    const parts = state.listMode ? ta.value.split('\n') : [ta.value];
-    const added = addNotes(parts, state.compColor);
+    const added = addIdeas(state.listMode ? ta.value.split('\n') : [ta.value], state.compColor);
     if (added) {
-      state.drafts.compose = '';
-      if (state.listMode) { state.listMode = false; toast(`Added ${added} note${added > 1 ? 's' : ''}.`); }
-      if (!state.team) render();
-      focusById('compose');
+      state.drafts.compose = ''; state.focusId = 'compose';
+      if (state.listMode) { state.listMode = false; toast(`Added ${added} note${added > 1 ? 's' : ''}.` + (state.leftOut ? ` ${state.leftOut} didn't fit: Generate holds ${MAX_IDEAS} at most.` : '')); }
+      render();
     }
   };
-  ta.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (state.listMode ? (e.ctrlKey || e.metaKey) : !e.shiftKey)) { e.preventDefault(); submit(); }
-  });
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter' && (state.listMode ? (e.ctrlKey || e.metaKey) : !e.shiftKey)) { e.preventDefault(); submit(); } });
   const row = el('div', 'row');
-  row.append(swatches(state.compColor, c => { state.compColor = c; render(); focusById('compose'); }));
-  const add = el('button', 'primary small', state.listMode ? 'Add all lines' : 'Add note'); add.type = 'button'; add.onclick = submit;
-  const mode = el('button', 'link', state.listMode ? 'Write one note instead' : 'Paste a list'); mode.type = 'button';
-  mode.onclick = () => { state.listMode = !state.listMode; render(); focusById('compose'); };
-  row.append(add, mode, el('span', 'hint', state.listMode ? 'Ctrl + Enter to add all' : 'Enter to add · Shift + Enter for a new line'));
+  row.append(swatches(state.compColor, c => { state.compColor = c; state.focusId = 'compose'; render(); }));
+  const add = el('button', 'primary small', state.listMode ? 'Add all lines' : 'Add'); add.type = 'button'; add.onclick = submit;
+  const mode = el('button', 'link', state.listMode ? 'One note' : 'Paste a list'); mode.type = 'button';
+  mode.onclick = () => { state.listMode = !state.listMode; state.focusId = 'compose'; render(); };
+  row.append(add, mode);
   box.append(ta, row);
   return box;
 }
 
-function renderBoard() {
-  const board = $('#board'); board.innerHTML = '';
-  const write = canWrite();
-  board.append(renderStages());
+function colHead(n, name, count, full) {
+  const h = el('div', 'chead');
+  h.append(el('span', 'n', String(n)), el('h2', null, name));
+  if (count != null) h.append(el('span', 'count' + (full ? ' full' : ''), count));
+  return h;
+}
 
-  // Unsorted tray
-  const tray = el('section', 'tray');
-  const loose = notesIn('');
-  const th = el('div', 'thead');
-  th.append(el('h2', null, 'Unsorted notes'), el('span', 'count', String(loose.length)));
-  th.append(el('p', null, write ? 'Drag a note onto a group, or onto “New group”. On a phone, tap ⋯ on a note and pick a group.' : 'Open a team board above to start adding notes.'));
-  tray.append(th);
-  if (write) tray.append(composer());
-  const tn = el('div', 'notes');
-  if (!loose.length) tn.append(el('p', 'empty', state.notes.length ? 'Every note is in a group.' : 'No notes yet. Add the first one above.'));
-  loose.forEach(n => tn.append(noteCard(n)));
-  tray.append(tn);
-  dropZone(tray, '');
-  board.append(tray);
+function generateCol(write) {
+  const col = el('section', 'col gen'); col.setAttribute('aria-label', 'Generate');
+  const total = state.ideas.length;
+  col.append(colHead(1, 'Generate', `${total} / ${MAX_IDEAS}`, total >= MAX_IDEAS));
+  col.append(el('p', 'hint', write ? 'Everyone adds ideas on their own. One idea per note, 1 to 30 notes. Then drag them into clusters.' : 'Open a team board above to start.'));
+  if (write && total < MAX_IDEAS) col.append(composer());
+  else if (write) col.append(el('p', 'hint', `That's ${MAX_IDEAS} notes, the most Generate holds. Start organising.`));
+  const list = el('div', 'notes');
+  if (!total) list.append(el('p', 'empty', 'No notes yet.'));
+  [...state.ideas].sort((a, b) => a.at - b.at).forEach(n => list.append(ideaCard(n)));
+  col.append(list);
+  // Drop a copy back here to take it out of its cluster
+  dropZone(col, (kind, id) => { if (kind === 'copy') removeCopy(id); });
+  return col;
+}
 
-  // Groups
-  const grid = el('div', 'groups');
-  // "New group" comes first, right under the tray, so it's always close by
+function organiseCol(write) {
+  const col = el('section', 'col org' + (state.dotTool ? ' dotting' : '')); col.setAttribute('aria-label', 'Organise');
+  const gs = orderedGroups();
+  col.append(colHead(2, 'Organise', `${gs.length} cluster${gs.length === 1 ? '' : 's'}`));
+  col.append(el('p', 'hint', 'Name a cluster, then drag notes from Generate into it. Each drag adds a copy; the note stays in Generate.'));
   if (write) {
-    const ng = el('div', 'newgroup');
-    const b = el('button', null, '+ New group'); b.type = 'button'; b.onclick = () => newGroup();
-    ng.append(b, el('p', null, 'or drop a note here to start a group with it'));
-    dropZone(ng, '__new');
-    grid.append(ng);
+    // New cluster: type a name and press Enter, or drop a note here
+    const nc = el('div', 'newc');
+    const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'newCluster'; inp.maxLength = 80;
+    inp.placeholder = 'Cluster name, e.g. “Travel time is my me-time”'; inp.setAttribute('aria-label', 'New cluster name');
+    inp.value = state.drafts.newCluster || '';
+    inp.addEventListener('input', () => { state.drafts.newCluster = inp.value; });
+    const make = () => { const t = inp.value.trim(); if (!t) { inp.focus(); return; } state.drafts.newCluster = ''; state.focusId = 'newCluster'; newCluster(t); };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); make(); } });
+    const b = el('button', 'small', '+ Add cluster'); b.type = 'button'; b.onclick = make;
+    nc.append(inp, b, el('p', null, 'Or drop a note here to start an unnamed cluster with it.'));
+    dropZone(nc, (kind, id) => {
+      if (kind === 'idea') newCluster('', id);
+      else if (kind === 'copy') { const c = state.copies.find(x => x.id === id); if (c) { removeCopy(id); newCluster('', c.orig); } }
+    });
+    col.append(nc);
+
+    // The dot tool
+    const db = el('div', 'dotbar');
+    const t = el('button', 'small dotbtn'); t.type = 'button'; t.append(el('i'), state.dotTool ? 'Put the dot tool down' : 'Pick up the dot tool');
+    t.setAttribute('aria-pressed', String(state.dotTool)); t.disabled = !gs.length;
+    t.title = gs.length ? 'While the dot tool is picked up, click a cluster to give it a dot' : 'Make a cluster first';
+    t.onclick = () => { state.dotTool = !state.dotTool; render(); };
+    db.append(t);
+    if (state.team) {
+      const md = el('span', 'mydots'); const used = myDotsUsed();
+      for (let k = 0; k < DOTS_PER_PERSON; k++) md.append(el('i', k < used ? 'used' : ''));
+      md.append(` ${DOTS_PER_PERSON - used} of ${DOTS_PER_PERSON} dots left`);
+      db.append(md);
+    } else if (state.dotTool) db.append(el('span', 'mydots', 'Click a cluster to add a dot.'));
+    col.append(db);
   }
-  orderedGroups().forEach((g, i) => {
-    const sec = el('section', 'group'); sec.dataset.g = g.id;
-    const head = el('div', 'ghead');
-    const t = document.createElement('textarea'); t.className = 'gtitle'; t.id = 'gt-' + g.id; t.rows = 1; t.maxLength = 80;
-    t.placeholder = 'Name this group…'; t.setAttribute('aria-label', 'Group name');
-    t.value = state.titleDrafts[g.id] != null ? state.titleDrafts[g.id] : g.title;
-    t.disabled = !write;
-    t.addEventListener('input', () => { state.titleDrafts[g.id] = t.value.replace(/\n/g, ' '); fitTitle(t); });
-    // A redraw replaces this box; that must not count as "finished typing"
-    const commit = () => { if (rendering) return; const v = state.titleDrafts[g.id]; delete state.titleDrafts[g.id]; if (v != null) patchGroup(g.id, { title: v }); };
-    t.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); t.blur(); } });
-    t.addEventListener('blur', commit);
-    const list = notesIn(g.id);
-    head.append(t, el('span', 'count', String(list.length)));
-    sec.append(head);
 
-    const ns = el('div', 'notes');
-    if (!list.length) ns.append(el('p', 'empty', 'Drop notes here.'));
-    list.forEach(n => ns.append(noteCard(n)));
-    sec.append(ns);
+  const grid = el('div', 'clusters');
+  if (!gs.length) grid.append(el('p', 'empty', 'No clusters yet.'));
+  gs.forEach((g, i) => {
+    const card = el('div', 'cluster'); card.dataset.g = g.id;
+    const top = el('div', 'ctop');
+    const lab = el('div', 'clabel');
+    const t = draftField('textarea', 'gt-' + g.id, g.title, v => patchGroup(g.id, { title: v }));
+    t.rows = 1; t.maxLength = 80; t.placeholder = 'Name this cluster…'; t.setAttribute('aria-label', 'Cluster name'); t.disabled = !write;
+    lab.append(t); top.append(lab); card.append(top);
 
-    const foot = el('div', 'gfoot');
-    const dots = el('span', 'gdots'); dots.setAttribute('aria-label', g.dots + ' dots');
-    for (let k = 0; k < Math.min(g.dots, 12); k++) dots.append(el('i'));
-    foot.append(dots);
-    if (write && state.stage === 2) {   // voting happens in Prioritise
-      const v = el('button', 'small', state.team && g.mine ? '− dot' : '+ dot'); v.type = 'button';
-      v.title = state.team ? (g.mine ? 'Take your dot back' : 'Give this group one of your dots') : 'Add a dot vote';
-      v.onclick = () => vote(g);
-      foot.append(v);
+    const total = dotsOf(g), mine = myDotsOn(g);
+    const dots = el('div', 'cdots'); dots.setAttribute('aria-label', `${total} dot${total === 1 ? '' : 's'}`);
+    for (let k = 0; k < Math.min(total, 14); k++) dots.append(el('i', k < mine && state.team ? 'mine' : ''));
+    if (total > 14) dots.append(el('em', null, `+${total - 14}`));
+    if (total) dots.append(el('em', null, `${total} dot${total === 1 ? '' : 's'}`));
+    card.append(dots);
+
+    const cn = el('div', 'cnotes');
+    const cs = copiesIn(g.id);
+    if (!cs.length) cn.append(el('p', 'empty', 'Drag notes here'));
+    cs.forEach(c => {
+      const nn = el('div', 'note copy c-' + (COLORS.includes(copyColor(c)) ? copyColor(c) : 'yellow'));
+      nn.style.setProperty('--tilt', tilt(c.id));
+      nn.append(el('p', 'txt', copyText(c)));
+      if (write) {
+        const x = el('button', 'x', '×'); x.type = 'button'; x.title = 'Take this copy out of the cluster'; x.setAttribute('aria-label', 'Remove from cluster');
+        x.onclick = e => { e.stopPropagation(); removeCopy(c.id); };
+        nn.append(x);
+        draggable(nn, 'copy:' + c.id);
+      }
+      cn.append(nn);
+    });
+    card.append(cn);
+
+    const foot = el('div', 'cfoot');
+    foot.append(el('span', 'meta', `${cs.length} note${cs.length === 1 ? '' : 's'}`));
+    if (write && (state.team ? mine : total)) {
+      const tb = el('button', 'small', state.team ? 'Take a dot back' : '− dot'); tb.type = 'button';
+      tb.onclick = e => { e.stopPropagation(); takeDot(g); };
+      foot.append(tb);
     }
     if (write) {
-      if (!state.team && g.dots && state.stage === 2) { const r = el('button', 'small', '−'); r.type = 'button'; r.title = 'Remove a dot'; r.setAttribute('aria-label', 'Remove a dot'); r.onclick = () => vote(g, true); foot.append(r); }
-      const sure = state.confirmUngroup === g.id;
-      const u = el('button', 'small' + (sure ? ' danger' : ''), sure ? 'Confirm ungroup' : 'Ungroup'); u.type = 'button';
-      u.title = 'Remove this group and send its notes back to Unsorted';
-      u.onclick = () => { if (sure) { state.confirmUngroup = null; ungroup(g.id); } else { state.confirmUngroup = g.id; render(); setTimeout(() => { if (state.confirmUngroup === g.id) { state.confirmUngroup = null; render(); } }, 4000); } };
-      foot.append(u);
+      const sure = state.confirmDrop === g.id;
+      const d = el('button', 'small' + (sure ? ' danger' : ''), sure ? 'Confirm delete' : 'Delete'); d.type = 'button';
+      d.title = 'Delete this cluster. The notes stay in Generate.';
+      d.onclick = e => { e.stopPropagation(); if (sure) { state.confirmDrop = null; deleteCluster(g.id); } else { state.confirmDrop = g.id; render(); setTimeout(() => { if (state.confirmDrop === g.id) { state.confirmDrop = null; render(); } }, 4000); } };
+      foot.append(d);
     }
+    card.append(foot);
+
+    // With the dot tool picked up, a click anywhere on the cluster adds a dot
+    card.addEventListener('click', e => {
+      if (!state.dotTool || !write || e.target.closest('button, textarea, input')) return;
+      addDot(g);
+    });
+    dropZone(card, (kind, id) => { if (kind === 'idea') copyTo(id, g.id); else if (kind === 'copy') moveCopy(id, g.id); });
+    grid.append(card);
+  });
+  col.append(grid);
+  return col;
+}
+
+function prioritiseCol(write) {
+  const col = el('section', 'col pri'); col.setAttribute('aria-label', 'Prioritise');
+  const r = ranked(), voted = r.filter(x => x.dots > 0), rest = r.filter(x => !x.dots);
+  const maxDots = voted.length ? voted[0].dots : 1;
+  col.append(colHead(3, 'Prioritise', voted.length ? `${voted.reduce((s, x) => s + x.dots, 0)} dots` : null));
+  col.append(el('p', 'hint', 'Clusters rank themselves by dots, most first. Agree a next step and an owner for the top ones.'));
+  const list = el('div', 'rank');
+  if (!voted.length) list.append(el('p', 'empty', r.length ? 'No dots yet. Pick up the dot tool in Organise and click the clusters that matter most.' : 'Clusters appear here once they have dots.'));
+  voted.forEach(({ g, label, dots }, i) => {
+    const it = el('div', 'ritem' + (i === 0 ? ' first' : ''));
+    it.append(el('span', 'r', '#' + (i + 1)), el('h3', null, label));
+    const meta = el('div', 'meta');
+    const b3 = el('span', 'bar3'); const sp = el('span'); sp.style.width = Math.round(dots / maxDots * 100) + '%'; b3.append(sp);
+    meta.append(`${dots} dot${dots === 1 ? '' : 's'} · ${copiesIn(g.id).length} notes`, b3);
+    it.append(meta);
+    const nx = el('div', 'gnext');
+    const a = draftField('input', 'nx-' + g.id, g.next || '', v => patchGroup(g.id, { next: v }));
+    a.maxLength = 140; a.placeholder = 'Next step'; a.setAttribute('aria-label', 'Next step for ' + label); a.disabled = !write;
+    const o = draftField('input', 'ow-' + g.id, g.owner || '', v => patchGroup(g.id, { owner: v }));
+    o.maxLength = 40; o.placeholder = 'Who'; o.setAttribute('aria-label', 'Who owns it'); o.disabled = !write;
+    if (i < 3 && !a.value.trim()) a.classList.add('missing');
+    if (i < 3 && !o.value.trim()) o.classList.add('missing');
+    nx.append(a, o); it.append(nx);
     if (g.title.trim()) {
-      const a = el('a', null, 'How Might We →'); a.href = '/toolkit/how-might-we/?problem=' + encodeURIComponent(g.title.trim().slice(0, 200));
-      a.target = '_blank'; a.rel = 'noopener'; a.title = 'Open this insight in the How Might We tool';
-      foot.append(a);
+      const l = el('a', null, 'Turn into How Might We →'); l.href = '/toolkit/how-might-we/?problem=' + encodeURIComponent(g.title.trim().slice(0, 200));
+      l.target = '_blank'; l.rel = 'noopener'; it.append(l);
     }
-    sec.append(foot);
+    list.append(it);
+  });
+  col.append(list);
+  if (rest.length && voted.length) {
+    col.append(el('p', 'subh', 'No dots yet'));
+    const ul = el('ul', 'unvoted'); rest.forEach(x => ul.append(el('li', null, x.label))); col.append(ul);
+  }
+  col.append(el('p', 'subh', 'Check'));
+  col.append(checksList());
+  return col;
+}
 
-    // Prioritise: a voted group gets a next step and someone who owns it
-    if (state.stage === 2) {
-      const nx = el('div', 'gnext');
-      const lab = el('label', null, 'Next step · Who'); lab.htmlFor = 'nx-' + g.id;
-      const field = (key, ph, max) => {
-        const id = (key === 'next' ? 'nx-' : 'ow-') + g.id;
-        const i = document.createElement('input'); i.type = 'text'; i.id = id; i.maxLength = max; i.placeholder = ph;
-        i.setAttribute('aria-label', key === 'next' ? 'Next step for this group' : 'Who owns the next step');
-        i.value = state.titleDrafts[id] != null ? state.titleDrafts[id] : (g[key] || '');
-        i.disabled = !write;
-        if (g.dots > 0 && !i.value.trim()) i.classList.add('missing');
-        i.addEventListener('input', () => { state.titleDrafts[id] = i.value; });
-        const done = () => { if (rendering) return; const v = state.titleDrafts[id]; delete state.titleDrafts[id]; if (v != null) patchGroup(g.id, { [key]: v }); };
-        i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } });
-        i.addEventListener('blur', done);
-        return i;
-      };
-      nx.append(lab, field('next', 'What will you do about this?', 140), field('owner', 'Who', 40));
-      sec.append(nx);
+// What a facilitator would point out while walking past
+function checksList() {
+  const gs = orderedGroups(), out = [];
+  const loose = state.ideas.filter(n => !clustersOf(n.id)).length;
+  if (!state.ideas.length) out.push(['todo', 'Generate', 'Add at least one note.']);
+  else out.push([loose ? 'warn' : 'ok', 'Organise', loose ? `${loose} note${loose > 1 ? 's aren’t' : ' isn’t'} in any cluster yet.` : 'Every note is in a cluster.']);
+  if (gs.length) {
+    const unnamed = gs.filter(g => !g.title.trim()).length, emptyC = gs.filter(g => !copiesIn(g.id).length).length;
+    const oneWord = gs.find(g => g.title.trim() && g.title.trim().split(/\s+/).length < 3);
+    if (unnamed) out.push(['warn', 'Names', `${unnamed} cluster${unnamed > 1 ? 's have' : ' has'} no name.`]);
+    if (oneWord) out.push(['warn', 'Insights', `“${oneWord.title.trim()}” is a topic. Say what you learned, as a sentence.`]);
+    if (emptyC) out.push(['warn', 'Empty', `${emptyC} cluster${emptyC > 1 ? 's are' : ' is'} empty.`]);
+    const top = ranked().filter(x => x.dots).slice(0, 3);
+    if (top.length) {
+      const open = top.filter(x => !(x.g.next || '').trim() || !(x.g.owner || '').trim()).length;
+      out.push([open ? 'warn' : 'ok', 'Next steps', open ? `${open} of the top ${top.length} need${open === 1 ? 's' : ''} a next step and an owner.` : 'Top clusters have next steps and owners.']);
     }
-    dropZone(sec, g.id);
-    grid.append(sec);
-  });
-
-  board.append(grid);
-  // Group names wrap onto more lines when they're long
-  requestAnimationFrame(() => document.querySelectorAll('.gtitle').forEach(fitTitle));
-}
-function fitTitle(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
-
-// ---------- 3h. The three stages and the coach ----------
-// The team moves the board from stage to stage by clicking, and everyone on
-// a team board moves together. The only rules:
-//   Generate → Organise   needs at least 1 note
-//   Organise → Prioritise needs at least 1 group
-// Going back to an earlier stage is always allowed.
-const topGroups = () => orderedGroups().filter(g => g.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
-const stage = () => state.stage;
-const STAGES = [
-  ['Generate', 'Everyone adds notes on their own'],
-  ['Organise', 'Group similar notes, name each group'],
-  ['Prioritise', 'Dot-vote, then next steps and owners'],
-];
-// Why the board can't move to stage n yet ('' means it can)
-function blockedTo(n) {
-  if (n >= 1 && !state.notes.length) return 'Add at least one note first.';
-  if (n >= 2 && !state.groups.length) return 'Make at least one group first.';
-  return '';
-}
-function setStage(n) {
-  if (n === state.stage || blockedTo(n) || !canWrite()) return;
-  if (state.team) { state.stage = n; render(); teamSaveStage(n); return; }
-  state.stage = n; save(); render();
-}
-function nextStep() {
-  const total = state.notes.length, loose = notesIn('').length, top = topGroups();
-  const unnamed = state.groups.filter(g => !g.title.trim()).length;
-  switch (state.stage) {
-    case 0:
-      if (!state.question.trim()) return ['Generate', 'Write your research question at the top, then add notes.'];
-      if (!total) return ['Generate', 'Add your first note: one quote, fact or observation.'];
-      return ['Generate', `${total} note${total > 1 ? 's' : ''} so far. When everyone has added theirs, click Organise.`];
-    case 1:
-      if (!state.groups.length) return ['Organise', 'Drag a note onto “New group”, then drag similar notes next to it.'];
-      if (loose.length) return ['Organise', `${loose.length} note${loose.length > 1 ? 's are' : ' is'} still unsorted. Find each one a group, or start a new one.`];
-      if (unnamed) return ['Organise', 'Give every group a name that says what you learned.'];
-      return ['Organise', 'All sorted and named. Click Prioritise when the team is ready.'];
-    default:
-      if (!top.length) return ['Prioritise', 'Each person gives three dots to the groups that matter most.'];
-      if (top.some(g => !g.next.trim() || !g.owner.trim())) return ['Prioritise', 'For each of your top groups, write the next step and who owns it.'];
-      return ['Prioritise', 'Done. Open your top group in How Might We and turn it into questions to design for.'];
   }
+  const ul = el('ul', 'checks');
+  for (const [s, h, t] of out) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
+  return ul;
 }
-function renderStages() {
-  const now = state.stage, write = canWrite(), wrap = el('div', 'stagebar');
-  const bar = el('div', 'stages'); bar.setAttribute('aria-label', 'Stages');
-  STAGES.forEach(([name, tip], i) => {
-    const d = el('button', 'stage'); d.type = 'button'; d.dataset.s = i < now ? 'done' : i === now ? 'now' : 'todo';
-    d.append(el('span', 'n', i < now ? '✓' : String(i + 1)), el('b', null, name), el('span', null, tip));
-    if (i === now) d.setAttribute('aria-current', 'step');
-    const why = blockedTo(i);
-    d.disabled = !write || i === now || !!why;
-    d.title = i === now ? 'You are here' : why || `Move ${state.team ? 'the whole team' : 'the board'} to ${name}`;
-    d.onclick = () => setStage(i);
-    bar.append(d);
-  });
-  wrap.append(bar);
-  if (write && now < 2) {
-    const row = el('div', 'stagego');
-    const why = blockedTo(now + 1);
-    row.append(el('p', null, why || (state.team ? `When the team is ready, move everyone on together. You can always click a stage to go back.` : 'Move on whenever you are ready. You can always click a stage to go back.')));
-    const go = el('button', 'primary small', `Next: ${STAGES[now + 1][0]} →`); go.type = 'button'; go.disabled = !!why;
-    go.onclick = () => setStage(now + 1);
-    row.append(go);
-    wrap.append(row);
-  }
-  return wrap;
-}
-
-function renderCoach() {
-  const total = state.notes.length, sorted = state.notes.filter(isSorted).length;
-  $('#sortNum').firstChild.textContent = sorted;
-  $('#sortNum').querySelector('small').textContent = ` / ${total} notes sorted`;
-  $('#sortBar').style.width = (total ? Math.round(sorted / total * 100) : 0) + '%';
-  const [step, text] = nextStep();
-  const nx = $('#next'); nx.innerHTML = ''; nx.append('Next: ', el('b', null, step), ' · ' + text);
-
-  // Group check: what a facilitator would point out while walking past
-  const gs = orderedGroups(), sizes = gs.map(g => notesIn(g.id).length);
-  const lone = sizes.filter(s => s === 1).length, empty = sizes.filter(s => s === 0).length;
-  const big = gs.filter((g, i) => sizes[i] > 12), unnamed = gs.filter(g => !g.title.trim()).length;
-  const oneWord = gs.filter(g => g.title.trim() && g.title.trim().split(/\s+/).length < 3);
-  const checks = [];
-  if (!gs.length) checks.push(['todo', 'Groups', 'No groups yet. They appear as you sort.']);
-  else {
-    checks.push([unnamed ? 'warn' : 'ok', 'Names', unnamed ? `${unnamed} group${unnamed > 1 ? 's have' : ' has'} no name yet.` : 'Every group has a name.']);
-    checks.push([oneWord.length ? 'warn' : 'ok', 'Insights', oneWord.length ? `“${oneWord[0].title.trim()}” is a topic. Say what you learned about it, as a sentence.` : 'Names read as insights, not topics.']);
-    checks.push([lone ? 'warn' : 'ok', 'Lone notes', lone ? `${lone} group${lone > 1 ? 's hold' : ' holds'} one note. Merge it, or keep it if it's a real outlier.` : 'No group has just one note.']);
-    checks.push([big.length ? 'warn' : 'ok', 'Size', big.length ? `“${groupLabel(big[0], gs.indexOf(big[0]))}” has more than 12 notes. Can it split in two?` : 'No group is too big to read.']);
-    if (empty) checks.push(['warn', 'Empty', `${empty} group${empty > 1 ? 's are' : ' is'} empty. Fill or ungroup ${empty > 1 ? 'them' : 'it'}.`]);
-    if (total >= 15 && gs.length < 3) checks.push(['warn', 'Spread', 'Only a couple of groups for this many notes. Look for differences inside each group.']);
-    const tg = topGroups(), open = tg.filter(g => !g.next.trim() || !g.owner.trim());
-    if (tg.length) checks.push([open.length ? 'warn' : 'ok', 'Next steps', open.length ? `${open.length} of your top ${tg.length} group${tg.length > 1 ? 's needs' : ' needs'} a next step and an owner.` : 'Every top group has a next step and an owner.']);
-  }
-  const ul = $('#checks'); ul.innerHTML = '';
-  for (const [s, h, t] of checks) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
-
-  const top = topGroups();
-  const ol = $('#top3'); ol.innerHTML = '';
-  if (!top.length) ol.append(el('li', null, 'No dots yet. Each person gets three.'));
-  for (const g of top) {
-    const li = el('li', null, groupLabel(g, gs.indexOf(g)) + ' ');
-    li.append(el('em', null, `${g.dots} dot${g.dots > 1 ? 's' : ''}`));
-    if (g.next.trim()) li.append(el('span', 'nx', `Next: ${g.next.trim()}${g.owner.trim() ? ' · ' + g.owner.trim() : ''}`));
-    if (g.title.trim()) { li.append(document.createElement('br')); const a = el('a', null, 'Turn into How Might We →'); a.href = '/toolkit/how-might-we/?problem=' + encodeURIComponent(g.title.trim().slice(0, 200)); a.target = '_blank'; a.rel = 'noopener'; li.append(a); }
-    ol.append(li);
-  }
-  const md = $('#myDots'); md.hidden = !state.team; md.innerHTML = '';
-  if (state.team) {
-    const used = state.groups.filter(g => g.mine).length;
-    for (let k = 0; k < DOTS_PER_PERSON; k++) md.append(el('i', k < used ? 'used' : ''));
-    md.append(` Your dots: ${DOTS_PER_PERSON - used} of ${DOTS_PER_PERSON} left`);
-  }
-}
-
-function focusById(id) { requestAnimationFrame(() => { const t = document.getElementById(id); if (t) { t.focus(); const l = t.value.length; t.setSelectionRange(l, l); } }); }
 
 let rendering = false;
 function render() {
@@ -860,8 +874,8 @@ function render() {
 }
 function draw() {
   // Keep the cursor where it was, so a live redraw doesn't interrupt typing
-  const a = document.activeElement, focusId = a && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT') && a.id ? a.id : null;
-  const sel = focusId && a.setSelectionRange ? [a.selectionStart, a.selectionEnd] : null;
+  const a = document.activeElement, keepId = a && /^(TEXTAREA|INPUT)$/.test(a.tagName) && a.id ? a.id : null;
+  const sel = keepId && a.setSelectionRange ? [a.selectionStart, a.selectionEnd] : null;
 
   const ban = $('#banner'); ban.innerHTML = ''; ban.className = 'banner'; ban.hidden = true;
   if (boardFull()) {
@@ -871,7 +885,7 @@ function draw() {
     ban.hidden = false;
     const s = el('span'); s.append(el('b', null, 'This is an example board. '), 'Change anything to make it yours, or start with an empty board.');
     const b = el('button', null, 'Start an empty board'); b.type = 'button';
-    b.onclick = () => { state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; state.drafts = {}; save(); render(); };
+    b.onclick = () => { resetBoard(); save(); render(); };
     ban.append(s, b);
   }
   const q = $('#question');
@@ -881,34 +895,40 @@ function draw() {
   $('#clearBtn').className = state.confirmClear ? 'danger' : '';
   $('#exampleBtn').hidden = $('#clearBtn').hidden = state.teamView;   // a shared board never gets one-click cleared
   renderTeamPanel();
-  renderBoard();
-  renderCoach();
-  const fg = state.focusGroup && document.getElementById('gt-' + state.focusGroup);
-  if (fg) { state.focusGroup = null; fg.focus(); }
-  else if (focusId) { const t = document.getElementById(focusId); if (t) { t.focus(); if (sel && t.setSelectionRange) t.setSelectionRange(sel[0], sel[1]); } }
-}
 
-// ---------- 3i. Copy as text ----------
+  const write = canWrite(), board = $('#board'); board.innerHTML = '';
+  board.append(generateCol(write), organiseCol(write), prioritiseCol(write));
+  document.querySelectorAll('.clabel textarea').forEach(fit);
+  requestAnimationFrame(() => document.querySelectorAll('.clabel textarea').forEach(fit));
+
+  const want = state.focusId && document.getElementById(state.focusId);
+  if (want) { state.focusId = null; want.focus(); const l = (want.value || '').length; if (want.setSelectionRange) want.setSelectionRange(l, l); }
+  else if (keepId) { const t = document.getElementById(keepId); if (t) { t.focus(); if (sel && t.setSelectionRange) t.setSelectionRange(sel[0], sel[1]); } }
+}
+function resetBoard() { Object.assign(state, { question: '', ideas: [], groups: [], copies: [], isExample: false, drafts: {}, fieldDrafts: {}, dotTool: false, editing: null }); }
+
+// ---------- 3h. Copy as text ----------
 function asText() {
   let out = `# Affinity map: ${state.question || 'Untitled research question'}\n\n`;
   if (state.team) out += `Team code: ${state.team.code}\n\n`;
-  const gs = orderedGroups().map((g, i) => [g, groupLabel(g, i)]).sort((a, b) => b[0].dots - a[0].dots);
-  for (const [g, label] of gs) {
-    out += `## ${label}${g.dots ? ` (${g.dots} dot${g.dots > 1 ? 's' : ''})` : ''}\n`;
-    if (g.next.trim()) out += `Next step: ${g.next.trim()}${g.owner.trim() ? ` (owner: ${g.owner.trim()})` : ''}\n`;
-    const list = notesIn(g.id);
-    out += list.length ? list.map(n => `- ${n.text.replace(/\n/g, ' ')}`).join('\n') + '\n\n' : '- (empty)\n\n';
-  }
-  const loose = notesIn('');
-  if (loose.length) out += `## Unsorted\n${loose.map(n => `- ${n.text.replace(/\n/g, ' ')}`).join('\n')}\n`;
+  out += `## 1. Generate (${state.ideas.length} notes)\n` + ([...state.ideas].sort((a, b) => a.at - b.at).map(n => `- ${n.text.replace(/\n/g, ' ')}`).join('\n') || '- (none)') + '\n\n';
+  out += '## 2. Organise\n';
+  orderedGroups().forEach((g, i) => {
+    out += `### ${groupLabel(g, i)}\n` + (copiesIn(g.id).map(c => `- ${copyText(c).replace(/\n/g, ' ')}`).join('\n') || '- (empty)') + '\n';
+  });
+  out += '\n## 3. Prioritise\n';
+  const r = ranked().filter(x => x.dots);
+  out += r.length ? r.map((x, i) => `${i + 1}. ${x.label} (${x.dots} dot${x.dots > 1 ? 's' : ''})${x.g.next ? ` · Next: ${x.g.next}${x.g.owner ? ` (${x.g.owner})` : ''}` : ''}`).join('\n') + '\n' : 'No dots yet.\n';
   return out;
 }
 
-// ---------- 3j. Save A4 sheet ----------
-// Like Crazy 8s and the Business Model Canvas: we don't screenshot the page.
-// We redraw the board from the data on a white A4 landscape page at 300 dpi
-// (297 × 210 mm = 3508 × 2480 px), in dark ink, so it prints well in black and white.
+// ---------- 3i. Save A4 sheet ----------
+// Like Crazy 8s and the Business Model Canvas: the screen keeps the dark
+// theme, but the saved sheet is redrawn from the data on white A4 landscape
+// at 300 dpi (297 × 210 mm = 3508 × 2480 px), in dark ink for any printer.
+// It has the same three columns: Generate | Organise | Prioritise.
 const PRINT_TINT = { yellow: '#FFF3B8', pink: '#FFE0E7', mint: '#DDF5E7', sky: '#DEEEFD', lilac: '#ECE5FD' };
+const LABEL_TINT = '#E9DDFF';
 const UI_F = 'Geist, Arial, sans-serif', HAND_F = 'Kalam, "Comic Sans MS", cursive';
 
 function wrapText(x, text, maxW) {
@@ -933,11 +953,10 @@ function fitOneLine(x, text, maxW) {
   while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1);
   return text + '…';
 }
-// Place notes inside a box in `cols` columns (shortest column first). Try big
-// text, then step the size down until every note fits; whatever still doesn't
-// fit at the smallest size is counted as "+ N more".
+// Place notes in a box in `cols` columns (shortest column first). Try big text,
+// then step down until all fit; what still doesn't fit is "+ N more".
 function planNotes(x, list, box, cols, fsMax, fsMin) {
-  const gap = 14, nw = (box.w - gap * (cols - 1)) / cols, np = 12;
+  const gap = 12, nw = (box.w - gap * (cols - 1)) / cols, np = 10;
   let plan = null;
   for (let fs = fsMax; fs >= fsMin && !plan; fs -= 2) {
     x.font = `400 ${fs}px ${HAND_F}`;
@@ -960,89 +979,110 @@ function drawPlan(x, plan, INK) {
     p.lines.forEach((l, i) => x.fillText(l, p.x + plan.np, p.y + plan.np + plan.fs * 0.9 + i * p.lh));
   }
 }
+// A row of filled dots starting at x0; returns where the row ends
+function dotRow(x, n, x0, y, r, max) {
+  const step = r * 2 + 6;
+  for (let k = 0; k < Math.min(n, max); k++) { x.beginPath(); x.arc(x0 + r + k * step, y, r, 0, Math.PI * 2); x.fill(); }
+  return x0 + Math.min(n, max) * step;
+}
 
 async function drawSheet() {
   try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist'), document.fonts.load('400 30px Kalam')]); } catch (e) {}
-  const W = 3508, H = 2480, M = 130, INK = '#111111', GREY = '#555555';
+  const W = 3508, H = 2480, M = 120, INK = '#111111', GREY = '#555555';
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
   x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
 
-  // Header (left): label and the research question (up to two lines)
-  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`;
-  x.fillText('AFFINITY MAP  ·  INVENTNDISCOVER.COM', M, M + 28);
-  x.fillStyle = INK; x.font = `800 64px ${UI_F}`;
-  const qLines = wrapText(x, state.question || 'Untitled research question', 2150);
-  const qShow = qLines.slice(0, 2); if (qLines.length > 2) qShow[1] = fitOneLine(x, qShow[1] + ' ' + qLines.slice(2).join(' '), 2150);
-  qShow.forEach((l, i) => x.fillText(l, M, M + 110 + i * 76));
+  // Header: label, question (up to two lines), Name and Date lines, team code
+  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`; x.fillText('AFFINITY MAP  ·  INVENTNDISCOVER.COM', M, M + 28);
+  x.fillStyle = INK; x.font = `800 60px ${UI_F}`;
+  const qL = wrapText(x, state.question || 'Untitled research question', 2200);
+  const qShow = qL.slice(0, 2); if (qL.length > 2) qShow[1] = fitOneLine(x, qShow[1] + ' ' + qL.slice(2).join(' '), 2200);
+  qShow.forEach((l, i) => x.fillText(l, M, M + 104 + i * 72));
+  const rx = W - M - 860;
+  x.strokeStyle = INK; x.lineWidth = 3; x.font = `600 34px ${UI_F}`;
+  [['Name', M + 56], ['Date', M + 132]].forEach(([label, y]) => { x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke(); });
+  if (state.team) { x.fillStyle = GREY; x.font = `400 30px ${UI_F}`; x.fillText('Team code: ' + state.team.code, rx, M + 205); }
 
-  // Header (right): Name and Date lines to write on, and the team code
-  const rx = W - M - 900;
-  x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK; x.font = `600 34px ${UI_F}`;
-  [['Name', M + 60], ['Date', M + 140]].forEach(([label, y]) => { x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke(); });
-  if (state.team) { x.fillStyle = GREY; x.font = `400 30px ${UI_F}`; x.fillText('Team code: ' + state.team.code, rx, M + 215); }
+  // Three columns: Generate 24% | Organise 50% | Prioritise 26%
+  const top = M + 104 + qShow.length * 72 + 30, bottom = H - M - 40, gap = 36, gw = W - 2 * M - 2 * gap;
+  const cols = [['1  GENERATE', gw * 0.24], ['2  ORGANISE', gw * 0.50], ['3  PRIORITISE', gw * 0.26]];
+  let cx = M; const boxes = [];
+  cols.forEach(([t, w]) => {
+    x.strokeStyle = INK; x.lineWidth = 4; x.strokeRect(cx, top, w, bottom - top);
+    x.fillStyle = INK; x.fillRect(cx, top, w, 64);
+    x.fillStyle = '#FFFFFF'; x.font = `800 30px ${UI_F}`; x.fillText(t, cx + 22, top + 43);
+    boxes.push({ x: cx + 22, y: top + 64 + 22, w: w - 44, h: bottom - top - 64 - 44 });
+    cx += w + gap;
+  });
 
-  const top = M + 110 + qShow.length * 76 + 40, bottom = H - M - 40, gw = W - 2 * M;
-  const loose = notesIn('');
-  const stripH = loose.length ? 300 : 0;
-  const gridBottom = bottom - (stripH ? stripH + 30 : 0);
+  // 1 Generate: every idea, ticked if it's in a cluster
+  const ideas = [...state.ideas].sort((a, b) => a.at - b.at);
+  if (ideas.length) {
+    const p = planNotes(x, ideas, boxes[0], 2, 26, 16); drawPlan(x, p, INK);
+    x.fillStyle = INK; x.font = `700 20px ${UI_F}`;
+    p.placed.forEach(q => { if (clustersOf(q.n.id)) x.fillText('✓', q.x + p.nw - 24, q.y + q.h - 8); });
+    if (p.hidden) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${p.hidden} more on screen`, boxes[0].x, bottom - 26); }
+  } else { x.fillStyle = GREY; x.font = `400 26px ${UI_F}`; x.fillText('(no notes)', boxes[0].x, boxes[0].y + 30); }
 
-  // Groups, most dots first, in a grid of boxes
-  const all = orderedGroups().map((g, i) => [g, groupLabel(g, i)]).sort((a, b) => b[0].dots - a[0].dots || a[0].at - b[0].at);
-  const MAXG = 18, gs = all.slice(0, MAXG);
-  if (!gs.length) {
-    x.fillStyle = GREY; x.font = `400 34px ${UI_F}`; x.fillText('No groups yet. Draw your groups here by hand.', M, top + 50);
-    x.strokeStyle = '#999999'; x.lineWidth = 2;
-    for (let y = top + 130; y < gridBottom - 10; y += 70) { x.beginPath(); x.moveTo(M, y); x.lineTo(W - M, y); x.stroke(); }
-  } else {
-    const K = gs.length, cols = K <= 4 ? K : K <= 6 ? 3 : K <= 8 ? 4 : K <= 10 ? 5 : 6,   // 5 groups → 3 + 2, 7 → 4 + 3
-      rows = Math.ceil(K / cols), gap = 28;
-    const cw = (gw - gap * (cols - 1)) / cols, ch = (gridBottom - top - gap * (rows - 1)) / rows;
-    gs.forEach(([g, label], i) => {
-      const bx = M + (i % cols) * (cw + gap), by = top + Math.floor(i / cols) * (ch + gap), pad = 22;
-      x.strokeStyle = INK; x.lineWidth = 4; x.strokeRect(bx, by, cw, ch);
-      // dots on the right of the title row
-      x.fillStyle = INK;
-      const d = Math.min(g.dots, 10);
-      for (let k = 0; k < d; k++) { x.beginPath(); x.arc(bx + cw - pad - 10 - k * 26, by + pad + 18, 10, 0, Math.PI * 2); x.fill(); }
-      const titleW = cw - 2 * pad - (d ? d * 26 + 10 : 0);
-      x.font = `700 ${cols >= 5 ? 28 : 34}px ${UI_F}`; x.fillStyle = g.title.trim() ? INK : GREY;
-      const tl = wrapText(x, label, titleW).slice(0, 2);
-      tl.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, titleW) : l, bx + pad, by + pad + 30 + k * 40));
-      let nTop = by + pad + 30 + tl.length * 40 + 8;
-      if (g.next.trim()) {   // the agreed next step, in italics under the name
-        x.font = `italic 400 24px ${UI_F}`; x.fillStyle = INK;
-        const nl = wrapText(x, `Next: ${g.next.trim()}${g.owner.trim() ? ' (' + g.owner.trim() + ')' : ''}`, cw - 2 * pad).slice(0, 2);
-        nl.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, cw - 2 * pad) : l, bx + pad, nTop + 4 + k * 30));
-        nTop += nl.length * 30 + 10;
-      }
-      x.strokeStyle = '#BBBBBB'; x.lineWidth = 2; x.beginPath(); x.moveTo(bx + pad, nTop - 4); x.lineTo(bx + cw - pad, nTop - 4); x.stroke();
-      const list = notesIn(g.id);
-      const box = { x: bx + pad, y: nTop + 10, w: cw - 2 * pad, h: by + ch - pad - nTop - 10 - 34 };
-      const plan = planNotes(x, list, box, cw > 900 ? 2 : 1, 30, 18);
-      drawPlan(x, plan, INK);
-      if (plan.hidden) { x.fillStyle = GREY; x.font = `600 24px ${UI_F}`; x.fillText(`+ ${plan.hidden} more on screen`, bx + pad, by + ch - pad); }
-      else if (!list.length) { x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.fillText('(empty)', bx + pad, nTop + 40); }
+  // 2 Organise: clusters in a grid, each with its label sticky and dots
+  const gs = orderedGroups(), ob = boxes[1];
+  if (gs.length) {
+    const K = Math.min(gs.length, 9), gc = K <= 2 ? K : K <= 4 ? 2 : 3, gr = Math.ceil(K / gc), g2 = 22;
+    const cw = (ob.w - g2 * (gc - 1)) / gc, ch = (ob.h - g2 * (gr - 1)) / gr;
+    gs.slice(0, K).forEach((g, i) => {
+      const bx = ob.x + (i % gc) * (cw + g2), by = ob.y + Math.floor(i / gc) * (ch + g2), pad = 16;
+      x.strokeStyle = '#999999'; x.lineWidth = 2; x.strokeRect(bx, by, cw, ch);
+      // the purple label sticky
+      x.font = `700 26px ${UI_F}`;
+      const lw = cw - 2 * pad, ll = wrapText(x, groupLabel(g, i), lw - 24).slice(0, 2);
+      const lh = 20 + ll.length * 32;
+      x.fillStyle = LABEL_TINT; x.fillRect(bx + pad, by + pad, lw, lh); x.strokeStyle = '#333333'; x.strokeRect(bx + pad, by + pad, lw, lh);
+      x.fillStyle = g.title.trim() ? INK : GREY;
+      ll.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, lw - 24) : l, bx + pad + 12, by + pad + 36 + k * 32));
+      let y = by + pad + lh + 14;
+      const d = dotsOf(g);
+      if (d) { x.fillStyle = INK; const end = dotRow(x, d, bx + pad + 4, y + 10, 11, 12); x.font = `600 22px ${UI_F}`; x.fillText(`${d} dot${d > 1 ? 's' : ''}`, end + 6, y + 18); y += 34; }
+      const list = copiesIn(g.id).map(c => ({ text: copyText(c), color: copyColor(c) }));
+      const p = planNotes(x, list, { x: bx + pad, y, w: lw, h: by + ch - pad - y - 26 }, cw > 700 ? 2 : 1, 24, 16);
+      drawPlan(x, p, INK);
+      if (p.hidden) { x.fillStyle = GREY; x.font = `600 20px ${UI_F}`; x.fillText(`+ ${p.hidden} more on screen`, bx + pad, by + ch - pad); }
     });
-    if (all.length > MAXG) { x.fillStyle = GREY; x.font = `600 26px ${UI_F}`; x.fillText(`+ ${all.length - MAXG} more groups on screen`, M, gridBottom + 26); }
+    if (gs.length > K) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${gs.length - K} more clusters on screen`, ob.x, bottom - 6); }
+  } else {
+    x.fillStyle = GREY; x.font = `400 26px ${UI_F}`; x.fillText('No clusters yet. Draw them here by hand.', ob.x, ob.y + 30);
   }
 
-  // Unsorted notes strip along the bottom
-  if (stripH) {
-    const sy = bottom - stripH;
-    x.setLineDash([14, 10]); x.strokeStyle = GREY; x.lineWidth = 3; x.strokeRect(M, sy, gw, stripH); x.setLineDash([]);
-    x.fillStyle = GREY; x.font = `700 26px ${UI_F}`; x.fillText(`UNSORTED (${loose.length})`, M + 22, sy + 42);
-    const plan = planNotes(x, loose, { x: M + 22, y: sy + 62, w: gw - 44, h: stripH - 84 }, 6, 26, 18);
-    drawPlan(x, plan, INK);
-    if (plan.hidden) { x.fillStyle = GREY; x.font = `600 24px ${UI_F}`; x.textAlign = 'right'; x.fillText(`+ ${plan.hidden} more on screen`, W - M - 22, sy + 42); x.textAlign = 'left'; }
+  // 3 Prioritise: the ranking, #1 at the top, with next steps
+  const pb = boxes[2], r = ranked().filter(z => z.dots);
+  let y = pb.y;
+  if (!r.length) { x.fillStyle = GREY; x.font = `400 26px ${UI_F}`; x.fillText('No dots yet.', pb.x, y + 30); }
+  for (let i = 0; i < r.length; i++) {
+    const { g, label, dots } = r[i];
+    x.font = `700 28px ${UI_F}`;
+    const tl = wrapText(x, label, pb.w - 90).slice(0, 2);
+    x.font = `italic 400 22px ${UI_F}`;
+    const nextText = g.next ? `Next: ${g.next}${g.owner ? ' (' + g.owner + ')' : ''}` : 'Next: ________________  Who: ______';
+    const nl = wrapText(x, nextText, pb.w - 90).slice(0, 2);
+    const h = 26 + tl.length * 34 + 40 + nl.length * 28 + 18;
+    if (y + h > pb.y + pb.h) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${r.length - i} more on screen`, pb.x, bottom - 26); break; }
+    x.strokeStyle = i === 0 ? INK : '#999999'; x.lineWidth = i === 0 ? 4 : 2; x.strokeRect(pb.x, y, pb.w, h);
+    x.fillStyle = INK; x.font = `800 44px ${UI_F}`; x.fillText(String(i + 1), pb.x + 18, y + 56);
+    x.font = `700 28px ${UI_F}`; tl.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, pb.w - 90) : l, pb.x + 76, y + 44 + k * 34));
+    let yy = y + 26 + tl.length * 34 + 16;
+    x.fillStyle = INK; const end = dotRow(x, dots, pb.x + 76, yy + 2, 9, 12);
+    x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`${dots} dot${dots > 1 ? 's' : ''}`, end + 6, yy + 10);
+    yy += 40;
+    x.fillStyle = g.next ? INK : GREY; x.font = `italic 400 22px ${UI_F}`;
+    nl.forEach((l, k) => x.fillText(l, pb.x + 76, yy + k * 28));
+    y += h + 16;
   }
 
-  x.fillStyle = GREY; x.font = `400 26px ${UI_F}`;
-  x.fillText('Groups are sorted by dots.  ● = dot votes.', M, H - M + 10);
-  x.textAlign = 'right'; x.fillText('Affinity diagram (KJ method): Jiro Kawakita · Steps: Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 10); x.textAlign = 'left';
+  x.fillStyle = GREY; x.font = `400 24px ${UI_F}`;
+  x.fillText('✓ = note is in a cluster.  ● = dot votes. Clusters rank by dots, most first.', M, H - M + 14);
+  x.textAlign = 'right'; x.fillText('Affinity diagram (KJ method): Jiro Kawakita · Steps: Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 14); x.textAlign = 'left';
   return cv;
 }
-
 async function exportSheet() {
   const cv = await drawSheet();
   const link = document.createElement('a');
@@ -1053,13 +1093,14 @@ async function exportSheet() {
   toast('Saved. When printing, choose "Fit to page".');
 }
 
-// ---------- 3k. Team mode (live, shared through Firebase) ----------
+// ---------- 3j. Team mode (live, shared through Firebase) ----------
 // Each team board lives at maps/<team code> in Firestore:
-//   maps/team-7                 { question, updatedAt }
-//   maps/team-7/notes/n1abc     { text, color, group, by, at }
-//   maps/team-7/groups/g9xyz    { title, by, at, votes: { <person id>: true } }
-// Everyone signs in anonymously, which gives each device its own id, so each
-// person's three dots are counted separately and can't overwrite a teammate's.
+//   maps/team-7                      { question, updatedAt }
+//   maps/team-7/notes/n1abc          an idea in Generate      { text, color, group: '', by, at }
+//   maps/team-7/notes/c_g9xyz_n1abc  its copy in a cluster    { text, color, group: 'g9xyz', by, at }
+//   maps/team-7/groups/g9xyz         a cluster                { title, next, owner, by, at, votes: { <person id>: 3 } }
+// Everyone signs in anonymously, so each device has its own id: each person's
+// dots are counted separately and can't overwrite a teammate's.
 const FB_VER = '10.12.2';
 let fb = null, unsubs = [], teamMsg = '';
 async function firebaseReady() {
@@ -1079,74 +1120,82 @@ function teamError(e) {
   console.warn(e);
   toast(e && e.code === 'permission-denied' ? 'The team board refused that change. Notes can be up to 200 characters.' : "That didn't save. Check your internet connection.");
 }
-
 async function joinTeam(code) {
   state.teamView = true; teamMsg = 'Connecting…'; render();
   try { await firebaseReady(); }
   catch (e) { console.warn(e); teamMsg = "Couldn't reach the team service. Check your internet connection and try again."; render(); return; }
   unsubs.forEach(u => u()); unsubs = [];
-  state.team = { code }; state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false;
-  state.editing = null; state.drafts = {}; state.titleDrafts = {}; teamMsg = '';
+  resetBoard(); state.team = { code }; teamMsg = '';
   try { localStorage.setItem(TEAM_KEY, code); } catch (e) {}
   history.replaceState(null, '', '?team=' + encodeURIComponent(code));
   // onSnapshot = "tell me now, and again every time this changes"
   unsubs.push(fb.fs.onSnapshot(fb.fs.collection(fb.db, 'maps', code, 'notes'), snap => {
-    state.notes = snap.docs.map(d => { const n = d.data(); return { id: d.id, text: n.text, color: n.color, group: n.group || '', by: n.by, at: n.at || 0 }; });
-    render();
+    const ideas = [], copies = [];
+    snap.docs.forEach(d => {
+      const n = d.data();
+      if (d.id.startsWith('c_') && n.group) { const p = d.id.split('_'); copies.push({ id: d.id, orig: p[2], group: n.group, text: n.text, color: n.color, by: n.by, at: n.at || 0 }); }
+      else ideas.push({ id: d.id, text: n.text, color: n.color, by: n.by, at: n.at || 0 });
+    });
+    state.ideas = ideas; state.copies = copies; render();
   }, teamError));
   unsubs.push(fb.fs.onSnapshot(fb.fs.collection(fb.db, 'maps', code, 'groups'), snap => {
-    state.groups = snap.docs.map(d => {
-      const g = d.data(), votes = g.votes || {}, voters = Object.keys(votes).filter(k => votes[k]);
-      return { id: d.id, title: g.title || '', next: g.next || '', owner: g.owner || '', by: g.by, at: g.at || 0, dots: voters.length, voters, mine: !!votes[fb.uid] };
-    });
+    state.groups = snap.docs.map(d => { const g = d.data(); return { id: d.id, title: g.title || '', next: g.next || '', owner: g.owner || '', by: g.by, at: g.at || 0, votes: g.votes || {} }; });
     render();
   }, teamError));
-  unsubs.push(fb.fs.onSnapshot(mapDoc(), snap => {
-    if (snap.exists()) { const m = snap.data(); state.question = m.question || ''; state.stage = Number.isInteger(m.stage) ? m.stage : 0; }
-    render();
-  }, teamError));
+  unsubs.push(fb.fs.onSnapshot(mapDoc(), snap => { if (snap.exists()) state.question = snap.data().question || ''; render(); }, teamError));
   render();
 }
 function leaveTeam(toSolo) {
   unsubs.forEach(u => u()); unsubs = [];
-  state.team = null; state.editing = null; state.drafts = {}; state.titleDrafts = {};
+  resetBoard(); state.team = null;
   history.replaceState(null, '', location.pathname);
-  state.notes = []; state.groups = []; state.question = ''; state.stage = 0;
   if (toSolo) { state.teamView = false; if (!load()) loadExample(); }
   render();
 }
-
-function teamAddNotes(texts, color) {
-  const b = fb.fs.writeBatch(fb.db), now = Date.now();
+const batch = () => fb.fs.writeBatch(fb.db);
+function teamAddIdeas(texts, color) {
+  const b = batch(), now = Date.now();
   texts.forEach((text, i) => b.set(noteRef(newId('n')), { text, color, group: '', by: fb.uid, at: now + i }));
   b.commit().catch(teamError);
 }
-function teamPatchNote(id, patch) {
-  const p = {}; for (const k of ['text', 'color', 'group']) if (k in patch) p[k] = patch[k];
-  if (Object.keys(p).length) fb.fs.updateDoc(noteRef(id), p).catch(teamError);
+function teamEditIdea(id, patch) {
+  const b = batch(); b.update(noteRef(id), patch);
+  state.copies.filter(c => c.orig === id).forEach(c => b.update(noteRef(c.id), patch));
+  b.commit().catch(teamError);
 }
-function teamDeleteNote(id) { fb.fs.deleteDoc(noteRef(id)).catch(teamError); }
-function teamNewGroup(id, noteId) {
-  const b = fb.fs.writeBatch(fb.db);
-  b.set(groupRef(id), { title: '', by: fb.uid, at: Date.now(), votes: {} });
-  if (noteId) b.update(noteRef(noteId), { group: id });
+function teamDeleteIdea(id) {
+  const b = batch(); b.delete(noteRef(id));
+  state.copies.filter(c => c.orig === id).forEach(c => b.delete(noteRef(c.id)));
+  b.commit().catch(teamError);
+}
+function teamCopy(nid, gid, b0) {
+  const n = ideaById(nid); if (!n) return;
+  const b = b0 || batch();
+  b.set(noteRef(copyId(gid, nid)), { text: n.text, color: n.color, group: gid, by: fb.uid, at: Date.now() });
+  if (!b0) b.commit().catch(teamError);
+}
+function teamMoveCopy(c, gid) {
+  const b = batch(); b.delete(noteRef(c.id));
+  b.set(noteRef(copyId(gid, c.orig)), { text: copyText(c), color: copyColor(c), group: gid, by: fb.uid, at: Date.now() });
+  b.commit().catch(teamError);
+}
+function teamRemoveCopy(cid) { fb.fs.deleteDoc(noteRef(cid)).catch(teamError); }
+function teamNewCluster(id, title, firstIdea) {
+  const b = batch();
+  b.set(groupRef(id), { title: title.slice(0, 80), next: '', owner: '', by: fb.uid, at: Date.now(), votes: {} });
+  if (firstIdea) teamCopy(firstIdea, id, b);
   b.commit().catch(teamError);
 }
 function teamPatchGroup(id, patch) { fb.fs.updateDoc(groupRef(id), patch).catch(teamError); }
-function teamUngroup(id) {
-  const b = fb.fs.writeBatch(fb.db);
-  state.notes.filter(n => n.group === id).forEach(n => b.update(noteRef(n.id), { group: '' }));
-  b.delete(groupRef(id));
+function teamDeleteCluster(id) {
+  const b = batch(); b.delete(groupRef(id));
+  state.copies.filter(c => c.group === id).forEach(c => b.delete(noteRef(c.id)));
   b.commit().catch(teamError);
 }
-function teamToggleDot(g) {
-  const used = state.groups.filter(x => x.mine).length;
-  if (!g.mine && used >= DOTS_PER_PERSON) { toast(`You've used all ${DOTS_PER_PERSON} dots. Take one back to move it.`); return; }
-  // "votes.<my id>" changes only my own dot inside the group, never anyone else's
-  fb.fs.updateDoc(groupRef(g.id), { ['votes.' + fb.uid]: g.mine ? fb.fs.deleteField() : true }).catch(teamError);
-}
-function teamSaveStage(n) {
-  fb.fs.setDoc(mapDoc(), { stage: n, updatedAt: Date.now() }, { merge: true }).catch(teamError);
+// "votes.<my id>" changes only my own dots on a cluster, never a teammate's
+function teamDot(g, step) {
+  const n = myDotsOn(g) + step;
+  fb.fs.updateDoc(groupRef(g.id), { ['votes.' + fb.uid]: n > 0 ? n : fb.fs.deleteField() }).catch(teamError);
 }
 let qTimer;
 function teamSaveQuestion() {
@@ -1155,15 +1204,14 @@ function teamSaveQuestion() {
 }
 
 function renderTeamPanel() {
-  const seg = $('#modeSeg');
-  seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.m === 'team') === state.teamView)));
+  $('#modeSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.m === 'team') === state.teamView)));
   const tp = $('#teamPanel'); tp.hidden = !state.teamView;
   if (!state.teamView) return;
   tp.innerHTML = '';
   if (state.team) {
     const row = el('div', 'live');
     row.append(el('span', 'dot'), el('span', null, 'Live team board'), el('code', null, state.team.code));
-    row.append(el('span', 'meta', `${state.notes.length} note${state.notes.length === 1 ? '' : 's'} · ${people().size} of ${MAX_PEOPLE} people`));
+    row.append(el('span', 'meta', `${state.ideas.length} notes · ${state.groups.length} clusters · ${people().size} of ${MAX_PEOPLE} people`));
     row.append(el('span', 'spacer'));
     const copy = el('button', 'small', 'Copy invite link'); copy.type = 'button';
     copy.onclick = () => {
@@ -1172,10 +1220,10 @@ function renderTeamPanel() {
     };
     const sw = el('button', 'small', 'Switch team'); sw.type = 'button'; sw.onclick = () => leaveTeam(false);
     row.append(copy, sw);
-    tp.append(row, el('p', null, 'Everyone who opens this code sees the same board and every change as it happens. Best for a team of 4–5; up to 30 people can join one board. Anyone with the code can edit, so keep it within your team.'));
+    tp.append(row, el('p', null, `Everyone who opens this code sees the same board and every change as it happens. Best for a team of 4–5; up to 30 people can join one board, and each person gets ${DOTS_PER_PERSON} dots. Anyone with the code can edit, so keep it within your team.`));
     return;
   }
-  const p = el('p'); p.append(el('b', null, 'Sort notes together, live. '), "Pick a team code and share it with your teammates. Choose one that other teams won't guess, like ", el('b', null, 'commute-team3'), '.');
+  const p = el('p'); p.append(el('b', null, 'Build the map together, live. '), "Pick a team code and share it with your teammates. Choose one that other teams won't guess, like ", el('b', null, 'commute-team3'), '.');
   const f = document.createElement('form'); f.autocomplete = 'off';
   const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'teamCode'; inp.maxLength = 40; inp.placeholder = 'Team code, e.g. commute-team3'; inp.setAttribute('aria-label', 'Team code');
   try { inp.value = localStorage.getItem(TEAM_KEY) || ''; } catch (e) {}
@@ -1191,16 +1239,16 @@ function renderTeamPanel() {
   tp.append(p, f, err);
 }
 
-// ---------- 3l. Wiring up the buttons ----------
+// ---------- 3k. Wiring up the buttons ----------
 $('#question').addEventListener('input', e => {
   state.question = e.target.value;
   if (state.team) return teamSaveQuestion();
-  claimExample(); save(); $('#banner').hidden = true; renderCoach();
+  claimExample(); save(); $('#banner').hidden = true;
 });
 $('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; state.drafts = {}; save(); render(); };
 $('#clearBtn').onclick = () => {
   if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
-  state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; state.confirmClear = false; state.drafts = {}; save(); render(); toast('Board cleared.');
+  resetBoard(); state.confirmClear = false; save(); render(); toast('Board cleared.');
 };
 $('#copyBtn').onclick = () => {
   const text = asText();
@@ -1210,10 +1258,11 @@ $('#exportBtn').onclick = exportSheet;
 $('#modeSeg').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.m === 'solo') { if (state.teamView) leaveTeam(true); }
-  else if (!state.teamView) { save(); state.teamView = true; state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; teamMsg = ''; render(); }
+  else if (!state.teamView) { save(); resetBoard(); state.teamView = true; teamMsg = ''; render(); }
 });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.dotTool) { state.dotTool = false; render(); } });
 
-// ---------- 3m. Start ----------
+// ---------- 3l. Start ----------
 // First visit: show the example. Later visits: bring back your own board.
 // A link with ?team=code opens that team's board straight away.
 if (!load()) loadExample();
