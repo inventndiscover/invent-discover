@@ -120,7 +120,13 @@
   /* ---------- The three stages: Generate · Organise · Prioritise ---------- */
   .stages { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
   @media (max-width: 640px) { .stages { grid-template-columns: 1fr; } }
-  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: center; background: rgba(0,0,0,0.25); }
+  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: center; background: rgba(0,0,0,0.25); text-align: left; color: var(--text); font: inherit; }
+  button.stage:hover:not(:disabled) { border-color: rgba(139,92,246,0.6); }
+  button.stage:disabled { opacity: 1; cursor: default; }
+  button.stage[data-s="todo"]:disabled { opacity: .55; cursor: not-allowed; }
+  .stagebar { display: grid; gap: 8px; }
+  .stagego { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .stagego p { margin: 0; color: var(--muted); font-size: 13px; flex: 1 1 260px; }
   .stage .n { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; border: 1px solid var(--line-2); color: var(--muted); }
   .stage b { font-size: 15px; }
   .stage span { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
@@ -291,8 +297,8 @@
   </div>
 
   <section class="how">
-    <div class="card"><div class="step">STAGE 1 · GENERATE · 12 MIN</div><h3>Generate</h3><p>Write your research question at the top. Then everyone adds notes on their own, without talking: one quote, fact or observation per note. Paste a list if you have interview notes.</p></div>
-    <div class="card"><div class="step">STAGE 2 · ORGANISE · 18 MIN</div><h3>Organise</h3><p>Drag notes next to similar ones. You can move anyone's note, and start a new group whenever nothing fits. Then name each group with what you learned, as a sentence: “I plan my day around train timings”, not “Timing”.</p></div>
+    <div class="card"><div class="step">STAGE 1 · GENERATE · 12 MIN</div><h3>Generate</h3><p>Write your research question at the top. Then everyone adds notes on their own, without talking: one quote, fact or observation per note. Paste a list if you have interview notes. When everyone's done, click <b>Next: Organise</b>.</p></div>
+    <div class="card"><div class="step">STAGE 2 · ORGANISE · 18 MIN</div><h3>Organise</h3><p>Drag notes next to similar ones. You can move anyone's note, and start a new group whenever nothing fits. Then name each group with what you learned, as a sentence: “I plan my day around train timings”, not “Timing”. Then click <b>Next: Prioritise</b>.</p></div>
     <div class="card"><div class="step">STAGE 3 · PRIORITISE · 10 MIN</div><h3>Prioritise</h3><p>Each person gives three dots to the groups that matter most. For the top groups, write the next step and who owns it. Then turn them into <a href="/toolkit/how-might-we/">How Might We</a> questions.</p></div>
   </section>
 
@@ -372,6 +378,7 @@ const EXAMPLE = {
 // A note with group '' is still in the Unsorted tray.
 const state = {
   question: '', notes: [], groups: [], isExample: false,
+  stage: 0,               // 0 Generate, 1 Organise, 2 Prioritise (the team moves it on)
   editing: null,          // note id being edited
   focusGroup: null,       // a new group whose name box should get the cursor
   confirmDel: null,       // note id waiting for "Confirm delete"
@@ -414,20 +421,22 @@ const canWrite = () => !(state.teamView && !state.team) && !boardFull();
 // ---------- 3e. Saving a solo board in the browser ----------
 function save() {
   if (state.teamView) return;     // never let a team board overwrite the solo one
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ question: state.question, notes: state.notes, groups: state.groups, isExample: state.isExample })); } catch (e) {}
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ question: state.question, notes: state.notes, groups: state.groups, stage: state.stage, isExample: state.isExample })); } catch (e) {}
 }
 function load() {
   try {
     const d = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (d && Array.isArray(d.notes) && Array.isArray(d.groups)) {
       const groups = d.groups.map(g => ({ next: '', owner: '', ...g }));   // boards saved before next steps existed
-      Object.assign(state, { question: d.question || '', notes: d.notes, groups, isExample: !!d.isExample }); return true;
+      // boards saved before stages could be clicked: start in Organise if there are groups
+      const st = Number.isInteger(d.stage) ? d.stage : groups.length ? 1 : 0;
+      Object.assign(state, { question: d.question || '', notes: d.notes, groups, stage: st, isExample: !!d.isExample }); return true;
     }
   } catch (e) {}
   return false;
 }
 function loadExample() {
-  state.question = EXAMPLE.question; state.isExample = true; state.notes = []; state.groups = [];
+  state.question = EXAMPLE.question; state.isExample = true; state.notes = []; state.groups = []; state.stage = 1;
   let t = 0;
   EXAMPLE.groups.forEach(([title, dots, next, notes], i) => {
     const id = 'g' + i; state.groups.push({ id, title, dots, at: i, next: next ? next[0] : '', owner: next ? next[1] : '' });
@@ -463,6 +472,7 @@ function deleteNote(id) {
 // Make a new group, optionally moving one note into it straight away
 function newGroup(noteId) {
   const id = newId('g');
+  if (state.stage === 0) setStage(1);   // starting a group means organising has begun
   state.focusGroup = id;      // put the cursor in its name as soon as it's drawn
   if (state.team) { teamNewGroup(id, noteId); return id; }
   claimExample();
@@ -674,12 +684,14 @@ function renderBoard() {
     const dots = el('span', 'gdots'); dots.setAttribute('aria-label', g.dots + ' dots');
     for (let k = 0; k < Math.min(g.dots, 12); k++) dots.append(el('i'));
     foot.append(dots);
-    if (write) {
+    if (write && state.stage === 2) {   // voting happens in Prioritise
       const v = el('button', 'small', state.team && g.mine ? '− dot' : '+ dot'); v.type = 'button';
       v.title = state.team ? (g.mine ? 'Take your dot back' : 'Give this group one of your dots') : 'Add a dot vote';
       v.onclick = () => vote(g);
       foot.append(v);
-      if (!state.team && g.dots) { const r = el('button', 'small', '−'); r.type = 'button'; r.title = 'Remove a dot'; r.setAttribute('aria-label', 'Remove a dot'); r.onclick = () => vote(g, true); foot.append(r); }
+    }
+    if (write) {
+      if (!state.team && g.dots && state.stage === 2) { const r = el('button', 'small', '−'); r.type = 'button'; r.title = 'Remove a dot'; r.setAttribute('aria-label', 'Remove a dot'); r.onclick = () => vote(g, true); foot.append(r); }
       const sure = state.confirmUngroup === g.id;
       const u = el('button', 'small' + (sure ? ' danger' : ''), sure ? 'Confirm ungroup' : 'Ungroup'); u.type = 'button';
       u.title = 'Remove this group and send its notes back to Unsorted';
@@ -694,7 +706,7 @@ function renderBoard() {
     sec.append(foot);
 
     // Prioritise: a voted group gets a next step and someone who owns it
-    if (g.dots > 0 || g.next || g.owner || stage() === 2) {
+    if (state.stage === 2) {
       const nx = el('div', 'gnext');
       const lab = el('label', null, 'Next step · Who'); lab.htmlFor = 'nx-' + g.id;
       const field = (key, ph, max) => {
@@ -724,52 +736,72 @@ function renderBoard() {
 function fitTitle(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
 // ---------- 3h. The three stages and the coach ----------
-// The board works out which stage you're in from what's on it:
-//   0 Generate  → still adding notes (no groups yet, fewer than 12 notes, or no question)
-//   1 Organise  → notes left in Unsorted, or groups without names
-//   2 Prioritise → everything sorted and named; vote, then next steps
-//   3 Done      → top groups have a next step and an owner
+// The team moves the board from stage to stage by clicking, and everyone on
+// a team board moves together. The only rules:
+//   Generate → Organise   needs at least 1 note
+//   Organise → Prioritise needs at least 1 group
+// Going back to an earlier stage is always allowed.
 const topGroups = () => orderedGroups().filter(g => g.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
-function stage() {
-  const total = state.notes.length;
-  if (!state.question.trim() || (total < 12 && !state.groups.length)) return 0;
-  if (!state.groups.length || notesIn('').length || state.groups.some(g => !g.title.trim())) return 1;
-  const top = topGroups();
-  if (!top.length || top.some(g => !g.next.trim() || !g.owner.trim())) return 2;
-  return 3;
-}
+const stage = () => state.stage;
 const STAGES = [
   ['Generate', 'Everyone adds notes on their own'],
   ['Organise', 'Group similar notes, name each group'],
   ['Prioritise', 'Dot-vote, then next steps and owners'],
 ];
+// Why the board can't move to stage n yet ('' means it can)
+function blockedTo(n) {
+  if (n >= 1 && !state.notes.length) return 'Add at least one note first.';
+  if (n >= 2 && !state.groups.length) return 'Make at least one group first.';
+  return '';
+}
+function setStage(n) {
+  if (n === state.stage || blockedTo(n) || !canWrite()) return;
+  if (state.team) { state.stage = n; render(); teamSaveStage(n); return; }
+  state.stage = n; save(); render();
+}
 function nextStep() {
-  const total = state.notes.length, loose = notesIn('').length;
-  const top = topGroups();
-  switch (stage()) {
+  const total = state.notes.length, loose = notesIn('').length, top = topGroups();
+  const unnamed = state.groups.filter(g => !g.title.trim()).length;
+  switch (state.stage) {
     case 0:
-      if (!state.question.trim()) return ['Generate', 'Write your research question at the top.'];
-      return ['Generate', `Add notes: one quote, fact or observation each. ${total ? `You have ${total}; aim for 20 or more.` : 'Aim for 20 or more.'}`];
+      if (!state.question.trim()) return ['Generate', 'Write your research question at the top, then add notes.'];
+      if (!total) return ['Generate', 'Add your first note: one quote, fact or observation.'];
+      return ['Generate', `${total} note${total > 1 ? 's' : ''} so far. When everyone has added theirs, click Organise.`];
     case 1:
       if (!state.groups.length) return ['Organise', 'Drag a note onto “New group”, then drag similar notes next to it.'];
       if (loose.length) return ['Organise', `${loose.length} note${loose.length > 1 ? 's are' : ' is'} still unsorted. Find each one a group, or start a new one.`];
-      return ['Organise', 'Give every group a name that says what you learned.'];
-    case 2:
-      if (!top.length) return ['Prioritise', 'Each person gives three dots to the groups that matter most.'];
-      return ['Prioritise', 'For each of your top groups, write the next step and who owns it.'];
+      if (unnamed) return ['Organise', 'Give every group a name that says what you learned.'];
+      return ['Organise', 'All sorted and named. Click Prioritise when the team is ready.'];
     default:
-      return ['Done', 'Open your top group in How Might We and turn it into questions to design for.'];
+      if (!top.length) return ['Prioritise', 'Each person gives three dots to the groups that matter most.'];
+      if (top.some(g => !g.next.trim() || !g.owner.trim())) return ['Prioritise', 'For each of your top groups, write the next step and who owns it.'];
+      return ['Prioritise', 'Done. Open your top group in How Might We and turn it into questions to design for.'];
   }
 }
 function renderStages() {
-  const now = stage(), bar = el('div', 'stages'); bar.setAttribute('aria-label', 'Stages');
+  const now = state.stage, write = canWrite(), wrap = el('div', 'stagebar');
+  const bar = el('div', 'stages'); bar.setAttribute('aria-label', 'Stages');
   STAGES.forEach(([name, tip], i) => {
-    const d = el('div', 'stage'); d.dataset.s = i < now ? 'done' : i === now ? 'now' : 'todo';
+    const d = el('button', 'stage'); d.type = 'button'; d.dataset.s = i < now ? 'done' : i === now ? 'now' : 'todo';
     d.append(el('span', 'n', i < now ? '✓' : String(i + 1)), el('b', null, name), el('span', null, tip));
     if (i === now) d.setAttribute('aria-current', 'step');
+    const why = blockedTo(i);
+    d.disabled = !write || i === now || !!why;
+    d.title = i === now ? 'You are here' : why || `Move ${state.team ? 'the whole team' : 'the board'} to ${name}`;
+    d.onclick = () => setStage(i);
     bar.append(d);
   });
-  return bar;
+  wrap.append(bar);
+  if (write && now < 2) {
+    const row = el('div', 'stagego');
+    const why = blockedTo(now + 1);
+    row.append(el('p', null, why || (state.team ? `When the team is ready, move everyone on together. You can always click a stage to go back.` : 'Move on whenever you are ready. You can always click a stage to go back.')));
+    const go = el('button', 'primary small', `Next: ${STAGES[now + 1][0]} →`); go.type = 'button'; go.disabled = !!why;
+    go.onclick = () => setStage(now + 1);
+    row.append(go);
+    wrap.append(row);
+  }
+  return wrap;
 }
 
 function renderCoach() {
@@ -839,7 +871,7 @@ function draw() {
     ban.hidden = false;
     const s = el('span'); s.append(el('b', null, 'This is an example board. '), 'Change anything to make it yours, or start with an empty board.');
     const b = el('button', null, 'Start an empty board'); b.type = 'button';
-    b.onclick = () => { state.notes = []; state.groups = []; state.question = ''; state.isExample = false; state.drafts = {}; save(); render(); };
+    b.onclick = () => { state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; state.drafts = {}; save(); render(); };
     ban.append(s, b);
   }
   const q = $('#question');
@@ -1053,7 +1085,7 @@ async function joinTeam(code) {
   try { await firebaseReady(); }
   catch (e) { console.warn(e); teamMsg = "Couldn't reach the team service. Check your internet connection and try again."; render(); return; }
   unsubs.forEach(u => u()); unsubs = [];
-  state.team = { code }; state.notes = []; state.groups = []; state.question = ''; state.isExample = false;
+  state.team = { code }; state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false;
   state.editing = null; state.drafts = {}; state.titleDrafts = {}; teamMsg = '';
   try { localStorage.setItem(TEAM_KEY, code); } catch (e) {}
   history.replaceState(null, '', '?team=' + encodeURIComponent(code));
@@ -1069,14 +1101,17 @@ async function joinTeam(code) {
     });
     render();
   }, teamError));
-  unsubs.push(fb.fs.onSnapshot(mapDoc(), snap => { if (snap.exists()) state.question = snap.data().question || ''; render(); }, teamError));
+  unsubs.push(fb.fs.onSnapshot(mapDoc(), snap => {
+    if (snap.exists()) { const m = snap.data(); state.question = m.question || ''; state.stage = Number.isInteger(m.stage) ? m.stage : 0; }
+    render();
+  }, teamError));
   render();
 }
 function leaveTeam(toSolo) {
   unsubs.forEach(u => u()); unsubs = [];
   state.team = null; state.editing = null; state.drafts = {}; state.titleDrafts = {};
   history.replaceState(null, '', location.pathname);
-  state.notes = []; state.groups = []; state.question = '';
+  state.notes = []; state.groups = []; state.question = ''; state.stage = 0;
   if (toSolo) { state.teamView = false; if (!load()) loadExample(); }
   render();
 }
@@ -1109,6 +1144,9 @@ function teamToggleDot(g) {
   if (!g.mine && used >= DOTS_PER_PERSON) { toast(`You've used all ${DOTS_PER_PERSON} dots. Take one back to move it.`); return; }
   // "votes.<my id>" changes only my own dot inside the group, never anyone else's
   fb.fs.updateDoc(groupRef(g.id), { ['votes.' + fb.uid]: g.mine ? fb.fs.deleteField() : true }).catch(teamError);
+}
+function teamSaveStage(n) {
+  fb.fs.setDoc(mapDoc(), { stage: n, updatedAt: Date.now() }, { merge: true }).catch(teamError);
 }
 let qTimer;
 function teamSaveQuestion() {
@@ -1162,7 +1200,7 @@ $('#question').addEventListener('input', e => {
 $('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; state.drafts = {}; save(); render(); };
 $('#clearBtn').onclick = () => {
   if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
-  state.notes = []; state.groups = []; state.question = ''; state.isExample = false; state.confirmClear = false; state.drafts = {}; save(); render(); toast('Board cleared.');
+  state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; state.confirmClear = false; state.drafts = {}; save(); render(); toast('Board cleared.');
 };
 $('#copyBtn').onclick = () => {
   const text = asText();
@@ -1172,7 +1210,7 @@ $('#exportBtn').onclick = exportSheet;
 $('#modeSeg').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.m === 'solo') { if (state.teamView) leaveTeam(true); }
-  else if (!state.teamView) { save(); state.teamView = true; state.notes = []; state.groups = []; state.question = ''; state.isExample = false; teamMsg = ''; render(); }
+  else if (!state.teamView) { save(); state.teamView = true; state.notes = []; state.groups = []; state.question = ''; state.stage = 0; state.isExample = false; teamMsg = ''; render(); }
 });
 
 // ---------- 3m. Start ----------
