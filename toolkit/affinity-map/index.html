@@ -70,8 +70,19 @@
   .wrap { max-width: 1480px; margin: 0 auto; padding: 0 16px 64px; }
   :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
 
-  /* ---------- Header (same as the other tools) ---------- */
-  header { padding: 40px 0 20px; }
+  /* ---------- Header: intro on the left, the three stage cards on the right ---------- */
+  header { padding: 40px 0 20px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px 40px; align-items: end; }
+  @media (max-width: 960px) { header { grid-template-columns: minmax(0, 1fr); } }
+  .intro { min-width: 0; }
+  .stagecards { display: grid; gap: 10px; }
+  .scard { display: grid; grid-template-columns: 40px 1fr auto; gap: 2px 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+  .scard .n { grid-column: 1; grid-row: 1 / span 2; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--violet), var(--pink)); box-shadow: 0 0 14px rgba(139,92,246,0.45); }
+  .scard b { grid-column: 2; grid-row: 1; font-size: 16px; }
+  .scard .d { grid-column: 2; grid-row: 2; color: var(--muted); font-size: 13.5px; line-height: 1.4; }
+  .scard .mini { grid-row: 1 / span 2; grid-column: 3; display: flex; gap: 3px; align-items: center; }
+  .mini i { width: 12px; height: 12px; border-radius: 2px; background: var(--note-yellow); }
+  .mini i.l { background: var(--label); } .mini i.d { width: 10px; height: 10px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 6px var(--dot); }
+  .mini em { font-style: normal; font-weight: 800; font-size: 13px; color: #9CC5FF; margin-right: 2px; }
   .back { color: var(--muted); text-decoration: none; font-size: 14px; }
   .back:hover { color: var(--text); }
   .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
@@ -82,7 +93,14 @@
   .lede b { color: var(--text); }
   .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
   .credit a, .about a, .how a { color: #C4B5FD; }
-  .about { margin-top: 36px; }
+  .about { margin-top: 36px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .about { grid-template-columns: minmax(0, 1fr); } }
+  .about > div { min-width: 0; }
+  .about .side { display: grid; gap: 14px; }
+  .about .panel { border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); padding: 14px 16px; }
+  .about h3 { margin: 0 0 8px; font-size: 15px; }
+  .about ol { margin: 0 0 8px; padding-left: 20px; color: var(--muted); line-height: 1.55; display: grid; gap: 4px; }
+  .about .panel p { margin: 0; font-size: 14px; }
   .about h2 { margin: 0 0 10px; font-size: 22px; }
   .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
   .about b { color: var(--text); }
@@ -252,11 +270,18 @@
 -->
 <div class="wrap">
   <header>
-    <a class="back" href="/#tools">← All tools</a><br>
-    <span class="pill">TOOL · AFFINITY MAP</span>
-    <h1>Affinity Map</h1>
-    <p class="lede">Turn a pile of research notes into a few clear priorities, in three columns. <b>Generate</b>: everyone adds ideas as sticky notes. <b>Organise</b>: name clusters and drag a copy of each note into one. <b>Prioritise</b>: everyone puts dots on the clusters, and they line up in order by themselves, most dots first. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
-    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
+    <div class="intro">
+      <a class="back" href="/#tools">← All tools</a><br>
+      <span class="pill">TOOL · AFFINITY MAP</span>
+      <h1>Affinity Map</h1>
+      <p class="lede">Turn a pile of research notes into a few clear priorities, on one board with three columns. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
+      <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
+    </div>
+    <div class="stagecards" aria-label="The three steps">
+      <div class="scard"><span class="n">1</span><b>Generate</b><span class="d">Everyone adds ideas as sticky notes, 1 to 30.</span><div class="mini" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard"><span class="n">2</span><b>Organise</b><span class="d">Name clusters, drag a copy of each note in, then dot the ones that matter.</span><div class="mini" aria-hidden="true"><i class="l"></i><i></i><i></i><i class="d"></i></div></div>
+      <div class="scard"><span class="n">3</span><b>Prioritise</b><span class="d">Clusters line up by dots, most first. Nothing to click.</span><div class="mini" aria-hidden="true"><em>#1</em><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+    </div>
   </header>
 
   <div class="card">
@@ -288,17 +313,32 @@
   </section>
 
   <section class="card about" id="where">
-    <h2>Where affinity mapping comes from</h2>
-    <p>Affinity mapping is also called the <b>KJ method</b>, after its inventor, the Japanese anthropologist and ethnographer <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The name uses his initials, K. J., with the family name first, as in Japanese.</p>
-    <ul>
-      <li><b>The inventor.</b> Kawakita developed the technique in the 1960s while doing field research in Nepal.</li>
-      <li><b>The problem.</b> He had a huge, messy pile of qualitative field notes and observations, and standard top-down, deductive Western methods couldn't make sense of them.</li>
-      <li><b>The solution.</b> He worked bottom-up: notes are grouped by their natural “affinity”, meaning how closely related they are, before any labels or categories are put on them. Groups are named only after they have formed.</li>
-    </ul>
-    <p>Because notes cluster by how similar they are, the practice became widely known as the <b>affinity diagram</b> or <b>affinity mapping</b>. It's one of the seven management and planning tools in quality management, and a standard step in UX research and design sprints, where teams use it to sort interview notes, observations and How Might We notes.</p>
-    <p>The steps on this page follow how <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> describes affinity diagramming for UX teams (Rachel Krause and Kara Pernice, 2024): write ideas on notes on your own first, cluster and label them together, then prioritise the clusters with dot voting and agree on next steps.</p>
-    <p class="sources">Sources: <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> · <a href="https://asq.org/quality-resources/affinity" target="_blank" rel="noopener">ASQ, Affinity diagram</a> · <a href="https://www.designreview.byu.edu/collections/ideation-techniques-affinity-mapping" target="_blank" rel="noopener">BYU Design Review</a> · <a href="https://storyflow.so/blog/what-is-affinity-mapping-complete-guide" target="_blank" rel="noopener">StoryFlow</a> · <a href="https://velonova.io/blog/vol-12-affinity-diagram-k-j-method/" target="_blank" rel="noopener">Velonova</a></p>
-    <p>The three-column board, dot tool, ranking and A4 sheet on this page are made by Invent + Discover. <b>Solo</b> boards stay in your browser and are never uploaded. <b>Team</b> boards are stored on Google Firebase so teammates can see each other's notes; anyone with the team code can view and edit that board, so don't put names or anything private on it.</p>
+    <div>
+      <h2>Where affinity mapping comes from</h2>
+      <p>Affinity mapping is also called the <b>KJ method</b>, after its inventor, the Japanese anthropologist and ethnographer <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The name uses his initials, K. J., with the family name first, as in Japanese.</p>
+      <ul>
+        <li><b>The inventor.</b> Kawakita developed the technique in the 1960s while doing field research in Nepal.</li>
+        <li><b>The problem.</b> He had a huge, messy pile of qualitative field notes and observations, and standard top-down, deductive Western methods couldn't make sense of them.</li>
+        <li><b>The solution.</b> He worked bottom-up: notes are grouped by their natural “affinity”, meaning how closely related they are, before any labels or categories are put on them. Groups are named only after they have formed.</li>
+      </ul>
+      <p>Because notes cluster by how similar they are, the practice became widely known as the <b>affinity diagram</b> or <b>affinity mapping</b>. It's one of the seven management and planning tools in quality management, and a standard step in UX research and design sprints, where teams use it to sort interview notes and observations.</p>
+    </div>
+    <div class="side">
+      <div class="panel">
+        <h3>The three steps</h3>
+        <ol>
+          <li><b>Generate</b> ideas as sticky notes, on your own first.</li>
+          <li><b>Organise</b> the notes into clusters and label them together.</li>
+          <li><b>Prioritise</b> the clusters with dot voting.</li>
+        </ol>
+        <p>As described by <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> (Rachel Krause and Kara Pernice, 2024).</p>
+      </div>
+      <div class="panel">
+        <h3>Where your board is kept</h3>
+        <p><b>Solo</b> boards stay in your browser and are never uploaded. <b>Team</b> boards are stored on Google Firebase so teammates can see each other's notes. Anyone with the team code can view and edit that board, so don't put names or anything private on it.</p>
+      </div>
+      <p class="sources">Sources: <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> · <a href="https://asq.org/quality-resources/affinity" target="_blank" rel="noopener">ASQ, Affinity diagram</a> · <a href="https://www.designreview.byu.edu/collections/ideation-techniques-affinity-mapping" target="_blank" rel="noopener">BYU Design Review</a> · <a href="https://storyflow.so/blog/what-is-affinity-mapping-complete-guide" target="_blank" rel="noopener">StoryFlow</a> · <a href="https://velonova.io/blog/vol-12-affinity-diagram-k-j-method/" target="_blank" rel="noopener">Velonova</a>. The three-column board, dot tool, ranking and A4 sheet are made by Invent + Discover.</p>
+    </div>
   </section>
 
   <footer class="sitefoot">
