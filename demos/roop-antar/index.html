@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Roop-Antar · Invent + Discover</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="description" content="Roop-Antar (रूप-अंतर): walk a clockwise Pradakshina around four sanctums and watch each gentle Saumya form become its fierce Vikral form, with sources from Britannica and WisdomLib and a procedural tabla in Ekgun and Chaugun. In your browser, or in VR on Meta Quest.">
+<link rel="canonical" href="https://inventndiscover.com/demos/roop-antar/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Roop-Antar: Pradakshina &amp; Avatar Museum">
+<meta property="og:description" content="An immersive WebXR sanctum exploring Saumya and Vikral forms through classical Pradakshina and procedural Tabla spatial audio.">
+<meta property="og:url" content="https://inventndiscover.com/demos/roop-antar/">
+<meta property="og:image" content="https://inventndiscover.com/media/roop-antar-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05060A;--v:#8b5cf6;--b:#3b82f6;--p:#ec4899;--t:#ece8ff;--m:#a9a4cc;--o:#ffb23f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--t);font-family:Geist,"Noto Sans Devanagari",system-ui,sans-serif;overflow:hidden}
+canvas{display:block;touch-action:none}
+.grid{background-color:var(--bg);background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:40px 40px}
+#notice{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.card{position:relative;width:100%;max-width:540px;max-height:calc(100vh - 32px);overflow:auto;background:rgba(10,11,22,.95);border:1px solid rgba(139,92,246,.5);border-radius:16px;padding:0 18px 16px;box-shadow:0 0 40px rgba(139,92,246,.25),0 0 90px rgba(255,178,63,.08)}
+.art{display:block;width:calc(100% + 36px);margin:0 -18px 8px;height:auto;max-height:110px;border-radius:16px 16px 0 0}
+h1{margin:0;font-size:22px;letter-spacing:.2px;text-shadow:0 0 16px rgba(255,178,63,.5)}
+h1 span{font-weight:500;color:#ffcf7a;font-size:16px;margin-left:6px}
+.sub{color:var(--m);margin:4px 0 10px;font-size:13.5px;line-height:1.45}
+h2{font-size:11.5px;letter-spacing:1.8px;text-transform:uppercase;color:#c4b5fd;margin:0 0 6px}
+.frame{font-size:12.5px;line-height:1.5;color:#e2dcf7;background:rgba(255,178,63,.07);border:1px solid rgba(255,178,63,.35);border-radius:10px;padding:9px 11px;margin:0 0 10px}
+.quick{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:3px}.quick li{font-size:12.5px;color:#d9d4f2;padding-left:12px;position:relative}.quick li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--o);box-shadow:0 0 6px var(--o)}.quick li.warn::before{background:#ec4899;box-shadow:0 0 6px #ec4899}
+details{margin:0 0 10px}summary{cursor:pointer;font-size:12px;color:#c4b5fd;margin-bottom:6px}
+.safety{list-style:none;margin:6px 0 8px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}
+.safety li{font-size:12px;line-height:1.35;color:#d9d4f2;padding-left:12px;position:relative}
+.safety li::before{content:"";position:absolute;left:0;top:5px;width:6px;height:6px;border-radius:50%;background:var(--o);box-shadow:0 0 6px var(--o)}
+.safety li.warn::before{background:#ec4899;box-shadow:0 0 6px #ec4899}
+.safety b{color:#fff;font-weight:600}
+.ctl{font-size:12px;color:var(--m);line-height:1.55;margin-bottom:10px}
+.ctl b{color:#e9e4ff}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;margin:0 0 10px;color:#e2dcf7;cursor:pointer}
+.chk input{accent-color:#ffb23f;width:16px;height:16px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button{font:600 14px Geist,system-ui,sans-serif;color:var(--t);background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.7);border-radius:999px;padding:10px 18px;cursor:pointer;box-shadow:0 0 16px rgba(139,92,246,.3)}
+button:hover{background:rgba(139,92,246,.3)}
+button.alt{border-color:rgba(255,178,63,.75);background:rgba(255,178,63,.14);box-shadow:0 0 16px rgba(255,178,63,.3)}
+button:disabled{opacity:.4;cursor:default}
+.build{margin-top:10px;font-size:11px;color:#77739a;line-height:1.5}
+#loading{font-size:12px;color:#c4b5fd;margin:0 0 8px;min-height:16px}
+a{color:#c4b5fd}
+@media (max-width:560px){.safety{grid-template-columns:1fr}}
+#hud{position:fixed;top:12px;right:12px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 24px)}
+#hud button{padding:8px 13px;font-size:13px;background:rgba(5,6,10,.72)}
+#hud button.on{background:rgba(255,178,63,.25);border-color:rgba(255,178,63,.85)}
+#hint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9;max-width:min(640px,calc(100% - 32px));background:rgba(5,6,10,.78);border:1px solid rgba(139,92,246,.45);border-radius:14px;padding:12px 18px;text-align:center;font-size:15px;line-height:1.5;transition:opacity .8s;opacity:0;pointer-events:none}
+#hint b{display:block;font-size:17px;margin-bottom:2px}
+#readout{position:fixed;left:12px;top:12px;z-index:10;font:12px/1.5 ui-monospace,monospace;background:rgba(5,6,10,.78);border:1px solid rgba(59,130,246,.5);border-radius:10px;padding:8px 10px;display:none;white-space:pre}
+#tracker{position:fixed;left:12px;bottom:14px;z-index:9;display:none;background:rgba(5,6,10,.78);border:1px solid rgba(255,178,63,.55);border-radius:14px;padding:8px 14px;font-size:13px;line-height:1.45;min-width:190px}
+#tracker .deg{font-size:22px;font-weight:700;color:#ffcf7a}
+#tracker .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);margin:4px 0 2px;overflow:hidden}
+#tracker .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#ffb23f)}
+#bol{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9;display:none;background:rgba(5,6,10,.7);border:1px solid rgba(139,92,246,.45);border-radius:999px;padding:5px 14px;font-size:14px;color:#e9e4ff;white-space:nowrap}
+#bol b{color:#ffcf7a;font-family:"Noto Sans Devanagari",Geist,sans-serif}
+#info{position:fixed;right:12px;bottom:14px;z-index:9;width:min(380px,calc(100% - 24px));max-height:calc(100% - 140px);overflow:auto;display:none;padding:14px 16px}
+#info h3{margin:0 0 2px;font-size:18px;font-family:"Noto Sans Devanagari",Geist,sans-serif;color:#ffcf7a}
+#info .forms{font-size:12.5px;color:var(--m);margin:0 0 8px}
+#info p{font-size:13px;line-height:1.5;margin:0 0 8px;color:#e2dcf7}
+#info .src{font-size:12px;line-height:1.6}
+#info .now{display:inline-block;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;border:1px solid rgba(255,178,63,.6);border-radius:999px;padding:2px 8px;margin-bottom:6px;color:#ffcf7a}
+#joy{position:fixed;left:22px;bottom:110px;width:110px;height:110px;border-radius:50%;border:1px solid rgba(139,92,246,.6);background:rgba(5,6,10,.4);z-index:10;display:none;touch-action:none}
+#joy i{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:rgba(139,92,246,.55)}
+@media (max-width:700px){#info{bottom:auto;top:60px;max-height:38%}#tracker{bottom:240px}}
+</style>
+</head>
+<body>
+<div id="notice" class="grid">
+  <div class="card">
+    <svg class="art" viewBox="0 0 540 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d0a22"/><stop offset="1" stop-color="#1d1236"/></linearGradient>
+        <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffcf7a" stop-opacity=".9"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="540" height="130" fill="url(#sk)"/>
+      <ellipse cx="270" cy="104" rx="210" ry="20" fill="none" stroke="#ffb23f" stroke-width="2" stroke-dasharray="10 7" opacity=".75"/>
+      <path d="M470 100l10 4-10 4" fill="none" stroke="#ffb23f" stroke-width="2"/>
+      <g fill="#0a0716" stroke="#8b5cf6" stroke-width="1.2">
+        <path d="M88 100V72h30v28M86 72l17-26 17 26zM96 46l7-14 7 14z"/>
+        <path d="M203 100V66h36v34M200 66l21-32 21 32zM212 34l9-16 9 16z"/>
+        <path d="M301 100V66h36v34M298 66l21-32 21 32zM310 34l9-16 9 16z"/>
+        <path d="M422 100V72h30v28M420 72l17-26 17 26zM430 46l7-14 7 14z"/>
+      </g>
+      <circle cx="103" cy="86" r="16" fill="url(#gl)" opacity=".7"/><circle cx="221" cy="84" r="20" fill="url(#gl)" opacity=".8"/>
+      <circle cx="319" cy="84" r="20" fill="url(#gl)" opacity=".5"/><circle cx="437" cy="86" r="16" fill="url(#gl)" opacity=".6"/>
+      <text x="270" y="22" text-anchor="middle" fill="#ffcf7a" font-size="15" font-family="Noto Sans Devanagari, sans-serif" opacity=".9">रूप-अंतर</text>
+    </svg>
+    <h1>Roop-Antar <span>रूप-अंतर · Pradakshina &amp; Avatar Museum</span></h1>
+    <p class="sub">Walk once clockwise around a sanctum, keeping it on your right. When the circle closes at 360°, the gentle <b>Saumya</b> form turns into its fierce <b>Vikral</b> (Ugra) form.</p>
+    <div class="frame"><b>A museum of light sculptures, not a temple.</b> The figures are abstract forms made for learning, not consecrated mūrtis. In these traditions the gentle and the fierce form are the same deity: the fierce form protects and removes fear, it is not evil. Traditions differ by region and lineage, so each sanctum names its source. Please explore with respect.</div>
+    <ul class="quick">
+      <li>Four sanctums: Devī ⟶ Kālī · Śiva ⟶ Bhairava · Viṣṇu ⟶ Narasiṃha · Sarasvatī ⟶ Nīla Sarasvatī</li>
+      <li class="warn">Forms brighten slowly and flames sway gently · Safe Light keeps everything steady</li>
+      <li class="warn">VR movement can cause motion sickness · stop if unwell</li>
+      <li>Procedural tabla: Teentaal in Ekgun near a calm form, Chaugun near a fierce one</li>
+    </ul>
+    <details>
+      <summary>Full safety notes &amp; controls</summary>
+      <ul class="safety">
+        <li class="warn"><b>Light.</b> Each change brightens over about 2.5 s. Flames sway under 2 times a second. No strobes or full flashes. If you are sensitive to light or have photosensitive epilepsy, turn on Safe Light (steady, softer, slower).</li>
+        <li class="warn"><b>Motion.</b> Smooth walking with a comfort vignette and 30° snap turns. Stop if you feel dizzy, sick or eye strain.</li>
+        <li><b>Space.</b> Clear the area around you and set your boundary. You can play seated and walk with the stick.</li>
+        <li><b>Sound.</b> Drums get faster near a fierce form. Start with the volume low. M mutes.</li>
+        <li><b>Content.</b> Fierce iconography is shown in an abstract way: dark colours, flames, many arms, a lion's mane. No gore.</li>
+        <li><b>Health.</b> Break every 20–30 min. If pregnant, or with epilepsy, a heart or other condition, check with a doctor first.</li>
+        <li><b>Way out.</b> Safe Light at any time (A in the headset, L or the button on screen). Exit with the Oculus/Meta button or Exit on screen.</li>
+        <li><b>Children.</b> Only as the headset maker's age guidance allows, with an adult nearby.</li>
+      </ul>
+      <div class="ctl"><b>Headset:</b> left stick walks where your left controller points · right stick turns 30° · trigger awakens or calms the nearest form · B or Y switches Garbhagriha ⇄ Scholar view · A Safe Light · X performance<br><b>Screen:</b> W A S D or arrows walk · drag to look · R awaken or calm · C Scholar comparison view · L Safe Light · M mute · X performance</div>
+    </details>
+    <label class="chk"><input type="checkbox" id="safeChk"> Start in Safe Light (steady light, no flame sway, slower changes)</label>
+    <div id="loading">Lighting the lamps…</div>
+    <div class="btns">
+      <button id="vrBtn" disabled>Enter VR</button>
+      <button id="screenBtn" class="alt" disabled>Start on screen</button>
+    </div>
+    <div class="build">Build <span id="buildStamp"></span> · Sources: Encyclopaedia Britannica and WisdomLib, linked in each sanctum · Built with three.js (MIT) and the Web Audio API · <a href="https://inventndiscover.com/">Back to Invent</a></div>
+  </div>
+</div>
+<div id="hud" style="display:none">
+  <button id="modeBtn">Scholar view (C)</button>
+  <button id="formBtn">Awaken (R)</button>
+  <button id="safeBtn">Safe Light (L)</button>
+  <button id="muteBtn">Mute (M)</button>
+  <button id="exitBtn">Exit</button>
+</div>
+<div id="hint"></div>
+<div id="readout"></div>
+<div id="bol"></div>
+<div id="tracker"><div>Pradakshina · <span id="trName"></span></div><div class="deg"><span id="trDeg">0</span>° <small style="font-size:13px;color:#a9a4cc">of 360°</small></div><div class="bar"><i id="trBar"></i></div><div id="trTip" style="font-size:11.5px;color:#a9a4cc">Walk clockwise, shrine on your right</div></div>
+<div id="info" class="card"></div>
+<div id="joy"><i></i></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ------------------------------------------------------------------
+   Roop-Antar (रूप-अंतर) · Pradakshina & Avatar Museum
+   One file: scene, four sanctums, pradakshina tracker, morphing forms,
+   scholar comparison view, safe light, procedural tabla, WebXR (Quest).
+------------------------------------------------------------------- */
+const BUILD = '2026-10-31a';
+const $ = id => document.getElementById(id);
+$('buildStamp').textContent = BUILD;
+
+/* ---------- Headset detection & quality ladder ---------- */
+const UA = navigator.userAgent;
+const HEADSET = (UA.match(/Quest\s?(3S|3|2|Pro)/) || [])[1] || null;
+const IS_Q2 = HEADSET === '2';
+// Level 0 = best. Each level: foveation (VR), desktop pixel scale, share of flames drawn.
+const LADDER = [
+  { fov: 0.0, px: 1.0, flames: 1.0 },
+  { fov: 0.2, px: 1.0, flames: 1.0 },
+  { fov: 0.4, px: 0.9, flames: 0.75 },
+  { fov: 0.6, px: 0.8, flames: 0.6 },
+  { fov: 0.8, px: 0.7, flames: 0.5 },
+  { fov: 1.0, px: 0.6, flames: 0.4 },
+];
+let Q = HEADSET ? (IS_Q2 ? 2 : 1) : 0;   // the ONE quality variable everything reads
+let qCeiling = 0;
+
+/* ---------- Renderer, scene, rig ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * LADDER[Q].px);
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.xr.enabled = true;
+renderer.xr.setReferenceSpaceType('local-floor');
+renderer.xr.setFramebufferScaleFactor(IS_Q2 ? 0.8 : 0.9);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+scene.fog = new THREE.FogExp2(0x07060f, 0.028);
+
+const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 120);
+const EYE = 1.6;
+camera.position.set(0, EYE, 0);
+const rig = new THREE.Group();          // the player's "body"; the headset moves the camera inside it
+rig.position.set(0, 0, 2.5);
+rig.add(camera);
+scene.add(rig);
+
+scene.add(new THREE.HemisphereLight(0x5a4a86, 0x0c0816, 0.75));
+
+/* ---------- Small helpers ---------- */
+const TAU = Math.PI * 2;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => t * t * (3 - 2 * t);
+const wrapPi = a => { a = (a + Math.PI) % TAU; if (a < 0) a += TAU; return a - Math.PI; };
+const lam = (c, e = 0x000000) => new THREE.MeshLambertMaterial({ color: c, emissive: e });
+const std = (c, e = 0x000000, r = 0.5, m = 0.25) => new THREE.MeshStandardMaterial({ color: c, emissive: e, roughness: r, metalness: m });
+function mesh(geo, mat, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); return m; }
+const put = (parent, o) => { parent.add(o); return o; };   // add a child and get the CHILD back
+function canvasTex(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return { c, g: c.getContext('2d'), t }; }
+function wrapText(g, text, maxW) {
+  const words = text.split(' '); const lines = []; let line = '';
+  for (const w of words) { const tryL = line ? line + ' ' + w : w; if (g.measureText(tryL).width > maxW && line) { lines.push(line); line = w; } else line = tryL; }
+  if (line) lines.push(line); return lines;
+}
+const FONT = '"Geist","Noto Sans Devanagari",system-ui,sans-serif';
+const DEVA = '"Noto Sans Devanagari","Geist",sans-serif';
+
+/* ---------- The hall ---------- */
+const HALL_R = 21;
+{
+  // floor with a faint neon grid and rings (shader: cheap, one draw)
+  const floorMat = new THREE.ShaderMaterial({
+    uniforms: { fogColor: { value: new THREE.Color(0x07060f) } },
+    vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
+    fragmentShader: `varying vec3 vW; uniform vec3 fogColor;
+      float line(float v,float w){ float d=abs(fract(v)-.5); return smoothstep(.5-w,.5,d); }
+      void main(){
+        vec2 p=vW.xz; float r=length(p);
+        vec3 col=vec3(.035,.032,.06);
+        float g=max(line(p.x*.5+.5,.02),line(p.y*.5+.5,.02));
+        col+=vec3(.25,.18,.5)*g*.18;
+        float ring=1.-smoothstep(.0,.05,abs(r-6.)); col+=vec3(1.,.7,.25)*ring*.35;
+        float ring2=1.-smoothstep(.0,.04,abs(r-19.5)); col+=vec3(.55,.36,1.)*ring2*.4;
+        float spokes=(1.-smoothstep(.0,.05,min(abs(p.x),abs(p.y))))*step(1.,r)*step(r,7.5);
+        col+=vec3(1.,.7,.25)*spokes*.22;
+        float f=1.-exp(-pow(.028*length(vW-cameraPosition),2.)); f=clamp(f,0.,1.);
+        gl_FragColor=vec4(mix(col,fogColor,f*.9),1.);
+        #include <colorspace_fragment>
+      }`
+  });
+  const floor = mesh(new THREE.CircleGeometry(HALL_R + 2, 64), floorMat);
+  floor.rotation.x = -Math.PI / 2; scene.add(floor);
+
+  // outer wall and ceiling
+  const wall = mesh(new THREE.CylinderGeometry(HALL_R + 2, HALL_R + 2, 10, 48, 1, true), lam(0x0d0a1c, 0x05030c), 0, 5, 0);
+  wall.material.side = THREE.BackSide; scene.add(wall);
+  const ceil = mesh(new THREE.CircleGeometry(HALL_R + 2, 48), lam(0x07050f)); ceil.rotation.x = Math.PI / 2; ceil.position.y = 10; scene.add(ceil);
+
+  // a ring of pillars with glowing capitals (instanced: 1 draw call each)
+  const N = 20, pillarGeo = new THREE.CylinderGeometry(0.32, 0.4, 8, 8), capGeo = new THREE.BoxGeometry(0.95, 0.25, 0.95);
+  const pil = new THREE.InstancedMesh(pillarGeo, lam(0x1a1430, 0x05030a), N);
+  const cap = new THREE.InstancedMesh(capGeo, lam(0x2a1d10, 0x553000), N);
+  const M4 = new THREE.Matrix4();
+  for (let i = 0; i < N; i++) {
+    const a = (i + 0.5) / N * TAU, x = Math.cos(a) * (HALL_R - 0.8), z = Math.sin(a) * (HALL_R - 0.8);
+    M4.makeTranslation(x, 4, z); pil.setMatrixAt(i, M4);
+    M4.makeTranslation(x, 7.9, z); cap.setMatrixAt(i, M4);
+  }
+  scene.add(pil, cap);
+
+  // central brass lamp stand (deepa stambha) with steady flames
+  const brass = std(0xb8862f, 0x2a1800, 0.35, 0.8);
+  scene.add(mesh(new THREE.CylinderGeometry(0.55, 0.7, 0.18, 16), brass, 0, 0.09, 0));
+  scene.add(mesh(new THREE.CylinderGeometry(0.07, 0.12, 1.3, 10), brass, 0, 0.8, 0));
+  const flameMat = new THREE.MeshBasicMaterial({ color: 0xffc35a });
+  for (let k = 0; k < 3; k++) {
+    const y = 0.6 + k * 0.38, rr = 0.42 - k * 0.11;
+    put(scene, mesh(new THREE.TorusGeometry(rr, 0.035, 6, 24), brass, 0, y, 0)).rotation.x = Math.PI / 2;
+    const n = 8 - k * 2;
+    for (let j = 0; j < n; j++) { const a = j / n * TAU; const f = mesh(new THREE.ConeGeometry(0.025, 0.08, 5), flameMat, Math.cos(a) * rr, y + 0.07, Math.sin(a) * rr); scene.add(f); }
+  }
+  scene.add(mesh(new THREE.ConeGeometry(0.04, 0.12, 6), flameMat, 0, 1.55, 0));
+}
+
+/* ---------- Sanctum content (verified sources) ---------- */
+const SANCTA = [
+  {
+    key: 'devi', dir: [0, -1],
+    deva: 'देवी  ⟶  काली', saumya: 'Devī (Ambikā / Durgā)', ugra: 'Kālī', short: 'Devī ⟶ Kālī',
+    note: 'In the Devī Māhātmya (part of the Mārkaṇḍeya Purāṇa; chapter 7 of the Durgā Saptaśatī), as the demons Caṇḍa and Muṇḍa close in, Ambikā’s face darkens with anger and Kālī springs from her brow. Kālī defeats them and is named Cāmuṇḍā. The fierce form is the same goddess, turned outward to protect.',
+    src: [['Britannica — Kali', 'https://www.britannica.com/topic/Kali'], ['Britannica — Devi-Mahatmya', 'https://www.britannica.com/topic/Devi-Mahatmya']],
+    sC: 0xe9b04a, sE: 0x3a2204, uC: 0x1a1d44, uE: 0x220a3c, flame: 0xff4a1f, light: [0xffc070, 0xff5a3a]
+  },
+  {
+    key: 'shiva', dir: [1, 0],
+    deva: 'शिव  ⟶  भैरव', saumya: 'Śiva (as the liṅga)', ugra: 'Bhairava', short: 'Śiva ⟶ Bhairava',
+    note: 'The Śiva Purāṇa (Śatarudra-saṃhitā, chapters 8–9) tells how Bhairava arises from Śiva to humble Brahmā’s pride and cuts off his fifth head. Carrying that skull as penance, he wanders until he is freed of the sin at Kāśī (Vārāṇasī), whose guardian he becomes as Kāla Bhairava.',
+    src: [['WisdomLib — Śiva Purāṇa, Bhairava incarnation (ch. 8)', 'https://www.wisdomlib.org/hinduism/book/shiva-purana-english/d/doc226404.html'], ['WisdomLib — The sports of Bhairava (ch. 9)', 'https://www.wisdomlib.org/hinduism/book/shiva-purana-english/d/doc226405.html'], ['WisdomLib — Bhairava', 'https://www.wisdomlib.org/definition/bhairava']],
+    sC: 0x3c4250, sE: 0x0a0f1c, uC: 0x5d6270, uE: 0x10183a, flame: 0xff6a2a, light: [0xbfd4ff, 0xff7a3a]
+  },
+  {
+    key: 'vishnu', dir: [0, 1],
+    deva: 'विष्णु  ⟶  नरसिंह', saumya: 'Viṣṇu', ugra: 'Narasiṃha', short: 'Viṣṇu ⟶ Narasiṃha',
+    note: 'Bhāgavata Purāṇa 7.8: Hiraṇyakaśipu’s boon guards him from man and beast, by day and by night, indoors and out. When he strikes a pillar to mock his son Prahlāda’s faith, Viṣṇu bursts from it as Narasiṃha, half man and half lion, and ends him at dusk on the threshold: neither day nor night, neither inside nor out.',
+    src: [['Britannica — Narasimha', 'https://www.britannica.com/topic/Narasimha'], ['WisdomLib — Nṛsiṃha (cites Bhāgavata VII.8)', 'https://www.wisdomlib.org/definition/nrisimha']],
+    sC: 0x2f6fd6, sE: 0x081a40, uC: 0xe08a2a, uE: 0x4a1e00, flame: 0xffa32a, light: [0x8fb8ff, 0xffa040]
+  },
+  {
+    key: 'saras', dir: [-1, 0],
+    deva: 'सरस्वती  ⟶  नील सरस्वती', saumya: 'Sarasvatī', ugra: 'Nīla Sarasvatī (Ugra Tārā)', short: 'Sarasvatī ⟶ Nīla Sarasvatī',
+    note: 'Sarasvatī is the goddess of learning, speech and music, shown with the vīṇā, a book and a swan. Her fierce counterpart comes from Śākta tantra rather than the Purāṇas: Tārā, second of the ten Mahāvidyās, is called Nīla Sarasvatī (“blue Sarasvatī”) because she grants speech, and Ugra Tārā because she saves devotees from terrible calamity. The Kālikā Purāṇa names Ugratārā.',
+    src: [['Britannica — Sarasvati', 'https://www.britannica.com/topic/Sarasvati'], ['WisdomLib — Ugratārā', 'https://www.wisdomlib.org/definition/ugratara'], ['WisdomLib — Nīlasarasvatī', 'https://www.wisdomlib.org/definition/nilasarasvati']],
+    sC: 0xf2eee6, sE: 0x26221c, uC: 0x1d3fa8, uE: 0x0e2a8a, flame: 0x7ab8ff, light: [0xfff1d6, 0x6aa0ff]
+  },
+];
+const S_DIST = 11;            // sanctum distance from the hall centre
+const PLAT_R = 1.55;          // shrine platform radius (you can't walk on it)
+const BAND_IN = 1.7, BAND_OUT = 4.1, TRACK_R = 2.65;
+
+/* ---------- Idol builder: abstract light-sculpture forms ---------- */
+const G = {
+  body: new THREE.LatheGeometry([[0, 0], [0.33, 0], [0.35, 0.06], [0.27, 0.13], [0.31, 0.45], [0.22, 0.76], [0.16, 0.95], [0.23, 1.18], [0.21, 1.36], [0.07, 1.44], [0, 1.45]].map(p => new THREE.Vector2(p[0], p[1])), 20),
+  head: new THREE.SphereGeometry(0.14, 16, 12),
+  crown: new THREE.ConeGeometry(0.1, 0.3, 8),
+  orb: new THREE.SphereGeometry(1, 10, 8),
+  arm: new THREE.CylinderGeometry(0.03, 0.04, 0.52, 6).translate(0, -0.26, 0),
+  ray: new THREE.CylinderGeometry(0.012, 0.03, 0.75, 5).translate(0, 0.375, 0),
+  flame: new THREE.ConeGeometry(0.05, 0.24, 5).translate(0, 0.12, 0),
+  spike: new THREE.ConeGeometry(0.035, 0.22, 5).translate(0, 0.11, 0),
+  petal: new THREE.SphereGeometry(1, 8, 6),
+  halo: new THREE.TorusGeometry(0.98, 0.028, 6, 56, Math.PI * 1.3),
+  thin: new THREE.CylinderGeometry(0.015, 0.015, 1, 6),
+};
+G.halo.rotateZ(-Math.PI * 0.15);
+
+function sprite(text, w = 512, h = 128, color = '#ffcf7a', size = 52, font = DEVA) {
+  const { c, g, t } = canvasTex(w, h);
+  g.font = `700 ${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.shadowColor = color; g.shadowBlur = 18; g.fillStyle = color; g.fillText(text, w / 2, h / 2);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false, fog: false }));
+  s.scale.set(w / h * 0.22, 0.22, 1); return s;
+}
+
+function makeIdol(def) {
+  const root = new THREE.Group();
+  const bodyMat = std(def.sC, def.sE, 0.42, 0.35); bodyMat.side = THREE.DoubleSide;
+  const goldMat = std(0xd9a441, 0x3a2400, 0.3, 0.85);
+  const flameMat = new THREE.MeshBasicMaterial({ color: def.flame, transparent: true, opacity: 0.9, depthWrite: false });
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xffe2a0 });
+  const C0 = new THREE.Color(def.sC), C1 = new THREE.Color(def.uC), E0 = new THREE.Color(def.sE), E1 = new THREE.Color(def.uE);
+  const parts = { fadeIn: [], fadeOut: [], spin: null, flames: [], rays: [], aksharas: [] };
+  const scaleBy = (o, k) => { o.userData.base = o.scale.clone(); (k > 0 ? parts.fadeIn : parts.fadeOut).push(o); return o; };
+
+  // lotus pedestal
+  const ped = new THREE.Group(); root.add(ped);
+  ped.add(mesh(new THREE.CylinderGeometry(0.55, 0.62, 0.3, 20), lam(0x241a36, 0x0a0614), 0, 0.15, 0));
+  const petalMat = std(0xe68fb0, 0x2a0b18, 0.6, 0.1);
+  for (let i = 0; i < 14; i++) {
+    const a = i / 14 * TAU, p = mesh(G.petal, petalMat, Math.cos(a) * 0.42, 0.42, Math.sin(a) * 0.42);
+    p.scale.set(0.09, 0.05, 0.17); p.rotation.y = -a + Math.PI / 2; p.rotation.x = -0.5; ped.add(p);
+  }
+  const fig = new THREE.Group(); fig.position.y = 0.45; root.add(fig);
+
+  // the figure: body, head, crown, arms
+  const figure = new THREE.Group(); fig.add(figure);
+  figure.add(mesh(G.body, bodyMat));
+  const head = mesh(G.head, bodyMat, 0, 1.58, 0); figure.add(head);
+  const crown = mesh(G.crown, goldMat, 0, 1.83, 0); figure.add(crown);
+  put(figure, mesh(G.orb, goldMat, 0, 2.0, 0)).scale.setScalar(0.035);
+  const third = mesh(G.orb, new THREE.MeshBasicMaterial({ color: 0xff7a3a }), 0, 1.63, 0.13); third.scale.setScalar(0.022); figure.add(third);
+  scaleBy(third, 1);
+  const arms = [];
+  const armPose = [[-0.21, 1.33, 0.35, 0.5], [0.21, 1.33, -0.35, 0.5], [-0.2, 1.36, 2.4, 0.0], [0.2, 1.36, -2.4, 0.0]];
+  for (const [x, y, rz, rx] of armPose) { const a = mesh(G.arm, bodyMat, x, y, 0); a.rotation.set(rx, 0, rz); figure.add(a); arms.push(a); }
+  const handTip = i => { const v = new THREE.Vector3(0, -0.52, 0); arms[i].updateMatrix(); return v.applyMatrix4(arms[i].matrix); };
+
+  // fierce extras: radiating arms (many-armed form), flame halo
+  const rayMat = bodyMat;
+  for (let i = 0; i < 10; i++) {
+    const a = lerp(-1.25, 1.25, i / 9); const r = mesh(G.ray, rayMat, Math.sin(a) * 0.12, 1.25, -0.12);
+    r.rotation.z = -a * 1.15; r.userData.a = a; parts.rays.push(r); figure.add(r);
+  }
+  const halo = mesh(G.halo, goldMat, 0, 1.25, -0.26); fig.add(halo);
+  const NF = 26;
+  for (let i = 0; i < NF; i++) {
+    const t = -Math.PI * 0.15 + i / (NF - 1) * Math.PI * 1.3;
+    const f = mesh(G.flame, flameMat, Math.cos(t) * 0.98, 1.25 + Math.sin(t) * 0.98, -0.26);
+    f.rotation.z = t - Math.PI / 2; f.userData.i = i; parts.flames.push(f); fig.add(f);
+  }
+
+  // deity-specific attributes
+  if (def.key === 'devi') {
+    const lotus = mesh(G.orb, std(0xff9ec4, 0x40102a, 0.5, 0.1)); lotus.scale.set(0.08, 0.06, 0.08);
+    lotus.position.copy(handTip(3)); figure.add(scaleBy(lotus, -1));
+    const tri = new THREE.Group(); tri.position.copy(handTip(2));
+    const shaft = mesh(G.thin, goldMat); shaft.scale.set(1, 1.1, 1); tri.add(shaft);
+    for (const dx of [-0.07, 0, 0.07]) { const p = mesh(G.spike, goldMat, dx, 0.55, 0); p.scale.set(0.7, dx ? 0.8 : 1.1, 0.7); tri.add(p); }
+    figure.add(tri);
+    const sword = mesh(new THREE.BoxGeometry(0.05, 0.75, 0.012).translate(0, 0.37, 0), std(0xdfe8ff, 0x405080, 0.2, 0.9));
+    sword.position.copy(handTip(3)); sword.rotation.z = -0.3; figure.add(scaleBy(sword, 1));
+    for (let i = 0; i < 12; i++) { // wild hair
+      const a = i / 12 * TAU, s = mesh(G.spike, bodyMat, Math.cos(a) * 0.12, 1.62 + Math.sin(a) * 0.12, -0.04); s.rotation.z = a - Math.PI / 2; s.scale.setScalar(1.3); figure.add(scaleBy(s, 1));
+    }
+  }
+  if (def.key === 'shiva') {
+    // Saumya: aniconic liṅga with crescent moon and tripuṇḍra; Ugra: Bhairava figure rises
+    const linga = new THREE.Group(); fig.add(linga);
+    const stone = std(0x2c303a, 0x05070c, 0.3, 0.2);
+    linga.add(mesh(new THREE.CylinderGeometry(0.42, 0.46, 0.18, 24), stone, 0, 0.09, 0));
+    const spout = mesh(new THREE.BoxGeometry(0.16, 0.08, 0.36), stone, 0, 0.12, 0.5); linga.add(spout);
+    linga.add(mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.75, 24), stone, 0, 0.55, 0));
+    linga.add(mesh(new THREE.SphereGeometry(0.2, 20, 10, 0, TAU, 0, Math.PI / 2), stone, 0, 0.92, 0));
+    const ash = new THREE.MeshBasicMaterial({ color: 0xe8e4da });
+    for (let k = 0; k < 3; k++) { const b = mesh(new THREE.TorusGeometry(0.205, 0.008, 4, 24, Math.PI * 0.7), ash, 0, 0.7 + k * 0.05, 0); b.rotation.set(Math.PI / 2, 0, Math.PI * 0.15); linga.add(b); }
+    const moon = mesh(new THREE.TorusGeometry(0.16, 0.03, 6, 24, Math.PI * 0.9), new THREE.MeshBasicMaterial({ color: 0xf2f6ff }), 0, 1.35, -0.1); moon.rotation.z = Math.PI * 0.55; linga.add(moon);
+    scaleBy(linga, -1);
+    scaleBy(figure, 1);                         // Bhairava figure exists only as the fierce form
+    const tri = new THREE.Group(); tri.position.copy(handTip(3));
+    const shaft = mesh(G.thin, goldMat); shaft.scale.set(1.2, 1.4, 1.2); tri.add(shaft);
+    for (const dx of [-0.08, 0, 0.08]) { const p = mesh(G.spike, goldMat, dx, 0.7, 0); p.scale.set(0.8, dx ? 0.9 : 1.2, 0.8); tri.add(p); }
+    figure.add(tri);
+    const dam = new THREE.Group(); dam.position.copy(handTip(2));
+    const dm = std(0x7a4a2a, 0x1a0800, 0.6, 0.1);
+    dam.add(mesh(new THREE.ConeGeometry(0.07, 0.1, 10).translate(0, 0.05, 0), dm)); const d2 = mesh(new THREE.ConeGeometry(0.07, 0.1, 10).translate(0, 0.05, 0), dm); d2.rotation.x = Math.PI; dam.add(d2);
+    figure.add(dam); parts.damaru = dam;
+    for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI + 0.1, s = mesh(G.spike, bodyMat, Math.cos(a) * 0.13, 1.66 + Math.sin(a) * 0.1, -0.05); s.rotation.z = a - Math.PI / 2; s.scale.set(1, 1.6, 1); figure.add(s); }
+  }
+  if (def.key === 'vishnu') {
+    const chakra = new THREE.Group(); chakra.position.copy(handTip(3)); chakra.position.y += 0.08;
+    const cm = std(0xffd27a, 0x6a3a00, 0.25, 0.9);
+    chakra.add(mesh(new THREE.TorusGeometry(0.13, 0.018, 6, 28), cm));
+    for (let i = 0; i < 8; i++) { const sp = mesh(new THREE.BoxGeometry(0.008, 0.25, 0.008), cm); sp.rotation.z = i / 8 * Math.PI; chakra.add(sp); }
+    figure.add(chakra); parts.spin = chakra;
+    const shankha = new THREE.Group(); shankha.position.copy(handTip(2)); shankha.position.y += 0.05;
+    const sm = std(0xfff8ee, 0x302a20, 0.35, 0.1);
+    const sc = mesh(new THREE.ConeGeometry(0.06, 0.2, 10), sm); sc.rotation.z = Math.PI / 2; shankha.add(sc);
+    shankha.add(mesh(new THREE.TorusGeometry(0.05, 0.025, 6, 14), sm, -0.06, 0, 0));
+    figure.add(shankha);
+    const hood = new THREE.Group(); hood.position.set(0, 1.62, -0.2);
+    const hm = std(0x2a8a6a, 0x05261a, 0.5, 0.2);
+    for (let i = 0; i < 5; i++) { const a = lerp(-0.9, 0.9, i / 4), h = mesh(G.orb, hm, Math.sin(a) * 0.24, Math.cos(a) * 0.24, 0); h.scale.set(0.08, 0.12, 0.04); h.rotation.z = -a; hood.add(h); }
+    fig.add(scaleBy(hood, -1));
+    const mane = new THREE.Group(); mane.position.set(0, 1.58, -0.02);
+    const mm = std(0xffb43a, 0x5a2a00, 0.6, 0.2);
+    for (let i = 0; i < 26; i++) { const a = i / 26 * TAU, s = mesh(G.spike, mm, Math.cos(a) * 0.14, Math.sin(a) * 0.14, -0.02); s.rotation.z = a - Math.PI / 2; s.scale.set(1.4, 1.5, 1.4); mane.add(s); }
+    figure.add(scaleBy(mane, 1));
+    parts.head = head;
+    // the pillar that splits open
+    const pm = lam(0x5a4a3a, 0x0a0604);
+    const pg = new THREE.CylinderGeometry(0.5, 0.5, 2.6, 20, 1, true, 0, Math.PI); pg.translate(0, 1.3, 0);
+    const pL = mesh(pg, pm), pR = mesh(pg, pm); pL.material.side = THREE.DoubleSide; pR.rotation.y = Math.PI;
+    fig.add(pL, pR); parts.pillar = [pL, pR];
+  }
+  if (def.key === 'saras') {
+    const veena = new THREE.Group(); veena.position.set(0.0, 1.0, 0.24); veena.rotation.z = -0.75;
+    const wood = std(0x8a4a22, 0x1a0800, 0.5, 0.1);
+    const neck = mesh(G.thin, wood); neck.scale.set(1.6, 1.25, 1.6); veena.add(neck);
+    put(veena, mesh(G.orb, wood, 0, -0.62, 0)).scale.setScalar(0.17);
+    put(veena, mesh(G.orb, wood, 0, 0.5, 0.05)).scale.setScalar(0.1);
+    const str = new THREE.MeshBasicMaterial({ color: 0xfff2c0 });
+    for (const dx of [-0.012, 0.012]) { const s = mesh(G.thin, str, dx, 0, 0.03); s.scale.set(0.12, 1.2, 0.12); veena.add(s); }
+    figure.add(veena);
+    const book = mesh(new THREE.BoxGeometry(0.16, 0.05, 0.11), std(0x9a2a2a, 0x200404, 0.7, 0.05)); book.position.copy(handTip(2)); figure.add(book);
+    const mala = mesh(new THREE.TorusGeometry(0.07, 0.012, 5, 18), std(0xfff2e0, 0x302010, 0.4, 0.2)); mala.position.copy(handTip(3)); figure.add(mala);
+    // swan (hamsa)
+    const swan = new THREE.Group(); swan.position.set(0.48, 0.0, 0.45); swan.rotation.y = -0.6;
+    const wm = std(0xffffff, 0x2a2a2a, 0.5, 0.05);
+    put(swan, mesh(G.orb, wm)).scale.set(0.16, 0.09, 0.09);
+    const neckC = new THREE.CatmullRomCurve3([new THREE.Vector3(0.12, 0.03, 0), new THREE.Vector3(0.18, 0.18, 0), new THREE.Vector3(0.14, 0.28, 0), new THREE.Vector3(0.2, 0.3, 0)]);
+    swan.add(mesh(new THREE.TubeGeometry(neckC, 12, 0.022, 5), wm));
+    put(swan, mesh(new THREE.ConeGeometry(0.015, 0.06, 5), std(0xff9a20), 0.24, 0.3, 0)).rotation.z = -Math.PI / 2;
+    root.add(scaleBy(swan, -1));
+    // ring of aksharas (letters) for the goddess of speech
+    const AK = ['अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ऋ', 'ए', 'ऐ', 'ओ', 'औ', 'ॐ'];
+    AK.forEach((ch, i) => { const s = sprite(ch, 128, 128, '#9ec8ff', 84); s.scale.set(0.2, 0.2, 1); s.userData.a = i / AK.length * TAU; parts.aksharas.push(s); fig.add(s); });
+  }
+
+  const state = { u: -1 };
+  function set(u, t, safe, flameShare) {
+    const s = smooth(u);
+    bodyMat.color.copy(C0).lerp(C1, s); bodyMat.emissive.copy(E0).lerp(E1, s);
+    for (const o of parts.fadeIn) { o.visible = s > 0.01; o.scale.copy(o.userData.base).multiplyScalar(Math.max(0.0001, s)); }
+    for (const o of parts.fadeOut) { o.visible = s < 0.99; o.scale.copy(o.userData.base).multiplyScalar(Math.max(0.0001, 1 - s)); }
+    // radiating arms fan out
+    parts.rays.forEach(r => { r.visible = s > 0.01; r.scale.set(1, s, 1); r.rotation.z = -r.userData.a * lerp(0.4, 1.15, s); });
+    // flames along the halo: steady in Safe Light, a slow sway otherwise
+    const nShow = Math.round(parts.flames.length * flameShare);
+    parts.flames.forEach((f, i) => {
+      const show = s > 0.01 && (i % Math.round(parts.flames.length / Math.max(1, nShow)) === 0 || flameShare >= 1);
+      f.visible = show; const sway = safe ? 1 : 1 + 0.16 * Math.sin(t * 2.2 + i * 1.7);  // 2.2 rad/s ≈ 0.35 Hz
+      f.scale.set(s, s * sway * (1 + 0.6 * Math.abs(Math.sin(i * 2.3))), s);
+    });
+    flameMat.opacity = (safe ? 0.55 : 0.9) * s;
+    if (parts.spin) { parts.spin.rotation.z -= (safe ? 0.004 : 0.008) + s * (safe ? 0.01 : 0.03); parts.spin.children[0].material.emissive.setRGB(0.42 + s * 0.6, 0.23 + s * 0.12, 0); }
+    if (parts.head) parts.head.scale.setScalar(1 + 0.35 * s);
+    if (parts.pillar) { const open = smooth(clamp((s - 0.05) / 0.6, 0, 1)); parts.pillar.forEach((p, k) => { p.visible = s > 0.01; p.position.x = (k ? -1 : 1) * open * 0.72; p.scale.set(1, Math.min(1, s * 4), 1); }); }
+    if (parts.damaru && !safe) parts.damaru.rotation.y = Math.sin(t * 3) * 0.6 * s;
+    parts.aksharas.forEach(a => { a.visible = s > 0.02; a.material.opacity = s; const ang = a.userData.a + t * (safe ? 0.05 : 0.15); a.position.set(Math.cos(ang) * 0.85, 1.35 + Math.sin(ang * 2) * 0.05, Math.sin(ang) * 0.85); });
+    state.u = u;
+  }
+  return { root, set, state };
+}
+
+/* ---------- Ring shader: the pradakshina path on the floor ---------- */
+function ringMaterial(center, col) {
+  return new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uC: { value: center }, uStart: { value: 0 }, uProg: { value: 0 }, uTime: { value: 0 }, uFlash: { value: 0 }, uSafe: { value: 0 }, uCol: { value: new THREE.Color(col) }, uNear: { value: 0 } },
+    vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
+    fragmentShader: `varying vec3 vW; uniform vec3 uC,uCol; uniform float uStart,uProg,uTime,uFlash,uSafe,uNear;
+      void main(){
+        vec2 d=vW.xz-uC.xz; float r=length(d); float a=atan(d.y,d.x);
+        float rel=mod(a-uStart+12.566370,6.2831853);
+        float track=1.-smoothstep(.07,.13,abs(r-${TRACK_R.toFixed(2)}));
+        float edges=(1.-smoothstep(.0,.03,abs(r-${BAND_IN.toFixed(2)})))+(1.-smoothstep(.0,.03,abs(r-${BAND_OUT.toFixed(2)})));
+        float tf=fract(a/6.2831853*12.); float ticks=(1.-smoothstep(.004,.008,min(tf,1.-tf)))*step(abs(r-${TRACK_R.toFixed(2)}),.3);
+        // chevrons drifting clockwise (static in Safe Light)
+        float chev=step(.62,fract(a/6.2831853*36.-(abs(r-${TRACK_R.toFixed(2)}))*2.-uTime*.25*(1.-uSafe)))*(1.-smoothstep(.12,.3,abs(r-${TRACK_R.toFixed(2)})));
+        float lit=(uProg>0.001)?(1.-smoothstep(uProg-.02,uProg,rel)):0.;
+        vec3 base=vec3(.55,.36,1.)*(track*.35+edges*.25+ticks*.45+chev*.18*uNear);
+        vec3 prog=uCol*track*lit*1.6;
+        vec3 flash=uCol*track*uFlash*2.;
+        vec3 c=base+prog+flash;
+        float al=clamp(max(max(c.r,c.g),c.b),0.,1.);
+        gl_FragColor=vec4(c,al);
+        #include <colorspace_fragment>
+      }`
+  });
+}
+
+/* ---------- Build the four sanctums ---------- */
+const sanctums = [];
+const titleFont = (g, s) => g.font = `700 ${s}px ${DEVA}`;
+for (const def of SANCTA) {
+  const pos = new THREE.Vector3(def.dir[0] * S_DIST, 0, def.dir[1] * S_DIST);
+  const face = Math.atan2(-pos.x, -pos.z);         // turn the shrine's front (+z) toward the hall centre
+  const g = new THREE.Group(); g.position.copy(pos); g.rotation.y = face; scene.add(g);
+
+  // platform, four pillars, tiered roof (vimana) with kalasha
+  const stone = lam(0x1d1630, 0x06030c);
+  g.add(mesh(new THREE.CylinderGeometry(PLAT_R, PLAT_R + 0.12, 0.3, 24), stone, 0, 0.15, 0));
+  g.add(mesh(new THREE.CylinderGeometry(PLAT_R - 0.05, PLAT_R - 0.05, 0.02, 24), lam(0x2a1d10, 0x2a1500), 0, 0.31, 0));
+  const pg = new THREE.CylinderGeometry(0.09, 0.11, 2.9, 8);
+  for (let i = 0; i < 4; i++) { const a = Math.PI / 4 + i * Math.PI / 2; g.add(mesh(pg, stone, Math.cos(a) * 1.28, 1.75, Math.sin(a) * 1.28)); }
+  const tierMat = lam(0x2b1f40, 0x0a0614), gold = std(0xd9a441, 0x4a2c00, 0.3, 0.85);
+  let y = 3.2;
+  for (let k = 0; k < 5; k++) { const r = 1.55 - k * 0.27, h = 0.42 - k * 0.04; g.add(mesh(new THREE.CylinderGeometry(r * 0.86, r, h, 8), tierMat, 0, y + h / 2, 0)); put(g, mesh(new THREE.TorusGeometry(r * 0.9, 0.02, 4, 8), gold, 0, y + h, 0)).rotation.x = Math.PI / 2; y += h; }
+  g.add(mesh(new THREE.SphereGeometry(0.22, 12, 8), gold, 0, y + 0.2, 0));
+  g.add(mesh(new THREE.ConeGeometry(0.06, 0.3, 8), gold, 0, y + 0.52, 0));
+
+  // the forms: one for Garbhagriha view, two for Scholar comparison
+  const main = makeIdol(def); main.root.position.y = 0.31; g.add(main.root);
+  const cmpA = makeIdol(def), cmpB = makeIdol(def);
+  for (const [o, x] of [[cmpA, -0.62], [cmpB, 0.62]]) { o.root.position.set(x, 0.31, 0); o.root.scale.setScalar(0.62); o.root.visible = false; g.add(o.root); }
+  const lblA = sprite('Saumya · ' + def.saumya.split(' (')[0], 768, 128, '#ffe2a0', 46, FONT); lblA.position.set(-0.62, 2.25, 0.3); lblA.scale.set(0.9, 0.15, 1);
+  const lblB = sprite('Vikral · ' + def.ugra.split(' (')[0], 768, 128, '#ff9a7a', 46, FONT); lblB.position.set(0.62, 2.25, 0.3); lblB.scale.set(0.9, 0.15, 1);
+  lblA.visible = lblB.visible = false; g.add(lblA, lblB);
+
+  // title plaque over the entrance (redrawn only when the form changes)
+  const plaque = canvasTex(1024, 256);
+  const pm = mesh(new THREE.PlaneGeometry(1.9, 0.475), new THREE.MeshBasicMaterial({ map: plaque.t, transparent: true, fog: false }), 0, 3.0, 1.45); g.add(pm);
+
+  // lamp light for the sanctum
+  const light = new THREE.PointLight(def.light[0], 7, 9, 1.6); light.position.set(0, 2.7, 1.2); g.add(light);
+
+  // info panel standing by the path (drawn once)
+  const ip = canvasTex(1024, 760); drawInfoPanel(ip, def);
+  const panel = mesh(new THREE.PlaneGeometry(1.25, 0.928), new THREE.MeshBasicMaterial({ map: ip.t, transparent: true, fog: false }));
+  const back = mesh(panel.geometry, panel.material); back.rotation.y = Math.PI; panel.add(back);   // readable from both sides
+  const pa = Math.atan2(-pos.z, -pos.x) + 0.62;
+  panel.position.set(pos.x + Math.cos(pa) * 4.55, 1.45, pos.z + Math.sin(pa) * 4.55);
+  panel.lookAt(pos.x + Math.cos(pa) * 9, 1.45, pos.z + Math.sin(pa) * 9);
+  scene.add(panel);
+  scene.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.98, 6), lam(0x3a2a55), panel.position.x, 0.49, panel.position.z));
+
+  // floor ring + degree marker
+  const rm = ringMaterial(pos, def.light[1]);
+  const ring = mesh(new THREE.RingGeometry(BAND_IN - 0.05, BAND_OUT + 0.05, 128, 1), rm, pos.x, 0.012, pos.z); ring.rotation.x = -Math.PI / 2; ring.renderOrder = 2; scene.add(ring);
+
+  const s = { def, pos, group: g, main, cmpA, cmpB, lblA, lblB, plaque, light, ring: rm, target: 0, u: 0,
+    lc0: new THREE.Color(def.light[0]), lc1: new THREE.Color(def.light[1]), prog: 0, startA: 0, lastA: null, outside: 0, back: 0, flash: 0, lastHint: -99, plaqueState: -1, dist: 99 };
+  drawPlaque(s, 0);
+  sanctums.push(s);
+}
+
+function drawPlaque(s, ugra) {
+  const { g, c, t } = s.plaque; g.clearRect(0, 0, c.width, c.height);
+  g.fillStyle = 'rgba(8,6,18,.82)'; g.strokeStyle = ugra ? '#ff8a5a' : '#ffcf7a'; g.lineWidth = 4;
+  g.beginPath(); g.roundRect(12, 20, 1000, 216, 28); g.fill(); g.stroke();
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  const name = ugra ? s.def.ugra : s.def.saumya;
+  g.fillStyle = ugra ? '#ffb08a' : '#ffe2a0'; titleFont(g, 70); g.fillText(s.def.deva.split('  ⟶  ')[ugra ? 1 : 0], 512, 92);
+  g.fillStyle = '#d9d4f2'; g.font = `600 38px ${FONT}`; g.fillText(name + (ugra ? ' · Vikral Roop' : ' · Saumya Roop'), 512, 172);
+  t.needsUpdate = true; s.plaqueState = ugra;
+}
+function drawInfoPanel({ c, g, t }, def) {
+  g.fillStyle = 'rgba(8,6,18,.9)'; g.strokeStyle = 'rgba(139,92,246,.85)'; g.lineWidth = 4;
+  g.beginPath(); g.roundRect(8, 8, c.width - 16, c.height - 16, 30); g.fill(); g.stroke();
+  g.textAlign = 'left'; g.textBaseline = 'top';
+  g.fillStyle = '#ffcf7a'; titleFont(g, 60); g.fillText(def.deva, 44, 36);
+  g.fillStyle = '#c4b5fd'; g.font = `600 32px ${FONT}`; g.fillText(`Saumya: ${def.saumya}   ·   Vikral: ${def.ugra}`, 44, 120, 940);
+  g.fillStyle = '#ece8ff'; g.font = `400 31px ${FONT}`;
+  let y = 182; for (const l of wrapText(g, def.note, 936)) { g.fillText(l, 44, y); y += 41; }
+  g.fillStyle = '#a9a4cc'; g.font = `400 25px ${FONT}`; y += 10;
+  for (const l of wrapText(g, 'Sources: ' + def.src.map(x => x[0]).join(' · '), 936)) { g.fillText(l, 44, y); y += 33; }
+  t.needsUpdate = true;
+}
+
+/* ---------- Floor degree marker that leads the walker ---------- */
+const mark = canvasTex(512, 256);
+const markMesh = mesh(new THREE.PlaneGeometry(0.9, 0.45), new THREE.MeshBasicMaterial({ map: mark.t, transparent: true, depthWrite: false, fog: false }));
+markMesh.rotation.x = -Math.PI / 2; markMesh.renderOrder = 3; markMesh.visible = false; scene.add(markMesh);
+let markVal = -1;
+function drawMark(deg) {
+  if (deg === markVal) return; markVal = deg;
+  const { g, c, t } = mark; g.clearRect(0, 0, c.width, c.height);
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.shadowColor = '#ffb23f'; g.shadowBlur = 16;
+  g.fillStyle = '#ffcf7a'; g.font = `700 120px ${FONT}`; g.fillText(deg + '°', 256, 105);
+  g.shadowBlur = 0; g.fillStyle = '#d9d4f2'; g.font = `600 34px ${FONT}`; g.fillText('of 360 · keep walking ⟳', 256, 205);
+  t.needsUpdate = true;
+}
+
+/* ---------- Message panel (headset) + hint (screen) ---------- */
+const msgTex = canvasTex(1024, 384);
+const msgMesh = mesh(new THREE.PlaneGeometry(0.84, 0.315), new THREE.MeshBasicMaterial({ map: msgTex.t, transparent: true, depthTest: false, depthWrite: false, fog: false }));
+msgMesh.renderOrder = 10; msgMesh.visible = false; scene.add(msgMesh);
+let msgUntil = 0, hintTimer = 0;
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function message(title, body = '') {
+  const lines = body ? body.split(' · ').map(cap) : [];
+  // screen
+  const h = $('hint'); h.innerHTML = `<b>${title}</b>${lines.join('<br>')}`; h.style.opacity = 1;
+  const dur = 2600 + 55 * (title.length + body.length);
+  clearTimeout(hintTimer); hintTimer = setTimeout(() => h.style.opacity = 0, dur);
+  // headset
+  if (!renderer.xr.isPresenting) return;
+  const { g, c, t } = msgTex; g.clearRect(0, 0, c.width, c.height);
+  let ts = 64; g.font = `700 ${ts}px ${FONT}`; while (g.measureText(title).width > 900 && ts > 34) { ts -= 2; g.font = `700 ${ts}px ${FONT}`; }
+  g.font = `400 40px ${FONT}`;
+  const wrapped = []; lines.forEach(l => wrapped.push(...wrapText(g, l, 900)));
+  const hgt = Math.min(384, 40 + ts + 14 + wrapped.length * 50 + 24), top = (384 - hgt) / 2;
+  g.fillStyle = 'rgba(6,6,14,.9)'; g.strokeStyle = 'rgba(255,178,63,.8)'; g.lineWidth = 4;
+  g.beginPath(); g.roundRect(20, top, 984, hgt, 26); g.fill(); g.stroke();
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  g.fillStyle = '#ffcf7a'; g.font = `700 ${ts}px ${FONT}`; g.fillText(title, 512, top + 26);
+  g.fillStyle = '#ece8ff'; g.font = `400 40px ${FONT}`;
+  wrapped.forEach((l, i) => g.fillText(l, 512, top + 26 + ts + 14 + i * 50));
+  t.needsUpdate = true; msgMesh.visible = true; msgUntil = performance.now() + dur;
+  placeMsg(true);
+}
+const _hp = new THREE.Vector3(), _hq = new THREE.Quaternion(), _fw = new THREE.Vector3(), _tp = new THREE.Vector3();
+function placeMsg(snap) {
+  camera.getWorldPosition(_hp); camera.getWorldQuaternion(_hq);
+  _fw.set(0, 0, -1).applyQuaternion(_hq); _fw.y = 0; _fw.normalize();
+  _tp.copy(_hp).addScaledVector(_fw, 1.6); _tp.y = _hp.y - 0.22;
+  if (snap) msgMesh.position.copy(_tp); else msgMesh.position.lerp(_tp, 0.04);
+  msgMesh.lookAt(_hp);
+}
+
+/* ---------- Comfort: vignette & snap-turn fade (headset only) ---------- */
+const vigMat = new THREE.ShaderMaterial({
+  transparent: true, depthTest: false, depthWrite: false, uniforms: { uS: { value: 0 }, uF: { value: 0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+  fragmentShader: `varying vec2 vUv; uniform float uS,uF; void main(){ float r=length(vUv-.5)*2.; float a=smoothstep(.45,.85,r)*uS; gl_FragColor=vec4(0.,0.,0.,max(a,uF)); }`
+});
+const vig = mesh(new THREE.PlaneGeometry(2.6, 2.6), vigMat, 0, 0, -0.5); vig.renderOrder = 20; vig.visible = false; camera.add(vig);
+let fade = 0;
+
+/* ---------- State ---------- */
+let started = false, scholar = false, safe = false, muted = false, readoutOn = false;
+let yaw = 0, pitch = 0;
+const keys = {};
+let nearest = null;
+
+function setScholar(on) {
+  scholar = on;
+  for (const s of sanctums) { s.main.root.visible = !on; s.cmpA.root.visible = s.cmpB.root.visible = on; s.lblA.visible = s.lblB.visible = on; }
+  $('modeBtn').classList.toggle('on', on);
+  $('modeBtn').textContent = on ? 'Garbhagriha view (C)' : 'Scholar view (C)';
+  message(on ? 'Scholar comparison view' : 'Garbhagriha view', on ? 'Saumya on the left · Vikral on the right · walk around to compare' : 'One form per sanctum · walk a full Pradakshina to awaken it');
+}
+function setSafe(on) {
+  safe = on; $('safeBtn').classList.toggle('on', on); $('safeChk').checked = on;
+  renderer.toneMappingExposure = on ? 0.9 : 1.05;
+  for (const s of sanctums) s.ring.uniforms.uSafe.value = on ? 1 : 0;
+  if (started) message(on ? 'Safe Light on' : 'Safe Light off', on ? 'Steady light · no flame sway · slower changes' : 'Gentle flame sway restored');
+}
+function setMute(on) { muted = on; $('muteBtn').classList.toggle('on', on); if (audio.master) audio.master.gain.setTargetAtTime(on ? 0 : 0.85, audio.ctx.currentTime, 0.08); }
+function toggleForm(s, why) {
+  if (!s) { message('Walk to a sanctum first', 'Stand on its glowing ring'); return; }
+  s.target = s.target > 0.5 ? 0 : 1;
+  const ugra = s.target === 1;
+  if (ugra) { message(`${s.def.ugra} awakens`, `Vikral Roop of ${s.def.saumya.split(' (')[0]}${why ? ' · ' + why : ''} · the tabla moves to Chaugun`); audio.conch(); }
+  else { message(`${s.def.saumya.split(' (')[0]} returns`, 'Saumya Roop · the tabla settles back to Ekgun'); audio.bell(); }
+}
+
+/* ---------- Desktop / touch input ---------- */
+addEventListener('keydown', e => {
+  keys[e.code] = true; if (!started) return;
+  if (e.code === 'KeyR') toggleForm(nearest && nearest.dist < 9 ? nearest : null);
+  if (e.code === 'KeyC') setScholar(!scholar);
+  if (e.code === 'KeyL') setSafe(!safe);
+  if (e.code === 'KeyM') setMute(!muted);
+  if (e.code === 'KeyX') { readoutOn = !readoutOn; $('readout').style.display = readoutOn ? 'block' : 'none'; }
+});
+addEventListener('keyup', e => keys[e.code] = false);
+let drag = null;
+renderer.domElement.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.clientX < innerWidth * 0.35 && e.clientY > innerHeight * 0.55) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; });
+addEventListener('pointermove', e => { if (!drag || e.pointerId !== drag.id) return; yaw -= (e.clientX - drag.x) * 0.0042; pitch = clamp(pitch - (e.clientY - drag.y) * 0.0036, -1.2, 1.2); drag.x = e.clientX; drag.y = e.clientY; });
+addEventListener('pointerup', e => { if (drag && e.pointerId === drag.id) drag = null; });
+const joy = { x: 0, y: 0, id: null };
+const joyEl = $('joy'), knob = joyEl.firstElementChild;
+joyEl.addEventListener('pointerdown', e => { joy.id = e.pointerId; joyEl.setPointerCapture(e.pointerId); joyMove(e); });
+joyEl.addEventListener('pointermove', e => { if (e.pointerId === joy.id) joyMove(e); });
+joyEl.addEventListener('pointerup', () => { joy.id = null; joy.x = joy.y = 0; knob.style.transform = ''; });
+function joyMove(e) { const r = joyEl.getBoundingClientRect(); let x = (e.clientX - r.left - 55) / 45, y = (e.clientY - r.top - 55) / 45; const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; } joy.x = x; joy.y = y; knob.style.transform = `translate(${x * 35}px,${y * 35}px)`; }
+$('modeBtn').onclick = () => setScholar(!scholar);
+$('formBtn').onclick = () => toggleForm(nearest && nearest.dist < 9 ? nearest : null);
+$('safeBtn').onclick = () => setSafe(!safe);
+$('muteBtn').onclick = () => setMute(!muted);
+$('exitBtn').onclick = () => location.href = 'https://inventndiscover.com/';
+$('safeChk').onchange = e => setSafe(e.target.checked);
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+/* ---------- Controllers (headset) ---------- */
+const ctrls = [];
+const handleGeo = new THREE.CylinderGeometry(0.018, 0.024, 0.13, 10).rotateX(Math.PI / 2 - 0.5).translate(0, -0.015, 0.045);
+const beamGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -0.7)]);
+beamGeo.setAttribute('color', new THREE.Float32BufferAttribute([0.85, 0.75, 1, 0.05, 0.03, 0.1], 3));
+for (let i = 0; i < 2; i++) {
+  const ray = renderer.xr.getController(i), grip = renderer.xr.getControllerGrip(i);
+  ray.add(new THREE.Line(beamGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending })));
+  grip.add(mesh(handleGeo, std(0x16141f, 0x05040a, 0.6, 0.2)));
+  const c = { ray, grip, hand: null, gp: null, prev: [] };
+  ray.addEventListener('connected', e => { c.hand = e.data.handedness; c.gp = e.data.gamepad; });
+  ray.addEventListener('disconnected', () => { c.hand = null; c.gp = null; });
+  ray.addEventListener('selectstart', () => toggleForm(nearest && nearest.dist < 9 ? nearest : null));
+  rig.add(ray, grip); ctrls.push(c);
+}
+let snapArmed = true;
+
+/* ---------- Procedural tabla (Web Audio) ---------- */
+const THEKA = ['Dha', 'Dhin', 'Dhin', 'Dha', 'Dha', 'Dhin', 'Dhin', 'Dha', 'Dha', 'Tin', 'Tin', 'Ta', 'Ta', 'Dhin', 'Dhin', 'Dha'];
+const DEV_BOL = { Dha: 'धा', Dhin: 'धिं', Tin: 'तिं', Ta: 'ता' };
+const audio = {
+  ctx: null, master: null, panner: null, noise: null, next: 0, bol: 0, show: [], drone: null, gun: 1,
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const ctx = this.ctx = new AC();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(ctx.destination);
+    this.master = ctx.createGain(); this.master.gain.value = 0.85; this.master.connect(comp);
+    const p = this.panner = ctx.createPanner();
+    p.panningModel = 'HRTF'; p.distanceModel = 'inverse'; p.refDistance = 3; p.rolloffFactor = 1.1; p.maxDistance = 40;
+    p.connect(this.master);
+    const len = ctx.sampleRate; const b = ctx.createBuffer(1, len, ctx.sampleRate); const d = b.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1; this.noise = b;
+    // tanpura-like drone: Sa and Pa, very soft, not spatial
+    const dg = ctx.createGain(); dg.gain.value = 0.045; dg.connect(this.master);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.connect(dg);
+    for (const [f, a] of [[138.6, 0.6], [207.7, 0.35], [277.2, 0.3], [69.3, 0.4]]) {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = (Math.random() - 0.5) * 6;
+      const g = ctx.createGain(); g.gain.value = a; o.connect(g).connect(lp); o.start();
+    }
+    this.next = ctx.currentTime + 0.3;
+    setInterval(() => this.schedule(), 25);
+  },
+  env(g, t, peak, dec, att = 0.003) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + att); g.gain.exponentialRampToValueAtTime(0.0001, t + dec); },
+  bayan(t, acc) {        // Ge: the low left drum, with a small upward meend
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(78, t); o.frequency.linearRampToValueAtTime(96, t + 0.09); o.frequency.exponentialRampToValueAtTime(82, t + 0.5);
+    this.env(g, t, 0.75 * acc, 0.55); o.connect(g).connect(this.panner); o.start(t); o.stop(t + 0.6);
+    this.noiseHit(t, 'lowpass', 220, 0.04, 0.3 * acc);
+  },
+  dayan(t, acc, kind) {  // Na / Ta (rim, bright and short) or Tin (open, ringing)
+    const c = this.ctx, f0 = 277.2;
+    const parts = kind === 'Tin' ? [[1, 0.22], [2, 0.42], [3, 0.3], [4.1, 0.1]] : [[1, 0.5], [2, 0.32], [3, 0.24], [4.2, 0.14], [5.4, 0.07]];
+    const dec = kind === 'Tin' ? 0.7 : 0.32;
+    for (const [m, a] of parts) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = f0 * m; this.env(g, t, a * 0.55 * acc, dec / (m * 0.4 + 0.6)); o.connect(g).connect(this.panner); o.start(t); o.stop(t + dec + 0.05); }
+    this.noiseHit(t, 'highpass', 2500, 0.018, 0.22 * acc);
+  },
+  noiseHit(t, type, f, dur, amp) {
+    const c = this.ctx, s = c.createBufferSource(), fl = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = this.noise; fl.type = type; fl.frequency.value = f; this.env(g, t, amp, dur, 0.001);
+    s.connect(fl).connect(g).connect(this.panner); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02);
+  },
+  stroke(name, t, acc) {
+    if (name === 'Dha') { this.bayan(t, acc); this.dayan(t, acc, 'Na'); }
+    else if (name === 'Dhin') { this.bayan(t, acc); this.dayan(t, acc, 'Tin'); }
+    else if (name === 'Tin') this.dayan(t, acc, 'Tin');
+    else this.dayan(t, acc, 'Na');
+  },
+  damaru(t) { for (let k = 0; k < 4; k++) this.noiseHit(t + k * 0.045, 'bandpass', 900 + k * 60, 0.03, 0.18); },
+  schedule() {
+    const c = this.ctx; if (!c || c.state !== 'running') return;
+    const n = nearest; const fierce = n && n.u > 0.5;
+    this.gun = fierce ? 4 : 1;                       // Ekgun ↔ Chaugun at the same laya
+    const matra = 60 / 80;                           // 80 matras per minute
+    const step = matra / this.gun;
+    while (this.next < c.currentTime + 0.12) {
+      const bi = this.bol % 16, acc = bi === 0 ? 1.25 : (bi === 8 ? 0.8 : 1);
+      if (n && n.dist < 16) {
+        this.stroke(THEKA[bi], this.next, acc * (fierce ? 0.8 : 1));
+        if (fierce && n.def.key === 'shiva' && this.bol % 4 === 0) this.damaru(this.next);   // Tandava accents
+        this.show.push([this.next, THEKA[bi], bi]);
+      }
+      this.bol++; this.next += step;
+    }
+  },
+  conch() {               // shankha swell on awakening
+    const c = this.ctx; if (!c) return; const t = c.currentTime + 0.05;
+    const o = c.createOscillator(), o2 = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+    o.type = 'sawtooth'; o2.type = 'sawtooth'; o.frequency.value = 233; o2.frequency.value = 466.6;
+    lfo.frequency.value = 5; lg.gain.value = 3; lfo.connect(lg).connect(o.frequency);
+    f.type = 'lowpass'; f.frequency.setValueAtTime(300, t); f.frequency.linearRampToValueAtTime(1500, t + 1.2); f.frequency.linearRampToValueAtTime(600, t + 2.6);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.8); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.8);
+    o.connect(f); o2.connect(f); f.connect(g).connect(this.master);
+    for (const x of [o, o2, lfo]) { x.start(t); x.stop(t + 2.9); }
+  },
+  bell() {                // temple bell (ghanta) when the form calms
+    const c = this.ctx; if (!c) return; const t = c.currentTime + 0.02;
+    for (const [m, a] of [[1, 0.2], [2.76, 0.12], [5.4, 0.07], [8.9, 0.03]]) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = 620 * m; this.env(g, t, a, 3.2 / m + 0.4); o.connect(g).connect(this.master); o.start(t); o.stop(t + 3.6); }
+  },
+  listener() {
+    const c = this.ctx; if (!c) return; const L = c.listener;
+    camera.getWorldPosition(_hp); camera.getWorldQuaternion(_hq);
+    _fw.set(0, 0, -1).applyQuaternion(_hq); const up = new THREE.Vector3(0, 1, 0).applyQuaternion(_hq);
+    if (L.positionX) { const tt = c.currentTime; L.positionX.setTargetAtTime(_hp.x, tt, 0.03); L.positionY.setTargetAtTime(_hp.y, tt, 0.03); L.positionZ.setTargetAtTime(_hp.z, tt, 0.03); L.forwardX.setTargetAtTime(_fw.x, tt, 0.03); L.forwardY.setTargetAtTime(_fw.y, tt, 0.03); L.forwardZ.setTargetAtTime(_fw.z, tt, 0.03); L.upX.setTargetAtTime(up.x, tt, 0.03); L.upY.setTargetAtTime(up.y, tt, 0.03); L.upZ.setTargetAtTime(up.z, tt, 0.03); }
+    else { L.setPosition(_hp.x, _hp.y, _hp.z); L.setOrientation(_fw.x, _fw.y, _fw.z, up.x, up.y, up.z); }
+    if (nearest) { const p = this.panner, tt = c.currentTime; const y = 1.6; if (p.positionX) { p.positionX.setTargetAtTime(nearest.pos.x, tt, 0.4); p.positionY.setTargetAtTime(y, tt, 0.4); p.positionZ.setTargetAtTime(nearest.pos.z, tt, 0.4); } else p.setPosition(nearest.pos.x, y, nearest.pos.z); }
+  }
+};
+
+/* ---------- Start ---------- */
+function begin(vr) {
+  started = true; $('notice').style.display = 'none';
+  audio.init(); if (audio.ctx && audio.ctx.state !== 'running') audio.ctx.resume();
+  setSafe($('safeChk').checked);
+  if (!vr) {
+    $('hud').style.display = 'flex';
+    if (matchMedia('(pointer:coarse)').matches) joyEl.style.display = 'block';
+    message('Welcome to Roop-Antar', 'Four sanctums wait at the four directions · walk once clockwise around one, shrine on your right · R awakens · C compares · L Safe Light');
+  }
+}
+$('screenBtn').onclick = () => begin(false);
+let xrSupported = false;
+if (navigator.xr) navigator.xr.isSessionSupported('immersive-vr').then(ok => { xrSupported = ok; $('vrBtn').disabled = !ok; if (!ok) $('vrBtn').textContent = 'VR not available here'; }).catch(() => { $('vrBtn').textContent = 'VR not available here'; });
+else $('vrBtn').textContent = 'VR not available here';
+$('vrBtn').onclick = async () => {
+  try {
+    const session = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor'] });
+    begin(true);
+    await renderer.xr.setSession(session);
+    session.addEventListener('end', onXREnd);
+    if (session.updateTargetFrameRate && session.supportedFrameRates && [...session.supportedFrameRates].includes(72)) session.updateTargetFrameRate(72).catch(() => {});
+    renderer.xr.setFoveation(LADDER[Q].fov);
+    const ref = renderer.xr.getReferenceSpace();
+    if (ref && ref.addEventListener) ref.addEventListener('reset', () => message('Recentred', 'Your view has been re-anchored'));
+    camera.position.set(0, 0, 0); pitch = 0;
+    vig.visible = true;
+    setTimeout(() => message('Welcome to Roop-Antar', 'Left stick walks where your left controller points · walk once clockwise around a sanctum · trigger awakens · B or Y compares · A Safe Light'), 600);
+  } catch (err) { message('Could not start VR', String(err.message || err)); }
+};
+function onXREnd() { vig.visible = false; msgMesh.visible = false; camera.position.set(0, EYE, 0); camera.rotation.set(0, 0, 0); $('hud').style.display = 'flex'; }
+$('loading').textContent = 'Ready. Turn your sound on.';
+$('screenBtn').disabled = false;
+
+/* ---------- Quality ladder (measured, with hysteresis) ---------- */
+const perf = { t0: 0, n: 0, slow: 0, good: 0, pauseUntil: 0, fps: 0, fpsN: 0, fpsT: 0, upAt: -1 };
+function applyQuality() {
+  if (renderer.xr.isPresenting) renderer.xr.setFoveation(LADDER[Q].fov);
+  else renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * LADDER[Q].px);
+}
+function measure(now, dt) {
+  perf.fpsN++; if (now - perf.fpsT > 1000) { perf.fps = perf.fpsN * 1000 / (now - perf.fpsT); perf.fpsN = 0; perf.fpsT = now; }
+  if (!renderer.xr.isPresenting || now < perf.pauseUntil) { perf.t0 = now; perf.n = 0; return; }
+  perf.n++;
+  if (now - perf.t0 >= 1200) {
+    const avg = (now - perf.t0) / perf.n, target = 1000 / 72;
+    if (avg > target * 1.12) { perf.good = 0; if (++perf.slow >= 2 && Q < LADDER.length - 1) { if (perf.upAt >= 0 && now - perf.upAt < 6000) qCeiling = Q + 1; Q++; perf.slow = 0; perf.pauseUntil = now + 1500; applyQuality(); } }
+    else if (avg < target * 1.04) { perf.slow = 0; if (++perf.good >= 4 && Q > qCeiling) { Q--; perf.good = 0; perf.upAt = now; perf.pauseUntil = now + 1500; applyQuality(); } }
+    perf.t0 = now; perf.n = 0;
+  }
+}
+function readoutText() {
+  const target = renderer.xr.isPresenting ? 72 : 60;
+  return `Headset  ${HEADSET ? 'Quest ' + HEADSET : (renderer.xr.isPresenting ? 'XR device' : 'screen')}\nFPS      ${perf.fps.toFixed(0)} of ${target} Hz\nQuality  level ${Q} (0 best, ${LADDER.length - 1} lightest)\nTris     ${renderer.info.render.triangles.toLocaleString()} per view\nBuild    ${BUILD}`;
+}
+
+/* ---------- Per-frame update ---------- */
+const clock = new THREE.Clock();
+const head = new THREE.Vector3(), dirV = new THREE.Vector3(), rightV = new THREE.Vector3(), q = new THREE.Quaternion();
+let lastReadout = 0, lastTracker = 0;
+renderer.setAnimationLoop((now, frame) => {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  measure(now, dt);
+  const xr = renderer.xr.isPresenting;
+  let mvx = 0, mvz = 0;
+  rig.rotation.y = yaw;
+
+  if (started) {
+    if (!xr) {
+      camera.rotation.set(pitch, 0, 0, 'YXZ');
+      const f = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - joy.y;
+      const s = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + joy.x;
+      dirV.set(-Math.sin(yaw), 0, -Math.cos(yaw)); rightV.set(Math.cos(yaw), 0, -Math.sin(yaw));
+      mvx = (dirV.x * f + rightV.x * s); mvz = (dirV.z * f + rightV.z * s);
+      const l = Math.hypot(mvx, mvz); if (l > 1) { mvx /= l; mvz /= l; }
+      mvx *= 2.2 * dt; mvz *= 2.2 * dt;
+    } else {
+      // gamepads: left stick walks along the left controller's pointing direction
+      let lx = 0, ly = 0, rx = 0, leftRay = null, rightRay = null;
+      for (const c of ctrls) {
+        if (!c.gp) continue; const ax = c.gp.axes; const sx = ax.length > 2 ? ax[2] : ax[0], sy = ax.length > 3 ? ax[3] : ax[1];
+        const b = c.gp.buttons, pressed = i => b[i] && b[i].pressed, edge = i => pressed(i) && !c.prev[i];
+        if (c.hand === 'left') { lx = sx; ly = sy; leftRay = c.ray; if (edge(4)) { readoutOn = !readoutOn; if (readoutOn) message('Performance', readoutText().split('\n').map(s => s.replace(/\s+/g, ' ')).join(' · ')); } if (edge(5)) setScholar(!scholar); }
+        if (c.hand === 'right') { rx = sx; rightRay = c.ray; if (edge(4)) setSafe(!safe); if (edge(5)) setScholar(!scholar); }
+        c.prev = b.map(x => x.pressed);
+      }
+      const aim = leftRay || rightRay;
+      if (aim) aim.getWorldQuaternion(q); else camera.getWorldQuaternion(q);
+      dirV.set(0, 0, -1).applyQuaternion(q); dirV.y = 0; if (dirV.lengthSq() < 1e-4) dirV.set(0, 0, -1); dirV.normalize();
+      rightV.set(-dirV.z, 0, dirV.x);
+      const dz = Math.abs(ly) > 0.15 ? -ly : 0, dx = Math.abs(lx) > 0.15 ? lx : 0;
+      mvx = (dirV.x * dz + rightV.x * dx) * 1.6 * dt; mvz = (dirV.z * dz + rightV.z * dx) * 1.6 * dt;
+      // snap turn 30° around the head, with a brief fade
+      if (Math.abs(rx) < 0.3) snapArmed = true;
+      if (snapArmed && Math.abs(rx) > 0.7) {
+        snapArmed = false; const ang = rx > 0 ? -Math.PI / 6 : Math.PI / 6;
+        camera.getWorldPosition(head);
+        rig.position.sub(head).applyAxisAngle(THREE.Object3D.DEFAULT_UP, ang).add(head); yaw += ang; rig.rotation.y = yaw;
+        fade = 0.85;
+      }
+    }
+    rig.position.x += mvx; rig.position.z += mvz;
+
+    // keep the head out of the shrines and inside the hall (moves the rig only)
+    camera.getWorldPosition(head);
+    for (const s of sanctums) {
+      const dx = head.x - s.pos.x, dz = head.z - s.pos.z, d = Math.hypot(dx, dz), m = PLAT_R + 0.18;
+      if (d < m && d > 1e-4) { rig.position.x += dx / d * (m - d); rig.position.z += dz / d * (m - d); }
+    }
+    const hr = Math.hypot(head.x, head.z); if (hr > HALL_R - 1.6) { const k = (HALL_R - 1.6) / hr; rig.position.x += head.x * k - head.x; rig.position.z += head.z * k - head.z; }
+    if (xr) { const sp = Math.hypot(mvx, mvz) / Math.max(dt, 1e-3); vigMat.uniforms.uS.value = lerp(vigMat.uniforms.uS.value, clamp(sp / 1.6, 0, 1) * 0.7, 0.15); }
+    fade = Math.max(0, fade - dt * 6); vigMat.uniforms.uF.value = fade;
+  }
+
+  /* pradakshina tracking */
+  camera.getWorldPosition(head);
+  let best = null;
+  for (const s of sanctums) {
+    const dx = head.x - s.pos.x, dz = head.z - s.pos.z; s.dist = Math.hypot(dx, dz);
+    if (!best || s.dist < best.dist) best = s;
+    const inBand = s.dist > BAND_IN && s.dist < BAND_OUT;
+    const a = Math.atan2(dz, dx);                  // increases when walking clockwise seen from above
+    if (started && inBand) {
+      s.outside = 0;
+      if (s.lastA !== null) {
+        const d = wrapPi(a - s.lastA);
+        if (s.prog <= 0 && d < 0) { s.startA = a; s.back += -d; if (s.back > 0.5 && t - s.lastHint > 20) { s.lastHint = t; message('Pradakshina goes clockwise', 'Keep the shrine on your right side'); } }
+        else { s.prog = Math.max(0, s.prog + d); if (d > 0) s.back = 0; }
+        if (s.prog >= TAU) { s.prog = 0; s.flash = 1; toggleForm(s, 'Pradakshina complete'); }
+      } else if (s.prog <= 0) s.startA = a;
+      s.lastA = a;
+    } else { s.lastA = null; s.outside += dt; if (s.outside > 12) s.prog = Math.max(0, s.prog - dt * 2); }
+    s.flash = Math.max(0, s.flash - dt * 0.6);
+    const R = s.ring.uniforms; R.uStart.value = s.startA; R.uProg.value = s.prog; R.uTime.value = t; R.uFlash.value = s.flash * (safe ? 0.4 : 1); R.uNear.value = s.dist < 6 ? 1 : 0;
+    // morph toward the target form
+    const rate = dt / (safe ? 4 : 2.5);
+    s.u = s.target > s.u ? Math.min(s.target, s.u + rate) : Math.max(s.target, s.u - rate);
+    const vis = s.dist < 26;
+    if (vis) {
+      const share = LADDER[Q].flames;
+      if (!scholar) s.main.set(s.u, t, safe, share); else { s.cmpA.set(0, t, safe, share); s.cmpB.set(1, t, safe, share); }
+    }
+    const ug = smooth(s.u);
+    s.light.color.copy(s.lc0).lerp(s.lc1, ug);
+    s.light.intensity = (safe ? 5 : 7) + ug * (safe ? 1 : 3);
+    const pState = s.u > 0.5 ? 1 : 0; if (pState !== s.plaqueState) drawPlaque(s, pState);
+  }
+  nearest = best;
+
+  // floor marker that leads the walker round the ring
+  const onRing = started && best && best.dist > BAND_IN && best.dist < BAND_OUT;
+  markMesh.visible = onRing;
+  if (onRing) {
+    const a = Math.atan2(head.z - best.pos.z, head.x - best.pos.x) + 0.45;
+    markMesh.position.set(best.pos.x + Math.cos(a) * TRACK_R, 0.03, best.pos.z + Math.sin(a) * TRACK_R);
+    markMesh.rotation.set(-Math.PI / 2, 0, Math.atan2(head.x - markMesh.position.x, head.z - markMesh.position.z));
+    if (now - lastTracker > 160) drawMark(Math.floor(best.prog / TAU * 360));
+  }
+
+  // screen HUD
+  if (started && !xr && now - lastTracker > 160) {
+    lastTracker = now;
+    const tr = $('tracker');
+    if (best && best.dist < 6) {
+      tr.style.display = 'block'; const deg = Math.floor(best.prog / TAU * 360);
+      $('trName').textContent = best.def.short; $('trDeg').textContent = deg; $('trBar').style.width = (deg / 3.6) + '%';
+      $('trTip').textContent = best.u > 0.5 ? 'Vikral form awake · another circuit calms it' : 'Walk clockwise, shrine on your right';
+      $('formBtn').textContent = (best.target ? 'Calm' : 'Awaken') + ' (R)';
+    } else tr.style.display = 'none';
+    showInfo(best && best.dist < 7 ? best : null);
+    if (readoutOn) $('readout').textContent = readoutText();
+  }
+
+  // audio
+  if (audio.ctx) {
+    audio.listener();
+    let cur = null; while (audio.show.length && audio.show[0][0] <= audio.ctx.currentTime) cur = audio.show.shift();
+    if (cur && !xr) { const b = $('bol'); b.style.display = 'block'; b.innerHTML = `<b>${DEV_BOL[cur[1]]}</b> ${cur[1]} · matra ${(cur[2] % 16) + 1}${cur[2] === 0 ? ' (sam)' : cur[2] === 8 ? ' (khali)' : ''} · ${audio.gun === 4 ? 'Chaugun' : 'Ekgun'}`; }
+    if (!(nearest && nearest.dist < 16)) $('bol').style.display = 'none';
+  }
+
+  // headset message panel
+  if (xr && msgMesh.visible) { placeMsg(false); if (performance.now() > msgUntil) msgMesh.visible = false; }
+
+  renderer.render(scene, camera);
+});
+
+/* ---------- Screen info card (with clickable sources) ---------- */
+let infoFor = null, infoUgra = -1;
+function showInfo(s) {
+  const el = $('info');
+  if (!s) { if (infoFor) { el.style.display = 'none'; infoFor = null; } return; }
+  const ug = s.u > 0.5 ? 1 : 0;
+  if (s === infoFor && ug === infoUgra) return;
+  infoFor = s; infoUgra = ug;
+  el.innerHTML = `<span class="now">${ug ? 'Vikral Roop' : 'Saumya Roop'}${scholar ? ' · Scholar view' : ''}</span>
+    <h3>${s.def.deva}</h3>
+    <div class="forms">Saumya: ${s.def.saumya} · Vikral: ${s.def.ugra}</div>
+    <p>${s.def.note}</p>
+    <div class="src"><b>Sources</b><br>${s.def.src.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join('<br>')}</div>`;
+  el.style.display = 'block';
+}
+
+window.__roop = { sanctums, rig, camera, renderer, get nearest() { return nearest; }, get Q() { return Q; }, setScholar, setSafe, toggleForm, begin };
+</script>
+</body>
+</html>
