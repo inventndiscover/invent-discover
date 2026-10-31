@@ -255,7 +255,7 @@
     <a class="back" href="/#tools">← All tools</a><br>
     <span class="pill">TOOL · AFFINITY MAP</span>
     <h1>Affinity Map</h1>
-    <p class="lede">Turn a pile of research notes into a few clear priorities, in three columns. <b>Generate</b>: everyone adds ideas as sticky notes. <b>Organise</b>: name clusters and drag a copy of each note into one. <b>Prioritise</b>: put dots on the clusters, and they rank themselves, most dots first. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
+    <p class="lede">Turn a pile of research notes into a few clear priorities, in three columns. <b>Generate</b>: everyone adds ideas as sticky notes. <b>Organise</b>: name clusters and drag a copy of each note into one. <b>Prioritise</b>: everyone puts dots on the clusters, and they line up in order by themselves, most dots first. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
     <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
   </header>
 
@@ -284,7 +284,7 @@
   <section class="how">
     <div class="card"><div class="step">COLUMN 1 · 10 MIN</div><h3>Generate</h3><p>Write the research question at the top. Then everyone adds ideas on their own, without talking: one quote, fact or observation per note, between 1 and 30 notes. Paste a list if you have interview notes.</p></div>
     <div class="card"><div class="step">COLUMN 2 · 15 MIN</div><h3>Organise</h3><p>Type a cluster name and press Enter. Drag notes from Generate into clusters: each drag adds a copy, so the original stays in Generate with a tick. Name clusters with what you learned: “I plan my day around train timings”, not “Timing”.</p></div>
-    <div class="card"><div class="step">COLUMN 3 · 10 MIN</div><h3>Prioritise</h3><p>Pick the dot tool and click the clusters that matter most. Each person on a team has five dots. The clusters rank themselves in the Prioritise column. Agree a next step and an owner for the top ones, then try <a href="/toolkit/how-might-we/">How Might We</a>.</p></div>
+    <div class="card"><div class="step">COLUMN 3 · 10 MIN</div><h3>Prioritise</h3><p>Everyone picks up the dot tool in Organise and clicks the clusters that matter most. Each person on a team has five dots. Nothing to click in this column: it reads the dots and lines the clusters up in order, #1 at the top.</p></div>
   </section>
 
   <section class="card about" id="where">
@@ -336,7 +336,7 @@ const FIREBASE_CONFIG = {
 
 // ---------- 3b. The example (shown on a first visit) ----------
 // 20 ideas; 5 clusters, each listing which ideas (by number) were copied in,
-// with its dots and, for the top two, a next step and an owner.
+// with its dots.
 const EXAMPLE = {
   question: 'How do students who commute by Mumbai local use their travel time?',
   ideas: [
@@ -350,8 +350,8 @@ const EXAMPLE = {
   ],
   colors: 'yyyypyyysyyymlyysyly',
   clusters: [
-    ['The crowd decides what I can do on the train', 10, [1, 2, 3, 4, 18], ['Test a one-handed “commute mode” with 5 riders', 'Riya']],
-    ['Travel time is my me-time', 8, [5, 6, 7, 8], ['Interview 5 more riders about evening trips', 'Arjun']],
+    ['The crowd decides what I can do on the train', 10, [1, 2, 3, 4, 18], null],
+    ['Travel time is my me-time', 8, [5, 6, 7, 8], null],
     ['I plan my day around train timings', 3, [9, 10, 11, 17], null],
     ['Bad network breaks whatever I was doing', 2, [12, 13, 20], null],
     ['I use the ride to study', 0, [14, 19], null],
@@ -374,7 +374,7 @@ const state = {
   listMode: false,        // the composer takes a pasted list, one note per line
   compColor: 'yellow',
   drafts: {},             // half-typed text, kept safe when teammates' changes arrive
-  fieldDrafts: {},        // cluster names, next steps and owners being typed
+  fieldDrafts: {},        // cluster names being typed
   focusId: null,          // a box that should get the cursor after the next redraw
   team: null,             // { code } while on a team board, null when solo
   teamView: false,        // the Team tab is open (joined or not)
@@ -809,7 +809,7 @@ function prioritiseCol(write) {
   const r = ranked(), voted = r.filter(x => x.dots > 0), rest = r.filter(x => !x.dots);
   const maxDots = voted.length ? voted[0].dots : 1;
   col.append(colHead(3, 'Prioritise', voted.length ? `${voted.reduce((s, x) => s + x.dots, 0)} dots` : null));
-  col.append(el('p', 'hint', 'Clusters rank themselves by dots, most first. Agree a next step and an owner for the top ones.'));
+  col.append(el('p', 'hint', 'No clicking needed here. The clusters line up by the dots they get in Organise, most dots first.'));
   const list = el('div', 'rank');
   if (!voted.length) list.append(el('p', 'empty', r.length ? 'No dots yet. Pick up the dot tool in Organise and click the clusters that matter most.' : 'Clusters appear here once they have dots.'));
   voted.forEach(({ g, label, dots }, i) => {
@@ -819,18 +819,6 @@ function prioritiseCol(write) {
     const b3 = el('span', 'bar3'); const sp = el('span'); sp.style.width = Math.round(dots / maxDots * 100) + '%'; b3.append(sp);
     meta.append(`${dots} dot${dots === 1 ? '' : 's'} · ${copiesIn(g.id).length} notes`, b3);
     it.append(meta);
-    const nx = el('div', 'gnext');
-    const a = draftField('input', 'nx-' + g.id, g.next || '', v => patchGroup(g.id, { next: v }));
-    a.maxLength = 140; a.placeholder = 'Next step'; a.setAttribute('aria-label', 'Next step for ' + label); a.disabled = !write;
-    const o = draftField('input', 'ow-' + g.id, g.owner || '', v => patchGroup(g.id, { owner: v }));
-    o.maxLength = 40; o.placeholder = 'Who'; o.setAttribute('aria-label', 'Who owns it'); o.disabled = !write;
-    if (i < 3 && !a.value.trim()) a.classList.add('missing');
-    if (i < 3 && !o.value.trim()) o.classList.add('missing');
-    nx.append(a, o); it.append(nx);
-    if (g.title.trim()) {
-      const l = el('a', null, 'Turn into How Might We →'); l.href = '/toolkit/how-might-we/?problem=' + encodeURIComponent(g.title.trim().slice(0, 200));
-      l.target = '_blank'; l.rel = 'noopener'; it.append(l);
-    }
     list.append(it);
   });
   col.append(list);
@@ -855,11 +843,6 @@ function checksList() {
     if (unnamed) out.push(['warn', 'Names', `${unnamed} cluster${unnamed > 1 ? 's have' : ' has'} no name.`]);
     if (oneWord) out.push(['warn', 'Insights', `“${oneWord.title.trim()}” is a topic. Say what you learned, as a sentence.`]);
     if (emptyC) out.push(['warn', 'Empty', `${emptyC} cluster${emptyC > 1 ? 's are' : ' is'} empty.`]);
-    const top = ranked().filter(x => x.dots).slice(0, 3);
-    if (top.length) {
-      const open = top.filter(x => !(x.g.next || '').trim() || !(x.g.owner || '').trim()).length;
-      out.push([open ? 'warn' : 'ok', 'Next steps', open ? `${open} of the top ${top.length} need${open === 1 ? 's' : ''} a next step and an owner.` : 'Top clusters have next steps and owners.']);
-    }
   }
   const ul = el('ul', 'checks');
   for (const [s, h, t] of out) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
@@ -918,7 +901,7 @@ function asText() {
   });
   out += '\n## 3. Prioritise\n';
   const r = ranked().filter(x => x.dots);
-  out += r.length ? r.map((x, i) => `${i + 1}. ${x.label} (${x.dots} dot${x.dots > 1 ? 's' : ''})${x.g.next ? ` · Next: ${x.g.next}${x.g.owner ? ` (${x.g.owner})` : ''}` : ''}`).join('\n') + '\n' : 'No dots yet.\n';
+  out += r.length ? r.map((x, i) => `${i + 1}. ${x.label} (${x.dots} dot${x.dots > 1 ? 's' : ''})`).join('\n') + '\n' : 'No dots yet.\n';
   return out;
 }
 
@@ -1053,18 +1036,15 @@ async function drawSheet() {
     x.fillStyle = GREY; x.font = `400 26px ${UI_F}`; x.fillText('No clusters yet. Draw them here by hand.', ob.x, ob.y + 30);
   }
 
-  // 3 Prioritise: the ranking, #1 at the top, with next steps
+  // 3 Prioritise: the ranking, #1 at the top
   const pb = boxes[2], r = ranked().filter(z => z.dots);
   let y = pb.y;
   if (!r.length) { x.fillStyle = GREY; x.font = `400 26px ${UI_F}`; x.fillText('No dots yet.', pb.x, y + 30); }
   for (let i = 0; i < r.length; i++) {
-    const { g, label, dots } = r[i];
+    const { label, dots } = r[i];
     x.font = `700 28px ${UI_F}`;
     const tl = wrapText(x, label, pb.w - 90).slice(0, 2);
-    x.font = `italic 400 22px ${UI_F}`;
-    const nextText = g.next ? `Next: ${g.next}${g.owner ? ' (' + g.owner + ')' : ''}` : 'Next: ________________  Who: ______';
-    const nl = wrapText(x, nextText, pb.w - 90).slice(0, 2);
-    const h = 26 + tl.length * 34 + 40 + nl.length * 28 + 18;
+    const h = 26 + tl.length * 34 + 44;
     if (y + h > pb.y + pb.h) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${r.length - i} more on screen`, pb.x, bottom - 26); break; }
     x.strokeStyle = i === 0 ? INK : '#999999'; x.lineWidth = i === 0 ? 4 : 2; x.strokeRect(pb.x, y, pb.w, h);
     x.fillStyle = INK; x.font = `800 44px ${UI_F}`; x.fillText(String(i + 1), pb.x + 18, y + 56);
@@ -1072,9 +1052,6 @@ async function drawSheet() {
     let yy = y + 26 + tl.length * 34 + 16;
     x.fillStyle = INK; const end = dotRow(x, dots, pb.x + 76, yy + 2, 9, 12);
     x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`${dots} dot${dots > 1 ? 's' : ''}`, end + 6, yy + 10);
-    yy += 40;
-    x.fillStyle = g.next ? INK : GREY; x.font = `italic 400 22px ${UI_F}`;
-    nl.forEach((l, k) => x.fillText(l, pb.x + 76, yy + k * 28));
     y += h + 16;
   }
 

@@ -874,7 +874,7 @@ const TOOLS=[
   letters:["+","−","⇄","◐","?"],colors:["#A58BFF","#EC4899","#3D9BFF","#2FD1C5","#FFB23F"],cta:"Start framing"},
  {id:"pov",added:"2026-10-19",name:"POV Statement",line:"Say who you're designing for, what they need and why, in four short steps. Then turn it into How Might We questions.",url:"/toolkit/pov/",
   credit:"The POV Madlib, Stanford d.school (Hasso Plattner Institute of Design)",time:"5 minutes · nothing uploaded",tag:"Problem framing",visual:"madlib",cta:"Write my POV"},
- {id:"affinity-map",added:"2026-10-31",name:"Affinity Map",line:"Three columns, solo or live with your team: Generate ideas as sticky notes, Organise copies into clusters, and Prioritise with dot votes that rank the clusters for you. Then save a printable A4 sheet.",url:"/toolkit/affinity-map/",
+ {id:"affinity-map",added:"2026-10-31",name:"Affinity Map",line:"Three columns, solo or live with your team: Generate ideas as sticky notes, Organise copies into clusters, and Prioritise, where clusters line up by everyone's dot votes. Then save a printable A4 sheet.",url:"/toolkit/affinity-map/",
   credit:"The KJ method, Jiro Kawakita (1960s); steps after Nielsen Norman Group",time:"30–40 minutes · solo or team",tag:"Research synthesis",visual:"affinity",cta:"Open the board"},
  {id:"business-model-canvas",added:"2026-10-23",name:"Business Model Canvas",line:"Map a whole business on one page, solo or live with your team: nine blocks of sticky notes, a dot vote and a fit check, then save a printable A4 sheet.",url:"/toolkit/business-model-canvas/",
   credit:"Alexander Osterwalder and Yves Pigneur (Business Model Generation, 2010)",time:"30–45 minutes · solo or team",tag:"Business models",visual:"bmc",cta:"Open the canvas"},
