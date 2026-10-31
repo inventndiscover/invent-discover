@@ -115,6 +115,16 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-grid .ax{position:absolute;font:500 9px var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .tool-grid .ay{left:-22px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
 .tool-grid .axx{bottom:-18px;left:50%;transform:translateX(-50%)}
+/* Affinity Map card: scattered notes sort themselves into three groups, then the group names appear */
+.tool-aff{position:relative;width:200px;height:200px;flex:none}
+.tool-aff::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
+.tool-aff i{position:absolute;left:var(--x0);top:var(--y0);width:26px;height:18px;border-radius:3px;transform:rotate(var(--r));
+  background:color-mix(in srgb,var(--c) 22%,#0B0D14);border:1px solid color-mix(in srgb,var(--c) 60%,transparent);box-shadow:0 0 10px color-mix(in srgb,var(--c) 30%,transparent);
+  animation:aff-sort 7s ease-in-out infinite;animation-delay:calc(var(--i) * .12s)}
+.tool-aff em{position:absolute;top:110px;width:36px;height:6px;border-radius:3px;background:var(--c);box-shadow:0 0 10px var(--c);opacity:0;animation:aff-name 7s ease-in-out infinite}
+.tool-aff .hub{position:absolute;left:0;right:0;bottom:28px;text-align:center;font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+@keyframes aff-sort{0%,14%{left:var(--x0);top:var(--y0);transform:rotate(var(--r))}42%,86%{left:var(--x1);top:var(--y1);transform:none}100%{left:var(--x0);top:var(--y0);transform:rotate(var(--r))}}
+@keyframes aff-name{0%,46%{opacity:0;transform:scaleX(.2)}56%,84%{opacity:1;transform:none}94%,100%{opacity:0}}
 /* Business Model Canvas card: the nine blocks light up in fill order, 1 to 9 */
 .tool-bmc{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 .tool-bmc::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
@@ -172,7 +182,8 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-madlib b{min-width:var(--w);padding:7px 10px;border-radius:8px;font:700 13px var(--sans);letter-spacing:0;text-transform:none;color:var(--c);
   background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px dashed color-mix(in srgb,var(--c) 55%,transparent);
   animation:id-lit 3s ease-in-out infinite,id-ink 3s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube,.tool-bmc b{animation:none}}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube,.tool-bmc b,.tool-aff i,.tool-aff em{animation:none}}
+@media (prefers-reduced-motion:reduce){.tool-aff i{left:var(--x1);top:var(--y1);transform:none}.tool-aff em{opacity:1}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
 .icon-btn{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--hair);background:var(--glass);border-radius:50%;position:relative;color:var(--ink2)}

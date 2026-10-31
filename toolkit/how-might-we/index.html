@@ -764,6 +764,15 @@ function readPovFromLink() {
   buildLenses();
   return true;
 }
+// ---------- 3k. An insight sent over from the Affinity Map ----------
+// The Affinity Map opens this page as /toolkit/how-might-we/?problem=I%20plan%20my%20day…
+// We put the group's name in the problem box and stay on step 1, so you can
+// reword it before making questions.
+function readProblemFromLink() {
+  const pr = (new URLSearchParams(location.search).get('problem') || '').trim().slice(0, 200);
+  if (pr) $('#problem').value = pr;
+}
+readProblemFromLink();
 goTo(readPovFromLink() ? 2 : 1);
 </script>
 </body>
