@@ -863,7 +863,7 @@ Promise.all([
   fetch("signals.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
   fetch("trends.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
 ])
-  .then(([d,sig,tr])=>{window.__DATA=d;window.__SIGNALS=sig;window.__TRENDS=tr;const s=document.createElement("script");s.src="app.js";document.body.appendChild(s)})
+  .then(([d,sig,tr])=>{window.__DATA=d;window.__SIGNALS=sig;window.__TRENDS=tr;const s=document.createElement("script");s.src="app.js?v="+Math.floor(Date.now()/3e5);document.body.appendChild(s)})
   .catch(()=>{document.getElementById("main").innerHTML='<div class="wrap" style="padding:80px 22px"><p>Events could not load. Please refresh the page.</p></div>'});
 </script>
 
