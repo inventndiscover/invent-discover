@@ -75,6 +75,8 @@
   .about h2 { margin: 0 0 10px; font-size: 22px; }
   .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
   .about b { color: var(--text); }
+  .about ul { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; padding-left: 20px; display: grid; gap: 6px; }
+  .about .sources { font-size: 13px; }
   .sitefoot { margin-top: 36px; }
   .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
   .sitefoot a:hover { color: var(--text); }
@@ -226,7 +228,7 @@
     <span class="pill">TOOL · AFFINITY MAP</span>
     <h1>Affinity Map</h1>
     <p class="lede">Turn a pile of research notes into a few clear insights. Add one observation per note, drag similar notes together, name each group with what you learned, then dot-vote the groups that matter most. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
-    <p class="credit">Also called the KJ method, after Japanese anthropologist Jiro Kawakita. <a href="#where">Where it comes from</a></p>
+    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. Steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
   </header>
 
   <div class="card">
@@ -280,8 +282,15 @@
 
   <section class="card about" id="where">
     <h2>Where affinity mapping comes from</h2>
-    <p>The affinity diagram is also known as the <b>KJ method</b>, named after the Japanese anthropologist <b>Jiro Kawakita</b>, who developed it in the 1960s to make sense of large amounts of field notes. Instead of starting with categories, you let the notes suggest them: similar notes are placed together, and the groups are named only after they have formed.</p>
-    <p>It later became one of the seven management and planning tools used in Japanese quality management, and today it's a standard step in design research, user experience and design sprints, where teams use it to sort interview notes, observations and How Might We notes.</p>
+    <p>Affinity mapping is also called the <b>KJ method</b>, after its inventor, the Japanese anthropologist and ethnographer <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The name uses his initials, K. J., with the family name first, as in Japanese.</p>
+    <ul>
+      <li><b>The inventor.</b> Kawakita developed the technique in the 1960s while doing field research in Nepal.</li>
+      <li><b>The problem.</b> He had a huge, messy pile of qualitative field notes and observations, and standard top-down, deductive Western methods couldn't make sense of them.</li>
+      <li><b>The solution.</b> He worked bottom-up: notes are grouped by their natural “affinity”, meaning how closely related they are, before any labels or categories are put on them. Groups are named only after they have formed.</li>
+    </ul>
+    <p>Because notes cluster by how similar they are, the practice became widely known as the <b>affinity diagram</b> or <b>affinity mapping</b>. It's one of the seven management and planning tools in quality management, and a standard step in UX research and design sprints, where teams use it to sort interview notes, observations and How Might We notes.</p>
+    <p>The steps on this page follow how <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> describes affinity diagramming for UX teams (Rachel Krause and Kara Pernice, 2024): write ideas on notes on your own first, cluster and label them together, then prioritise the clusters with dot voting and agree on next steps.</p>
+    <p class="sources">Sources: <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a> · <a href="https://asq.org/quality-resources/affinity" target="_blank" rel="noopener">ASQ, Affinity diagram</a> · <a href="https://www.designreview.byu.edu/collections/ideation-techniques-affinity-mapping" target="_blank" rel="noopener">BYU Design Review</a> · <a href="https://storyflow.so/blog/what-is-affinity-mapping-complete-guide" target="_blank" rel="noopener">StoryFlow</a> · <a href="https://velonova.io/blog/vol-12-affinity-diagram-k-j-method/" target="_blank" rel="noopener">Velonova</a></p>
     <p>The board, dot vote, group check and A4 sheet on this page are made by Invent + Discover. <b>Solo</b> boards stay in your browser and are never uploaded. <b>Team</b> boards are stored on Google Firebase so teammates can see each other's notes; anyone with the team code can view and edit that board, so don't put names or anything private on it.</p>
   </section>
 
@@ -907,7 +916,7 @@ async function drawSheet() {
 
   x.fillStyle = GREY; x.font = `400 26px ${UI_F}`;
   x.fillText('Groups are sorted by dots.  ● = dot votes.', M, H - M + 10);
-  x.textAlign = 'right'; x.fillText('Affinity diagram (KJ method): Jiro Kawakita · Sheet: Invent + Discover', W - M, H - M + 10); x.textAlign = 'left';
+  x.textAlign = 'right'; x.fillText('Affinity diagram (KJ method): Jiro Kawakita · Steps: Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 10); x.textAlign = 'left';
   return cv;
 }
 

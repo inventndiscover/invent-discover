@@ -875,7 +875,7 @@ const TOOLS=[
  {id:"pov",added:"2026-10-19",name:"POV Statement",line:"Say who you're designing for, what they need and why, in four short steps. Then turn it into How Might We questions.",url:"/toolkit/pov/",
   credit:"The POV Madlib, Stanford d.school (Hasso Plattner Institute of Design)",time:"5 minutes · nothing uploaded",tag:"Problem framing",visual:"madlib",cta:"Write my POV"},
  {id:"affinity-map",added:"2026-10-31",name:"Affinity Map",line:"Turn a pile of research notes into a few clear insights, solo or live with your team: sort similar notes into groups, name each one, dot-vote, then save a printable A4 sheet.",url:"/toolkit/affinity-map/",
-  credit:"The KJ method, Jiro Kawakita (1960s)",time:"30–40 minutes · solo or team",tag:"Research synthesis",visual:"affinity",cta:"Open the board"},
+  credit:"The KJ method, Jiro Kawakita (1960s); steps after Nielsen Norman Group",time:"30–40 minutes · solo or team",tag:"Research synthesis",visual:"affinity",cta:"Open the board"},
  {id:"business-model-canvas",added:"2026-10-23",name:"Business Model Canvas",line:"Map a whole business on one page, solo or live with your team: nine blocks of sticky notes, a dot vote and a fit check, then save a printable A4 sheet.",url:"/toolkit/business-model-canvas/",
   credit:"Alexander Osterwalder and Yves Pigneur (Business Model Generation, 2010)",time:"30–45 minutes · solo or team",tag:"Business models",visual:"bmc",cta:"Open the canvas"},
  {id:"pshe",added:"2026-10-02",name:"PSHE",line:"Find where you are on the Problem, Solution, How, Execution career ladder, and what to practise next.",url:"/toolkit/pshe/",shape:"diamond",
