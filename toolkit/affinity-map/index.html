@@ -117,6 +117,18 @@
   @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0,1fr); } }
   .board { display: grid; gap: 14px; min-width: 0; }
 
+  /* ---------- The three stages: Generate · Organise · Prioritise ---------- */
+  .stages { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+  @media (max-width: 640px) { .stages { grid-template-columns: 1fr; } }
+  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: center; background: rgba(0,0,0,0.25); }
+  .stage .n { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; border: 1px solid var(--line-2); color: var(--muted); }
+  .stage b { font-size: 15px; }
+  .stage span { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .stage[data-s="now"] { border-color: var(--violet); box-shadow: 0 0 18px rgba(139,92,246,0.3); background: rgba(139,92,246,0.10); }
+  .stage[data-s="now"] .n { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; color: #fff; }
+  .stage[data-s="done"] .n { background: var(--ok); border: none; color: #05130C; }
+  .stage[data-s="todo"] b { color: var(--muted); }
+
   /* ---------- Unsorted tray ---------- */
   .tray { border: 1px dashed var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.6); padding: 14px; display: grid; gap: 12px; transition: background .15s, box-shadow .15s; }
   .thead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
@@ -146,6 +158,12 @@
   .gfoot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line); }
   .gdots { display: inline-flex; gap: 3px; margin-right: 2px; }
   .gdots i { width: 9px; height: 9px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 8px rgba(139,92,246,0.7); }
+  .gnext { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.55fr); gap: 6px; }
+  .gnext label { grid-column: 1 / -1; margin: 0; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .gnext input { width: 100%; min-width: 0; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 13.5px; }
+  .gnext input:focus { outline: none; border-color: var(--violet); }
+  .gnext input.missing { border-color: rgba(255,178,63,0.55); }
+  .top3 .nx { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
   .gfoot a { color: #C4B5FD; font-size: 13px; text-decoration: none; margin-left: auto; }
   .gfoot a:hover { text-decoration: underline; }
   .newgroup { border: 1.5px dashed var(--line-2); border-radius: var(--radius); min-height: 120px; display: grid; place-items: center; text-align: center; padding: 14px; gap: 6px; transition: background .15s, box-shadow .15s; }
@@ -201,7 +219,7 @@
   .mydots i.used { background: var(--violet); box-shadow: 0 0 8px rgba(139,92,246,0.7); }
 
   /* ---------- How-to steps ---------- */
-  .how { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
   @media (max-width: 980px) { .how { grid-template-columns: repeat(2, minmax(0,1fr)); } }
   @media (max-width: 560px) { .how { grid-template-columns: 1fr; } .note { flex-basis: 100%; } }
   .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
@@ -227,8 +245,8 @@
     <a class="back" href="/#tools">← All tools</a><br>
     <span class="pill">TOOL · AFFINITY MAP</span>
     <h1>Affinity Map</h1>
-    <p class="lede">Turn a pile of research notes into a few clear insights. Add one observation per note, drag similar notes together, name each group with what you learned, then dot-vote the groups that matter most. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
-    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. Steps follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
+    <p class="lede">Turn a pile of research notes into a few clear insights, in three stages. <b style="color:var(--text)">Generate</b>: everyone adds notes on their own. <b style="color:var(--text)">Organise</b>: drag similar notes together and name each group with what you learned. <b style="color:var(--text)">Prioritise</b>: dot-vote the groups that matter most and agree who does what next. Work solo, or open a team board for groups of 4–5 (up to 30 people on one board).</p>
+    <p class="credit">Also called the KJ method, after its inventor, Japanese anthropologist <a href="https://www.google.com/search?kgmid=%2Fm%2F010fbydw&q=Jiro+Kawakita" target="_blank" rel="noopener">Jiro Kawakita</a>. The three stages follow <a href="https://www.nngroup.com/articles/affinity-diagram/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
   </header>
 
   <div class="card">
@@ -273,11 +291,9 @@
   </div>
 
   <section class="how">
-    <div class="card"><div class="step">STEP 1 · 2 MIN</div><h3>Ask</h3><p>Write the question your research set out to answer, at the top of the board.</p></div>
-    <div class="card"><div class="step">STEP 2 · 10 MIN</div><h3>Dump</h3><p>Everyone adds notes silently. One quote, fact or observation per note. Paste a list if you have interview notes.</p></div>
-    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Sort</h3><p>Drag notes next to similar ones, still without talking. You can move anyone's note. Start a new group whenever nothing fits.</p></div>
-    <div class="card"><div class="step">STEP 4 · 8 MIN</div><h3>Name</h3><p>Give each group a name that says what you learned, as a sentence: “I plan my day around train timings”, not “Timing”.</p></div>
-    <div class="card"><div class="step">STEP 5 · 5 MIN</div><h3>Vote</h3><p>Each person gets three dots for the groups that matter most. Turn the top groups into <a href="/toolkit/how-might-we/">How Might We</a> questions.</p></div>
+    <div class="card"><div class="step">STAGE 1 · GENERATE · 12 MIN</div><h3>Generate</h3><p>Write your research question at the top. Then everyone adds notes on their own, without talking: one quote, fact or observation per note. Paste a list if you have interview notes.</p></div>
+    <div class="card"><div class="step">STAGE 2 · ORGANISE · 18 MIN</div><h3>Organise</h3><p>Drag notes next to similar ones. You can move anyone's note, and start a new group whenever nothing fits. Then name each group with what you learned, as a sentence: “I plan my day around train timings”, not “Timing”.</p></div>
+    <div class="card"><div class="step">STAGE 3 · PRIORITISE · 10 MIN</div><h3>Prioritise</h3><p>Each person gives three dots to the groups that matter most. For the top groups, write the next step and who owns it. Then turn them into <a href="/toolkit/how-might-we/">How Might We</a> questions.</p></div>
   </section>
 
   <section class="card about" id="where">
@@ -327,23 +343,23 @@ const FIREBASE_CONFIG = {
 };
 
 // ---------- 3b. The example (shown on a first visit) ----------
-// Each group: [name, dots, [notes]]. The names are written as insights,
+// Each group: [name, dots, [next step, owner] or null, [notes]]. The names are written as insights,
 // in the user's voice, which is what a good affinity map ends up with.
 const EXAMPLE = {
   question: 'How do students who commute by Mumbai local use their travel time?',
   groups: [
-    ['The crowd decides what I can do on the train', 4, [
+    ['The crowd decides what I can do on the train', 4, ['Test a one-handed “commute mode” with 5 riders', 'Riya'], [
       ["Can't take my phone out in the 9 am rush", 'yellow'], ["Stands near the door so she doesn't miss her stop", 'pink'],
       ['Only gets a seat after Dadar', 'sky'], ['Holds his bag in front so it doesn’t get pushed', 'yellow'], ['In first class he can actually read', 'mint']]],
-    ['Travel time is my me-time', 3, [
+    ['Travel time is my me-time', 3, ['Interview 5 more riders about evening trips', 'Arjun'], [
       ['Watches one episode per trip, timed to the ride', 'pink'], ['Calls her mom every evening from the train', 'yellow'],
       ['Podcasts, never music', 'sky'], ['Naps if he gets a window seat', 'mint']]],
-    ['I plan my day around train timings', 2, [
+    ['I plan my day around train timings', 2, null, [
       ['Leaves home for the 8:14 fast, never the slow', 'yellow'], ['Checks the train app before leaving class', 'sky'],
       ['Lets a train go if it looks too full', 'pink']]],
-    ['Bad network breaks whatever I was doing', 1, [
+    ['Bad network breaks whatever I was doing', 1, null, [
       ['Downloads episodes at home on Wi-Fi', 'mint'], ['Videos buffer in the same stretch every day', 'yellow']]],
-    ['', 0, [['Revises flashcards on the way to exams', 'lilac']]],
+    ['', 0, null, [['Revises flashcards on the way to exams', 'lilac']]],
   ],
   unsorted: [['Buys vada pav at the station on the way home', 'yellow'], ['Friends from college travel together on Fridays', 'pink'], ['Avoids the last train home if travelling alone', 'sky']],
 };
@@ -403,15 +419,18 @@ function save() {
 function load() {
   try {
     const d = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (d && Array.isArray(d.notes) && Array.isArray(d.groups)) { Object.assign(state, { question: d.question || '', notes: d.notes, groups: d.groups, isExample: !!d.isExample }); return true; }
+    if (d && Array.isArray(d.notes) && Array.isArray(d.groups)) {
+      const groups = d.groups.map(g => ({ next: '', owner: '', ...g }));   // boards saved before next steps existed
+      Object.assign(state, { question: d.question || '', notes: d.notes, groups, isExample: !!d.isExample }); return true;
+    }
   } catch (e) {}
   return false;
 }
 function loadExample() {
   state.question = EXAMPLE.question; state.isExample = true; state.notes = []; state.groups = [];
   let t = 0;
-  EXAMPLE.groups.forEach(([title, dots, notes], i) => {
-    const id = 'g' + i; state.groups.push({ id, title, dots, at: i });
+  EXAMPLE.groups.forEach(([title, dots, next, notes], i) => {
+    const id = 'g' + i; state.groups.push({ id, title, dots, at: i, next: next ? next[0] : '', owner: next ? next[1] : '' });
     notes.forEach(([text, color]) => state.notes.push({ id: 'ex' + t, text, color, group: id, at: t++ }));
   });
   EXAMPLE.unsorted.forEach(([text, color]) => state.notes.push({ id: 'ex' + t, text, color, group: '', at: t++ }));
@@ -447,16 +466,20 @@ function newGroup(noteId) {
   state.focusGroup = id;      // put the cursor in its name as soon as it's drawn
   if (state.team) { teamNewGroup(id, noteId); return id; }
   claimExample();
-  state.groups.push({ id, title: '', dots: 0, at: Date.now() });
+  state.groups.push({ id, title: '', next: '', owner: '', dots: 0, at: Date.now() });
   if (noteId) { const n = state.notes.find(n => n.id === noteId); if (n) n.group = id; }
   save(); render();
   return id;
 }
-function renameGroup(gid, title) {
-  title = title.trim().slice(0, 80);
-  const g = groupById(gid); if (!g || g.title === title) return;
-  if (state.team) return teamRenameGroup(gid, title);
-  claimExample(); g.title = title; save(); render();
+// Change a group's name, next step or owner, e.g. patchGroup('g1', { owner: 'Riya' })
+const GROUP_LIMITS = { title: 80, next: 140, owner: 40 };
+function patchGroup(gid, patch) {
+  const g = groupById(gid); if (!g) return;
+  const p = {};
+  for (const k in patch) { const v = String(patch[k]).trim().slice(0, GROUP_LIMITS[k]); if ((g[k] || '') !== v) p[k] = v; }
+  if (!Object.keys(p).length) return;
+  if (state.team) return teamPatchGroup(gid, p);
+  claimExample(); Object.assign(g, p); save(); render();
 }
 // Ungroup: the group goes, its notes go back to Unsorted
 function ungroup(gid) {
@@ -599,6 +622,7 @@ function composer() {
 function renderBoard() {
   const board = $('#board'); board.innerHTML = '';
   const write = canWrite();
+  board.append(renderStages());
 
   // Unsorted tray
   const tray = el('section', 'tray');
@@ -634,7 +658,7 @@ function renderBoard() {
     t.disabled = !write;
     t.addEventListener('input', () => { state.titleDrafts[g.id] = t.value.replace(/\n/g, ' '); fitTitle(t); });
     // A redraw replaces this box; that must not count as "finished typing"
-    const commit = () => { if (rendering) return; const v = state.titleDrafts[g.id]; delete state.titleDrafts[g.id]; if (v != null) renameGroup(g.id, v); };
+    const commit = () => { if (rendering) return; const v = state.titleDrafts[g.id]; delete state.titleDrafts[g.id]; if (v != null) patchGroup(g.id, { title: v }); };
     t.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); t.blur(); } });
     t.addEventListener('blur', commit);
     const list = notesIn(g.id);
@@ -668,6 +692,27 @@ function renderBoard() {
       foot.append(a);
     }
     sec.append(foot);
+
+    // Prioritise: a voted group gets a next step and someone who owns it
+    if (g.dots > 0 || g.next || g.owner || stage() === 2) {
+      const nx = el('div', 'gnext');
+      const lab = el('label', null, 'Next step · Who'); lab.htmlFor = 'nx-' + g.id;
+      const field = (key, ph, max) => {
+        const id = (key === 'next' ? 'nx-' : 'ow-') + g.id;
+        const i = document.createElement('input'); i.type = 'text'; i.id = id; i.maxLength = max; i.placeholder = ph;
+        i.setAttribute('aria-label', key === 'next' ? 'Next step for this group' : 'Who owns the next step');
+        i.value = state.titleDrafts[id] != null ? state.titleDrafts[id] : (g[key] || '');
+        i.disabled = !write;
+        if (g.dots > 0 && !i.value.trim()) i.classList.add('missing');
+        i.addEventListener('input', () => { state.titleDrafts[id] = i.value; });
+        const done = () => { if (rendering) return; const v = state.titleDrafts[id]; delete state.titleDrafts[id]; if (v != null) patchGroup(g.id, { [key]: v }); };
+        i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } });
+        i.addEventListener('blur', done);
+        return i;
+      };
+      nx.append(lab, field('next', 'What will you do about this?', 140), field('owner', 'Who', 40));
+      sec.append(nx);
+    }
     dropZone(sec, g.id);
     grid.append(sec);
   });
@@ -678,17 +723,53 @@ function renderBoard() {
 }
 function fitTitle(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
-// ---------- 3h. The coach: progress, group check, most dots ----------
+// ---------- 3h. The three stages and the coach ----------
+// The board works out which stage you're in from what's on it:
+//   0 Generate  → still adding notes (no groups yet, fewer than 12 notes, or no question)
+//   1 Organise  → notes left in Unsorted, or groups without names
+//   2 Prioritise → everything sorted and named; vote, then next steps
+//   3 Done      → top groups have a next step and an owner
+const topGroups = () => orderedGroups().filter(g => g.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
+function stage() {
+  const total = state.notes.length;
+  if (!state.question.trim() || (total < 12 && !state.groups.length)) return 0;
+  if (!state.groups.length || notesIn('').length || state.groups.some(g => !g.title.trim())) return 1;
+  const top = topGroups();
+  if (!top.length || top.some(g => !g.next.trim() || !g.owner.trim())) return 2;
+  return 3;
+}
+const STAGES = [
+  ['Generate', 'Everyone adds notes on their own'],
+  ['Organise', 'Group similar notes, name each group'],
+  ['Prioritise', 'Dot-vote, then next steps and owners'],
+];
 function nextStep() {
   const total = state.notes.length, loose = notesIn('').length;
-  const named = state.groups.filter(g => g.title.trim()), dots = state.groups.reduce((s, g) => s + g.dots, 0);
-  if (!state.question.trim()) return ['Ask', 'Write your research question at the top.'];
-  if (total < 12) return ['Dump', `Add notes: one quote, fact or observation each. ${total ? `You have ${total}; aim for 20 or more.` : 'Aim for 20 or more.'}`];
-  if (!state.groups.length) return ['Sort', 'Drag a note onto “New group”, then drag similar notes next to it.'];
-  if (loose.length) return ['Sort', `${loose.length} note${loose.length > 1 ? 's are' : ' is'} still unsorted. Find each one a group, or start a new one.`];
-  if (named.length < state.groups.length) return ['Name', 'Give every group a name that says what you learned.'];
-  if (!dots) return ['Vote', 'Each person gives three dots to the groups that matter most.'];
-  return ['Act', 'Open your top group in How Might We and turn it into questions to design for.'];
+  const top = topGroups();
+  switch (stage()) {
+    case 0:
+      if (!state.question.trim()) return ['Generate', 'Write your research question at the top.'];
+      return ['Generate', `Add notes: one quote, fact or observation each. ${total ? `You have ${total}; aim for 20 or more.` : 'Aim for 20 or more.'}`];
+    case 1:
+      if (!state.groups.length) return ['Organise', 'Drag a note onto “New group”, then drag similar notes next to it.'];
+      if (loose.length) return ['Organise', `${loose.length} note${loose.length > 1 ? 's are' : ' is'} still unsorted. Find each one a group, or start a new one.`];
+      return ['Organise', 'Give every group a name that says what you learned.'];
+    case 2:
+      if (!top.length) return ['Prioritise', 'Each person gives three dots to the groups that matter most.'];
+      return ['Prioritise', 'For each of your top groups, write the next step and who owns it.'];
+    default:
+      return ['Done', 'Open your top group in How Might We and turn it into questions to design for.'];
+  }
+}
+function renderStages() {
+  const now = stage(), bar = el('div', 'stages'); bar.setAttribute('aria-label', 'Stages');
+  STAGES.forEach(([name, tip], i) => {
+    const d = el('div', 'stage'); d.dataset.s = i < now ? 'done' : i === now ? 'now' : 'todo';
+    d.append(el('span', 'n', i < now ? '✓' : String(i + 1)), el('b', null, name), el('span', null, tip));
+    if (i === now) d.setAttribute('aria-current', 'step');
+    bar.append(d);
+  });
+  return bar;
 }
 
 function renderCoach() {
@@ -713,16 +794,19 @@ function renderCoach() {
     checks.push([big.length ? 'warn' : 'ok', 'Size', big.length ? `“${groupLabel(big[0], gs.indexOf(big[0]))}” has more than 12 notes. Can it split in two?` : 'No group is too big to read.']);
     if (empty) checks.push(['warn', 'Empty', `${empty} group${empty > 1 ? 's are' : ' is'} empty. Fill or ungroup ${empty > 1 ? 'them' : 'it'}.`]);
     if (total >= 15 && gs.length < 3) checks.push(['warn', 'Spread', 'Only a couple of groups for this many notes. Look for differences inside each group.']);
+    const tg = topGroups(), open = tg.filter(g => !g.next.trim() || !g.owner.trim());
+    if (tg.length) checks.push([open.length ? 'warn' : 'ok', 'Next steps', open.length ? `${open.length} of your top ${tg.length} group${tg.length > 1 ? 's needs' : ' needs'} a next step and an owner.` : 'Every top group has a next step and an owner.']);
   }
   const ul = $('#checks'); ul.innerHTML = '';
   for (const [s, h, t] of checks) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
 
-  const top = gs.filter(g => g.dots > 0).sort((a, b) => b.dots - a.dots).slice(0, 3);
+  const top = topGroups();
   const ol = $('#top3'); ol.innerHTML = '';
   if (!top.length) ol.append(el('li', null, 'No dots yet. Each person gets three.'));
   for (const g of top) {
     const li = el('li', null, groupLabel(g, gs.indexOf(g)) + ' ');
     li.append(el('em', null, `${g.dots} dot${g.dots > 1 ? 's' : ''}`));
+    if (g.next.trim()) li.append(el('span', 'nx', `Next: ${g.next.trim()}${g.owner.trim() ? ' · ' + g.owner.trim() : ''}`));
     if (g.title.trim()) { li.append(document.createElement('br')); const a = el('a', null, 'Turn into How Might We →'); a.href = '/toolkit/how-might-we/?problem=' + encodeURIComponent(g.title.trim().slice(0, 200)); a.target = '_blank'; a.rel = 'noopener'; li.append(a); }
     ol.append(li);
   }
@@ -779,6 +863,7 @@ function asText() {
   const gs = orderedGroups().map((g, i) => [g, groupLabel(g, i)]).sort((a, b) => b[0].dots - a[0].dots);
   for (const [g, label] of gs) {
     out += `## ${label}${g.dots ? ` (${g.dots} dot${g.dots > 1 ? 's' : ''})` : ''}\n`;
+    if (g.next.trim()) out += `Next step: ${g.next.trim()}${g.owner.trim() ? ` (owner: ${g.owner.trim()})` : ''}\n`;
     const list = notesIn(g.id);
     out += list.length ? list.map(n => `- ${n.text.replace(/\n/g, ' ')}`).join('\n') + '\n\n' : '- (empty)\n\n';
   }
@@ -892,7 +977,13 @@ async function drawSheet() {
       x.font = `700 ${cols >= 5 ? 28 : 34}px ${UI_F}`; x.fillStyle = g.title.trim() ? INK : GREY;
       const tl = wrapText(x, label, titleW).slice(0, 2);
       tl.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, titleW) : l, bx + pad, by + pad + 30 + k * 40));
-      const nTop = by + pad + 30 + tl.length * 40 + 8;
+      let nTop = by + pad + 30 + tl.length * 40 + 8;
+      if (g.next.trim()) {   // the agreed next step, in italics under the name
+        x.font = `italic 400 24px ${UI_F}`; x.fillStyle = INK;
+        const nl = wrapText(x, `Next: ${g.next.trim()}${g.owner.trim() ? ' (' + g.owner.trim() + ')' : ''}`, cw - 2 * pad).slice(0, 2);
+        nl.forEach((l, k) => x.fillText(k === 1 ? fitOneLine(x, l, cw - 2 * pad) : l, bx + pad, nTop + 4 + k * 30));
+        nTop += nl.length * 30 + 10;
+      }
       x.strokeStyle = '#BBBBBB'; x.lineWidth = 2; x.beginPath(); x.moveTo(bx + pad, nTop - 4); x.lineTo(bx + cw - pad, nTop - 4); x.stroke();
       const list = notesIn(g.id);
       const box = { x: bx + pad, y: nTop + 10, w: cw - 2 * pad, h: by + ch - pad - nTop - 10 - 34 };
@@ -974,7 +1065,7 @@ async function joinTeam(code) {
   unsubs.push(fb.fs.onSnapshot(fb.fs.collection(fb.db, 'maps', code, 'groups'), snap => {
     state.groups = snap.docs.map(d => {
       const g = d.data(), votes = g.votes || {}, voters = Object.keys(votes).filter(k => votes[k]);
-      return { id: d.id, title: g.title || '', by: g.by, at: g.at || 0, dots: voters.length, voters, mine: !!votes[fb.uid] };
+      return { id: d.id, title: g.title || '', next: g.next || '', owner: g.owner || '', by: g.by, at: g.at || 0, dots: voters.length, voters, mine: !!votes[fb.uid] };
     });
     render();
   }, teamError));
@@ -1006,7 +1097,7 @@ function teamNewGroup(id, noteId) {
   if (noteId) b.update(noteRef(noteId), { group: id });
   b.commit().catch(teamError);
 }
-function teamRenameGroup(id, title) { fb.fs.updateDoc(groupRef(id), { title }).catch(teamError); }
+function teamPatchGroup(id, patch) { fb.fs.updateDoc(groupRef(id), patch).catch(teamError); }
 function teamUngroup(id) {
   const b = fb.fs.writeBatch(fb.db);
   state.notes.filter(n => n.group === id).forEach(n => b.update(noteRef(n.id), { group: '' }));
