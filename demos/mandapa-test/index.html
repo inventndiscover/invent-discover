@@ -118,12 +118,12 @@ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
    6 INPUT      keyboard / mouse / touch; controllers in VR
    7 QUALITY    frame-time ladder (Quest standard)
 ================================================================== */
-const BUILD = '2026-11-01k';
+const BUILD = '2026-11-01l';
 const $ = id => document.getElementById(id);
 $('buildStamp').textContent = BUILD;
 
 /* ---------- 1. Catalogue (date order). h = true height in metres from the museum record ---------- */
-const MIN_SHOW = .75;   // display height floor (m): tiny bronzes are enlarged to this, and the story card says so
+const MIN_SHOW = .95;   // display height floor (m): tiny bronzes are enlarged to this, and the story card says so
 const CMA = 'https://www.clevelandart.org/art/', MIA = 'https://collections.artsmia.org/art/', SF = 'https://sketchfab.com/3d-models/';
 const PIECES = [
   P('mother-goddess', .794, 'मातृका', 'Mother Goddess', 'c. 600', 'Rajasthan, India', 'Schist',
@@ -290,7 +290,7 @@ const exhibits = [];
 let started = false;
 const STAND_H = .14, BASE = { w: 1.4, h: .86, d: .95 };
 let LETTERS = null;
-const STELE = { w: .82, h: 1.55, d: .2, stand: .08 }, CARVE = { w: STELE.w * .84, h: .82, y: STELE.stand + 1.55 * .6 };   // every sculpture stands on the same size of block
+const STELE = { w: .66, h: 1.4, d: .1, stand: .06 }, CARVE = { w: STELE.w * .86, h: .74, y: STELE.stand + 1.4 * .6 };   // every sculpture stands on the same size of block
 PIECES.forEach((p, k) => {
   const row = Math.floor(k / 2), side = p.centre ? 0 : k % 2 === 0 ? -1 : 1;        // 1st left, 2nd right, 3rd left…: forward through time
   const g = new THREE.Group(); scene.add(g);
@@ -315,12 +315,13 @@ function fit(ex, m) {
   const foot = Math.max(size.x, size.z) * k; if (!ex.foot) ex.foot = foot;
   m.traverse(o => { if (!o.isMesh) return; o.castShadow = true; o.receiveShadow = true;
     if (o.material && !o.material.isMeshStandardMaterial) { const b = o.material; o.material = new THREE.MeshStandardMaterial({ map: b.map, color: b.color, side: b.side, roughness: .85 }); b.dispose(); }   // a scan saved as "unlit" would glow in the dark
+    if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();   // some scans ship without surface directions and would render black
     const mt = o.material; if (!mt) return; mt.envMapIntensity = .5;
     if (ex.p.clean) { if (!mt.map) { o.visible = false; return; } if (mt.normalMap) { mt.normalMap.dispose(); mt.normalMap = null; } mt.roughness = Math.max(mt.roughness, .9); mt.needsUpdate = true; }
     if (mt.map) { mt.emissiveMap = mt.map; mt.emissive = new THREE.Color(0, 0, 0); } });
 }
 function loadInto(ex, url, lvl) {
-  loader.load(url, gl => {
+  loader.load(url + '?b=' + BUILD, gl => {   // the build tag makes browsers fetch fresh models after each update
     const m = gl.scene; fit(ex, m);
     if (lvl === 'lo') { ex.lo = m; if (!ex.hi) { ex.holder.add(m); ex.model = m; collectGlow(ex, m); } }
     else { ex.hi = m; ex.hiLoading = false; if (ex.lo) ex.holder.remove(ex.lo); ex.holder.add(m); ex.model = m; collectGlow(ex, m); }
@@ -445,7 +446,7 @@ function robustBox(root, f = .015, fy = f) {
 function letterSizes() {
   const pxPerM = 1024 / CARVE.w, fw = 1024 * .86, [, g] = canvas(8, 8);
   const deva = Math.min(.12, ...PIECES.map(p => fitFont(g, p.deva, 700, '"Noto Serif Devanagari",serif', Math.round(.12 * pxPerM), fw) / pxPerM));
-  LETTERS = { deva, name: .062, meta: .044 };   // the same size on every stone; long names wrap to a second line
+  LETTERS = { deva, name: .056, meta: .04 };   // the same size on every stone; long names wrap to a second line
 }
 function drawCarving(lines3, W, H, light = false, planeW = BASE.w * .86, sizes = null) {
   const [c, g] = canvas(W, H), [hc, hg] = canvas(W, H); hg.fillStyle = '#808080'; hg.fillRect(0, 0, W, H);
@@ -524,7 +525,7 @@ function buildBase(ex, foot) {
   // the stele: in front of the pedestal, on the side you walk in from, turned toward you
   const st = stele([p.deva, p.name, `${p.date} · ${p.stonePlace || p.place}`], null, STELE.w, STELE.h, STELE.d, STELE.stand, CARVE.w, CARVE.h, CARVE.y, ex.k);
   if (p.centre) { st.position.set(-(bw / 2 + .6), 0, bd / 2 + .1); st.rotation.y = .4; }
-  else { st.position.set(ex.side * (bw / 2 + .25), 0, bd / 2 + .3); st.rotation.y = ex.side * .75; }
+  else { st.position.set(ex.side * (bw / 2 + .55), 0, bd / 2 - .15); st.rotation.y = 0; }   // beside the pedestal on the entrance side, facing the aisle, set back from it
   ex.group.add(st); ex.stele = st;
   ex.group.updateMatrixWorld(true); ex.steleW = st.getWorldPosition(new THREE.Vector3());
 }
@@ -736,7 +737,7 @@ renderer.setAnimationLoop(now => {
     rig.position.x += mvx; rig.position.z += mvz;
     camera.getWorldPosition(head);
     const push = (cx, cz, r) => { const dx = head.x - cx, dz = head.z - cz, d = Math.hypot(dx, dz); if (d < r && d > 1e-4) { const k = (r - d) / d; rig.position.x += dx * k; rig.position.z += dz * k; head.x += dx * k; head.z += dz * k; } };
-    for (const ex of exhibits) { push(ex.group.position.x, ex.group.position.z, clamp((ex.baseW || .6) * .6 + .3, .6, 1.35)); if (ex.steleW) push(ex.steleW.x, ex.steleW.z, .6); }
+    for (const ex of exhibits) { push(ex.group.position.x, ex.group.position.z, clamp((ex.baseW || .6) * .6 + .3, .6, 1.35)); if (ex.steleW) push(ex.steleW.x, ex.steleW.z, .5); }
     push(INTRO.x, INTRO.z, .95);
     const lim = 4.6; if (Math.abs(head.x) > lim) rig.position.x -= head.x - Math.sign(head.x) * lim;
     if (head.z > 2.2) rig.position.z -= head.z - 2.2; if (head.z < Z_LAST + .2) rig.position.z -= head.z - (Z_LAST + .2);   // the last sculpture marks the end
