@@ -118,7 +118,7 @@ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
    6 INPUT      keyboard / mouse / touch; controllers in VR
    7 QUALITY    frame-time ladder (Quest standard)
 ================================================================== */
-const BUILD = '2026-11-01l';
+const BUILD = '2026-11-01m';
 const $ = id => document.getElementById(id);
 $('buildStamp').textContent = BUILD;
 
@@ -174,6 +174,10 @@ const PIECES = [
     'Viṣṇu stands with his consorts, carved in the dark stone of eastern India under the Pala kings.',
     'Faint traces of paint survive on the stone: most temple sculpture was once brightly coloured.',
     'Herbert F. Johnson Museum of Art, Cornell University', SF + '8d61f9c8a7b14ab893edecaf835ce485', 'Scan CC BY 4.0, TerryVallery', { approx: true, rot: -Math.PI / 4 }),
+  P('nataraja-mia', .711, 'आनन्द-ताण्डव', 'Shiva Nataraja, the Dance of Bliss', 'c. 1100', 'Tamil Nadu · Chola', 'Bronze',
+    'Śiva dances the ānanda tāṇḍava, the dance of bliss: drum for creation, flame for destruction, one foot on the demon of ignorance, the other raised in release.',
+    'The ring of fire that once circled him is lost: only the dancer survived. He was the first Indian work ever given to the Minneapolis museum.',
+    'Minneapolis Institute of Art · 29.2', MIA + '376', 'Scan CC0, Minneapolis Institute of Art'),
   P('shiva-garland', .6, 'शिव', 'Shiva with Garland', '11th–12th century', 'India', 'Sandstone',
     'Śiva sits carrying a garland, beneath a loving couple, in a weathered sandstone carving.',
     'It was scanned in 2024 by a Grinnell College student, Amy Kan, with a handheld 3D scanner.',
@@ -194,10 +198,6 @@ const PIECES = [
     'Nandi, Śiva’s bull, garlanded and hung with bells: 86 cm tall and weighing 613 kg.',
     'In a Śiva temple, Nandi sits facing the sanctum, gazing at his lord.',
     'British Museum', SF + '9accbde1fbe24a86b82adf91ab127954', 'Scan CC BY 4.0, Daniel Pett', { stonePlace: 'Vijayanagara' }),
-  P('shiva-parvati', 1.0, 'शिव-पार्वती', 'Shiva and Parvati', 'date not recorded', 'India', 'Stone',
-    'Śiva and Pārvatī in embrace: the divine couple whose union stands for the oneness of all things.',
-    'Now in the National Museum of Scotland in Edinburgh, far from the temple it was made for.',
-    'National Museum of Scotland', SF + '638eeecf5d564c27a34dc1e51d929d46', 'Scan CC BY 4.0, Rafael Maya-Torcelly', { approx: true, clean: true }),
   P('bhairava', .6, 'भैरव', 'Bhairava', 'date not recorded', 'Nepal', 'Bronze',
     'Simhamukha Kama Bhairava: Śiva’s fierce form, many-armed, before a blazing aureole.',
     'Bhairava is a guardian; in Nepal his images watch over gateways, temples and city squares.',
@@ -620,7 +620,7 @@ function setMute(on) { muted = on; $('muteBtn').classList.toggle('on', on); if (
 let tour = -1;
 function goTo(step) {
   tour = (tour + step + exhibits.length) % exhibits.length; const ex = exhibits[tour];
-  const stand = ex.side === 0 ? new THREE.Vector3(.3, 0, ex.group.position.z + 2.6) : new THREE.Vector3(ex.side * (ROW_X - 2.1 - Math.min(.8, ex.p.dh * .3)), 0, ex.group.position.z + .2);
+  const stand = ex.side === 0 ? new THREE.Vector3(.3, 0, ex.group.position.z + 1.9) : new THREE.Vector3(ex.side * (ROW_X - 2.1 - Math.min(.8, ex.p.dh * .3)), 0, ex.group.position.z + .2);
   camera.getWorldPosition(_hp); rig.position.x += stand.x - _hp.x; rig.position.z += stand.z - _hp.z;
   yaw = Math.atan2(-(ex.world.x - stand.x), -(ex.world.z - stand.z)); fade = .9; if (!renderer.xr.isPresenting) pitch = -.14;
   message(`${tour + 1} of ${exhibits.length} · ${ex.p.name}`, ex.p.date);
