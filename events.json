@@ -1,31 +1,6 @@
 {
- "REFRESHED": "2026-10-30T22:40:00+05:30",
+ "REFRESHED": "2026-11-01T21:50:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "mobile-architecture-lab-4",
-   "title": "Hackathon @ Mobile Architecture Lab 4",
-   "cat": "Tech",
-   "tags": [
-    "Hackathon",
-    "Mobile apps"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue shared on registration",
-   "start": "2026-10-31T10:00",
-   "end": "18:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · registration open",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/q7m53cxm",
-   "org": "Mobile Architecture Lab",
-   "access": "open",
-   "desc": "A one-day hackathon where solo builders or teams of two to three create a mobile app around a challenge announced on the day."
-  },
   {
    "id": "india-blockchain-week",
    "title": "India Blockchain Week 2026",
@@ -846,53 +821,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "Listing pages not fetchable; single event pages via search",
-   "found": 4,
+   "what": "mumbai, discover/ai pages (fetch blocked by allowlist; found via web search)",
+   "found": 3,
    "pub": 0,
-   "review": 1,
+   "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Listing pages blocked by fetch allowlist; mobile-architecture-lab-4 page also unreachable, kept from last run unverified."
+   "skip": 3,
+   "note": "Listing pages not fetchable this run. Mumbai Meets AI 5th Ed and AI Engineers Day pages are past (May 2026); aimumbai calendar showed no upcoming events."
   },
   {
    "src": "AllEvents",
-   "what": "Listing pages",
+   "what": "technology, startup",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run."
+   "note": "Not fetchable this run (URL not on allowlist). Existing AllEvents entries kept."
   },
   {
    "src": "dev.events",
-   "what": "Listing pages",
+   "what": "Mumbai meetups and conferences",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run."
+   "note": "Not fetchable this run (URL not on allowlist)."
   },
   {
    "src": "hiddenevents",
-   "what": "Not attempted",
+   "what": "Mumbai mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Skipped; same allowlist limits."
+   "note": "Not attempted; listing sources were blocked."
   },
   {
    "src": "web search",
-   "what": "AI, design, XR, hackathon, startup, climate, Devcon queries",
-   "found": 6,
-   "pub": 1,
-   "review": 1,
+   "what": "AI, design/UX, hackathon, XR, startup, Devcon, climate/art queries",
+   "found": 4,
+   "pub": 0,
+   "review": 0,
    "dup": 0,
    "skip": 4,
-   "note": "Added OpenTechSummit India (Eventyay); most other hits were past or outside the window."
+   "note": "Results were past or out-of-city (Design Samvaad is Gurugram, Sept). Mumbai Builds 2027 is a closed student hackathon with its finale on 7 Feb 2027, outside the 45-day window. Devcon 8 still shown for 3-6 Nov."
   }
  ],
  "COMMUNITIES": [
