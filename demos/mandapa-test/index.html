@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mandapa Museum · Invent + Discover</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="description" content="Walk a dark, lamp-lit temple corridor of real 3D-scanned sculptures from museum collections, in date order from the 6th century to the 16th. Each sculpture stands in its own spotlight. In your browser, or in VR on Meta Quest.">
+<meta name="theme-color" content="#05060a">
+<meta name="robots" content="noindex, nofollow">   <!-- test copy: hidden until approved -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Noto+Serif+Devanagari:wght@500;700&family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--t:#f3ead8;--m:#c9b99a;--gold:#d9a441}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:var(--t);font-family:Geist,system-ui,sans-serif;overflow:hidden}
+canvas{display:block;touch-action:none}
+#notice{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;background:radial-gradient(ellipse at 50% 40%,#17110b 0%,#000 72%)}
+/* an old stone tablet: pale weathered limestone, grain, chipped edges, cut letters */
+.tablet{position:relative;background-color:#cfc3ab;background-size:cover;color:#4e4233;filter:drop-shadow(0 18px 40px rgba(0,0,0,.85));
+  clip-path:polygon(0 2.5%,3% 0,18% .8%,31% 0,46% 1.2%,63% .2%,78% 1.4%,94% 0,100% 3%,99.2% 21%,100% 40%,99.4% 61%,100% 82%,98.6% 97%,95% 100%,74% 98.8%,52% 100%,33% 99%,14% 100%,2% 98.6%,.6% 80%,0 57%,.8% 34%,0 15%)}
+.tablet .cut{color:#5a4b39;text-shadow:1px 1px 0 rgba(255,250,238,.7),-1px -1px 0 rgba(50,38,24,.45)}
+.card{width:100%;max-width:600px;max-height:calc(100vh - 24px);overflow:auto;padding:24px 28px 18px}
+h1{margin:0;font:700 30px/1.05 Cinzel,serif;letter-spacing:3px;text-align:center}
+h1 span{display:block;font:700 22px/1.4 "Noto Serif Devanagari",serif;letter-spacing:0;margin-top:2px}
+.welcome{font:600 17px/1.42 "Cormorant Garamond",serif;color:#4a3d2e;margin:8px 0 8px;text-align:center}
+.welcome b{font-weight:700}
+.rule{height:2px;margin:6px 18% 10px;background:rgba(70,54,36,.35);box-shadow:0 1px 0 rgba(255,250,238,.6)}
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+.keys div{background:rgba(70,54,36,.07);box-shadow:inset 2px 2px 0 rgba(70,54,36,.18),inset -1px -1px 0 rgba(255,250,238,.5);border-radius:3px;padding:7px 10px;font:500 12px/1.6 Geist,sans-serif;color:#4a3d2e}
+.keys b{display:block;font:700 12px Cinzel,serif;letter-spacing:1.6px;margin-bottom:2px;color:#5a4b39}
+kbd{font:600 11px ui-monospace,monospace;background:#efe6d3;border:1px solid #8b7a60;border-bottom-width:2px;border-radius:3px;padding:0 5px;color:#3a2f22}
+.quick{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:2px}.quick li{font:500 12.5px/1.5 Geist,sans-serif;color:#4a3d2e;padding-left:12px;position:relative}.quick li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:#8a6a3c}.quick li.warn::before{background:#9e2b25}
+details{margin:0 0 10px}summary{cursor:pointer;font:700 12px Cinzel,serif;letter-spacing:1px;color:#5a4b39;margin-bottom:6px}
+.small{font:500 11.5px/1.55 Geist,sans-serif;color:#5d5040}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+button{font:600 14px Geist,system-ui,sans-serif;color:#f3ead8;background:#3b3024;border:1px solid #2a2118;border-radius:999px;padding:10px 20px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+button:hover{background:#4d3f2f}
+button.alt{background:#7a4a1c;border-color:#5b3612}
+button:disabled{opacity:.45;cursor:default}
+.build{margin-top:12px;font:500 11px Geist,sans-serif;color:#6d604d;text-align:center}
+#loading{font:600 12.5px Geist,sans-serif;color:#6b4b20;margin:2px 0 6px;min-height:16px;text-align:center}
+a{color:#7a4a1c}
+@media (max-width:560px){.keys{grid-template-columns:1fr}.card{padding:24px 20px 20px}}
+#hud{position:fixed;top:12px;right:12px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 24px)}
+#hud button{padding:7px 12px;font-size:12.5px;background:rgba(0,0,0,.6);border-color:rgba(217,164,65,.5)}
+#hud button.on{background:rgba(217,164,65,.28)}
+#keyhint{position:fixed;left:12px;bottom:12px;max-width:calc(50% - 100px);z-index:9;font-size:12px;color:#cdbf9f;background:rgba(0,0,0,.55);border:1px solid rgba(217,164,65,.25);border-radius:10px;padding:6px 10px;line-height:1.8}
+#hint{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:9;max-width:min(560px,calc(100% - 32px));background:rgba(0,0,0,.7);border:1px solid rgba(217,164,65,.35);border-radius:12px;padding:9px 16px;text-align:center;font-size:14px;line-height:1.5;transition:opacity .8s;opacity:0;pointer-events:none}
+#hint b{display:block;color:#f0c870}
+#readout{position:fixed;left:12px;top:12px;z-index:10;font:12px/1.5 ui-monospace,monospace;background:rgba(0,0,0,.8);border:1px solid rgba(59,130,246,.5);border-radius:10px;padding:8px 10px;display:none;white-space:pre}
+/* ---- near-a-sculpture prompt, and the story tablet that opens on tap ---- */
+#near{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:9;font:600 13px Geist,sans-serif;color:#e9dcc2;background:rgba(0,0,0,.6);border:1px solid rgba(217,164,65,.35);border-radius:999px;padding:7px 16px;opacity:0;transition:opacity .8s;pointer-events:none}
+#near.on{opacity:1}
+#story{position:fixed;right:20px;top:50%;z-index:11;width:min(380px,calc(100% - 32px));max-height:calc(100% - 100px);overflow:auto;padding:26px 26px 20px;opacity:0;transform:translateY(-46%);transition:opacity .9s ease,transform .9s ease;pointer-events:none}
+#story.on{opacity:1;transform:translateY(-50%);pointer-events:auto}
+#story .dv{font:700 30px/1.2 "Noto Serif Devanagari",serif;text-align:center}
+#story .en{font:700 20px/1.25 Cinzel,serif;letter-spacing:2px;text-align:center;margin:2px 0 4px}
+#story .meta{font:500 12.5px/1.5 Cinzel,serif;letter-spacing:1.2px;text-align:center}
+#story p{font:600 17px/1.45 "Cormorant Garamond",serif;color:#43372a;margin:10px 0 0}
+#story .fact{font:600 16px/1.45 "Cormorant Garamond",serif;color:#5b3612;margin-top:10px;padding-top:10px;border-top:1px solid rgba(70,54,36,.3)}
+#story .ref{font:500 11.5px/1.5 Geist,sans-serif;color:#5d5040;margin-top:12px}
+#story .x{position:absolute;right:12px;top:10px;background:none;border:0;box-shadow:none;color:#5a4b39;font-size:20px;padding:4px 8px}
+#joy{position:fixed;left:22px;bottom:110px;width:110px;height:110px;border-radius:50%;border:1px solid rgba(217,164,65,.6);background:rgba(0,0,0,.4);z-index:10;display:none;touch-action:none}
+#joy i{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:rgba(217,164,65,.5)}
+@media (max-width:700px){#story{left:12px;right:12px;top:auto;bottom:12px;width:auto;transform:none;max-height:55%}#story.on{transform:none}#keyhint{display:none}}
+</style>
+</head>
+<body>
+<div id="notice">
+  <div class="card tablet" id="welcome">
+    <h1 class="cut">Mandapa Museum<span>मण्डप संग्रहालय · स्वागतम्</span></h1>
+    <p class="welcome cut">Welcome. You are entering a hall of <b>survivors</b>.<br>
+    These gods were carved and cast between the 6th and 16th centuries for temples and homes across India and its neighbours. Over the centuries many were broken in raids, defaced, buried, or carried far from the places they were made for. Some reached museums across the world; one was found in pieces in a village. Yet here they are.<br>
+    Walk slowly. Each waits in the dark and lights up as you come near.</p>
+    <div class="rule"></div>
+    <div class="keys">
+      <div><b>On a laptop</b><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows: walk<br>Drag: look around · <kbd>Shift</kbd>: faster<br><b style="display:inline;font:inherit;letter-spacing:0">Click a lit sculpture</b> to read its story<br><kbd>N</kbd>/<kbd>B</kbd>: next/previous · <kbd>L</kbd>: Safe Light · <kbd>M</kbd>: sound</div>
+      <div><b>On Meta Quest 2 / 3</b>Left stick: walk where your left hand points<br>Right stick: turn 30°<br><b style="display:inline;font:inherit;letter-spacing:0">Point at a lit sculpture, pull the index trigger</b> to read its story<br><kbd>B</kbd>/<kbd>Y</kbd>: next · <kbd>A</kbd>: Safe Light · <kbd>X</kbd>: performance</div>
+    </div>
+    <ul class="quick">
+      <li>Real 3D scans of historic works, shown at true size and with respect</li>
+      <li class="warn">Lights fade on and off slowly · Safe Light makes the changes even gentler</li>
+      <li class="warn">VR movement can cause motion sickness · stop if unwell; you can play seated</li>
+    </ul>
+    <details><summary>Safety notes and scan credits</summary>
+      <div class="small">No flashing light: each sculpture’s light fades on and off over about a second. Clear the space around you and rest every 20–30 minutes. With epilepsy, a heart or other condition, check with a doctor first. Children only as the headset maker's age guidance allows, with an adult nearby.</div>
+      <div id="credits" class="small" style="margin-top:8px"></div>
+    </details>
+    <div id="loading">Lighting the lamps…</div>
+    <div class="btns"><button id="vrBtn" disabled>Enter VR</button><button id="screenBtn" class="alt" disabled>Enter on screen</button></div>
+    <div class="build">Build <span id="buildStamp"></span> · Flute: <a href="https://pixabay.com/users/echoes_of_lumen-56361169/" target="_blank" rel="noopener">echoes_of_lumen</a> (Pixabay) · three.js (MIT) · <a href="https://inventndiscover.com/">Back to Invent</a></div>
+  </div>
+</div>
+<div id="hud" style="display:none"><button id="prevBtn">Previous (B)</button><button id="nextBtn">Next (N)</button><button id="safeBtn">Safe Light (L)</button><button id="muteBtn">Sound (M)</button><button id="exitBtn">Exit</button></div>
+<div id="keyhint" style="display:none"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk · drag to look · click a lit sculpture to read · <kbd>N</kbd>/<kbd>B</kbd> next/previous · <kbd>L</kbd> Safe Light · <kbd>M</kbd> sound</div>
+<div id="hint"></div><div id="readout"></div><div id="near"></div><div id="story" class="tablet"></div><div id="joy"><i></i></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+
+/* ==================================================================
+   Mandapa Museum
+   1 CATALOGUE  facts from the museum records, listed in DATE ORDER
+   2 MATERIALS  stone for the steles, brass, flames (wood textures load from assets/tex)
+   3 GALLERY    old oak floor, weathered wooden blocks; pitch dark all round
+   4 LIGHT      a visible beam on every sculpture + 4 real shadowed
+                spots that follow you; far sculptures glow faintly from
+                their own texture so the corridor stays dark but readable
+   5 REVEAL     walking close raises the light; the base is an inscribed limestone block
+   6 INPUT      keyboard / mouse / touch; controllers in VR
+   7 QUALITY    frame-time ladder (Quest standard)
+================================================================== */
+const BUILD = '2026-11-01h';
+const $ = id => document.getElementById(id);
+$('buildStamp').textContent = BUILD;
+
+/* ---------- 1. Catalogue (date order). h = true height in metres from the museum record ---------- */
+const CMA = 'https://www.clevelandart.org/art/', MIA = 'https://collections.artsmia.org/art/', SF = 'https://sketchfab.com/3d-models/';
+const PIECES = [
+  P('mother-goddess', .794, 'मातृका', 'Mother Goddess', 'c. 600', 'Rajasthan, India', 'Schist',
+    'Sets of mother goddesses once stood in shrines near temple entrances. In this one, from one of the most naturalistic sets known, a mother takes her toddler by the wrist and smiles down at him.',
+    'Her soft, lifelike style hints at links with the art of Gandhara, in present-day Pakistan, shaped by Greek and Roman contact.',
+    'Cleveland Museum of Art · 1970.12', CMA + '1970.12', 'Scan CC0, Cleveland Museum of Art'),
+  P('krishna-govardhan', 2.031, 'गोवर्धनधारी कृष्ण', 'Krishna Lifting Govardhan', 'c. 600', 'Phnom Da, Cambodia', 'Sandstone',
+    'Krishna lifts Mount Govardhan to shelter villagers and their herds from the storms of a jealous god. He is one of eight colossal figures recovered from Phnom Da, a two-peaked hill in the Mekong delta.',
+    'It comes from near Angkor Borei, one of the earliest cities of the Mekong delta, where Indian stories took root far from India.',
+    'Cleveland Museum of Art · 1973.106', CMA + '1973.106', 'Scan CC0, Cleveland Museum of Art'),
+  P('vishnu-eight-arms', 2.885, 'अष्टभुज विष्णु', 'Vishnu with Eight Arms', 'c. 600', 'Phnom Da, Cambodia', 'Sandstone',
+    'Viṣṇu, preserver of the world, stands almost three metres tall, his eight arms held up by a horseshoe-shaped arch. Like the Krishna beside him, he comes from the hill of Phnom Da.',
+    'The original stands in the National Museum of Cambodia in Phnom Penh; this scan lets him travel without leaving home.',
+    'National Museum of Cambodia · Ka.1639', SF + 'fcb8105839064999bd5efb44de4a1817', 'Scan CC BY 4.0, Cleveland Museum of Art'),
+  P('ekamukhalinga', .838, 'एकमुखलिङ्ग', 'One-Faced Linga', '600s–700s', 'Bihar, India · Pala', 'Chloritic schist',
+    'In the innermost chamber of a Śiva temple stands the liṅga, the god’s formless sign. Here a face emerges from it: a powerful yogi with matted locks, a crescent moon and all three eyes open.',
+    'Together, chamber and liṅga stand for the potential of all creation; the face is its first stirring.',
+    'Cleveland Museum of Art · 1973.73', CMA + '1973.73', 'Scan CC0, Cleveland Museum of Art'),
+  P('surya', .504, 'सूर्य', 'Surya, the Sun God', 'early 700s', 'Kashmir', 'Brass',
+    'The sun god as the metalworkers of Kashmir imagined him: in the tunic, belt and tall boots of northern dress, with a lotus in each hand.',
+    'Surya is one of the very few Indian gods shown wearing boots.',
+    'Cleveland Museum of Art · 1965.557', CMA + '1965.557', 'Scan CC0, Cleveland Museum of Art'),
+  P('dancing-ganesha', 1.0, 'नृत्य गणेश', 'Dancing Ganesha', 'c. 750', 'Uttar Pradesh, India', 'Sandstone',
+    'Gaṇeśa, lord of beginnings, dances. In his hands he carries his own broken tusk, a bowl of sweets, a rosary and an axe.',
+    'As placer and remover of obstacles, Gaṇeśa is traditionally worshipped first, before any other god.',
+    'British Museum', SF + '408ac4696cdf4a4d9aec6257f568872b', 'Scan CC BY 4.0, Thomas Flynn', { approx: true }),
+  P('shiva-10th', 1.226, 'शिव', 'Shiva', 'late 10th century', 'India', 'Red sandstone',
+    'Śiva stands in the graceful triple bend, jewelled festoons hanging from his belt and his matted hair piled into a tall crown, flanked by small worshipping celestial couples.',
+    'In the triple bend (tribhaṅga), head, chest and hips each turn a different way: a pose shared with classical dance.',
+    'Minneapolis Institute of Art · 96.44', MIA + '5094', 'Scan CC0, Minneapolis Institute of Art'),
+  P('uma-maheshvara', 1.499, 'उमा-महेश्वर', 'Uma-Maheshvara', '10th–11th century', 'India', 'Buff sandstone',
+    'Śiva as Maheśvara, the Great God, sits with Pārvatī as Umā, daughter of Himavān, king of the mountains.',
+    'As Umā, the goddess is said to have performed long austerities to win Śiva as her husband.',
+    'Minneapolis Institute of Art · 97.36', MIA + '5369', 'Scan CC0, Minneapolis Institute of Art'),
+  P('nataraja', 1.13, 'नटराज', 'Nataraja, Lord of the Dance', '1000s', 'Tamil Nadu · Chola', 'Bronze',
+    'Śiva dances inside a ring of fire. One hand beats the drum of creation, another holds the flame of destruction; a raised foot promises release while the other crushes the dwarf of ignorance.',
+    'Chola bronzes like this were made to be carried in procession, dressed and garlanded, on festival days.',
+    'Cleveland Museum of Art · 1930.331', CMA + '1930.331', 'Scan CC0, Cleveland Museum of Art'),
+  P('goddess-uma', .356, 'उमा', 'Goddess Uma', '1000s', 'Nepal', 'Gilt bronze, semiprecious stones',
+    'Umā turns toward Śiva, her companion, from whom this figure was long ago separated. Solid-cast, gilded and set with stones, she embodies the creative energy of the god.',
+    'In Nepal, Hindu and Buddhist traditions have flourished side by side for centuries.',
+    'Cleveland Museum of Art · 1982.49', CMA + '1982.49', 'Scan CC0, Cleveland Museum of Art'),
+  P('ganesha', .508, 'गणेश', 'Ganesha', 'c. 1070', 'South India · Chola', 'Bronze',
+    'Gaṇeśa removes obstacles and protects his worshippers. In the best-known story, Śiva beheaded him in anger and, at Pārvatī’s plea, revived him with the head of the first creature found: an elephant.',
+    'His round belly and the sweet modaka in his hand show his famous weakness for sweets.',
+    'Cleveland Museum of Art · 1970.62', CMA + '1970.62', 'Scan CC0, Cleveland Museum of Art'),
+  P('vishnu-pala', .9, 'विष्णु', 'Vishnu', '11th century', 'Bengal · Pala', 'Dark stone, traces of colour',
+    'Viṣṇu stands with his consorts, carved in the dark stone of eastern India under the Pala kings.',
+    'Faint traces of paint survive on the stone: most temple sculpture was once brightly coloured.',
+    'Herbert F. Johnson Museum of Art, Cornell University', SF + '8d61f9c8a7b14ab893edecaf835ce485', 'Scan CC BY 4.0, TerryVallery', { approx: true, rot: -Math.PI / 4 }),
+  P('shiva-garland', .6, 'शिव', 'Shiva with Garland', '11th–12th century', 'India', 'Sandstone',
+    'Śiva sits carrying a garland, beneath a loving couple, in a weathered sandstone carving.',
+    'It was scanned in 2024 by a Grinnell College student, Amy Kan, with a handheld 3D scanner.',
+    'Grinnell College Museum of Art · 1980.011.276', SF + '01706633673a4392ba1446f9e1a3d813', 'Scan CC BY 4.0, Grinnell College Immersive Experiences Lab', { approx: true }),
+  P('vishnu-garuda', .181, 'गरुडारूढ विष्णु', 'Vishnu on Garuda', '12th–13th century', 'Cambodia', 'Bronze',
+    'Viṣṇu rides Garuḍa, half man and half eagle, in a Cambodian bronze just 18 cm tall.',
+    'Garuḍa, the enemy of serpents, still appears on the national emblems of Indonesia and Thailand.',
+    'Minneapolis Institute of Art · 99.216.7', MIA + '8321', 'Scan CC0, Minneapolis Institute of Art'),
+  P('kaliamman', 1.0, 'काली अम्मन', 'Kaliamman', '13th–14th century', 'Coimbatore district, Tamil Nadu', 'Stone',
+    'Kālī, fierce form of Pārvatī and Durgā, slays a demon, weapons in her many hands and rage in her face. She was found broken and forgotten in Palangarai village.',
+    'Even broken, she is beautiful: the damage of time is part of her story. Scanned in a photogrammetry workshop led by the Factum Foundation, under the guidance of Imran Khan.',
+    'Palangarai village, Tamil Nadu', SF + 'd4c2779b7cb64f5180259f8a303684b2', 'Scan CC BY 4.0, Chandhiran M', { approx: true, stonePlace: 'Tamil Nadu' }),
+  P('somaskanda', .6, 'सोमस्कन्द', 'Somaskanda', '14th–15th century', 'South India', 'Bronze',
+    'Śiva and Umā sit side by side on double lotus seats. Between them once sat their small son Skanda, now lost from the bronze.',
+    'The Somaskanda form, Śiva with Umā and Skanda, arose in South Indian temples as early as the 6th century.',
+    'Minneapolis Institute of Art', SF + 'c4377b0209764be4a3baa10969d6cd01', 'Scan CC0, Minneapolis Institute of Art'),
+  P('nandi', .86, 'नन्दी', 'Nandi', '16th century', 'South India · Vijayanagara', 'Granite',
+    'Nandi, Śiva’s bull, garlanded and hung with bells: 86 cm tall and weighing 613 kg.',
+    'In a Śiva temple, Nandi sits facing the sanctum, gazing at his lord.',
+    'British Museum', SF + '9accbde1fbe24a86b82adf91ab127954', 'Scan CC BY 4.0, Daniel Pett'),
+  P('shiva-parvati', 1.0, 'शिव-पार्वती', 'Shiva and Parvati', 'date not recorded', 'India', 'Stone',
+    'Śiva and Pārvatī in embrace: the divine couple whose union stands for the oneness of all things.',
+    'Now in the National Museum of Scotland in Edinburgh, far from the temple it was made for.',
+    'National Museum of Scotland', SF + '638eeecf5d564c27a34dc1e51d929d46', 'Scan CC BY 4.0, Rafael Maya-Torcelly', { approx: true }),
+  P('bhairava', .6, 'भैरव', 'Bhairava', 'date not recorded', 'Nepal', 'Bronze',
+    'Simhamukha Kama Bhairava: Śiva’s fierce form, many-armed, before a blazing aureole.',
+    'Bhairava is a guardian; in Nepal his images watch over gateways, temples and city squares.',
+    'National Museum of Nepal, Kathmandu', SF + '967d3399cbe1492e998a6e6bb4f1467d', 'Scan CC BY 4.0, Robert Jackisch', { approx: true }),
+];
+function P(id, h, deva, name, date, place, mat, story, fact, where, ref, credit, o = {}) { return { id, hi: `assets/${id}-hi.glb`, lo: `assets/${id}-lo.glb`, h, deva, name, date, place, mat, story, fact, where, ref, credit, rot: o.rot || 0, approx: !!o.approx, stonePlace: o.stonePlace }; }
+
+/* ---------- Headset + quality ---------- */
+const UA = navigator.userAgent, HEADSET = (UA.match(/Quest\s?(3S|3|2|Pro)/) || [])[1] || null, IS_Q2 = HEADSET === '2';
+const LADDER = [{ fov:0, px:1, hiDist:7 }, { fov:.25, px:1, hiDist:6.5 }, { fov:.45, px:.9, hiDist:6 }, { fov:.6, px:.8, hiDist:5 }, { fov:.8, px:.7, hiDist:4 }, { fov:1, px:.6, hiDist:3.2 }];
+let Q = HEADSET ? (IS_Q2 ? 2 : 1) : 0, qCeiling = 0;
+const MAX_HI = HEADSET ? 3 : 6;    // how many full-detail scans may be in memory at once
+
+/* ---------- Renderer ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * LADDER[Q].px);
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.25;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.xr.enabled = true; renderer.xr.setReferenceSpaceType('local-floor'); renderer.xr.setFramebufferScaleFactor(IS_Q2 ? 0.8 : 0.9);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x000000); scene.fog = new THREE.Fog(0x000000, 6, 22);
+const camera = new THREE.PerspectiveCamera(66, innerWidth / innerHeight, 0.05, 60);
+const EYE = 1.6; camera.position.set(0, EYE, 0);
+const rig = new THREE.Group(); rig.position.set(0, 0, 1.2); rig.add(camera); scene.add(rig);
+
+const TAU = Math.PI * 2, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, smooth = t => t * t * (3 - 2 * t);
+function mesh(g, m, x = 0, y = 0, z = 0) { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); return o; }
+function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; }
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function tex(c, rx = 1, ry = 1, srgb = true) { const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = 8; if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t; }
+function normalFromHeight(hc, k = 2) {
+  const w = hc.width, h = hc.height, s = hc.getContext('2d').getImageData(0, 0, w, h).data, [nc, ng] = canvas(w, h), o = ng.createImageData(w, h);
+  const H = (x, y) => s[(((y + h) % h) * w + ((x + w) % w)) * 4] / 255;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const dx = (H(x - 1, y) - H(x + 1, y)) * k, dy = (H(x, y - 1) - H(x, y + 1)) * k, l = Math.hypot(dx, dy, 1), i = (y * w + x) * 4; o.data[i] = (dx / l * .5 + .5) * 255; o.data[i + 1] = (dy / l * .5 + .5) * 255; o.data[i + 2] = (1 / l * .5 + .5) * 255; o.data[i + 3] = 255; }
+  ng.putImageData(o, 0, 0); return nc;
+}
+// colour from height: recesses darker (baked "ambient occlusion"), raised parts lighter
+function stoneFromHeight(hc, dark, light) {
+  const w = hc.width, h = hc.height, s = hc.getContext('2d').getImageData(0, 0, w, h).data, [c, g] = canvas(w, h), o = g.createImageData(w, h);
+  const D = new THREE.Color(dark), L = new THREE.Color(light);
+  for (let i = 0; i < w * h; i++) { const v = s[i * 4] / 255, n = (rnd() - .5) * .12, k = clamp(Math.pow(v, 1.4) + n, 0, 1); o.data[i * 4] = (D.r + (L.r - D.r) * k) * 255; o.data[i * 4 + 1] = (D.g + (L.g - D.g) * k) * 255; o.data[i * 4 + 2] = (D.b + (L.b - D.b) * k) * 255; o.data[i * 4 + 3] = 255; }
+  g.putImageData(o, 0, 0); return c;
+}
+
+/* ---------- 2. Stone ---------- */
+const plainStone = (() => { const [c, g] = canvas(256, 256); g.fillStyle = '#5e5953'; g.fillRect(0, 0, 256, 256); for (let i = 0; i < 6000; i++) { g.fillStyle = rnd() < .5 ? 'rgba(30,26,22,.25)' : 'rgba(190,175,155,.18)'; g.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 2, 1 + rnd() * 2); } return new THREE.MeshStandardMaterial({ map: tex(c, 2, 2), roughness: .8 }); })();
+const brass = new THREE.MeshStandardMaterial({ color: 0xc89a46, roughness: .3, metalness: .9 });
+const flameMat = new THREE.MeshBasicMaterial({ color: 0xffc061 });
+
+/* ---------- 3. Gallery: wooden floor, darkness all round, no pillars ---------- */
+const STEP = 4.2, ROW_X = 2.5, Z0 = -2.6, CEIL = 5.4;
+const N_ROWS = Math.ceil(PIECES.length / 2), Z_END = Z0 - (N_ROWS - 1) * STEP - 3.5;
+const TL = new THREE.TextureLoader();
+const woodTex = (f, rx, ry, srgb) => { const t = TL.load('assets/tex/' + f); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = 8; if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t; };
+{
+  const L = 4 - Z_END, cz = (4 + Z_END) / 2, W = 12, TILE = 2.6;   // one texture tile = 2.6 m of floor
+  const fm = new THREE.MeshStandardMaterial({ map: woodTex('floor_col.jpg', W / TILE, L / TILE, true), normalMap: woodTex('floor_nrm.jpg', W / TILE, L / TILE), roughness: .92, metalness: 0, envMapIntensity: .25 });   // matte, no sheen
+  const floor = mesh(new THREE.PlaneGeometry(W, L), fm, 0, 0, cz); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+}
+// the base: a pale limestone block with the name cut into a moulded panel, on a dark museum stand (built in buildBase)
+const standMat = new THREE.MeshStandardMaterial({ color: 0x151311, roughness: .7, metalness: .1 });
+const limeSide = new THREE.MeshStandardMaterial({ roughness: .88 });
+// small brass oil lamps on the floor beside each sculpture
+const flames = [], lampSpots = [];
+const brassLamp = (() => { const g = new THREE.Group(); g.add(mesh(new THREE.CylinderGeometry(.09, .12, .05, 14), brass, 0, .025, 0)); g.add(mesh(new THREE.CylinderGeometry(.02, .03, .32, 10), brass, 0, .2, 0)); g.add(mesh(new THREE.CylinderGeometry(.08, .035, .04, 14), brass, 0, .37, 0)); return g; })();
+const flameG = new THREE.ConeGeometry(.012, .05, 6).translate(0, .025, 0);
+const glowM = new THREE.SpriteMaterial({ map: (() => { const [c, g] = canvas(64, 64); const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,200,110,.95)'); gr.addColorStop(.3, 'rgba(255,150,60,.35)'); gr.addColorStop(1, 'rgba(255,120,40,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+function placeLamp(x, z) { const st = brassLamp.clone(); st.position.set(x, 0, z); scene.add(st); lampSpots.push(new THREE.Vector3(x, .5, z)); const f = mesh(flameG, flameMat, x, .39, z); scene.add(f); flames.push(f); const sp = new THREE.Sprite(glowM); sp.scale.setScalar(.3); sp.position.set(x, .42, z); scene.add(sp); }
+
+/* ---------- 4. Light ---------- */
+{ const env = new THREE.Scene(); env.add(mesh(new THREE.BoxGeometry(8, 5, 30), new THREE.MeshBasicMaterial({ color: 0x0c0907, side: THREE.BackSide })));
+  for (let i = 0; i < 5; i++) env.add(mesh(new THREE.BoxGeometry(1.2, .1, .6), new THREE.MeshBasicMaterial({ color: 0xa06a30 }), 0, 2.4, -12 + i * 6));
+  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(env, .03).texture; pm.dispose(); }
+scene.add(new THREE.HemisphereLight(0x3a2c1e, 0x050302, .35));
+const lantern = new THREE.PointLight(0xffc690, 4, 7, 1.7); scene.add(lantern);                 // the light you carry: shows nearby carving
+const LAMPL = [];   // the floor lamps nearest you
+const POOL = [0, 1, 2, 3].map(i => { const L = new THREE.SpotLight(0xffe2b8, 0, 8, .4, .55, 1.4); L.castShadow = i < 2; L.shadow.mapSize.set(1024, 1024); L.shadow.bias = -.0004; L.shadow.normalBias = .02; scene.add(L, L.target); return L; });
+// the visible beam: a soft cone from the ceiling to each sculpture
+const beamMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+  uniforms: { uI: { value: .16 } },
+  vertexShader: `varying float vY; varying vec3 vN,vV; void main(){ vY=uv.y; vec4 w=modelMatrix*vec4(position,1.); vN=normalize(mat3(modelMatrix)*normal); vV=normalize(cameraPosition-w.xyz); gl_Position=projectionMatrix*viewMatrix*w; }`,
+  fragmentShader: `varying float vY; varying vec3 vN,vV; uniform float uI; void main(){ float edge=pow(abs(dot(vN,vV)),1.5); float a=uI*edge*smoothstep(0.,.35,vY)*(.35+.65*vY); gl_FragColor=vec4(vec3(1.,.82,.58)*a,1.); }` });
+
+/* ---------- Sculptures on plinths ---------- */
+const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+const plinthG = new THREE.BoxGeometry(1, 1, 1);
+const exhibits = [];
+let started = false;
+const STAND_H = .14, BASE = { w: 1.25, h: .8, d: .9 };   // every sculpture stands on the same size of block
+PIECES.forEach((p, k) => {
+  const row = Math.floor(k / 2), side = k % 2 === 0 ? -1 : 1;        // 1st left, 2nd right, 3rd left…: forward through time
+  const g = new THREE.Group(); g.position.set(side * ROW_X, 0, Z0 - row * STEP); g.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2; scene.add(g);
+  // total base height: small bronzes are raised toward eye level, big stone pieces sit low
+  const ph = STAND_H + BASE.h;
+  const holder = new THREE.Group(); holder.position.y = ph; g.add(holder);
+  const topY = CEIL - ph, rBot = clamp(p.h * .55, .3, .95);
+  const cone = mesh(new THREE.CylinderGeometry(.05, rBot, topY, 24, 1, true), beamMat.clone(), 0, topY / 2, .05); cone.renderOrder = 3; holder.add(cone);
+  const ex = { p, k, group: g, holder, cone, side, ph, base: null, model: null, lo: null, hi: null, hiLoading: false, reveal: 0, dist: 99, world: new THREE.Vector3(), glow: [] };
+  g.updateMatrixWorld(); ex.world.set(0, ph + p.h * .5, 0).applyMatrix4(g.matrixWorld);
+  buildBase(ex, .5);
+  exhibits.push(ex);
+  loadInto(ex, p.lo, 'lo');
+});
+function collectGlow(ex, m) { ex.glow = []; m.traverse(o => { if (o.isMesh && o.material && o.material.emissiveMap) ex.glow.push(o.material); }); }
+function fit(ex, m) {
+  m.rotation.y = ex.p.rot; m.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(m), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3()), k = ex.p.h / size.y;
+  m.scale.multiplyScalar(k); m.position.set(-c.x * k, -box.min.y * k, -c.z * k);
+  const foot = Math.max(size.x, size.z) * k; if (!ex.foot) ex.foot = foot;
+  m.traverse(o => { if (!o.isMesh) return; o.castShadow = true; o.receiveShadow = true; const mt = o.material; if (mt && mt.isMeshStandardMaterial) { mt.envMapIntensity = .5; if (mt.map) { mt.emissiveMap = mt.map; mt.emissive = new THREE.Color(0, 0, 0); } } });
+}
+function loadInto(ex, url, lvl) {
+  loader.load(url, gl => {
+    const m = gl.scene; fit(ex, m);
+    if (lvl === 'lo') { ex.lo = m; if (!ex.hi) { ex.holder.add(m); ex.model = m; collectGlow(ex, m); } }
+    else { ex.hi = m; ex.hiLoading = false; if (ex.lo) ex.holder.remove(ex.lo); ex.holder.add(m); ex.model = m; collectGlow(ex, m); }
+    updateLoading();
+  }, undefined, () => { if (lvl === 'hi') ex.hiLoading = false; updateLoading(); });
+}
+function dropHi(ex) {
+  if (!ex.hi) return; ex.holder.remove(ex.hi);
+  ex.hi.traverse(o => { if (o.isMesh) { o.geometry.dispose(); for (const key of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap']) if (o.material[key]) o.material[key].dispose(); o.material.dispose(); } });
+  ex.hi = null; if (ex.lo) { ex.holder.add(ex.lo); ex.model = ex.lo; collectGlow(ex, ex.lo); }
+}
+function updateLoading() { const n = exhibits.filter(e => e.lo).length, el = $('loading'); if (el && !started) el.textContent = n < PIECES.length ? `Bringing in the sculptures… ${n} of ${PIECES.length}` : 'Ready. Turn your sound on.'; }
+$('credits').innerHTML = '<b>Sculpture scans</b><br>' + PIECES.map(p => `${p.name}: ${p.credit}`).join('<br>') + '<br><b>Stone bases</b><br>Gothic sandstone cube: axonite, CC BY 4.0<br>Granite Block: Meerschaum Digital, CC BY 4.0<br><b>Music</b><br>“Krishna Flute” by <a href="https://pixabay.com/users/echoes_of_lumen-56361169/" target="_blank" rel="noopener">echoes_of_lumen</a> on Pixabay';
+
+/* ---------- 5. Inscribed limestone: the base of every sculpture, and the card on screen ---------- */
+// pale limestone, weathered: stains, pores, erosion pits with crumbled rims, grime low down, hairline cracks.
+// If a height canvas is passed, the pits and cracks are drawn into it too (for the normal map).
+function noise3(x, y, z) { const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return n - Math.floor(n); }
+function limestone(g, W, H, seedBase, hg, gentle = false) {
+  seed = seedBase; const S = W / 1024; g.fillStyle = '#d2c6ad'; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 70; i++) { const r = (20 + rnd() * 160) * S; g.fillStyle = rnd() < .6 ? `rgba(140,116,84,${.05 + rnd() * .09})` : `rgba(245,238,222,${.05 + rnd() * .08})`; g.beginPath(); g.ellipse(rnd() * W, rnd() * H, r, r * (.4 + rnd() * .8), rnd() * 3, 0, TAU); g.fill(); }
+  for (let i = 0; i < W * H / 180; i++) { g.fillStyle = `rgba(${rnd() < .7 ? '82,68,50' : '255,250,238'},${.15 + rnd() * .4})`; const s = .6 + rnd() * 2 * S; g.fillRect(rnd() * W, rnd() * H, s, s); }
+  // erosion pits: dark hollow, light crumbled rim
+  const pits = Math.round(W * H / (gentle ? 30000 : 9000));
+  for (let i = 0; i < pits; i++) { const x = rnd() * W, y = rnd() * H, r = (1.5 + Math.pow(rnd(), 3) * (gentle ? 5 : 16)) * S;
+    g.fillStyle = 'rgba(255,248,232,.35)'; g.beginPath(); g.ellipse(x + r * .25, y + r * .25, r * 1.15, r * .95, 0, 0, TAU); g.fill();
+    g.fillStyle = `rgba(70,56,40,${(gentle ? .2 : .45) + rnd() * (gentle ? .2 : .35)})`; g.beginPath(); g.ellipse(x, y, r, r * (.6 + rnd() * .5), rnd() * 3, 0, TAU); g.fill();
+    if (hg) { hg.fillStyle = 'rgba(0,0,0,.7)'; hg.beginPath(); hg.ellipse(x, y, r, r * .8, 0, 0, TAU); hg.fill(); } }
+  // vertical weathering streaks and a couple of hairline cracks
+  for (let i = 0; i < 22; i++) { g.strokeStyle = `rgba(110,88,62,${.05 + rnd() * .09})`; g.lineWidth = (2 + rnd() * 7) * S; g.beginPath(); const x = rnd() * W; g.moveTo(x, rnd() * H * .3); g.bezierCurveTo(x + (rnd() - .5) * 60, H * .4, x + (rnd() - .5) * 60, H * .7, x + (rnd() - .5) * 80, H); g.stroke(); }
+  for (let i = 0; i < 2; i++) { let x = rnd() * W, y = rnd() < .5 ? 0 : rnd() * H; g.strokeStyle = 'rgba(52,40,28,.55)'; g.lineWidth = 1.6 * S; g.beginPath(); g.moveTo(x, y); if (hg) { hg.strokeStyle = '#000'; hg.lineWidth = 2.5 * S; hg.beginPath(); hg.moveTo(x, y); }
+    for (let k = 0; k < 9; k++) { x += (rnd() - .5) * 70 * S; y += (20 + rnd() * 50) * S; g.lineTo(x, y); if (hg) hg.lineTo(x, y); } g.stroke(); if (hg) hg.stroke(); }
+  // grime toward the bottom and the edges, as on stone that has stood for centuries
+  let gr = g.createLinearGradient(0, H * .55, 0, H); gr.addColorStop(0, 'rgba(60,48,32,0)'); gr.addColorStop(1, 'rgba(60,48,32,.3)'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  gr = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .3, W / 2, H / 2, Math.max(W, H) * .75); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(60,46,30,.4)'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+}
+// V-cut letters: dark floor, a light lower-right edge and a shadowed upper-left edge; worn a little by time
+function incise(g, text, x, y, px) { const o = Math.max(1, px / 26); g.fillStyle = 'rgba(255,252,242,.7)'; g.fillText(text, x + o, y + o); g.fillStyle = 'rgba(58,44,28,.75)'; g.fillText(text, x - o * .7, y - o * .7); g.fillStyle = '#665641'; g.fillText(text, x, y); }
+function wrapTxt(g, s, W) { const out = []; let line = ''; for (const w of s.split(' ')) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > W && line) { out.push(line); line = w; } else line = t; } if (line) out.push(line); return out; }
+function fitFont(g, text, weight, family, max, W) { let px = max; g.font = `${weight} ${px}px ${family}`; while (g.measureText(text).width > W && px > 10) { px -= 2; g.font = `${weight} ${px}px ${family}`; } return px; }
+// the front face: moulded frame, sunken field, three short lines
+function drawInscription(lines3, W, H, k) {
+  const [c, g] = canvas(W, H), [hc, hg] = canvas(W, H); hg.fillStyle = '#808080'; hg.fillRect(0, 0, W, H); limestone(g, W, H, 101 + k * 7, hg);
+  const m = Math.round(Math.min(W, H) * .07), b = Math.round(Math.min(W, H) * .035);
+  g.lineWidth = b; g.strokeStyle = 'rgba(255,250,238,.5)'; g.strokeRect(m, m, W - 2 * m, H - 2 * m);
+  g.lineWidth = b * .45; g.strokeStyle = 'rgba(80,64,44,.45)'; g.strokeRect(m + b * .6, m + b * .6, W - 2 * m - b * 1.2, H - 2 * m - b * 1.2);
+  hg.lineWidth = b; hg.strokeStyle = '#b8b8b8'; hg.strokeRect(m, m, W - 2 * m, H - 2 * m);
+  hg.globalAlpha = .6; hg.fillStyle = '#6e6e6e'; hg.fillRect(m + b, m + b, W - 2 * m - 2 * b, H - 2 * m - 2 * b); hg.globalAlpha = 1;
+  const fw = W - 2 * m - 3 * b, hAvail = H - 2 * m - 3 * b;
+  const spec = [[lines3[0], 700, '"Noto Serif Devanagari",serif', .34, 1.25], [lines3[1], 700, 'Cinzel,serif', .2, 1.25], [lines3[2], 500, 'Cinzel,serif', .12, 1.3]];
+  const px = spec.map(([t, wt, fam, f]) => fitFont(g, t, wt, fam, Math.round(hAvail * f), fw)); px[2] = Math.min(px[2], px[1] * .62);
+  const total = spec.reduce((a, sp, i) => a + px[i] * sp[4], 0), sc = Math.min(1, hAvail / total);
+  let y = H / 2 - total * sc / 2; g.textAlign = hg.textAlign = 'center'; g.textBaseline = hg.textBaseline = 'top';
+  spec.forEach(([t, wt, fam, , gap], i) => { const q = px[i] * sc; g.font = hg.font = `${wt} ${q}px ${fam}`; incise(g, t, W / 2, y, q); hg.fillStyle = '#1a1a1a'; hg.fillText(t, W / 2, y); y += q * gap; });
+  return [c, hc];
+}
+// a box with broken corners and worn edges: vertices inside a "chip" sphere are pushed onto its surface
+function chippedBox(w, h, d, k) {
+  const sx = Math.min(28, Math.ceil(w / .035)), sy = Math.min(28, Math.ceil(h / .035)), sz = Math.min(28, Math.ceil(d / .035));
+  const geo = new THREE.BoxGeometry(w, h, d, sx, sy, sz), pos = geo.attributes.position, v = new THREE.Vector3(), dir = new THREE.Vector3();
+  seed = 900 + k * 13; const chips = [], m = Math.min(w, h, d);
+  const nChips = 2 + Math.floor(rnd() * 3);
+  for (let i = 0; i < nChips; i++) {                         // mostly the top corners and edges, where stone gets knocked
+    const top = rnd() < .8, cx = (rnd() < .5 ? -1 : 1) * w / 2, cz = (rnd() < .5 ? -1 : 1) * d / 2, along = rnd() < .4;
+    const c = new THREE.Vector3(along ? (rnd() - .5) * w * .8 : cx, top ? h / 2 : (rnd() - .5) * h, along ? cz : (rnd() < .5 ? cz : (rnd() - .5) * d * .8));
+    chips.push([c, m * (.12 + rnd() * .2)]);
+  }
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    for (const [c, r] of chips) { dir.subVectors(v, c); const dl = dir.length(); const rr = r * (.8 + .4 * noise3(v.x * 9, v.y * 9, v.z * 9)); if (dl < rr && dl > 1e-5) v.copy(c).addScaledVector(dir, rr / dl); }
+    // worn edges: the closer to an edge, the more it crumbles inward a little
+    const ex = 1 - Math.abs(v.x) / (w / 2), ey = 1 - Math.abs(v.y) / (h / 2), ez = 1 - Math.abs(v.z) / (d / 2);
+    const edge = [ex, ey, ez].sort((a, b) => a - b)[1];        // second-smallest: near an edge, not just a face
+    if (edge < .06) { const amt = (.06 - edge) / .06 * .012 * (.4 + .6 * noise3(v.x * 23, v.y * 23, v.z * 23)); v.x -= Math.sign(v.x) * amt * (ex < .06 ? 1 : 0); v.y -= Math.sign(v.y) * amt * (ey < .06 ? 1 : 0); v.z -= Math.sign(v.z) * amt * (ez < .06 ? 1 : 0); }
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  geo.computeVertexNormals(); return geo;
+}
+// The bases are two real stone models, used alternately: a worn sandstone cube and a rough-hewn granite block.
+// They are loaded once and each sculpture gets its own resized copy. The name is cut into the front face as a carving.
+function getBases() {
+  if (!getBases.p) getBases.p = Promise.all(['assets/base-sandstone.glb', 'assets/base-granite.glb'].map(u => new Promise(res => loader.load(u, gl => {
+    const m = gl.scene;
+    squareUp(m);
+    m.updateMatrixWorld(true); const box = robustBox(m);
+    m.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); if (o.material) o.material.envMapIntensity = .4; } });
+    res({ m, size: box.getSize(new THREE.Vector3()), min: box.min.clone(), center: box.getCenter(new THREE.Vector3()) });
+  }, undefined, () => res(null)))));
+  return getBases.p;
+}
+// Some scans are stored at a slant. Find the block's own flat faces (the most common surface directions, weighted
+// by area) and turn the model so those faces line up with the floor and walls; the face nearest "up" stays up.
+function squareUp(root) {
+  root.updateMatrixWorld(true);
+  const bins = new Map(), key = n => `${Math.round(n.x * 12)},${Math.round(n.y * 12)},${Math.round(n.z * 12)}`;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), n = new THREE.Vector3();
+  root.traverse(o => { if (!o.isMesh) return; const g = o.geometry, P = g.attributes.position, I = g.index; const tri = I ? I.count / 3 : P.count / 3;
+    for (let t = 0; t < tri; t += 2) { const i0 = I ? I.getX(t * 3) : t * 3, i1 = I ? I.getX(t * 3 + 1) : t * 3 + 1, i2 = I ? I.getX(t * 3 + 2) : t * 3 + 2;
+      a.fromBufferAttribute(P, i0).applyMatrix4(o.matrixWorld); b.fromBufferAttribute(P, i1).applyMatrix4(o.matrixWorld); c.fromBufferAttribute(P, i2).applyMatrix4(o.matrixWorld);
+      n.subVectors(b, a).cross(c.clone().sub(a)); const area = n.length(); if (area < 1e-12) continue; n.divideScalar(area); if (n.y < 0 || (n.y === 0 && n.x < 0)) n.negate();
+      const k = key(n), e = bins.get(k); if (e) { e.w += area; e.v.addScaledVector(n, area); } else bins.set(k, { w: area, v: n.clone().multiplyScalar(area) }); } });
+  const sorted = [...bins.values()].sort((p, q) => q.w - p.w); if (!sorted.length) return;
+  const n1 = sorted[0].v.clone().normalize(); const second = sorted.find(e => Math.abs(e.v.clone().normalize().dot(n1)) < .25); if (!second) return;
+  let n2 = second.v.clone().normalize(); n2.addScaledVector(n1, -n2.dot(n1)).normalize(); const n3 = new THREE.Vector3().crossVectors(n1, n2);
+  // whichever of the three face directions is closest to world-up becomes up
+  const axes = [n1, n2, n3].sort((p, q) => Math.abs(q.y) - Math.abs(p.y)); let up = axes[0].clone(); if (up.y < 0) up.negate();
+  let fwd = axes[1].clone(); const right = new THREE.Vector3().crossVectors(up, fwd); fwd = new THREE.Vector3().crossVectors(right, up);
+  const basis = new THREE.Matrix4().makeBasis(right, up, fwd);   // columns: the block's own right/up/forward in world space
+  const q = new THREE.Quaternion().setFromRotationMatrix(basis).invert();
+  const wrap = new THREE.Group(); while (root.children.length) wrap.add(root.children[0]); wrap.quaternion.copy(q); root.add(wrap);
+}
+// bounds of the solid stone only: ignore the outermost 1.5% of points on each axis (stray scan specks)
+function robustBox(root) {
+  const xs = [], ys = [], zs = [], v = new THREE.Vector3();
+  root.traverse(o => { if (!o.isMesh) return; const P = o.geometry.attributes.position, step = Math.max(1, Math.floor(P.count / 20000)); for (let i = 0; i < P.count; i += step) { v.fromBufferAttribute(P, i).applyMatrix4(o.matrixWorld); xs.push(v.x); ys.push(v.y); zs.push(v.z); } });
+  const q = (arr, f) => { arr.sort((p, r) => p - r); return arr[Math.min(arr.length - 1, Math.max(0, Math.round(f * (arr.length - 1))))]; };
+  return new THREE.Box3(new THREE.Vector3(q(xs, .015), q(ys, .015), q(zs, .015)), new THREE.Vector3(q(xs, .985), q(ys, .985), q(zs, .985)));
+}
+// the carving: transparent except for the letters, which are cut in (dark floor, lit lower edge, shadowed upper edge)
+// letter heights in metres, the same on every stone: chosen so the longest name still fits the block
+let LETTERS = null;
+function letterSizes() {
+  const planeW = BASE.w * .84, planeH = BASE.h * .74, W = 1024, pxPerM = W / planeW, H = Math.round(planeH * pxPerM), m = Math.round(Math.min(W, H) * .05), fw = W - 4 * m, hAvail = H - 4 * m;
+  const [, g] = canvas(8, 8), min = (f, wt, fam, max) => Math.min(...PIECES.map(p => fitFont(g, f(p), wt, fam, max, fw)));
+  let d = min(p => p.deva, 700, '"Noto Serif Devanagari",serif', Math.round(hAvail * .38)), n = min(p => p.name, 700, 'Cinzel,serif', Math.round(hAvail * .2)), t = Math.min(n * .66, min(p => `${p.date} · ${p.stonePlace || p.place}`, 600, 'Cinzel,serif', Math.round(hAvail * .12)));
+  const sc = Math.min(1, hAvail / (d * 1.22 + n * 1.25 + t * 1.3));
+  LETTERS = { deva: d * sc / pxPerM, name: n * sc / pxPerM, meta: t * sc / pxPerM };
+}
+function drawCarving(lines3, W, H, light = false, planeW = BASE.w * .84, sizes = null) {
+  const [c, g] = canvas(W, H), [hc, hg] = canvas(W, H); hg.fillStyle = '#808080'; hg.fillRect(0, 0, W, H);
+  const m = Math.round(Math.min(W, H) * .05);
+  // a thin incised border, as on old inscription stones
+  for (const [ctx, col, w, o] of [[g, 'rgba(255,248,232,.35)', 4, 2], [g, 'rgba(30,22,14,.6)', 4, 0], [hg, '#202020', 6, 0]]) { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.strokeRect(m + o, m + o, W - 2 * m, H - 2 * m); }
+  const fw = W - 4 * m, hAvail = H - 4 * m;
+  const spec = [[lines3[0], 700, '"Noto Serif Devanagari",serif', .38, 1.22], [lines3[1], 700, 'Cinzel,serif', .2, 1.25], [lines3[2], 600, 'Cinzel,serif', .12, 1.3]].filter(x => x[0]);
+  if (!LETTERS) letterSizes(); const pxPerM = W / planeW, use = sizes || [LETTERS.deva, LETTERS.name, LETTERS.meta];
+  const px = spec.map((sp, i) => use[i] * pxPerM);
+  const total = spec.reduce((a, sp, i) => a + px[i] * sp[4], 0), sc = 1;
+  let y = H / 2 - total * sc / 2; g.textAlign = hg.textAlign = 'center'; g.textBaseline = hg.textBaseline = 'top';
+  spec.forEach(([t, wt, fam, , gap], i) => { const q = px[i] * sc, o = Math.max(1.2, q / 22); g.font = hg.font = `${wt} ${q}px ${fam}`;
+    if (light) { g.fillStyle = 'rgba(255,250,240,.4)'; g.fillText(t, W / 2 + o, y + o); g.fillStyle = 'rgba(0,0,0,.85)'; g.fillText(t, W / 2 - o * .7, y - o * .7); g.fillStyle = 'rgba(22,18,14,.93)'; g.fillText(t, W / 2, y); }   // granite: deeper, darker cut
+    else { g.fillStyle = 'rgba(255,248,232,.45)'; g.fillText(t, W / 2 + o, y + o); g.fillStyle = 'rgba(20,14,8,.7)'; g.fillText(t, W / 2 - o * .6, y - o * .6); g.fillStyle = 'rgba(48,38,28,.82)'; g.fillText(t, W / 2, y); }
+    hg.fillStyle = '#101010'; hg.fillText(t, W / 2, y); y += q * gap; });
+  return [c, hc];
+}
+function carvingMaterial(lines3, w, h, light, sizes) {
+  const W = 1024, H = clamp(Math.round(W * h / w / 4) * 4, 128, 1400), [col, hgt] = drawCarving(lines3, W, H, light, w, sizes);
+  const map = new THREE.CanvasTexture(col); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 8;
+  const small = document.createElement('canvas'); small.width = 512; small.height = Math.round(512 * H / W); small.getContext('2d').drawImage(hgt, 0, 0, small.width, small.height);
+  return new THREE.MeshStandardMaterial({ map, normalMap: new THREE.CanvasTexture(normalFromHeight(small, 4)), normalScale: new THREE.Vector2(1.3, 1.3), roughness: .95, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
+}
+// put a resized copy of a stone model under a sculpture, on a dark museum stand,
+// and project the carving onto the stone's real front surface so the letters follow every bump and hollow
+function stoneBlock(kind, bw, bh, bd, lines3, sizes = null) {
+  const grp = new THREE.Group(); grp.userData.decals = [];
+  const stand = mesh(new THREE.BoxGeometry(bw + .14, STAND_H, bd + .14), standMat, 0, STAND_H / 2, 0); stand.castShadow = stand.receiveShadow = true; grp.add(stand);
+  getBases().then(list => {
+    const b = list[kind] || list[0] || list[1]; if (!b || grp.userData.dead) return;
+    const inner = b.m.clone(), sx = bw / b.size.x, sy = bh / b.size.y, sz = bd / b.size.z;
+    inner.scale.set(sx, sy, sz); inner.position.set(-b.center.x * sx, STAND_H - b.min.y * sy, -b.center.z * sz); grp.add(inner);
+    grp.updateMatrixWorld(true);
+    const mat = carvingMaterial(lines3, bw * .84, bh * .74, kind === 1, sizes);
+    const pos = new THREE.Vector3(0, STAND_H + bh * .5, bd / 2).applyMatrix4(grp.matrixWorld);
+    const ori = new THREE.Euler().setFromQuaternion(grp.getWorldQuaternion(new THREE.Quaternion()));
+    const size = new THREE.Vector3(bw * .84, bh * .74, Math.max(.25, bd * .5));
+    inner.traverse(o => { if (!o.isMesh) return; const d = new THREE.Mesh(new DecalGeometry(o, pos, ori, size), mat); d.renderOrder = 2; d.userData.carving = true; scene.add(d); grp.userData.decals.push(d); });
+  });
+  return grp;
+}
+function disposeStone(grp) { grp.userData.dead = true; for (const d of grp.userData.decals || []) { scene.remove(d); d.geometry.dispose(); } const m = grp.userData.decals?.[0]?.material; if (m) { m.map.dispose(); m.normalMap.dispose(); m.dispose(); } }
+function buildBase(ex, foot) {
+  if (ex.base) { ex.group.remove(ex.base); disposeStone(ex.base); }
+  const p = ex.p, bw = BASE.w, bh = BASE.h, bd = BASE.d;
+  const grp = stoneBlock(ex.k % 2, bw, bh, bd, [p.deva, p.name, `${p.date} · ${p.stonePlace || p.place}`]);
+  ex.group.add(grp); ex.base = grp; ex.baseW = bw;
+}
+// fonts arrive after the first draw: cut the carvings again once they are ready
+if (document.fonts) document.fonts.ready.then(() => { letterSizes(); exhibits.forEach(ex => buildBase(ex, ex.foot || .5)); buildClosing(); });
+
+// the welcome and story cards: weathered limestone tablets
+const tabletTex = (() => { const [c, g] = canvas(900, 1100); limestone(g, 900, 1100, 55, null, true); return c.toDataURL('image/jpeg', .82); })();
+document.querySelectorAll('.tablet').forEach(el => el.style.backgroundImage = `url(${tabletTex})`);
+
+/* ---------- The story: opens only when you are near and tap (screen) or point and pull the trigger (Quest) ---------- */
+let storyFor = null;
+function storyHTML(p) {
+  const host = p.ref.includes('sketchfab') ? 'the 3D scan page' : 'the museum record';
+  return `<button class="x" aria-label="Close">×</button><div class="cut dv">${p.deva}</div><div class="cut en">${p.name}</div>
+  <div class="cut meta">${p.date} · ${p.place}<br>${p.mat}</div><p>${p.story}</p><div class="fact">${p.fact}</div>
+  <div class="ref">${p.where}${p.approx ? ' · shown at an estimated size' : ''}<br>Read more: <a href="${p.ref}" target="_blank" rel="noopener">${host}</a><br>${p.credit}</div>`;
+}
+// headset version: the same tablet drawn on a canvas, standing beside the sculpture
+const storyVR = (() => { const [c, g] = canvas(900, 1150), t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const m = mesh(new THREE.PlaneGeometry(.62, .62 * 1150 / 900), new THREE.MeshBasicMaterial({ map: t, color: 0xb9b0a0, transparent: true, depthWrite: false, fog: false })); m.renderOrder = 8; m.visible = false; scene.add(m); return { c, g, t, m }; })();
+function drawStoryVR(p) {
+  const { c, g, t } = storyVR, W = c.width, H = c.height; g.clearRect(0, 0, W, H);
+  g.save(); g.beginPath(); const jag = [[0, 18], [40, 0], [300, 10], [560, 0], [880, 8], [900, 40], [893, 400], [900, 760], [890, 1120], [860, 1150], [520, 1140], [200, 1150], [20, 1138], [6, 800], [0, 420]]; jag.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.clip();
+  limestone(g, W, H, 77, null, true); g.restore();
+  g.textAlign = 'center'; g.textBaseline = 'top'; let y = 56;
+  const cutText = (txt, font, yy) => { g.font = font; incise(g, txt, W / 2, yy, parseInt(font.match(/(\d+)px/)[1])); };
+  cutText(p.deva, '700 64px "Noto Serif Devanagari",serif', y); y += 86;
+  g.font = '700 44px Cinzel,serif'; for (const l of wrapTxt(g, p.name, 780)) { cutText(l, '700 44px Cinzel,serif', y); y += 54; }
+  g.font = '500 28px Cinzel,serif'; for (const l of wrapTxt(g, `${p.date} · ${p.place}`, 780)) { cutText(l, '500 28px Cinzel,serif', y); y += 36; }
+  y += 18; g.fillStyle = 'rgba(70,54,36,.35)'; g.fillRect(180, y, 540, 2); y += 24;
+  g.textAlign = 'left'; g.fillStyle = '#43372a'; g.font = '600 36px "Cormorant Garamond",serif'; for (const l of wrapTxt(g, p.story, 780)) { g.fillText(l, 60, y); y += 44; }
+  y += 14; g.fillStyle = '#5b3612'; g.font = '600 33px "Cormorant Garamond",serif'; for (const l of wrapTxt(g, p.fact, 780)) { g.fillText(l, 60, y); y += 41; }
+  y += 18; g.fillStyle = '#5d5040'; g.font = '500 22px Geist,sans-serif'; for (const l of wrapTxt(g, `${p.where} · ${p.credit}`, 780)) { g.fillText(l, 60, y); y += 28; }
+  g.textAlign = 'center'; g.fillStyle = '#6d604d'; g.font = '500 22px Geist,sans-serif'; g.fillText('Pull the trigger again to close', W / 2, H - 52);
+  t.needsUpdate = true;
+}
+function openStory(ex) {
+  storyFor = ex; const el = $('story');
+  if (renderer.xr.isPresenting) {
+    drawStoryVR(ex.p); camera.getWorldPosition(_hp);
+    // stand the tablet between you and the sculpture, a little to your left, so the sculpture stays in view
+    const toP = new THREE.Vector3(ex.world.x - _hp.x, 0, ex.world.z - _hp.z).normalize(), left = new THREE.Vector3(toP.z, 0, -toP.x);
+    storyVR.m.position.copy(_hp).addScaledVector(toP, .9).addScaledVector(left, .38); storyVR.m.position.y = _hp.y - .12;
+    storyVR.m.lookAt(_hp.x, storyVR.m.position.y, _hp.z); storyVR.m.visible = true;
+  } else { el.innerHTML = storyHTML(ex.p); el.querySelector('.x').onclick = () => closeStory(); el.classList.add('on'); }
+  $('near').classList.remove('on');
+}
+function closeStory() { storyFor = null; $('story').classList.remove('on'); storyVR.m.visible = false; }
+// what are you pointing at? the nearest lit sculpture (or its base) hit by the ray
+const picker = new THREE.Raycaster();
+function pickExhibit() {
+  let best = null, bd = 1e9;
+  for (const ex of exhibits) { if (ex.reveal < .35 || ex.dist > 5.5) continue; const objs = [ex.base, ex.model].filter(Boolean); const hit = picker.intersectObjects(objs, true)[0]; if (hit && hit.distance < bd) { bd = hit.distance; best = ex; } }
+  return best;
+}
+
+/* ---------- The last stone, at the end of the hall ---------- */
+let closing = null;
+function buildClosing() {
+  if (closing) { scene.remove(closing); disposeStone(closing); }
+  if (!LETTERS) letterSizes();
+  closing = stoneBlock(0, 1.9, BASE.h, BASE.d, ['अतीत के अवशेष', 'Broken, buried, carried away, and still here', 'Thank you for walking with them'], [LETTERS.deva, LETTERS.meta * 1.15, LETTERS.meta]);
+  closing.position.set(0, 0, Z_END + 2.2); scene.add(closing); closing.updateMatrixWorld(true);
+}
+const closingLight = new THREE.SpotLight(0xffe2b8, 0, 7, .45, .6, 1.4); closingLight.position.set(0, CEIL - .4, Z_END + 3.4); closingLight.target.position.set(0, .6, Z_END + 2.2); scene.add(closingLight, closingLight.target);
+
+/* ---------- Headset message panel ---------- */
+const FONT = '"Geist",system-ui,sans-serif';
+const [msgCv, msgG] = canvas(1024, 384), msgT = new THREE.CanvasTexture(msgCv); msgT.colorSpace = THREE.SRGBColorSpace;
+const msgM = mesh(new THREE.PlaneGeometry(.84, .315), new THREE.MeshBasicMaterial({ map: msgT, transparent: true, depthTest: false, depthWrite: false, fog: false })); msgM.renderOrder = 10; msgM.visible = false; scene.add(msgM);
+let msgUntil = 0, hintTimer = 0;
+function message(title, body = '') {
+  const lines = body ? body.split(' · ').map(s => s.charAt(0).toUpperCase() + s.slice(1)) : [];
+  const h = $('hint'); h.innerHTML = `<b>${title}</b>${lines.join('<br>')}`; h.style.opacity = 1; const dur = 2600 + 50 * (title.length + body.length); clearTimeout(hintTimer); hintTimer = setTimeout(() => h.style.opacity = 0, dur);
+  if (!renderer.xr.isPresenting) return;
+  const g = msgG; g.clearRect(0, 0, 1024, 384); let ts = 60; g.font = `700 ${ts}px ${FONT}`; while (g.measureText(title).width > 900 && ts > 34) { ts -= 2; g.font = `700 ${ts}px ${FONT}`; }
+  g.font = `400 40px ${FONT}`; const wl = []; lines.forEach(l => wl.push(...wrapTxt(g, l, 900)));
+  const hh = Math.min(384, 40 + ts + 14 + wl.length * 50 + 24), top = (384 - hh) / 2;
+  g.fillStyle = 'rgba(10,7,5,.92)'; g.strokeStyle = 'rgba(217,164,65,.8)'; g.lineWidth = 4; g.beginPath(); g.roundRect(20, top, 984, hh, 26); g.fill(); g.stroke();
+  g.textAlign = 'center'; g.textBaseline = 'top'; g.fillStyle = '#ffd98a'; g.font = `700 ${ts}px ${FONT}`; g.fillText(title, 512, top + 26); g.fillStyle = '#f3e6c8'; g.font = `400 40px ${FONT}`; wl.forEach((l, i) => g.fillText(l, 512, top + 26 + ts + 14 + i * 50));
+  msgT.needsUpdate = true; msgM.visible = true; msgUntil = performance.now() + dur; placeMsg(true);
+}
+const _hp = new THREE.Vector3(), _hq = new THREE.Quaternion(), _fw = new THREE.Vector3(), _tp = new THREE.Vector3();
+function placeMsg(snap) { camera.getWorldPosition(_hp); camera.getWorldQuaternion(_hq); _fw.set(0, 0, -1).applyQuaternion(_hq); _fw.y = 0; _fw.normalize(); _tp.copy(_hp).addScaledVector(_fw, 1.6); _tp.y = _hp.y - .22; if (snap) msgM.position.copy(_tp); else msgM.position.lerp(_tp, .04); msgM.lookAt(_hp); }
+
+/* ---------- 6. Input ---------- */
+let safe = false, muted = false, readoutOn = false, yaw = 0, pitch = 0, fade = 0, snapArmed = true;
+const keys = {};
+function setSafe(on) { safe = on; $('safeBtn').classList.toggle('on', on); if (started) message(on ? 'Safe Light on' : 'Safe Light off', on ? 'Lights change more slowly and softly' : 'Normal light changes'); }
+function setMute(on) { muted = on; $('muteBtn').classList.toggle('on', on); if (audio.master) audio.master.gain.setTargetAtTime(on ? 0 : AMBIENT_VOL, audio.ctx.currentTime, .1); }
+let tour = -1;
+function goTo(step) {
+  tour = (tour + step + exhibits.length) % exhibits.length; const ex = exhibits[tour];
+  const stand = new THREE.Vector3(ex.side * (ROW_X - 2.0 - Math.min(.8, ex.p.h * .3)), 0, ex.group.position.z + .2);
+  camera.getWorldPosition(_hp); rig.position.x += stand.x - _hp.x; rig.position.z += stand.z - _hp.z;
+  yaw = Math.atan2(-(ex.world.x - stand.x), -(ex.world.z - stand.z)); fade = .9; if (!renderer.xr.isPresenting) pitch = -.14;
+  message(`${tour + 1} of ${exhibits.length} · ${ex.p.name}`, ex.p.date);
+}
+addEventListener('keydown', e => { keys[e.code] = true; if (!started) return;
+  if (e.code === 'KeyN') goTo(1); if (e.code === 'KeyB') goTo(-1); if (e.code === 'KeyL') setSafe(!safe); if (e.code === 'KeyM') setMute(!muted);
+  if (e.code === 'KeyX') { readoutOn = !readoutOn; $('readout').style.display = readoutOn ? 'block' : 'none'; } });
+addEventListener('keyup', e => keys[e.code] = false);
+let drag = null;
+renderer.domElement.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now() }; });
+addEventListener('pointermove', e => { if (!drag || e.pointerId !== drag.id) return; yaw -= (e.clientX - drag.x) * .0042; pitch = clamp(pitch - (e.clientY - drag.y) * .0036, -1.1, 1.1); drag.x = e.clientX; drag.y = e.clientY; });
+addEventListener('pointerup', e => {
+  if (drag && e.pointerId === drag.id) {
+    const moved = Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0), quick = performance.now() - drag.t0 < 450;
+    if (started && moved < 7 && quick && e.target === renderer.domElement) {
+      picker.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera);
+      const ex = pickExhibit(); if (ex) openStory(ex); else closeStory();
+    }
+    drag = null;
+  }
+});
+renderer.domElement.addEventListener('pointermove', e => { if (!started || drag || frameN % 2) return; picker.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera); renderer.domElement.style.cursor = pickExhibit() ? 'pointer' : ''; });
+const joy = { x: 0, y: 0, id: null }, joyEl = $('joy'), knob = joyEl.firstElementChild;
+joyEl.addEventListener('pointerdown', e => { e.stopPropagation(); joy.id = e.pointerId; joyEl.setPointerCapture(e.pointerId); jm(e); });
+joyEl.addEventListener('pointermove', e => { if (e.pointerId === joy.id) jm(e); });
+joyEl.addEventListener('pointerup', () => { joy.id = null; joy.x = joy.y = 0; knob.style.transform = ''; });
+function jm(e) { const r = joyEl.getBoundingClientRect(); let x = (e.clientX - r.left - 55) / 45, y = (e.clientY - r.top - 55) / 45; const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; } joy.x = x; joy.y = y; knob.style.transform = `translate(${x * 35}px,${y * 35}px)`; }
+$('nextBtn').onclick = () => goTo(1); $('prevBtn').onclick = () => goTo(-1); $('safeBtn').onclick = () => setSafe(!safe); $('muteBtn').onclick = () => setMute(!muted);
+$('exitBtn').onclick = () => location.href = 'https://inventndiscover.com/';
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+const ctrls = [];
+const handleGeo = new THREE.CylinderGeometry(.018, .024, .13, 10).rotateX(Math.PI / 2 - .5).translate(0, -.015, .045);
+const beamGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, -.7)]); beamGeo.setAttribute('color', new THREE.Float32BufferAttribute([1, .85, .5, .05, .03, .01], 3));
+for (let i = 0; i < 2; i++) {
+  const ray = renderer.xr.getController(i), grip = renderer.xr.getControllerGrip(i);
+  ray.add(new THREE.Line(beamGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .85, blending: THREE.AdditiveBlending })));
+  grip.add(mesh(handleGeo, new THREE.MeshStandardMaterial({ color: 0x16120e, roughness: .6 })));
+  const c = { ray, grip, hand: null, gp: null, prev: [] };
+  ray.addEventListener('connected', e => { c.hand = e.data.handedness; c.gp = e.data.gamepad; });
+  ray.addEventListener('selectstart', () => { if (storyFor) { closeStory(); return; } const mtx = new THREE.Matrix4().extractRotation(ray.matrixWorld); picker.ray.origin.setFromMatrixPosition(ray.matrixWorld); picker.ray.direction.set(0, 0, -1).applyMatrix4(mtx); const ex = pickExhibit(); if (ex) openStory(ex); }); ray.addEventListener('disconnected', () => { c.hand = null; c.gp = null; });
+  rig.add(ray, grip); ctrls.push(c);
+}
+const vigMat = new THREE.ShaderMaterial({ transparent: true, depthTest: false, depthWrite: false, uniforms: { uS: { value: 0 }, uF: { value: 0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+  fragmentShader: `varying vec2 vUv; uniform float uS,uF; void main(){ float r=length(vUv-.5)*2.; gl_FragColor=vec4(0.,0.,0.,max(smoothstep(.45,.85,r)*uS,uF)); }` });
+const vig = mesh(new THREE.PlaneGeometry(2.6, 2.6), vigMat, 0, 0, -.5); vig.renderOrder = 20; vig.visible = false; camera.add(vig);
+
+/* ---------- Sound: a flute, constant and very low, looping for as long as you are in the museum ----------
+   "Krishna Flute" by echoes_of_lumen (Pixabay). If the file can't load, a soft tanpura is synthesised instead. */
+const AMBIENT_VOL = .12;
+const audio = { ctx: null, master: null,
+  init() { if (this.ctx) return; const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; const c = this.ctx = new AC();
+    this.master = c.createGain(); this.master.gain.value = AMBIENT_VOL; this.master.connect(c.destination);
+    fetch('assets/flute.mp3', { method: 'HEAD' }).then(r => { if (r.ok) this.useFile(); else this.synth(); }).catch(() => this.synth()); },
+  useFile() { const a = new Audio('assets/flute.mp3'); a.loop = true; a.crossOrigin = 'anonymous'; this.ctx.createMediaElementSource(a).connect(this.master); a.play().catch(() => {}); this.el = a; },
+  synth() { const c = this.ctx; const len = c.sampleRate * 3.4, ir = c.createBuffer(2, len, c.sampleRate); for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+    this.rev = c.createConvolver(); this.rev.buffer = ir; const rg = c.createGain(); rg.gain.value = .6; this.rev.connect(rg).connect(this.master); this.dry = c.createGain(); this.dry.gain.value = .5; this.dry.connect(this.master);
+    this.cycle = 0; this.next = c.currentTime + .3; setInterval(() => this.tick(), 60); },
+  pluck(f, t, a) { const c = this.ctx, o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter(); o.type = o2.type = 'sawtooth'; o.frequency.value = f; o2.frequency.value = f * 1.003; lp.type = 'lowpass'; lp.frequency.setValueAtTime(2400, t); lp.frequency.exponentialRampToValueAtTime(650, t + 3.5); lp.Q.value = 4; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(a, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 4.2); o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(this.dry); g.connect(this.rev); o.start(t); o2.start(t); o.stop(t + 4.3); o2.stop(t + 4.3); },
+  tick() { const c = this.ctx; if (c.state !== 'running') return; const SA = 130.8, seq = [SA * 1.5, SA * 2, SA * 2, SA];
+    while (this.next < c.currentTime + .2) { this.pluck(seq[this.cycle % 4], this.next, this.cycle % 4 === 3 ? .5 : .36); this.cycle++; this.next += this.cycle % 4 === 0 ? 1.6 : 1.1; } } };
+
+/* ---------- Start ---------- */
+function begin(vr) { started = true; $('notice').style.display = 'none'; audio.init(); if (audio.ctx && audio.ctx.state !== 'running') audio.ctx.resume();
+  if (!vr) { $('hud').style.display = 'flex'; $('keyhint').style.display = 'block'; if (matchMedia('(pointer:coarse)').matches) joyEl.style.display = 'block'; message('Welcome to a hall of survivors', 'Walk with W A S D or the arrows · each sculpture lights up as you come near · click it to read its story'); } }
+$('screenBtn').onclick = () => begin(false);
+if (navigator.xr) navigator.xr.isSessionSupported('immersive-vr').then(ok => { $('vrBtn').disabled = !ok; if (!ok) $('vrBtn').textContent = 'VR not available here'; }).catch(() => $('vrBtn').textContent = 'VR not available here'); else $('vrBtn').textContent = 'VR not available here';
+$('vrBtn').onclick = async () => { try {
+  const session = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor'] }); begin(true); await renderer.xr.setSession(session); session.addEventListener('end', onXREnd);
+  if (session.updateTargetFrameRate && session.supportedFrameRates && [...session.supportedFrameRates].includes(72)) session.updateTargetFrameRate(72).catch(() => {});
+  renderer.xr.setFoveation(LADDER[Q].fov); const ref = renderer.xr.getReferenceSpace(); if (ref && ref.addEventListener) ref.addEventListener('reset', () => message('Recentred', 'Your view has been re-anchored'));
+  camera.position.set(0, 0, 0); pitch = 0; vig.visible = true;
+  setTimeout(() => message('Welcome to a hall of survivors', 'Left stick walks where your left hand points · right stick turns · point at a lit sculpture and pull the trigger to read its story'), 600);
+} catch (err) { message('Could not start VR', String(err.message || err)); } };
+function onXREnd() { vig.visible = false; msgM.visible = false; camera.position.set(0, EYE, 0); $('hud').style.display = 'flex'; $('keyhint').style.display = 'block'; }
+$('screenBtn').disabled = false; updateLoading();
+
+/* ---------- 7. Quality ---------- */
+const perf = { t0: 0, n: 0, slow: 0, good: 0, pauseUntil: 0, fps: 0, fpsN: 0, fpsT: 0, upAt: -1 };
+function applyQuality() { if (renderer.xr.isPresenting) renderer.xr.setFoveation(LADDER[Q].fov); else renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * LADDER[Q].px); }
+function measure(now) { perf.fpsN++; if (now - perf.fpsT > 1000) { perf.fps = perf.fpsN * 1000 / (now - perf.fpsT); perf.fpsN = 0; perf.fpsT = now; }
+  if (!renderer.xr.isPresenting || now < perf.pauseUntil) { perf.t0 = now; perf.n = 0; return; } perf.n++; if (now - perf.t0 < 1200) return;
+  const avg = (now - perf.t0) / perf.n, tg = 1000 / 72;
+  if (avg > tg * 1.12) { perf.good = 0; if (++perf.slow >= 2 && Q < LADDER.length - 1) { if (perf.upAt >= 0 && now - perf.upAt < 6000) qCeiling = Q + 1; Q++; perf.slow = 0; perf.pauseUntil = now + 1500; applyQuality(); } }
+  else if (avg < tg * 1.04) { perf.slow = 0; if (++perf.good >= 4 && Q > qCeiling) { Q--; perf.good = 0; perf.upAt = now; perf.pauseUntil = now + 1500; applyQuality(); } } perf.t0 = now; perf.n = 0; }
+const readoutText = () => `Headset  ${HEADSET ? 'Quest ' + HEADSET : renderer.xr.isPresenting ? 'XR device' : 'screen'}\nFPS      ${perf.fps.toFixed(0)} of ${renderer.xr.isPresenting ? 72 : 60} Hz\nQuality  level ${Q} (0 best, ${LADDER.length - 1} lightest)\nTris     ${renderer.info.render.triangles.toLocaleString()} per view\nDetail   ${exhibits.filter(e => e.hi).length} full scans in memory\nBuild    ${BUILD}`;
+
+/* ---------- Frame ---------- */
+const clock = new THREE.Clock(), head = new THREE.Vector3(), dirV = new THREE.Vector3(), rightV = new THREE.Vector3(), q = new THREE.Quaternion();
+let frameN = 0, lastHud = 0, lastVRPrompt = null;
+renderer.setAnimationLoop(now => {
+  const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime, xr = renderer.xr.isPresenting; frameN++; measure(now);
+  rig.rotation.y = yaw; let mvx = 0, mvz = 0;
+  if (started) {
+    if (!xr) {
+      camera.rotation.set(pitch, 0, 0, 'YXZ');
+      const f = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - joy.y, s = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + joy.x;
+      dirV.set(-Math.sin(yaw), 0, -Math.cos(yaw)); rightV.set(Math.cos(yaw), 0, -Math.sin(yaw)); mvx = dirV.x * f + rightV.x * s; mvz = dirV.z * f + rightV.z * s;
+      const l = Math.hypot(mvx, mvz); if (l > 1) { mvx /= l; mvz /= l; } const sp = (keys.ShiftLeft || keys.ShiftRight ? 3 : 1.4) * dt; mvx *= sp; mvz *= sp;
+    } else {
+      let lx = 0, ly = 0, rx = 0, leftRay = null, rightRay = null;
+      for (const c of ctrls) { if (!c.gp) continue; const ax = c.gp.axes, sx = ax.length > 2 ? ax[2] : ax[0], sy = ax.length > 3 ? ax[3] : ax[1], b = c.gp.buttons, edge = i => b[i] && b[i].pressed && !c.prev[i];
+        if (c.hand === 'left') { lx = sx; ly = sy; leftRay = c.ray; if (edge(4)) { readoutOn = !readoutOn; if (readoutOn) message('Performance', readoutText().split('\n').map(s => s.replace(/\s+/g, ' ')).join(' · ')); } if (edge(5)) goTo(1); }
+        if (c.hand === 'right') { rx = sx; rightRay = c.ray; if (edge(4)) setSafe(!safe); if (edge(5)) goTo(1); }
+        c.prev = b.map(x => x.pressed); }
+      const aim = leftRay || rightRay; if (aim) aim.getWorldQuaternion(q); else camera.getWorldQuaternion(q);
+      dirV.set(0, 0, -1).applyQuaternion(q); dirV.y = 0; if (dirV.lengthSq() < 1e-4) dirV.set(0, 0, -1); dirV.normalize(); rightV.set(-dirV.z, 0, dirV.x);
+      const dz = Math.abs(ly) > .15 ? -ly : 0, dx = Math.abs(lx) > .15 ? lx : 0; mvx = (dirV.x * dz + rightV.x * dx) * 1.3 * dt; mvz = (dirV.z * dz + rightV.z * dx) * 1.3 * dt;
+      if (Math.abs(rx) < .3) snapArmed = true;
+      if (snapArmed && Math.abs(rx) > .7) { snapArmed = false; const ang = rx > 0 ? -Math.PI / 6 : Math.PI / 6; camera.getWorldPosition(head); rig.position.sub(head).applyAxisAngle(THREE.Object3D.DEFAULT_UP, ang).add(head); yaw += ang; rig.rotation.y = yaw; fade = .85; }
+      vigMat.uniforms.uS.value = lerp(vigMat.uniforms.uS.value, clamp(Math.hypot(mvx, mvz) / Math.max(dt, 1e-3) / 1.3, 0, 1) * .65, .15);
+    }
+    rig.position.x += mvx; rig.position.z += mvz;
+    camera.getWorldPosition(head);
+    const push = (cx, cz, r) => { const dx = head.x - cx, dz = head.z - cz, d = Math.hypot(dx, dz); if (d < r && d > 1e-4) { const k = (r - d) / d; rig.position.x += dx * k; rig.position.z += dz * k; head.x += dx * k; head.z += dz * k; } };
+    for (const ex of exhibits) push(ex.group.position.x, ex.group.position.z, clamp((ex.baseW || .6) * .6 + .3, .6, 1.35));
+    const lim = 4.6; if (Math.abs(head.x) > lim) rig.position.x -= head.x - Math.sign(head.x) * lim;
+    if (head.z > 2.5) rig.position.z -= head.z - 2.5; if (head.z < Z_END + 1) rig.position.z -= head.z - (Z_END + 1);
+  }
+  fade = Math.max(0, fade - dt * 5); vigMat.uniforms.uF.value = fade;
+
+  camera.getWorldPosition(head); let best = null;
+  for (const ex of exhibits) {
+    ex.dist = Math.hypot(head.x - ex.world.x, head.z - ex.world.z);
+    const want = clamp((5.0 - ex.dist) / 1.8, 0, 1); ex.reveal += (want - ex.reveal) * Math.min(1, dt * (safe ? .7 : 1.1));   // lights come on as you approach, go off as you leave
+    // far: a faint glow from the scan's own colours keeps it readable in the dark; near: the real spotlight takes over
+    const lit = smooth(ex.reveal), gl = .012 * (1 - lit); for (const m of ex.glow) m.emissive.setScalar(gl);   // unlit: almost lost in the dark
+    ex.cone.material.uniforms.uI.value = (safe ? .14 : .2) * lit; ex.cone.visible = lit > .01;
+    if (!best || ex.dist < best.dist) best = ex;
+  }
+  // a quiet prompt when you face a lit sculpture; the story opens only on a tap or trigger, and closes if you walk away
+  camera.getWorldDirection(dirV); dirV.y = 0; dirV.normalize(); let facing = null;
+  for (const ex of exhibits) { if (ex.dist > 4.2 || ex.reveal < .5) continue; const dx = ex.world.x - head.x, dz = ex.world.z - head.z, l = Math.hypot(dx, dz) || 1; if ((dx * dirV.x + dz * dirV.z) / l < .64) continue; if (!facing || ex.dist < facing.dist) facing = ex; }
+  if (storyFor && storyFor.dist > 5.5) closeStory();
+  const nearEl = $('near'); if (facing && !storyFor && !xr) { nearEl.textContent = `${facing.p.name} · click the sculpture to read its story`; nearEl.classList.add('on'); } else nearEl.classList.remove('on');
+  if (xr && facing && facing !== lastVRPrompt && !storyFor) { lastVRPrompt = facing; message(facing.p.name, 'Point at it and pull the index trigger to read its story'); }
+  { const dC = Math.hypot(head.x, head.z - (Z_END + 2.2)); closingLight.intensity = 30 * smooth(clamp((5.5 - dC) / 2, 0, 1)); }
+  if (frameN % 20 === 0) {   // swap full-detail scans in and out by distance; at most MAX_HI in memory
+    const sorted = [...exhibits].sort((a, b) => a.dist - b.dist), hd = LADDER[Q].hiDist;
+    sorted.forEach((ex, i) => { if (i < MAX_HI && ex.dist < hd) { if (!ex.hi && !ex.hiLoading) { ex.hiLoading = true; loadInto(ex, ex.p.hi, 'hi'); } } else if (ex.hi && (ex.dist > hd + 2.5 || i > MAX_HI)) dropHi(ex); });
+  }
+  if (frameN % 3 === 0 || !xr) {
+    const near = [...exhibits].sort((a, b) => a.dist - b.dist).slice(0, POOL.length);
+    near.forEach((ex, i) => { const L = POOL[i]; L.position.set(ex.world.x - ex.side * .5, CEIL - .3, ex.world.z + .25); L.target.position.set(ex.world.x, ex.world.y - ex.p.h * .1, ex.world.z); L.target.updateMatrixWorld();
+      L.angle = clamp(.18 + ex.p.h * .12, .22, .48); L.intensity = 46 * smooth(ex.reveal) * (ex.p.h > 1.5 ? 1.6 : 1) * (safe ? .9 : 1); });
+  }
+  lantern.position.set(head.x, 2.6, head.z - .3);
+  if (frameN % 2 === 0) for (let i = 0; i < flames.length; i++) flames[i].scale.y = safe ? 1 : 1 + .2 * Math.sin(t * 9 + i * 1.7) * Math.sin(t * 2.3 + i);
+  if (!xr && readoutOn && now - lastHud > 250) { lastHud = now; $('readout').textContent = readoutText(); }
+  if (xr && msgM.visible) { placeMsg(false); if (performance.now() > msgUntil) msgM.visible = false; }
+  renderer.render(scene, camera);
+});
+window.__museum = { exhibits, rig, camera, renderer, goTo, openStory, closeStory, Z_END, setYaw: v => { yaw = v; pitch = -.1; }, closingLit: () => closingLight.intensity, setSafe, get Q() { return Q; }, begin };
+</script>
+</body>
+</html>
