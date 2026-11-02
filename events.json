@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-01T21:50:00+05:30",
+ "REFRESHED": "2026-11-02T22:05:00+05:30",
  "EVENTS_RAW": [
   {
    "id": "india-blockchain-week",
@@ -178,10 +178,9 @@
    ],
    "area": "Powai",
    "venue": "Indian Institute of Technology Bombay",
-   "start": "2026-11-20T09:30",
+   "start": "2026-11-20T08:30",
    "endDate": "2026-11-21",
-   "end": null,
-   "timeNote": "Day 1 from 9:30, day 2 from 10:30",
+   "end": "18:00",
    "fmt": "Offline",
    "price": null,
    "priceNote": "Ticket price not shown · some tickets need approval",
@@ -821,53 +820,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai, discover/ai pages (fetch blocked by allowlist; found via web search)",
-   "found": 3,
+   "what": "mumbai, discover/ai (fetch blocked by allowlist; web search only)",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Listing pages not fetchable this run. Mumbai Meets AI 5th Ed and AI Engineers Day pages are past (May 2026); aimumbai calendar showed no upcoming events."
+   "skip": 0,
+   "note": "Listing and event pages not fetchable this run; StartupLive Mumbai'26 re-checked via Eventbrite (times updated)."
   },
   {
    "src": "AllEvents",
-   "what": "technology, startup",
+   "what": "technology, startup pages (fetch blocked)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not fetchable this run (URL not on allowlist). Existing AllEvents entries kept."
+   "note": "Not reachable this run."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups and conferences",
+   "what": "Mumbai meetups and conferences (fetch blocked)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not fetchable this run (URL not on allowlist)."
+   "note": "Not reachable this run."
   },
   {
    "src": "hiddenevents",
-   "what": "Mumbai mirror",
+   "what": "Mumbai mirror (fetch blocked)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not attempted; listing sources were blocked."
+   "note": "Not reachable this run."
   },
   {
    "src": "web search",
-   "what": "AI, design/UX, hackathon, XR, startup, Devcon, climate/art queries",
-   "found": 4,
+   "what": "AI, hackathon, design/UX, XR, startup, art/climate queries",
+   "found": 6,
    "pub": 0,
    "review": 0,
-   "dup": 0,
-   "skip": 4,
-   "note": "Results were past or out-of-city (Design Samvaad is Gurugram, Sept). Mumbai Builds 2027 is a closed student hackathon with its finale on 7 Feb 2027, outside the 45-day window. Devcon 8 still shown for 3-6 Nov."
+   "dup": 1,
+   "skip": 5,
+   "note": "Hits were past, outside Mumbai (Design Samvaad is Gurugram), or lacked a confirmed 2026 date. Design Mumbai 2026 and Mumbai Builds 2027 dates not confirmed."
   }
  ],
  "COMMUNITIES": [
