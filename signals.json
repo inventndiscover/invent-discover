@@ -1,6 +1,56 @@
 {
- "REFRESHED": "2026-11-02T22:35:00+05:30",
+ "REFRESHED": "2026-11-03T22:00:25+05:30",
  "SIGNALS": [
+  {
+   "id": "2117425418454384677",
+   "handle": "MTSlive",
+   "name": "MTS",
+   "url": "https://x.com/MTSlive/status/2117425418454384677",
+   "posted": "2026-11-03T06:45:34+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "SemiAnalysis built GDPx, a benchmark of 206 multi-step tasks in 11 fields such as chip design and biology. The best model scores 12%, with Claude Opus 5.5 on top."
+  },
+  {
+   "id": "2117375881999942080",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2117375881999942080",
+   "posted": "2026-11-03T03:28:43+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "At ADIPEC in Abu Dhabi, Sam Altman said the internal model behind OpenAI's Navier-Stokes result is the next GPT, due to be released soon."
+  },
+  {
+   "id": "2117375234000990413",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2117375234000990413",
+   "posted": "2026-11-03T03:26:09+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Claude is launching a report card tool that gives companies a closer look at their AI costs and flags inefficiencies in how they use it."
+  },
+  {
+   "id": "2117323044213625181",
+   "handle": "mark_k",
+   "name": "Mark Kretschmann",
+   "url": "https://x.com/mark_k/status/2117323044213625181",
+   "posted": "2026-11-02T23:58:46+05:30",
+   "topic": "Models",
+   "kind": "Leak",
+   "summary": "Lists model releases rumored for November, including GPT-6.2 Astra (Nov 2-15) and GPT-6.2 Sol (Nov 10-15). Dates are unconfirmed rumors from the poster."
+  },
+  {
+   "id": "2117287409750561163",
+   "handle": "kimmonismus",
+   "name": "Chubby♨️",
+   "url": "https://x.com/kimmonismus/status/2117287409750561163",
+   "posted": "2026-11-02T21:37:10+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Posts that Anthropic says its internal estimates suggest it may soon reach its threshold for dramatically accelerated, AI-driven progress in AI development."
+  },
   {
    "id": "2117105228382150859",
    "handle": "AGTPinsights",
@@ -12,84 +62,14 @@
    "summary": "HalachaBench is a new test that puts AI models through the Israeli Chief Rabbinate's rabbinical ordination exams, which cover religious law topics."
   },
   {
-   "id": "2116528634894905484",
-   "handle": "TheHackersNews",
-   "name": "The Hacker News",
-   "url": "https://x.com/TheHackersNews/status/2116528634894905484",
-   "posted": "2026-10-31T19:22:04+05:30",
-   "topic": "Tech",
+   "id": "2115401428529250543",
+   "handle": "Inc42",
+   "name": "Inc42",
+   "url": "https://x.com/Inc42/status/2115401428529250543",
+   "posted": "2026-10-28T16:42:57+05:30",
+   "topic": "India",
    "kind": "Report",
-   "summary": "Microsoft says a malicious extension version (2.1.313) never reached its VS Code Marketplace; Cursor rotated keys and rebuilt its marketplace. How attackers published under Anthropic's name is unclear."
-  },
-  {
-   "id": "2116349211549843666",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2116349211549843666",
-   "posted": "2026-10-31T07:29:06+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "Anthropic describes research on automating red-teaming for subtle emergent misalignment, tasking thousands of Claude agents with evading a training data monitor."
-  },
-  {
-   "id": "2116337365744525543",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2116337365744525543",
-   "posted": "2026-10-31T06:42:02+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Cites the Financial Times: OpenAI has cut its funding target to about $20 billion from $30 billion, with a lower target valuation."
-  },
-  {
-   "id": "2116239697727180890",
-   "handle": "arena",
-   "name": "Arena",
-   "url": "https://x.com/arena/status/2116239697727180890",
-   "posted": "2026-10-31T00:13:56+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Arena reports Gemini 4 Carbon (High) placed first in Text Arena, second in Agent Arena and fourth in Code Arena WebDev."
-  },
-  {
-   "id": "2116186265095663708",
-   "handle": "DeItaone",
-   "name": "*Walter Bloomberg",
-   "url": "https://x.com/DeItaone/status/2116186265095663708",
-   "posted": "2026-10-30T20:41:37+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "Nikkei is cited as reporting that Japan has asked Anthropic and OpenAI for more access to their advanced AI models."
-  },
-  {
-   "id": "2116115471137198534",
-   "handle": "TheRundownAI",
-   "name": "The Rundown AI",
-   "url": "https://x.com/TheRundownAI/status/2116115471137198534",
-   "posted": "2026-10-30T16:00:18+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Daily digest lists a report on Nvidia's CEO being targeted by an alleged Chinese spy, and Anthropic's AI now monitoring its own conversations."
-  },
-  {
-   "id": "2115265133467635877",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2115265133467635877",
-   "posted": "2026-10-28T07:41:22+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Artificial Analysis announces Intelligence Index v5 with two new benchmarks and three upgrades; most of the index now uses private datasets."
-  },
-  {
-   "id": "2114960962734412112",
-   "handle": "nvidianewsroom",
-   "name": "NVIDIA Newsroom",
-   "url": "https://x.com/nvidianewsroom/status/2114960962734412112",
-   "posted": "2026-10-27T11:32:42+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "NVIDIA and Meta will expand their partnership on Muse models for inference and training, and explore NVIDIA OpenShell and Sentry for agent safety."
+   "summary": "Reports Sarvam AI is in talks to raise about $300 million from Cognizant and other investors at a valuation of roughly $3.5 billion to $4 billion."
   }
  ]
 }

@@ -1,35 +1,6 @@
 {
- "REFRESHED": "2026-11-02T22:05:00+05:30",
+ "REFRESHED": "2026-11-03T21:45:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "india-blockchain-week",
-   "title": "India Blockchain Week 2026",
-   "cat": "Tech",
-   "tags": [
-    "Web3",
-    "Conference",
-    "Devcon week"
-   ],
-   "area": "Andheri East",
-   "venue": "Fairmont Mumbai",
-   "start": "2026-11-01",
-   "endDate": "2026-11-02",
-   "end": null,
-   "timeNote": "Times on the event page",
-   "fmt": "Offline",
-   "price": 1499,
-   "priceNote": "Early bird general ₹1,499 · student ₹999 with hackathon eligibility",
-   "aud": [
-    "Developer",
-    "Founder",
-    "Student"
-   ],
-   "src": "IBW",
-   "url": "https://indiablockchainweek.com/",
-   "org": "India Blockchain Week",
-   "access": "open",
-   "desc": "A two-day Web3 conference for builders, founders and investors held just before Devcon in Mumbai. Student passes include workshop access and hackathon eligibility."
-  },
   {
    "id": "media-accelerator-cohort",
    "title": "Media Accelerator & Startup Cohort",
@@ -820,17 +791,17 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai, discover/ai (fetch blocked by allowlist; web search only)",
+   "what": "mumbai, discover/ai (fetch blocked by allowlist); web search + 2 event pages",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Listing and event pages not fetchable this run; StartupLive Mumbai'26 re-checked via Eventbrite (times updated)."
+   "note": "Listing pages not fetchable. Opened Mumbai Meets AI 5th Edition and AI Engineers Day pages: both are past events (May 2026), not added."
   },
   {
    "src": "AllEvents",
-   "what": "technology, startup pages (fetch blocked)",
+   "what": "technology, startup (fetch blocked by allowlist)",
    "found": 0,
    "pub": 0,
    "review": 0,
@@ -840,7 +811,7 @@
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups and conferences (fetch blocked)",
+   "what": "Mumbai meetups/conferences (fetch blocked by allowlist)",
    "found": 0,
    "pub": 0,
    "review": 0,
@@ -850,23 +821,23 @@
   },
   {
    "src": "hiddenevents",
-   "what": "Mumbai mirror (fetch blocked)",
+   "what": "not attempted (listing mirror, hint only)",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run."
+   "note": "Skipped; no source could confirm dates."
   },
   {
    "src": "web search",
-   "what": "AI, hackathon, design/UX, XR, startup, art/climate queries",
-   "found": 6,
+   "what": "AI, design/UX, hackathon, XR, climate, startup, Devcon 8 queries",
+   "found": 3,
    "pub": 0,
    "review": 0,
-   "dup": 1,
-   "skip": 5,
-   "note": "Hits were past, outside Mumbai (Design Samvaad is Gurugram), or lacked a confirmed 2026 date. Design Mumbai 2026 and Mumbai Builds 2027 dates not confirmed."
+   "dup": 0,
+   "skip": 3,
+   "note": "Results were past events or generic startup networking mixers; Design Samvaad is in Gurugram. Devcon 8 still shows Nov 3-6 2026 in Mumbai. India Blockchain Week ended 2 Nov and was removed."
   }
  ],
  "COMMUNITIES": [
