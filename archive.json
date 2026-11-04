@@ -80,6 +80,37 @@
   "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops.",
   "firstSeen": "2026-09-28"
  },
+ "bharat-ai-innovation-2026": {
+  "tags": [
+   "AI",
+   "Enterprise",
+   "Policy"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Founder",
+   "Student",
+   "Professional"
+  ],
+  "access": "open",
+  "id": "bharat-ai-innovation-2026",
+  "title": "Bharat AI Innovation 2026",
+  "cat": "AI",
+  "area": "Cuffe Parade",
+  "venue": "World Trade Center Mumbai",
+  "start": "2026-11-20T09:00",
+  "end": null,
+  "endDate": "2026-11-21",
+  "timeNote": "Daily hours not shown",
+  "price": 0,
+  "priceNote": "Free visitor pass by time slot (entry not guaranteed); paid delegate and academic passes from ₹999 + GST",
+  "src": "Organiser site",
+  "also": "foundercal (listing)",
+  "url": "https://bharataiinnovation.com/",
+  "org": "Bharat AI Innovation",
+  "desc": "A two-day AI conference and expo at World Trade Center Mumbai bringing together AI companies, startups, researchers, students and government bodies.",
+  "firstSeen": "2026-11-05"
+ },
  "build-and-fly": {
   "id": "build-and-fly",
   "title": "Build & Fly: hands-on drone workshop",
@@ -299,6 +330,35 @@
   "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies.",
   "firstSeen": "2026-10-28"
  },
+ "e-summit-iitb-2026": {
+  "tags": [
+   "Pitch",
+   "Hackathon",
+   "Investors"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Founder",
+   "Student"
+  ],
+  "access": "open",
+  "id": "e-summit-iitb-2026",
+  "title": "E-Summit 2026 at IIT Bombay",
+  "cat": "Startup",
+  "area": "Powai",
+  "venue": "IIT Bombay",
+  "start": "2026-12-12",
+  "end": null,
+  "endDate": "2026-12-13",
+  "timeNote": "Time not shown",
+  "price": null,
+  "priceNote": "Pricing not shown on listing",
+  "src": "foundercal (listing)",
+  "url": "https://foundercal.com/events/e-summit-2026-iit-bombay",
+  "org": "E-Cell IIT Bombay",
+  "desc": "The 22nd edition of IIT Bombay's student-run entrepreneurship conference, with a pitch competition, a startup expo, the I-Hack hackathon and workshops.",
+  "firstSeen": "2026-11-05"
+ },
  "earthshot-prize-mumbai": {
   "id": "earthshot-prize-mumbai",
   "title": "The Earthshot Prize 2026 Summit and Awards",
@@ -413,6 +473,34 @@
   "also": "StartupGrantsIndia",
   "firstSeen": "2026-09-28"
  },
+ "ethglobal-mumbai-2026": {
+  "tags": [
+   "Hackathon",
+   "Ethereum"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "access": "open",
+  "id": "ethglobal-mumbai-2026",
+  "title": "ETHGlobal Mumbai",
+  "cat": "Tech",
+  "area": "Mumbai",
+  "venue": "Venue not shown on listing",
+  "start": "2026-11-05",
+  "end": null,
+  "endDate": "2026-11-07",
+  "timeNote": "Time not shown",
+  "price": null,
+  "priceNote": "Check organiser page",
+  "src": "foundercal (listing)",
+  "url": "https://ethglobal.com/events/mumbai",
+  "org": "ETHGlobal",
+  "desc": "A multi-day Ethereum hackathon in Mumbai during the Devcon week.",
+  "firstSeen": "2026-11-05"
+ },
  "eva-symposium-3": {
   "id": "eva-symposium-3",
   "title": "EVA Symposium III",
@@ -523,6 +611,35 @@
   "access": "open",
   "desc": "A full-day summit for consumer-brand founders and operators that mixes hands-on AI bootcamps with panels and keynotes. Registration is on D2C Insider's site.",
   "firstSeen": "2026-09-29"
+ },
+ "frontier-intelligence-hackathon": {
+  "tags": [
+   "Hackathon",
+   "AI agents",
+   "Web3"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Student"
+  ],
+  "access": "approval",
+  "id": "frontier-intelligence-hackathon",
+  "title": "Frontier of Intelligence Hackathon",
+  "cat": "AI",
+  "area": "Mumbai",
+  "venue": "Venue not shown on listing",
+  "start": "2026-11-05T09:00",
+  "end": null,
+  "endDate": "2026-11-06",
+  "price": 0,
+  "priceNote": "Free; application-based",
+  "src": "foundercal (listing)",
+  "url": "https://foundercal.com/events/frontier-of-intelligence-hackathon-TuoJYVkPdsFFXSj",
+  "org": "Lakshmi",
+  "desc": "A hackathon on autonomous AI agents and decentralised AI infrastructure with mentors and a cash prize pool.",
+  "firstSeen": "2026-11-05"
  },
  "gamingcon-bharat-2026": {
   "id": "gamingcon-bharat-2026",
@@ -968,6 +1085,34 @@
   "desc": "MongoDB's one-day developer event on taking AI apps from pilot to production and modernising older systems, with technical sessions and time to meet the MongoDB team.",
   "firstSeen": "2026-09-30"
  },
+ "mumbai-ai-saturdays": {
+  "tags": [
+   "Co-working",
+   "Community",
+   "AI agents"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Student"
+  ],
+  "access": "open",
+  "id": "mumbai-ai-saturdays",
+  "title": "MumbAI AI Saturdays: Co-working at BHIVE BKC",
+  "cat": "AI",
+  "area": "BKC",
+  "venue": "BHIVE Adani Inspire BKC",
+  "start": "2026-11-07T18:00",
+  "end": "20:00",
+  "price": 75,
+  "priceNote": "Session is free; attendees buy a ₹75 BHIVE day pass. Repeats every Saturday",
+  "src": "foundercal (listing)",
+  "url": "https://foundercal.com/events/mumbai-ai-saturdays-get-funded-to-co-work-adani-inspire-bkc-bhive-317217993",
+  "org": "MumbAI AI",
+  "desc": "A relaxed Saturday evening co-working session where AI builders and beginners work on their laptops and swap ideas.",
+  "firstSeen": "2026-11-05"
+ },
  "mumbai-meets-ai-06": {
   "id": "mumbai-meets-ai-06",
   "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
@@ -1074,6 +1219,33 @@
   "access": "open",
   "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner.",
   "firstSeen": "2026-09-28"
+ },
+ "singularity-2-thane": {
+  "tags": [
+   "Hackathon",
+   "Students"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Student",
+   "Developer"
+  ],
+  "access": "open",
+  "id": "singularity-2-thane",
+  "title": "Singularity 2.0 Hackathon",
+  "cat": "Tech",
+  "area": "Thane",
+  "venue": "KC College of Engineering and Management Studies and Research, Thane",
+  "start": "2026-11-20",
+  "end": null,
+  "timeNote": "Time not shown",
+  "price": 0,
+  "priceNote": "Free entry; register on Unstop",
+  "src": "foundercal (listing)",
+  "url": "https://foundercal.com/events/singularity-2-0-2026-11-19",
+  "org": "KC College of Engineering and Management Studies and Research",
+  "desc": "An in-person college hackathon in Thane with registration handled through Unstop.",
+  "firstSeen": "2026-11-05"
  },
  "startuplive-mumbai-26": {
   "id": "startuplive-mumbai-26",
@@ -1213,6 +1385,34 @@
   "access": "approval",
   "desc": "An evening for founders building consumer brands to meet portfolio founders and investors from Titan Capital and V3 Ventures, co-hosted with Kotak Mahindra. Places are limited and need approval.",
   "firstSeen": "2026-09-28"
+ },
+ "touch-grass-buildathon": {
+  "tags": [
+   "Hackathon",
+   "Outdoor",
+   "DevFest"
+  ],
+  "fmt": "Offline",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "access": "open",
+  "id": "touch-grass-buildathon",
+  "title": "Pre-DevFest: The \"Touch Grass\" Buildathon",
+  "cat": "Tech",
+  "area": "Mumbai",
+  "venue": "Outdoor park, Mumbai (exact park not named)",
+  "start": "2026-11-21T09:00",
+  "end": null,
+  "price": 0,
+  "priceNote": "Free",
+  "src": "foundercal (listing)",
+  "also": "Luma",
+  "url": "https://foundercal.com/events/pre-devfest-the-touch-grass-buildathon-FRwmEApqD8w6r4m",
+  "org": "Devfest Mumbai",
+  "desc": "A two-hour outdoor build session where participants prototype and demo a working MVP in a park, ahead of DevFest Mumbai.",
+  "firstSeen": "2026-11-05"
  },
  "unchained-summit-india": {
   "id": "unchained-summit-india",

@@ -1,6 +1,46 @@
 {
- "REFRESHED": "2026-11-03T22:00:25+05:30",
+ "REFRESHED": "2026-11-04T21:52:33+05:30",
  "SIGNALS": [
+  {
+   "id": "2117874543893074141",
+   "handle": "appleinsider",
+   "name": "AppleInsider",
+   "url": "https://x.com/appleinsider/status/2117874543893074141",
+   "posted": "2026-11-04T12:30:14+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "AppleInsider shares a hands-on look at the iOS 27.3 beta, covering Safari, Siri AI and vertical tabs."
+  },
+  {
+   "id": "2117807808338923772",
+   "handle": "heyshrutimishra",
+   "name": "Shruti",
+   "url": "https://x.com/heyshrutimishra/status/2117807808338923772",
+   "posted": "2026-11-04T08:05:03+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Sarvam released an open model called Prism, built on its 105B model, that answers fixed-option questions such as approve or reject in about 44 milliseconds."
+  },
+  {
+   "id": "2117710942826123294",
+   "handle": "AnthropicAI",
+   "name": "Anthropic",
+   "url": "https://x.com/AnthropicAI/status/2117710942826123294",
+   "posted": "2026-11-04T01:40:08+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "Anthropic introduces FlashProve, research on provable inference that lets developers check whether a response really came from a given AI model."
+  },
+  {
+   "id": "2117680635561312732",
+   "handle": "ClaudeDevs",
+   "name": "ClaudeDevs",
+   "url": "https://x.com/ClaudeDevs/status/2117680635561312732",
+   "posted": "2026-11-03T23:39:42+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Users can now auto-connect plugins when they log in to Claude, for MCP servers that accept Claude as a trusted issuer, so no re-authorizing is needed."
+  },
   {
    "id": "2117425418454384677",
    "handle": "MTSlive",
@@ -20,16 +60,6 @@
    "topic": "AI",
    "kind": "Report",
    "summary": "At ADIPEC in Abu Dhabi, Sam Altman said the internal model behind OpenAI's Navier-Stokes result is the next GPT, due to be released soon."
-  },
-  {
-   "id": "2117375234000990413",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2117375234000990413",
-   "posted": "2026-11-03T03:26:09+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Claude is launching a report card tool that gives companies a closer look at their AI costs and flags inefficiencies in how they use it."
   },
   {
    "id": "2117323044213625181",
@@ -52,24 +82,14 @@
    "summary": "Posts that Anthropic says its internal estimates suggest it may soon reach its threshold for dramatically accelerated, AI-driven progress in AI development."
   },
   {
-   "id": "2117105228382150859",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2117105228382150859",
-   "posted": "2026-11-02T09:33:15+05:30",
-   "topic": "Research",
+   "id": "2117279303247523852",
+   "handle": "wallstengine",
+   "name": "Wall St Engine",
+   "url": "https://x.com/wallstengine/status/2117279303247523852",
+   "posted": "2026-11-02T21:04:57+05:30",
+   "topic": "Policy",
    "kind": "Report",
-   "summary": "HalachaBench is a new test that puts AI models through the Israeli Chief Rabbinate's rabbinical ordination exams, which cover religious law topics."
-  },
-  {
-   "id": "2115401428529250543",
-   "handle": "Inc42",
-   "name": "Inc42",
-   "url": "https://x.com/Inc42/status/2115401428529250543",
-   "posted": "2026-10-28T16:42:57+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Reports Sarvam AI is in talks to raise about $300 million from Cognizant and other investors at a valuation of roughly $3.5 billion to $4 billion."
+   "summary": "OpenAI announced a Grid Protectors program to cut power use at future AI data centers during grid stress; a planned Georgia campus needs 3.2GW."
   }
  ]
 }
