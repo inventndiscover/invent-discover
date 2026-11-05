@@ -1,0 +1,2098 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Green Diwali</title>
+<meta name="description" content="Light diyas, a phuljhadi, an anar and a chakri in your own room, and draw a rangoli on your floor. No smoke, no burns, no frightened pets. AR on Android, camera view on iPhone, 3D on a laptop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Neon site colours + festive accents ---------- */
+  :root{
+    --bg:#05060A; --violet:#9b6bff; --blue:#4cc9ff; --pink:#ff4fd8;
+    --text:#ecebff; --muted:#8d8aab; --ok:#5dffb0; --no:#ff6b8a;
+    --marigold:#ffab1a; --saffron:#ff7a1a; --leaf:#3fbf5f;
+    --deva:'Tiro Devanagari Hindi', Geist, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font-family:Geist,system-ui,-apple-system,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+
+  /* Layers, bottom to top: camera video → 3D canvas → HUD → home panel */
+  #cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}
+  #stage{position:fixed;inset:0;z-index:1}
+  #stage canvas{display:block;touch-action:none}
+
+  /* ---------- Toran: a string of marigolds and mango leaves (drawn in SVG by script) ---------- */
+  .toran{position:relative;height:80px;pointer-events:none}
+  .toran svg{position:absolute;left:0;top:0;display:block;overflow:visible;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(155,107,255,.3))}
+
+  /* ---------- Home panel ---------- */
+  #home{position:fixed;inset:0;z-index:3;display:flex;align-items:flex-start;justify-content:center;padding:16px;
+    overflow-y:auto;background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 12%,rgba(155,107,255,.18),transparent 45%),
+      radial-gradient(circle at 85% 88%,rgba(255,79,216,.12),transparent 45%),
+      radial-gradient(circle at 50% 0%,rgba(255,171,26,.10),transparent 40%),
+      linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px);
+    background-size:auto,auto,auto,32px 32px,32px 32px}
+  .card{width:100%;max-width:440px;margin:auto 0;border:1px solid rgba(155,107,255,.35);border-radius:18px;padding:0 20px 22px;
+    background:rgba(10,11,20,.88);box-shadow:0 0 40px rgba(155,107,255,.18);overflow:hidden}
+  .card .toran{margin:0 -20px 8px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+  h1{margin:6px 0 0;font-size:30px;font-weight:700;text-shadow:0 0 18px rgba(155,107,255,.6)}
+  .deva-title{font-family:var(--deva);font-size:20px;color:var(--marigold);margin:2px 0 8px;text-shadow:0 0 12px rgba(255,171,26,.45)}
+  .sub{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5}
+  .label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .seg{display:flex;gap:6px;margin:0 0 16px}
+  .seg button{flex:1;padding:9px 6px;border-radius:10px;border:1px solid rgba(155,107,255,.4);background:transparent;
+    color:var(--text);font:500 13px Geist,system-ui,sans-serif;cursor:pointer}
+  .seg button small{display:block;font-size:10.5px;color:var(--muted);font-weight:400;margin-top:2px}
+  .seg button.on{border-color:var(--marigold);background:rgba(255,171,26,.12);box-shadow:0 0 14px rgba(255,171,26,.35)}
+  .checks{list-style:none;margin:0 0 16px;padding:0;font-size:13.5px}
+  .checks li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .yes{color:var(--ok)} .noo{color:var(--no)} .wait{color:var(--muted)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:0 0 10px;padding:13px;border-radius:12px;
+    font:500 16px Geist,system-ui,sans-serif;color:var(--text);background:transparent;border:1px solid rgba(155,107,255,.5);cursor:pointer;text-decoration:none}
+  .btn.main{background:linear-gradient(90deg,rgba(155,107,255,.35),rgba(255,79,216,.22));
+    border-color:var(--violet);box-shadow:0 0 22px rgba(155,107,255,.45)}
+  .btn[hidden]{display:none}
+  .btn svg{width:26px;height:22px;flex:none}
+  .note{margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.55}
+  .safety{margin:14px 0 0;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.5;
+    border:1px solid rgba(255,171,26,.5);background:rgba(255,171,26,.07);color:#ffe2b0}
+  #err{color:var(--no);font-size:13px;min-height:1em;margin:6px 0 0}
+  #qrbox{margin:14px 0 0;display:flex;gap:14px;align-items:center}
+  #qrbox[hidden]{display:none}
+  #qr{width:110px;height:110px;border-radius:10px;border:2px solid var(--violet);box-shadow:0 0 18px rgba(155,107,255,.5);image-rendering:pixelated}
+  #qrbox p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+  #qrbox b{color:var(--text)}
+  #credit{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:var(--muted);line-height:1.6}
+  #credit a{color:var(--blue);text-decoration:none}
+  /* After Exit: a short festive "thank you" */
+  #finale{display:none;text-align:center;padding:6px 0 10px}
+  #finale .big{font-family:var(--deva);font-size:34px;color:var(--marigold);text-shadow:0 0 18px rgba(255,171,26,.6)}
+  #finale .latin{font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:#ffe2b0;margin-top:2px;text-shadow:0 0 12px rgba(255,79,216,.45)}
+  #finale p{margin:6px 0 14px;color:var(--muted);font-size:14px;line-height:1.5}
+  .after #finale{display:block}
+  .after #start{display:none}
+
+  /* ---------- HUD (shown while viewing; also the AR overlay) ---------- */
+  #hud{position:fixed;inset:0;z-index:2;display:none;pointer-events:none}
+  #hud .toran{position:absolute;top:env(safe-area-inset-top);left:0;right:0}
+  #topbar{position:absolute;top:calc(74px + env(safe-area-inset-top));left:10px;right:10px;display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+  #hud::before{content:'';position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 70px rgba(155,107,255,.16), inset 0 0 2px rgba(255,79,216,.35)}
+  .pill{pointer-events:auto;white-space:nowrap;box-shadow:0 0 10px rgba(155,107,255,.28);padding:8px 12px;border-radius:999px;font:500 13.5px Geist,system-ui,sans-serif;
+    color:var(--text);background:rgba(5,6,10,.75);border:1px solid rgba(155,107,255,.5);cursor:pointer}
+  .pill[hidden]{display:none}
+  #exit{border-color:var(--pink);box-shadow:0 0 12px rgba(255,79,216,.4)}
+  /* Clear all: clearly visible, so a rangoli you don't like is one tap away */
+  #clear{border:1.5px solid #ff5a7a;background:rgba(255,60,100,.22);color:#fff;font-weight:700;box-shadow:0 0 14px rgba(255,79,120,.55)}
+  #undo{border-color:var(--blue);box-shadow:0 0 12px rgba(76,201,255,.4)}
+  #stamp{position:absolute;top:calc(116px + env(safe-area-inset-top));left:12px;font-size:10.5px;color:#c9c6e6;padding:4px 9px;border-radius:999px;background:rgba(5,6,10,.7);
+    border:1px solid rgba(155,107,255,.3);pointer-events:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+  #fps{position:absolute;top:calc(142px + env(safe-area-inset-top));left:12px;font:11px ui-monospace,monospace;color:var(--ok);
+    background:rgba(5,6,10,.7);padding:3px 7px;border-radius:6px;display:none}
+  #bottom{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
+  #hint{margin:0 16px;text-align:center;font-size:14.5px;line-height:1.4;padding:10px 14px;border-radius:12px;
+    background:rgba(5,6,10,.72);border:1px solid rgba(155,107,255,.45);align-self:center;max-width:460px;box-shadow:0 0 16px rgba(155,107,255,.22)}
+  #hint:empty{display:none}
+  #fallback{align-self:center;border-color:var(--blue);box-shadow:0 0 12px rgba(76,201,255,.45)}
+  /* The tray of items: scrolls sideways on a phone */
+  #tray{pointer-events:auto;display:flex;gap:8px;overflow-x:auto;padding:4px 16px 6px;scrollbar-width:none;scroll-snap-type:x proximity}
+  #tray::-webkit-scrollbar{display:none}
+  .chip{flex:none;scroll-snap-align:center;min-width:76px;padding:8px 10px 7px;border-radius:14px;text-align:center;cursor:pointer;
+    background:rgba(5,6,10,.78);border:1px solid rgba(155,107,255,.45);color:var(--text);font-family:Geist,system-ui,sans-serif;box-shadow:0 0 10px rgba(155,107,255,.22)}
+  .chip .dv{display:block;font-family:var(--deva);font-size:19px;line-height:1.15;color:#ffe2b0;text-shadow:0 0 8px rgba(255,171,26,.35)}
+  .chip .en{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+  .chip.on{border-color:var(--marigold);background:rgba(40,22,4,.85);box-shadow:0 0 16px rgba(255,171,26,.55)}
+  .chip.on .en{color:var(--marigold)}
+  .chip.act{border-color:var(--pink);box-shadow:0 0 12px rgba(255,79,216,.35)}
+</style>
+</head>
+<body>
+
+<video id="cam" playsinline muted></video>
+<div id="stage"></div>
+
+<div id="hud">
+  <div class="toran"></div>
+  <div id="topbar">
+    <button id="sound" class="pill">🔊 Normal</button>
+    <button id="undo" class="pill">↶ Undo</button>
+    <button id="clear" class="pill">✕ Clear all</button>
+    <button id="exit" class="pill">Exit</button>
+  </div>
+  <div id="stamp" title="Tap to show the frame rate"></div>
+  <div id="fps"></div>
+  <div id="bottom">
+    <button id="fallback" class="pill" hidden>Use camera view instead</button>
+    <div id="hint"></div>
+    <div id="tray"></div>
+  </div>
+</div>
+
+<div id="home">
+  <div class="card">
+    <div class="toran"></div>
+    <div id="finale">
+      <div class="big">शुभ दीपावली</div>
+      <div class="latin">Shubh Dipawali</div>
+      <p>A green one! Thank you for lighting up without smoke, burns or fear for anyone's pets.</p>
+      <button class="btn main" id="again">Light up again</button>
+      <a class="btn" href="../../">Back to Invent &amp; Discover</a>
+    </div>
+    <div id="start">
+      <div class="eyebrow">Invent · AR · Civic</div>
+      <h1>Green Diwali</h1>
+      <div class="deva-title">हरित दीपावली</div>
+      <p class="sub">Draw a rangoli, light diyas, wave a phuljhadi and set off an anar and a chakri, right on your own floor. No smoke, no burns, no frightened pets.</p>
+
+      <div class="label">Sound</div>
+      <div class="seg" id="modes">
+        <button data-m="normal" class="on">Normal<small>with bangs</small></button>
+        <button data-m="quiet">Quiet<small>soft &amp; low</small></button>
+        <button data-m="pet">Pet-safe<small>no bangs</small></button>
+      </div>
+
+      <ul class="checks">
+        <li><span>Secure page (https)</span><span id="c-secure">…</span></li>
+        <li><span>Real AR (place on your floor)</span><span id="c-ar">…</span></li>
+        <li><span>Camera access</span><span id="c-cam">…</span></li>
+      </ul>
+
+      <button class="btn" id="b-ar" hidden><span class="ico"></span>Light up your room</button>
+      <button class="btn" id="b-cam" hidden><span class="ico"></span>Open camera view</button>
+      <button class="btn" id="b-3d"><span class="ico"></span>View in 3D</button>
+      <p id="err"></p>
+    </div>
+    <p class="note"><b>Notice before you begin.</b> Everything here is virtual: nothing burns and nothing is real. It has bright, flashing light and loud bangs (choose Quiet or Pet-safe above, and you can switch any time). Use it at home with some space around you, standing still, not while walking. On iPhone, turn the silent switch off for sound.<br><span id="stamp-home"></span></p>
+    <div class="safety">🪔 <b>Real crackers</b> burn hands, frighten pets, babies and the elderly, and fill the air with smoke. This Diwali, light these instead.</div>
+    <div id="qrbox" hidden>
+      <canvas id="qr"></canvas>
+      <p><b>On a computer?</b><br>Scan with your phone to light diyas on your own floor.</p>
+    </div>
+    <p id="credit">
+      Rocket model based on <a href="https://sketchfab.com/3d-models/fire-crackers-8bdb2b1a58b04a81ab03838eb44e8bee" target="_blank" rel="noopener">"Fire Crackers"</a> by <a href="https://sketchfab.com/Ankitimation" target="_blank" rel="noopener">Ankitimation</a>; brass samai based on <a href="https://sketchfab.com/3d-models/diya-divli-lamp-c1b7a1dc96194b73b9c9af5ac0015add" target="_blank" rel="noopener">"Diya | Divli | Lamp"</a> by <a href="https://sketchfab.com/verlekarshaunak" target="_blank" rel="noopener">ShonkV</a>; both <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, reduced in size for phones.
+      Cracker sounds from <a href="https://mixkit.co/free-sound-effects/fireworks/" target="_blank" rel="noopener">Mixkit</a> and <a href="https://pixabay.com/sound-effects/" target="_blank" rel="noopener">Pixabay</a> (tanweraman, freesound_community), trimmed. The diyas, anar, chakri, phuljhadi, ladi and rangoli are built in code, and the fizz, hiss and whirr are made live in the page.
+      Music by <a href="https://pixabay.com/users/sigmamusicart-36860929/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=627508" target="_blank" rel="noopener">Mikhail Smusev</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=627508" target="_blank" rel="noopener">Pixabay</a>.
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const BUILD = 'Green Diwali · v1.0';
+const $ = (id) => document.getElementById(id);
+$('stamp').textContent = BUILD;
+$('stamp-home').textContent = BUILD;
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp = THREE.MathUtils.clamp;
+
+/* =====================================================================
+   PART 0 — Little festive drawings for the UI (toran + diya icon)
+   ===================================================================== */
+/* The toran is drawn fresh to fit the screen width (like toran b in your
+   reference): a yellow crochet band with green diamonds in a white lattice,
+   two rows of pearl swags, red-and-gold beads, green pom-poms and marigolds
+   with mango leaves — and शुभ hanging on the left end, लाभ on the right.
+   A thin neon cord along the top ties it to the site's theme.              */
+function buildToran(el, id) {
+  const W = Math.round(Math.max(280, el.clientWidth || innerWidth)), H = 80;
+  const end = 48;                                              // room for the शुभ / लाभ hangings
+  const n = Math.max(3, Math.round((W - 2 * end) / 60));       // how many swags fit
+  const sw = (W - 2 * end) / n;
+  const u = (k) => `url(#${id}${k})`;
+  let o = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <pattern id="${id}kn" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#eaa800"/><circle cx="3" cy="3" r="2.3" fill="#ffc21f"/><circle cx="2.3" cy="2.3" r=".9" fill="#ffe17a"/></pattern>
+   <radialGradient id="${id}pom" cx=".38" cy=".33" r=".72"><stop offset="0" stop-color="#4caf5c"/><stop offset=".6" stop-color="#1f6b2e"/><stop offset="1" stop-color="#0d3416"/></radialGradient>
+   <radialGradient id="${id}prl" cx=".35" cy=".32" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#f1e7d2"/><stop offset="1" stop-color="#b9a681"/></radialGradient>
+   <radialGradient id="${id}med" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#e5402f"/><stop offset="1" stop-color="#8a120c"/></radialGradient>
+   <linearGradient id="${id}neon" x1="0" x2="1"><stop offset="0" stop-color="#9b6bff"/><stop offset=".5" stop-color="#ff4fd8"/><stop offset="1" stop-color="#4cc9ff"/></linearGradient>
+  </defs>`;
+  o += `<rect x="0" y="0" width="${W}" height="2" fill="${u('neon')}"/>`;            // neon cord
+  o += `<rect x="0" y="2" width="${W}" height="19" fill="${u('kn')}"/>`;            // crochet band
+  for (let x = 0; x < W + 14; x += 14) o += `<path d="M${x} 5.5L${x + 6} 11.5L${x} 17.5L${x - 6} 11.5Z" fill="#1c6a2b"/>`;
+  let z1 = 'M-7 5.5', z2 = 'M-7 17.5';
+  for (let x = -7; x < W + 14; x += 14) { z1 += `L${x + 7} 17.5L${x + 14} 5.5`; z2 += `L${x + 7} 5.5L${x + 14} 17.5`; }
+  o += `<path d="${z1}" stroke="#fffaf0" stroke-width="1.5" fill="none"/><path d="${z2}" stroke="#fffaf0" stroke-width="1.5" fill="none"/>`;
+  for (let x = 0; x < W; x += 8) o += `<circle cx="${x + 4}" cy="21" r="4" fill="${u('kn')}"/>`;   // scalloped edge
+  const pts = []; for (let i = 0; i <= n; i++) pts.push(end + i * sw);
+  const pearl = (x, y, r) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="${u('prl')}"/>`;
+  for (let i = 0; i < n; i++) {                                 // two rows of pearl swags
+    const a = pts[i], b = pts[i + 1];
+    [[13, 2.0], [24, 2.3]].forEach(([dep, r]) => {
+      const m = Math.round(sw * 1.18 / (r * 2.1));
+      for (let k = 1; k < m; k++) { const t = k / m; o += pearl(a + (b - a) * t, 25 + dep * 4 * t * (1 - t), r); }
+    });
+  }
+  pts.forEach((x, i) => {                                       // beads, leaves and a pom-pom or marigold
+    let y = 25;
+    ['#c8201a', '#f2b400', '#fffaf0', '#c8201a'].forEach((c) => { o += `<circle cx="${x.toFixed(1)}" cy="${y}" r="2.1" fill="${c}"/>`; y += 4.2; });
+    const py = y + 7, X = x.toFixed(1);
+    o += `<path d="M${X} ${py - 3}q-12 -3 -16 7q11 1 16 -7z" fill="#2f8f3e"/><path d="M${X} ${py - 3}q12 -3 16 7q-11 1 -16 -7z" fill="#278035"/>`;
+    if (i % 2 === 0) {
+      o += `<circle cx="${X}" cy="${py}" r="7.6" fill="${u('pom')}"/>`;
+      for (let k = 0; k < 12; k++) { const a = k * 0.5236; o += `<line x1="${(x + Math.cos(a) * 5.5).toFixed(1)}" y1="${(py + Math.sin(a) * 5.5).toFixed(1)}" x2="${(x + Math.cos(a) * 8.4).toFixed(1)}" y2="${(py + Math.sin(a) * 8.4).toFixed(1)}" stroke="#2a8a3a" stroke-width="1.3" stroke-linecap="round"/>`; }
+    } else {
+      o += `<circle cx="${X}" cy="${py}" r="7.4" fill="#ff7410"/>`;
+      for (let k = 0; k < 10; k++) { const a = k * 0.628; o += `<circle cx="${(x + Math.cos(a) * 5).toFixed(1)}" cy="${(py + Math.sin(a) * 5).toFixed(1)}" r="2.7" fill="#ffab1a"/>`; }
+      o += `<circle cx="${X}" cy="${py}" r="2.4" fill="#c25a00"/>`;
+    }
+  });
+  [[20, 'शुभ'], [W - 20, 'लाभ']].forEach(([x, word]) => {      // शुभ left, लाभ right
+    for (let k = 0; k < 4; k++) o += pearl(x, 27 + k * 4.6, 2.2);
+    o += `<circle cx="${x}" cy="56" r="15.5" fill="#f2b400"/><circle cx="${x}" cy="56" r="13.3" fill="${u('med')}"/>`;
+    o += `<text x="${x}" y="60.5" text-anchor="middle" font-family="'Tiro Devanagari Hindi', serif" font-size="13.5" fill="#ffe08a">${word}</text>`;
+    o += `<circle cx="${x}" cy="73.5" r="2.4" fill="#c8201a"/><circle cx="${x}" cy="78" r="2.2" fill="#1c6a2b"/>`;
+  });
+  el.innerHTML = o + '</svg>';
+}
+function drawTorans() { document.querySelectorAll('.toran').forEach((el, i) => buildToran(el, 't' + i)); }
+drawTorans();
+window.addEventListener('resize', drawTorans);
+if (document.fonts) document.fonts.ready.then(drawTorans);
+const diyaIcon = `<svg viewBox="0 0 26 22"><path d="M13 1.5c2.2 3 2.6 5.2 0 7.6-2.6-2.4-2.2-4.6 0-7.6z" fill="#ffd23a"/>
+<path d="M13 4.5c.9 1.4 1 2.6 0 3.6-1-1-.9-2.2 0-3.6z" fill="#fff6d0"/>
+<path d="M2 11h22c-.6 5.6-5.4 9-11 9S2.6 16.6 2 11z" fill="#d9692b"/><path d="M2 11h22l3-1.6-2.5 3.2" fill="#b8521f"/></svg>`;
+document.querySelectorAll('.btn .ico').forEach((el) => el.innerHTML = diyaIcon);
+
+/* =====================================================================
+   PART 1 — What can this device do?
+   ===================================================================== */
+async function detect() {
+  const secure = window.isSecureContext;
+  let ar = false;
+  if ('xr' in navigator) { try { ar = await navigator.xr.isSessionSupported('immersive-ar'); } catch (e) { ar = false; } }
+  const cam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  return { secure, ar, cam };
+}
+function mark(id, ok) { $(id).textContent = ok ? 'Yes' : 'No'; $(id).className = ok ? 'yes' : 'noo'; }
+const caps = await detect();
+mark('c-secure', caps.secure); mark('c-ar', caps.ar); mark('c-cam', caps.cam && caps.secure);
+if (caps.ar) { $('b-ar').hidden = false; $('b-ar').classList.add('main'); }
+if (caps.cam && caps.secure) { $('b-cam').hidden = false; if (!caps.ar) $('b-cam').classList.add('main'); }
+if (!caps.ar && !(caps.cam && caps.secure)) $('b-3d').classList.add('main');
+
+/* =====================================================================
+   PART 2 — The 3D scene
+   ===================================================================== */
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   // makes brass and clay look natural
+renderer.xr.enabled = true;
+$('stage').appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.01, 220);  // far = 220 m so sky bursts fit
+camera.rotation.order = 'YXZ';
+// A soft "room" reflection so the brass samai shines (computed once, at start)
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+
+// Base light for the evening: dim warm sky + dim floor bounce, plus one weak "moon"
+scene.add(new THREE.HemisphereLight(0xfff0dd, 0x2a1a10, 0.7));
+const moon = new THREE.DirectionalLight(0xcfd8ff, 0.35); moon.position.set(-2, 4, 1); scene.add(moon);
+// ONE real moving light. Every frame it jumps to whatever is burning brightest,
+// so a lit anar really lights up the diyas and the rangoli around it.
+const fireLight = new THREE.PointLight(0xff9a3c, 0, 5, 2); scene.add(fireLight);
+
+const world = new THREE.Group(); scene.add(world);   // everything you place goes in here
+let floorY = 0;                                      // height of the floor (AR finds it; other modes use 0)
+
+// The 3D view (laptop) gets a dark terrace floor so the light pools show
+const terrace = new THREE.Mesh(new THREE.CircleGeometry(7, 64),
+  new THREE.MeshStandardMaterial({ color: 0x2a221c, roughness: 0.92 }));
+terrace.rotation.x = -Math.PI / 2; terrace.visible = false; scene.add(terrace);
+
+// Floor ring that shows where a tap will place things (AR and camera view)
+const reticle = new THREE.Group();
+{
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.07, 0.085, 40).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xffab1a, transparent: true, opacity: 0.9, toneMapped: false }));
+  const dot = new THREE.Mesh(new THREE.CircleGeometry(0.012, 16).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xff4fd8, toneMapped: false }));
+  reticle.add(ring, dot);
+}
+reticle.visible = false; scene.add(reticle);
+
+/* ---------- Small textures drawn with code ---------- */
+function canvasTex(w, h, draw, repeat) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+  return t;
+}
+// A soft round glow: bright middle, fading to nothing. Used for flames, sparks and flashes.
+const glowTex = canvasTex(128, 128, (g, w) => {
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.18, 'rgba(255,255,255,.55)');
+  r.addColorStop(0.45, 'rgba(255,255,255,.14)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, w, w);
+});
+glowTex.colorSpace = THREE.NoColorSpace;
+// The pool of light a flame throws on the floor: falls off like real light (1 / distance²)
+const poolTex = canvasTex(128, 128, (g, w) => {
+  const img = g.createImageData(w, w);
+  for (let y = 0; y < w; y++) for (let x = 0; x < w; x++) {
+    const d = Math.hypot(x - 64, y - 64) / 64;
+    const v = d >= 1 ? 0 : (1 / (1 + 14 * d * d) - 1 / 15) / (1 - 1 / 15);
+    const i = (y * w + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 255; img.data[i + 3] = 255 * v;
+  }
+  g.putImageData(img, 0, 0);
+});
+poolTex.colorSpace = THREE.NoColorSpace;
+
+function glowSprite(color, size, opacity = 1) {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity,
+    blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+  s.scale.setScalar(size); return s;
+}
+function lightPool(color, radius) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(radius * 2, radius * 2).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ map: poolTex, color, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+  m.position.y = 0.002; m.renderOrder = 2; return m;
+}
+
+/* =====================================================================
+   PART 3 — SPARKS: one particle engine for every cracker
+   =====================================================================
+   Each spark is just numbers: where it is, how fast it moves, how old it is.
+   Every frame:  speed += gravity × time,  speed slows by "drag",  position += speed × time.
+   Its colour follows its "temperature": white-hot → yellow → orange → red → gone.
+   Each spark is drawn twice: a soft dot (the head) and a thin line behind it
+   (the streak a camera sees when something hot moves fast).                */
+const MAXP = 6000;
+const P = {
+  pos: new Float32Array(MAXP * 3), vel: new Float32Array(MAXP * 3), rgb: new Float32Array(MAXP * 3),
+  age: new Float32Array(MAXP), life: new Float32Array(MAXP), size: new Float32Array(MAXP),
+  drag: new Float32Array(MAXP), grav: new Float32Array(MAXP), streak: new Float32Array(MAXP),
+  floor: new Float32Array(MAXP), pal: new Uint8Array(MAXP), split: new Uint8Array(MAXP), alive: new Uint8Array(MAXP),
+};
+let pCursor = 0, quality = 1;
+const PAL = { GOLD: 0, SILVER: 1, COLOUR: 2, EMBER: 3, STROBE: 4 };
+
+// Points (heads). The shader sizes each dot by its real size in metres and distance.
+const headGeo = new THREE.BufferGeometry();
+const headPos = new Float32Array(MAXP * 3), headCol = new Float32Array(MAXP * 3), headSize = new Float32Array(MAXP);
+headGeo.setAttribute('position', new THREE.BufferAttribute(headPos, 3).setUsage(THREE.DynamicDrawUsage));
+headGeo.setAttribute('color', new THREE.BufferAttribute(headCol, 3).setUsage(THREE.DynamicDrawUsage));
+headGeo.setAttribute('size', new THREE.BufferAttribute(headSize, 1).setUsage(THREE.DynamicDrawUsage));
+const headMat = new THREE.ShaderMaterial({
+  uniforms: { uMap: { value: glowTex }, uH: { value: 800 } },
+  vertexShader: `attribute float size; attribute vec3 color; varying vec3 vC; uniform float uH;
+    void main(){ vC = color; vec4 mv = modelViewMatrix * vec4(position,1.0);
+      gl_PointSize = size * projectionMatrix[1][1] * uH * 0.5 / max(-mv.z, 0.02);
+      gl_Position = projectionMatrix * mv;
+      if (size <= 0.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }`,   // dead spark: park it off-screen
+  fragmentShader: `uniform sampler2D uMap; varying vec3 vC;
+    void main(){ float a = texture2D(uMap, gl_PointCoord).r; float l = max(vC.r, max(vC.g, vC.b));
+      gl_FragColor = vec4(vC * a / max(l, 0.001), l * a); }`,   // alpha follows brightness: dim sparks never darken the camera
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+});
+const heads = new THREE.Points(headGeo, headMat); heads.frustumCulled = false; heads.renderOrder = 5;
+scene.add(heads);
+// Lines (streaks): two points per spark, the head and a point a moment behind it
+const tailGeo = new THREE.BufferGeometry();
+const tailPos = new Float32Array(MAXP * 6), tailCol = new Float32Array(MAXP * 6);
+tailGeo.setAttribute('position', new THREE.BufferAttribute(tailPos, 3).setUsage(THREE.DynamicDrawUsage));
+tailGeo.setAttribute('color', new THREE.BufferAttribute(tailCol, 3).setUsage(THREE.DynamicDrawUsage));
+// "Light-only" material for streaks and the phuljhadi ribbon: it adds light and,
+// unlike a normal material, never paints dark lines over the camera picture.
+const lightOnlyMat = (side = THREE.FrontSide) => new THREE.ShaderMaterial({
+  vertexShader: `attribute vec3 color; varying vec3 vC; void main(){ vC = color; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `varying vec3 vC; void main(){ float l = max(vC.r, max(vC.g, vC.b)); gl_FragColor = vec4(vC / max(l, 0.001), l); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side });
+const tails = new THREE.LineSegments(tailGeo, lightOnlyMat());
+tails.frustumCulled = false; tails.renderOrder = 5; scene.add(tails);
+
+/* emit(): start one spark. o = options (all optional):
+   life (s), size (m), drag, grav (1 = normal gravity), streak (s), pal, rgb, split, floor */
+function emit(x, y, z, vx, vy, vz, o = {}) {
+  const i = pCursor; pCursor = (pCursor + 1) % MAXP;   // oldest slot gets reused
+  const k = i * 3;
+  P.pos[k] = x; P.pos[k + 1] = y; P.pos[k + 2] = z;
+  P.vel[k] = vx; P.vel[k + 1] = vy; P.vel[k + 2] = vz;
+  P.age[i] = 0; P.life[i] = o.life ?? 1; P.size[i] = o.size ?? 0.006;
+  P.drag[i] = o.drag ?? 0.5; P.grav[i] = o.grav ?? 1; P.streak[i] = o.streak ?? 0.03;
+  P.pal[i] = o.pal ?? PAL.GOLD; P.split[i] = o.split ?? 0; P.floor[i] = o.floor ?? floorY;
+  const c = o.rgb || [1, 0.7, 0.3]; P.rgb[k] = c[0]; P.rgb[k + 1] = c[1]; P.rgb[k + 2] = c[2];
+  P.alive[i] = 1;
+}
+// a random direction on a sphere, scaled by speed
+const _d = new THREE.Vector3();
+function randDir(out = _d) { const u = rand(-1, 1), th = rand(0, Math.PI * 2), s = Math.sqrt(1 - u * u);
+  return out.set(s * Math.cos(th), u, s * Math.sin(th)); }
+
+// colour of a spark at age fraction t (0 = just born, 1 = dying)
+function sparkColour(i, t, out) {
+  let r, g, b;
+  const pal = P.pal[i];
+  if (pal === PAL.SILVER) { const f = 1 - t; r = 1.0 * f + 0.2 * t; g = 0.97 * f + 0.15 * t; b = 0.92 * f + 0.25 * t; }
+  else if (pal === PAL.COLOUR) {  // firework star: white flash, then its colour, then dim
+    const k = i * 3, w = Math.max(0, 1 - t * 6);
+    r = P.rgb[k] * (1 - w) + w; g = P.rgb[k + 1] * (1 - w) + w; b = P.rgb[k + 2] * (1 - w) + w;
+  } else if (pal === PAL.EMBER) { r = 1.0; g = 0.35 - 0.25 * t; b = 0.05; }
+  else if (pal === PAL.STROBE) {  // glitter that blinks on and off
+    const on = ((P.age[i] * 15 + i * 0.37) | 0) % 2 ? 0.06 : 1; r = on; g = on * 0.97; b = on * 0.9; }
+  else {  // GOLD: hot white-yellow → orange → deep red
+    if (t < 0.3) { const f = t / 0.3; r = 1; g = 0.95 - 0.25 * f; b = 0.75 - 0.5 * f; }
+    else if (t < 0.7) { const f = (t - 0.3) / 0.4; r = 1; g = 0.7 - 0.38 * f; b = 0.25 - 0.19 * f; }
+    else { const f = (t - 0.7) / 0.3; r = 1 - 0.55 * f; g = 0.32 - 0.24 * f; b = 0.06 - 0.05 * f; }
+  }
+  const fade = 1 - t * t * t;   // stays bright, then drops off at the end
+  out[0] = r * fade; out[1] = g * fade; out[2] = b * fade;
+}
+const _c = [0, 0, 0];
+let liveSparks = 0;
+function updateSparks(dt) {
+  liveSparks = 0;
+  for (let i = 0; i < MAXP; i++) {
+    const k = i * 3, k2 = i * 6;
+    if (!P.alive[i]) { headSize[i] = 0; headCol[k] = headCol[k + 1] = headCol[k + 2] = 0; tailPos[k2] = tailPos[k2 + 3]; tailPos[k2 + 1] = tailPos[k2 + 4]; tailPos[k2 + 2] = tailPos[k2 + 5];
+      tailCol[k2] = tailCol[k2 + 1] = tailCol[k2 + 2] = tailCol[k2 + 3] = tailCol[k2 + 4] = tailCol[k2 + 5] = 0; continue; }
+    P.age[i] += dt;
+    const t = P.age[i] / P.life[i];
+    if (t >= 1) { P.alive[i] = 0; headSize[i] = 0; headCol[k] = headCol[k + 1] = headCol[k + 2] = 0; tailCol.fill(0, k2, k2 + 6); continue; }
+    liveSparks++;
+    // physics: gravity, then drag (air slows it), then move
+    P.vel[k + 1] -= 9.8 * P.grav[i] * dt;
+    const dr = Math.exp(-P.drag[i] * dt);
+    P.vel[k] *= dr; P.vel[k + 1] *= dr; P.vel[k + 2] *= dr;
+    P.pos[k] += P.vel[k] * dt; P.pos[k + 1] += P.vel[k + 1] * dt; P.pos[k + 2] += P.vel[k + 2] * dt;
+    // hits the floor: skids and bounces a little, then dies sooner
+    if (P.pos[k + 1] < P.floor[i] && P.vel[k + 1] < 0) {
+      P.pos[k + 1] = P.floor[i]; P.vel[k + 1] *= -0.25; P.vel[k] *= 0.55; P.vel[k + 2] *= 0.55;
+      P.age[i] = Math.max(P.age[i], P.life[i] * 0.72);
+    }
+    // a "splitting" spark bursts into tiny branches halfway (the sparkler's star-forks)
+    if (P.split[i] && t > 0.45) {
+      P.split[i] = 0;
+      const sky = P.size[i] > 0.05;        // big sky stars split into longer-lived pieces
+      const n = sky ? 4 : 3 + (Math.random() * 3 | 0);
+      for (let j = 0; j < n; j++) { const d = randDir(); const sp = sky ? rand(2.5, 4.5) : rand(0.25, 0.8);
+        emit(P.pos[k], P.pos[k + 1], P.pos[k + 2], P.vel[k] * 0.3 + d.x * sp, P.vel[k + 1] * 0.3 + d.y * sp, P.vel[k + 2] * 0.3 + d.z * sp,
+          { life: sky ? rand(0.6, 1.0) : rand(0.06, 0.16), size: P.size[i] * 0.7, drag: sky ? 1.6 : 3, grav: 0.4, streak: sky ? 0.08 : 0.022,
+            pal: P.pal[i], rgb: [P.rgb[k], P.rgb[k + 1], P.rgb[k + 2]], floor: P.floor[i] }); }
+      P.age[i] = P.life[i] * 0.9;
+    }
+    sparkColour(i, t, _c);
+    headPos[k] = P.pos[k]; headPos[k + 1] = P.pos[k + 1]; headPos[k + 2] = P.pos[k + 2];
+    headCol[k] = _c[0]; headCol[k + 1] = _c[1]; headCol[k + 2] = _c[2];
+    headSize[i] = P.size[i] * (1 - 0.4 * t);
+    const s = P.streak[i];
+    tailPos[k2] = P.pos[k]; tailPos[k2 + 1] = P.pos[k + 1]; tailPos[k2 + 2] = P.pos[k + 2];
+    tailPos[k2 + 3] = P.pos[k] - P.vel[k] * s; tailPos[k2 + 4] = P.pos[k + 1] - P.vel[k + 1] * s; tailPos[k2 + 5] = P.pos[k + 2] - P.vel[k + 2] * s;
+    tailCol[k2] = _c[0] * 0.9; tailCol[k2 + 1] = _c[1] * 0.9; tailCol[k2 + 2] = _c[2] * 0.9;
+    tailCol[k2 + 3] = _c[0] * 0.08; tailCol[k2 + 4] = _c[1] * 0.06; tailCol[k2 + 5] = _c[2] * 0.04;
+  }
+  headGeo.attributes.position.needsUpdate = true; headGeo.attributes.color.needsUpdate = true; headGeo.attributes.size.needsUpdate = true;
+  tailGeo.attributes.position.needsUpdate = true; tailGeo.attributes.color.needsUpdate = true;
+}
+function clearSparks() { P.alive.fill(0); smLife.fill(0); }
+
+const smokeTex = canvasTex(64, 64, (g, w) => {   // a very soft blob with no bright middle
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  r.addColorStop(0, 'rgba(255,255,255,.7)'); r.addColorStop(0.5, 'rgba(255,255,255,.35)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, w, w); });
+smokeTex.colorSpace = THREE.NoColorSpace;
+/* ---------- Faint smoke: a few soft grey puffs that rise and spread ---------- */
+const MAXS = 110;
+const smK = new Float32Array(MAXS);   // how dense each puff is
+const smokeGeo = new THREE.BufferGeometry();
+const smPos = new Float32Array(MAXS * 3), smSize = new Float32Array(MAXS), smA = new Float32Array(MAXS);
+const smVel = new Float32Array(MAXS * 3), smAge = new Float32Array(MAXS), smLife = new Float32Array(MAXS);
+smokeGeo.setAttribute('position', new THREE.BufferAttribute(smPos, 3).setUsage(THREE.DynamicDrawUsage));
+smokeGeo.setAttribute('size', new THREE.BufferAttribute(smSize, 1).setUsage(THREE.DynamicDrawUsage));
+smokeGeo.setAttribute('alpha', new THREE.BufferAttribute(smA, 1).setUsage(THREE.DynamicDrawUsage));
+const smoke = new THREE.Points(smokeGeo, new THREE.ShaderMaterial({
+  uniforms: { uMap: { value: smokeTex }, uH: headMat.uniforms.uH },
+  vertexShader: `attribute float size; attribute float alpha; varying float vA; uniform float uH;
+    void main(){ vA = alpha; vec4 mv = modelViewMatrix * vec4(position,1.0);
+      gl_PointSize = size * projectionMatrix[1][1] * uH * 0.5 / max(-mv.z, 0.05); gl_Position = projectionMatrix * mv;
+      if (alpha <= 0.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }`,
+  fragmentShader: `uniform sampler2D uMap; varying float vA;
+    void main(){ float a = texture2D(uMap, gl_PointCoord).r * vA; gl_FragColor = vec4(vec3(0.62,0.6,0.58), a); }`,
+  transparent: true, depthWrite: false,
+}));
+smoke.frustumCulled = false; smoke.renderOrder = 4; scene.add(smoke);
+let smCursor = 0;
+function puff(x, y, z, strength = 1, density = 1) {
+  const i = smCursor; smCursor = (smCursor + 1) % MAXS;
+  smPos.set([x, y, z], i * 3); smVel.set([rand(-0.05, 0.05), rand(0.12, 0.25), rand(-0.05, 0.05)], i * 3);
+  smAge[i] = 0; smLife[i] = rand(2.5, 4) ; smA[i] = 0.001; smSize[i] = 0.05 * strength; smK[i] = density;
+}
+function updateSmoke(dt) {
+  for (let i = 0; i < MAXS; i++) {
+    if (smLife[i] <= 0) { smA[i] = 0; continue; }
+    smAge[i] += dt; const t = smAge[i] / smLife[i];
+    if (t >= 1) { smLife[i] = 0; smA[i] = 0; continue; }
+    for (let j = 0; j < 3; j++) smPos[i * 3 + j] += smVel[i * 3 + j] * dt;
+    smSize[i] += dt * 0.12;
+    smA[i] = 0.028 * smK[i] * Math.sin(Math.PI * t);   // faint (thicker for the snake tablet)
+  }
+  smokeGeo.attributes.position.needsUpdate = true; smokeGeo.attributes.size.needsUpdate = true; smokeGeo.attributes.alpha.needsUpdate = true;
+}
+
+/* =====================================================================
+   PART 4 — Flames (diya and samai)
+   =====================================================================
+   A flame is a flat card that always turns to face you, but stays upright
+   (like a cut-out on a stick). The shader paints a teardrop: blue at the base,
+   white-hot core, orange edges, with a gentle sway and flicker.            */
+const flameMatBase = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uSeed: { value: 0 }, uH: { value: 0.032 }, uW: { value: 0.016 }, uBright: { value: 1 } },
+  vertexShader: `uniform float uTime, uSeed, uH, uW; varying vec2 vUv;
+    void main(){ vUv = uv;
+      vec4 c = modelViewMatrix * vec4(0.0,0.0,0.0,1.0);
+      vec3 up = normalize((viewMatrix * vec4(0.0,1.0,0.0,0.0)).xyz);
+      vec3 side = normalize(cross(up, vec3(0.0,0.0,1.0)));
+      float y = uv.y;
+      float sway = (sin(uTime*6.3+uSeed)*0.5 + sin(uTime*13.7+uSeed*2.1)*0.3) * y*y * uW * 0.35;
+      float h = uH * (0.92 + 0.10*sin(uTime*10.0+uSeed*3.0) + 0.05*sin(uTime*23.0+uSeed));
+      c.xyz += side * ((uv.x-0.5)*uW + sway) + up * (y*h - h*0.12);
+      gl_Position = projectionMatrix * c; }`,
+  fragmentShader: `uniform float uTime, uSeed, uBright; varying vec2 vUv;
+    void main(){ float y = vUv.y; float x = (vUv.x-0.5)*2.0;
+      float w = pow(sin(3.14159*pow(clamp(y,0.0,1.0),0.6)), 1.25) * (1.0 - 0.3*y);
+      float n = sin(y*8.0 - uTime*13.0 + uSeed)*0.07*y;
+      float d = abs(x+n) / max(w, 0.001);
+      float a = smoothstep(1.0, 0.45, d) * smoothstep(0.0, 0.07, y);
+      float core = smoothstep(0.8, 0.0, d) * smoothstep(0.8, 0.15, y);
+      vec3 col = mix(vec3(1.0,0.38,0.06), vec3(1.0,0.74,0.3), smoothstep(0.0,1.0,1.0-d));
+      col = mix(col, vec3(1.0,0.96,0.86), core);
+      col = mix(col, vec3(0.2,0.3,1.0), smoothstep(0.16,0.0,y)*0.55*(1.0-core));
+      gl_FragColor = vec4(col*a*uBright*1.4, a); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+});
+const flameGeo = new THREE.PlaneGeometry(1, 1);
+function makeFlame(h, w) {
+  const m = flameMatBase.clone();
+  m.uniforms.uH.value = h; m.uniforms.uW.value = w; m.uniforms.uSeed.value = rand(0, 100);
+  const f = new THREE.Mesh(flameGeo, m); f.frustumCulled = false; f.renderOrder = 6;
+  return f;
+}
+// gentle flicker number for light and glow (0.8 … 1.1)
+const flick = (t, s) => 0.92 + 0.07 * Math.sin(t * 9.1 + s) + 0.05 * Math.sin(t * 23.3 + s * 2) + 0.03 * Math.sin(t * 41 + s * 3);
+
+/* =====================================================================
+   PART 5 — SOUND (Web Audio)
+   =====================================================================
+   Recorded clips for bangs, pops, the rocket whistle and the sky bursts.
+   Fizz, hiss and whirr are made live: random noise → a filter that keeps
+   only some pitches → a volume knob we turn every frame.
+   Every sound goes through a "panner" placed where the cracker is, so it
+   comes from the right direction as you turn.                              */
+const MUSIC_LEVEL = 0.16;   // background music: low, under everything
+const A = { ctx: null, master: null, bus: null, noise: null, buf: {}, mode: 'normal', city: null };
+const MODE = {
+  normal: { label: '🔊 Normal', master: 1.0, bangs: true },
+  quiet: { label: '🔉 Quiet', master: 0.35, bangs: true },
+  pet: { label: '🐾 Pet-safe', master: 0.7, bangs: false },
+  off: { label: '🔇 Off', master: 0, bangs: false },
+};
+const CLIPS = ['bang1', 'bang2', 'bang3', 'bang4', 'pop1', 'pop2', 'pop3', 'pop4', 'rocket', 'whistles', 'burst1', 'burst2', 'city'];
+function ensureAudio() {
+  try {
+    if (!A.ctx) {
+      A.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      A.master = A.ctx.createGain();
+      const comp = A.ctx.createDynamicsCompressor();   // keeps many bangs at once from distorting
+      comp.threshold.value = -14; comp.ratio.value = 6;
+      A.master.connect(comp); comp.connect(A.ctx.destination);
+      A.bus = A.ctx.createGain(); A.bus.connect(A.master);
+      A.soft = A.ctx.createBiquadFilter(); A.soft.type = 'lowpass'; A.soft.frequency.value = 20000; // Quiet mode turns this down
+      A.soft.connect(A.bus);
+      A.noise = A.ctx.createBuffer(1, A.ctx.sampleRate * 2, A.ctx.sampleRate);
+      const d = A.noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      // Background music: streamed (not decoded all at once) and kept very low
+      try {
+        A.music = new Audio('audio/music.mp3'); A.music.loop = true; A.music.preload = 'auto'; A.music.setAttribute('playsinline', '');
+        const src = A.ctx.createMediaElementSource(A.music);
+        A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = MUSIC_LEVEL;
+        src.connect(A.musicGain); A.musicGain.connect(A.master);
+      } catch (e) { if (A.music) A.music.volume = MUSIC_LEVEL; }
+      setMode(A.mode);
+      CLIPS.forEach((n) => fetch(`audio/${n}.mp3`).then((r) => r.arrayBuffer())
+        .then((b) => A.ctx.decodeAudioData(b)).then((buf) => { A.buf[n] = buf; }).catch(() => {}));
+    }
+    A.ctx.resume();
+    if (A.music && A.mode !== 'off' && A.music.paused) A.music.play().catch(() => {});
+  } catch (e) {}
+}
+function setMode(m) {
+  A.mode = m; $('sound').textContent = MODE[m].label;
+  if (!A.ctx) return;
+  A.master.gain.setTargetAtTime(MODE[m].master, A.ctx.currentTime, 0.05);
+  A.soft.frequency.setTargetAtTime(m === 'quiet' ? 2400 : 20000, A.ctx.currentTime, 0.05);
+  if (A.music) { if (m === 'off') A.music.pause(); else if (A.music.paused) A.music.play().catch(() => {}); }
+  if (A.city) A.city.g.gain.setTargetAtTime(m === 'normal' ? 0.5 : m === 'quiet' ? 0.25 : 0, A.ctx.currentTime, 0.3);
+}
+function panner(pos, ref = 1.2) {
+  const p = A.ctx.createPanner(); p.panningModel = 'equalpower'; p.distanceModel = 'inverse';
+  p.refDistance = ref; p.rolloffFactor = 1; p.maxDistance = 500;
+  setPannerPos(p, pos); p.connect(A.soft); return p;
+}
+function setPannerPos(p, v) {
+  if (p.positionX) { p.positionX.value = v.x; p.positionY.value = v.y; p.positionZ.value = v.z; } else p.setPosition(v.x, v.y, v.z);
+}
+// play a recorded clip at a spot in the room
+function clip(name, pos, { gain = 1, rate = 1, delay = 0, ref = 1.2, bang = true } = {}) {
+  if (!A.ctx || !A.buf[name]) return;
+  if (bang && !MODE[A.mode].bangs) return;
+  const s = A.ctx.createBufferSource(); s.buffer = A.buf[name]; s.playbackRate.value = rate;
+  const g = A.ctx.createGain(); g.gain.value = gain;
+  s.connect(g); g.connect(panner(pos, ref)); s.start(A.ctx.currentTime + delay);
+}
+// a live noise voice: hiss / fizz / whirr. Returns knobs we can turn every frame.
+function noiseVoice(pos, { type = 'bandpass', freq = 3000, q = 0.8, hp = 0 } = {}) {
+  if (!A.ctx) return null;
+  const s = A.ctx.createBufferSource(); s.buffer = A.noise; s.loop = true; s.loopStart = Math.random();
+  const f = A.ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+  const g = A.ctx.createGain(); g.gain.value = 0;
+  let last = f;
+  s.connect(f);
+  if (hp) { const h = A.ctx.createBiquadFilter(); h.type = 'highpass'; h.frequency.value = hp; f.connect(h); last = h; }
+  const p = panner(pos);
+  last.connect(g); g.connect(p); s.start(0, Math.random());
+  return {
+    set(level, fr) { const t = A.ctx.currentTime; g.gain.setTargetAtTime(level, t, 0.04); if (fr) f.frequency.setTargetAtTime(fr, t, 0.05); },
+    move(v) { setPannerPos(p, v); },
+    stop() { const t = A.ctx.currentTime; g.gain.setTargetAtTime(0, t, 0.08); s.stop(t + 0.5); },
+  };
+}
+// a tiny crackle: 5–15 ms of bright noise (the little "tik"s in a sparkler or anar)
+function crackle(pos, gain = 0.3) {
+  if (!A.ctx) return;
+  const s = A.ctx.createBufferSource(); s.buffer = A.noise;
+  const f = A.ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = rand(2500, 6000);
+  const g = A.ctx.createGain(); const t = A.ctx.currentTime, d = rand(0.005, 0.016);
+  g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
+  s.connect(f); f.connect(g); g.connect(panner(pos)); s.start(t, Math.random() * 1.5, d + 0.01);
+}
+// a little bell-like "tink" when a samai wick catches
+function tink(pos) {
+  if (!A.ctx) return;
+  const o = A.ctx.createOscillator(), g = A.ctx.createGain(), t = A.ctx.currentTime;
+  o.frequency.value = rand(1700, 2100); o.type = 'sine';
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.08, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+  o.connect(g); g.connect(panner(pos)); o.start(t); o.stop(t + 0.7);
+}
+// a soft whoosh (Pet-safe rocket, and the rocket's lift-off)
+function whoosh(pos, dur = 1.1, gain = 0.25) {
+  if (!A.ctx) return;
+  const s = A.ctx.createBufferSource(); s.buffer = A.noise;
+  const f = A.ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
+  const g = A.ctx.createGain(), t = A.ctx.currentTime;
+  f.frequency.setValueAtTime(500, t); f.frequency.exponentialRampToValueAtTime(3500, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.08); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  s.connect(f); f.connect(g); g.connect(panner(pos)); s.start(t, 0, dur + 0.1);
+}
+// listener = your head: follows the phone each frame
+function updateListener(m) {
+  if (!A.ctx) return;
+  const L = A.ctx.listener, e = m.elements;
+  const px = e[12], py = e[13], pz = e[14], fx = -e[8], fy = -e[9], fz = -e[10], ux = e[4], uy = e[5], uz = e[6];
+  if (L.positionX) {
+    L.positionX.value = px; L.positionY.value = py; L.positionZ.value = pz;
+    L.forwardX.value = fx; L.forwardY.value = fy; L.forwardZ.value = fz; L.upX.value = ux; L.upY.value = uy; L.upZ.value = uz;
+  } else { L.setPosition(px, py, pz); L.setOrientation(fx, fy, fz, ux, uy, uz); }
+}
+function startCity() {
+  if (!A.ctx || !A.buf.city || A.city) return;
+  const s = A.ctx.createBufferSource(); s.buffer = A.buf.city; s.loop = true;
+  const g = A.ctx.createGain(); g.gain.value = 0;
+  s.connect(g); g.connect(A.soft); s.start();
+  A.city = { s, g }; setMode(A.mode);
+}
+function stopCity() {
+  if (!A.city) return; const t = A.ctx.currentTime;
+  A.city.g.gain.setTargetAtTime(0, t, 0.6); A.city.s.stop(t + 3); A.city = null;
+}
+$('sound').addEventListener('click', () => {
+  const order = ['normal', 'quiet', 'pet', 'off'];
+  setMode(order[(order.indexOf(A.mode) + 1) % order.length]);
+});
+document.querySelectorAll('#modes button').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('#modes button').forEach((x) => x.classList.toggle('on', x === b));
+  setMode(b.dataset.m);
+}));
+document.addEventListener('visibilitychange', () => {
+  if (!A.ctx) return;
+  if (document.hidden) { A.ctx.suspend(); if (A.music) A.music.pause(); }
+  else { A.ctx.resume(); if (A.music && A.mode !== 'off') A.music.play().catch(() => {}); }
+});
+
+/* =====================================================================
+   PART 6 — THE ITEMS
+   =====================================================================
+   Every item is a small object with:
+     group     → its 3D parts, placed on the floor
+     update(dt, t) → called every frame; returns false when it's finished
+     glow      → how much light it gives (the room light follows the brightest)
+     dispose() → tidy up (stop its sounds)                                   */
+const items = [];
+const _v = new THREE.Vector3(), _v2 = new THREE.Vector3();
+function addItem(it) { items.push(it); world.add(it.group); return it; }
+function removeItem(it) {
+  it.dispose && it.dispose(); world.remove(it.group);
+  it.group.traverse((o) => { if (o.geometry && !o.geometry.userData.shared) o.geometry.dispose(); });
+  items.splice(items.indexOf(it), 1);
+}
+function facingYaw(pos) {   // turn an item to face the viewer
+  const c = viewerPos(); return Math.atan2(c.x - pos.x, c.z - pos.z);
+}
+
+/* ---------- 6a. DIYA: a clay lamp, shaped on a "potter's wheel" ----------
+   LatheGeometry takes half an outline (radius, height) and spins it round.
+   Then we pinch one side outwards to make the spout where the wick rests.   */
+const clayTex = canvasTex(512, 256, (g, w, h) => {
+  g.fillStyle = '#a2492a'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 9000; i++) {   // grainy terracotta
+    const v = rand(-28, 28); g.fillStyle = `rgba(${150 + v},${70 + v * 0.6},${40 + v * 0.4},.35)`;
+    g.fillRect(rand(0, w), rand(0, h), rand(1, 3), rand(1, 3));
+  }
+  // carved bands on the outside of the belly (lathe "v" runs from base to rim and back inside)
+  g.strokeStyle = 'rgba(70,25,10,.55)'; g.lineWidth = 3;
+  [64, 112].forEach((y) => { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); });
+  for (let x = 8; x < w; x += 21.3) {   // a row of petals between the bands
+    g.beginPath(); g.ellipse(x, 88, 5, 13, 0, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = 'rgba(60,20,8,.5)'; g.beginPath(); g.arc(x + 10.6, 88, 2.4, 0, Math.PI * 2); g.fill();
+  }
+  // soot near the rim inside
+  const gr = g.createLinearGradient(0, 150, 0, 256); gr.addColorStop(0, 'rgba(30,10,4,0)'); gr.addColorStop(1, 'rgba(30,10,4,.65)');
+  g.fillStyle = gr; g.fillRect(0, 150, w, 106);
+});
+const diyaGeo = (() => {
+  // outline from the foot, up the outside, over the rim and down inside (metres)
+  const pts = [[0, 0], [0.022, 0], [0.026, 0.003], [0.034, 0.009], [0.040, 0.017], [0.0435, 0.025], [0.0438, 0.028],
+    [0.041, 0.0295], [0.037, 0.024], [0.03, 0.017], [0.018, 0.011], [0, 0.009]].map(([r, y]) => new THREE.Vector2(r, y));
+  const geo = new THREE.LatheGeometry(pts, 56);
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) {   // pinch the spout towards +x
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i), r = Math.hypot(x, z);
+    if (r < 0.02) continue;
+    const a = Math.atan2(z, x), k = Math.max(0, 1 - Math.abs(a) / 0.75);
+    const pull = k * k * 0.017 * (y / 0.028);
+    p.setX(i, x + pull * Math.cos(a) * 1.4); p.setZ(i, z * (1 - 0.45 * k * (y / 0.028))); p.setY(i, y + k * k * 0.004);
+  }
+  geo.computeVertexNormals(); geo.userData.shared = true; return geo;
+})();
+const diyaMat = new THREE.MeshStandardMaterial({ map: clayTex, roughness: 0.88, metalness: 0 });
+const oilGeo = new THREE.CircleGeometry(0.033, 32).rotateX(-Math.PI / 2); oilGeo.userData.shared = true;
+const oilMat = new THREE.MeshStandardMaterial({ color: 0x3a2204, roughness: 0.35, metalness: 0, emissive: 0x3a1c00, envMapIntensity: 0.15 });
+const wickGeo = new THREE.CylinderGeometry(0.0022, 0.0028, 0.03, 8); wickGeo.userData.shared = true;
+const wickMat = new THREE.MeshStandardMaterial({ color: 0xf4eedf, roughness: 1 });
+const wickTipMat = new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 1, emissive: 0x401000 });
+
+function makeDiya(pos, lit = true) {
+  const group = new THREE.Group(); group.position.copy(pos);
+  group.rotation.y = facingYaw(pos) + Math.PI / 2 + rand(-0.6, 0.6);  // spout roughly sideways to you
+  const body = new THREE.Mesh(diyaGeo, diyaMat); body.castShadow = false; group.add(body);
+  const oil = new THREE.Mesh(oilGeo, oilMat); oil.position.y = 0.021; group.add(oil);
+  const wick = new THREE.Mesh(wickGeo, wickMat); wick.position.set(0.04, 0.026, 0); wick.rotation.z = -1.05; group.add(wick);
+  const tip = new THREE.Mesh(new THREE.SphereGeometry(0.0026, 8, 6), wickTipMat); tip.position.set(0.053, 0.033, 0); group.add(tip);
+  const flame = makeFlame(0.034, 0.015); flame.position.set(0.054, 0.035, 0); group.add(flame);
+  const halo = glowSprite(0xffa040, 0.16, 0.5); halo.position.set(0.054, 0.045, 0); group.add(halo);
+  const pool = lightPool(0xff8a2a, 0.45); group.add(pool);
+  const seed = rand(0, 50);
+  let on = 0;
+  const it = {
+    type: 'diya', group, glow: 0,
+    flamePos: () => flame.getWorldPosition(_v2),
+    update(dt, t) {
+      on = Math.min(1, on + dt * 1.5);              // flame grows in over ⅔ s when lit
+      const f = flick(t, seed) * on;
+      flame.material.uniforms.uTime.value = t; flame.material.uniforms.uBright.value = f;
+      flame.scale.setScalar(Math.max(0.01, on));
+      halo.material.opacity = 0.45 * f; halo.scale.setScalar(0.15 + 0.02 * f);
+      pool.material.opacity = 0.5 * f;
+      it.glow = 0.6 * f;
+      return true;
+    },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6b. ANAR: a paper-wrapped clay cone that becomes a fountain ---------- */
+function anarTexture(scheme) {
+  const [bg, s1, s2, band] = scheme;
+  return canvasTex(512, 256, (g, w, h) => {
+    g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 32) { g.fillStyle = s1; g.fillRect(x, 0, 14, h); }   // stripes up the cone
+    g.fillStyle = band; g.fillRect(0, 150, w, 54);                                      // a band with flowers
+    for (let x = 18; x < w; x += 46) {
+      g.save(); g.translate(x, 177); g.fillStyle = s2;
+      for (let k = 0; k < 8; k++) { g.rotate(Math.PI / 4); g.beginPath(); g.ellipse(0, 10, 4, 9, 0, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = '#fff3b0'; g.beginPath(); g.arc(0, 0, 4, 0, Math.PI * 2); g.fill(); g.restore();
+    }
+    g.fillStyle = '#ffffff';
+    for (let i = 0; i < 70; i++) { const x = rand(0, w), y = rand(10, 140); star(g, x, y, rand(2.5, 5)); }
+    g.fillStyle = '#d8a530'; g.fillRect(0, 216, w, 14);   // gold foot band
+    for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(0,0,0,${rand(0, 0.08)})`; g.fillRect(rand(0, w), rand(0, h), 2, 2); } // paper grain
+  });
+}
+function star(g, x, y, r) { g.beginPath(); for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5 - Math.PI / 2, rr = k % 2 ? r * 0.45 : r;
+  g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } g.fill(); }
+const anarSchemes = [['#f5c21b', '#e2312b', '#d6246e', '#1d3fa8'], ['#e94f9b', '#2f5fd0', '#ffd23a', '#f08a1c'],
+  ['#2b8a3e', '#f2c218', '#e2312b', '#7b2fa8']].map(anarTexture);
+const anarGeo = (() => {
+  // the lathe "v" goes from the top centre down to the foot (so the paper texture reads upright)
+  const pts = [[0, 0.121], [0.012, 0.12], [0.014, 0.116], [0.024, 0.088], [0.040, 0.03], [0.046, 0.006], [0.046, 0], [0, 0]].reverse()   // bottom → top, so the outside faces outwards
+    .map(([r, y]) => new THREE.Vector2(r, y));
+  const g = new THREE.LatheGeometry(pts, 40); g.userData.shared = true; return g;
+})();
+const capMat = new THREE.MeshStandardMaterial({ color: 0x8a7a68, roughness: 1 });
+const fuseMat = new THREE.MeshStandardMaterial({ color: 0x3f7f45, roughness: 0.9 });
+
+function makeAnar(pos) {
+  const group = new THREE.Group(); group.position.copy(pos); group.rotation.y = rand(0, 6.3);
+  const paper = new THREE.MeshStandardMaterial({ map: anarSchemes[Math.random() * 3 | 0], roughness: 0.75 });
+  const cone = new THREE.Mesh(anarGeo, paper); group.add(cone);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.0125, 0.0135, 0.004, 20), capMat); cap.position.y = 0.122; group.add(cap);
+  const fuseCurve = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0.123, 0), new THREE.Vector3(0.004, 0.14, 0.002), new THREE.Vector3(0.012, 0.152, 0.004)]);
+  const fuse = new THREE.Mesh(new THREE.TubeGeometry(fuseCurve, 12, 0.0012, 5), fuseMat); group.add(fuse);
+  const core = glowSprite(0xfff0c0, 0.08, 0); core.position.y = 0.13; group.add(core);
+  const pool = lightPool(0xffb060, 1.4); group.add(pool);
+  const top = new THREE.Vector3();
+  let t0 = 0, voice = null;
+  const FUSE = 1.0, BURN = 10;
+  const it = {
+    type: 'anar', group, glow: 0,
+    flamePos: () => top,
+    update(dt) {
+      t0 += dt;
+      cone.getWorldPosition(top); top.y += 0.124;
+      if (t0 < FUSE) {                       // the fuse fizzes and shortens
+        const f = t0 / FUSE; fuse.scale.setScalar(1 - f * 0.9);
+        _v.set(0.012 * (1 - f), 0.152 - 0.03 * f, 0.004 * (1 - f)); group.localToWorld(_v);
+        for (let i = 0; i < 3; i++) { const d = randDir();
+          emit(_v.x, _v.y, _v.z, d.x * 0.5, d.y * 0.5 + 0.3, d.z * 0.5, { life: rand(0.1, 0.3), size: 0.003, drag: 2, grav: 0.5, streak: 0.02 }); }
+        if (Math.random() < dt * 30) crackle(_v, 0.06);
+        it.glow = 0.25; core.material.opacity = 0.3; pool.material.opacity = 0.12;
+        return true;
+      }
+      fuse.visible = false;
+      const e = t0 - FUSE;
+      if (e < BURN) {
+        if (!voice) voice = noiseVoice(top, { type: 'bandpass', freq: 2200, q: 0.6, hp: 900 });
+        // fountain strength: quick rise, gentle surges, then dies down
+        let s = Math.min(1, e / 0.12) * (1 - Math.max(0, (e - (BURN - 2.2)) / 2.2));   // bursts on almost at once
+        s *= 0.85 + 0.15 * Math.sin(e * 5.3) * Math.sin(e * 2.1 + 1);
+        const n = Math.round((e < 0.5 ? 1800 : 1200) * s * quality * dt + Math.random());   // extra-thick first half-second
+        for (let i = 0; i < n; i++) {
+          const sp = rand(4.2, 6.6) * (0.75 + 0.25 * s), th = rand(0, 6.283), sp2 = rand(0, 0.22);   // narrow cone upwards
+          const glitter = Math.random() < 0.12;
+          emit(top.x, top.y, top.z, Math.cos(th) * sp2 * sp, sp, Math.sin(th) * sp2 * sp, {
+            life: rand(0.8, 1.5), size: glitter ? 0.009 : 0.0055, drag: 0.9, grav: 1, streak: 0.028,
+            pal: Math.random() < 0.3 ? PAL.SILVER : PAL.GOLD, split: glitter ? 1 : 0 });
+        }
+        if (Math.random() < dt * 5 * s) puff(top.x, top.y + 0.1, top.z, 1.5);
+        if (Math.random() < dt * 40 * s) crackle(_v.set(top.x + rand(-0.3, 0.3), top.y + rand(0.4, 1.2), top.z + rand(-0.3, 0.3)), 0.12);
+        voice && voice.set(0.55 * s, 1800 + 900 * s);
+        const f = s * (0.85 + 0.15 * Math.random());
+        core.material.opacity = f; core.scale.setScalar(0.09 + 0.05 * f);
+        pool.material.opacity = 0.9 * f; it.glow = 3.2 * f;
+        paper.color.setScalar(1 - 0.35 * Math.min(1, e / BURN));   // paper darkens as it burns
+        return true;
+      }
+      if (voice) { voice.stop(); voice = null; }
+      // embers fade, then the burnt shell stays
+      const g = Math.max(0, 1 - (e - BURN) / 1.5);
+      core.material.opacity = 0.3 * g; pool.material.opacity = 0.15 * g; it.glow = 0.3 * g;
+      cap.material = wickTipMat;
+      return true;
+    },
+    dispose() { if (voice) voice.stop(); },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6c. CHAKRI: a paper spiral that spins and skids ---------- */
+class Spiral extends THREE.Curve {
+  getPoint(t, o = new THREE.Vector3()) { const a = t * Math.PI * 2 * 3.3, r = 0.008 + 0.028 * t;
+    return o.set(Math.cos(a) * r, 0.0048 + 0.0004 * Math.sin(a * 3), Math.sin(a) * r); }
+}
+const chakriTex = canvasTex(256, 32, (g, w, h) => {
+  const cols = ['#2fae4f', '#f2c218', '#e94f9b', '#2f5fd0', '#f05a28'];
+  for (let x = -h, i = 0; x < w + h; x += 16, i++) {
+    g.fillStyle = cols[i % cols.length]; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 16, 0); g.lineTo(x + 16 + h, h); g.lineTo(x + h, h); g.fill();
+  }
+}, [26, 1]);
+const chakriGeo = new THREE.TubeGeometry(new Spiral(), 260, 0.0043, 7); chakriGeo.userData.shared = true;
+const chakriMat = new THREE.MeshStandardMaterial({ map: chakriTex, roughness: 0.7 });
+// a flat ring of light that appears when it spins fast (your eye blurs the moving flame into a circle)
+const blurRingGeo = new THREE.RingGeometry(0.02, 0.06, 48).rotateX(-Math.PI / 2); blurRingGeo.userData.shared = true;
+
+function makeChakri(pos) {
+  const group = new THREE.Group(); group.position.copy(pos);
+  const spinner = new THREE.Group(); group.add(spinner);
+  spinner.add(new THREE.Mesh(chakriGeo, chakriMat));
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.009, 16), chakriMat); hub.position.y = 0.005; spinner.add(hub);
+  const ring = new THREE.Mesh(blurRingGeo, new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffb050, transparent: true, opacity: 0,
+    blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })); ring.position.y = 0.01; group.add(ring);
+  const nozzleGlow = glowSprite(0xffe0a0, 0.07, 0); group.add(nozzleGlow);
+  const pool = lightPool(0xffa050, 1.0); group.add(pool);
+  const end = new Spiral().getPoint(1), tan = new Spiral().getTangent(1);
+  const home = pos.clone(), vel = new THREE.Vector2();
+  let t0 = 0, spin = 0, ang = 0, voice = null;
+  const FUSE = 1.3, BURN = 8.5;
+  const it = {
+    type: 'chakri', group, glow: 0, flamePos: () => nozzleGlow.getWorldPosition(_v2),
+    update(dt) {
+      t0 += dt;
+      const nozzleW = _v.copy(end); spinner.localToWorld(nozzleW);
+      if (t0 < FUSE) {
+        for (let i = 0; i < 2; i++) { const d = randDir();
+          emit(nozzleW.x, nozzleW.y, nozzleW.z, d.x * 0.4, Math.abs(d.y) * 0.4, d.z * 0.4, { life: rand(0.1, 0.25), size: 0.003, drag: 2, grav: 0.4 }); }
+        nozzleGlow.position.copy(end).applyEuler(spinner.rotation); nozzleGlow.position.y += 0.01;
+        nozzleGlow.material.opacity = 0.4; it.glow = 0.3; pool.material.opacity = 0.1;
+        return true;
+      }
+      const e = t0 - FUSE;
+      if (e < BURN) {
+        if (!voice) voice = noiseVoice(group.position, { type: 'bandpass', freq: 900, q: 2.5 });
+        const s = Math.min(1, e / 1.2) * (1 - Math.max(0, (e - (BURN - 1.8)) / 1.8));
+        spin = 150 * s;                           // up to ~24 turns a second
+        ang -= spin * dt; spinner.rotation.y = ang;
+        // skid: wander a little, pulled back towards where it started
+        vel.x += (rand(-1, 1) * 2.5 - (group.position.x - home.x) * 3) * dt;
+        vel.y += (rand(-1, 1) * 2.5 - (group.position.z - home.z) * 3) * dt;
+        vel.multiplyScalar(Math.exp(-1.5 * dt)); if (vel.length() > 0.45) vel.setLength(0.45);
+        group.position.x += vel.x * dt * s; group.position.z += vel.y * dt * s;
+        spinner.rotation.x = Math.sin(e * 7) * 0.05 * s; spinner.rotation.z = Math.cos(e * 5.3) * 0.05 * s;  // wobble
+        // sparks shoot out of the nozzle along the paper tube's direction
+        // the nozzle sweeps a big arc each frame, so spread the sparks along that arc
+        const n = Math.round(520 * s * quality * dt + Math.random()), sweep = spin * dt;
+        const ce = Math.cos(ang), se = Math.sin(ang);
+        for (let i = 0; i < n; i++) {
+          const a = ang + sweep * Math.random(), ca = Math.cos(a), sa = Math.sin(a);
+          // rotate the nozzle point and its direction around the hub by angle a (y-axis)
+          const nx = end.x * ca + end.z * sa, nz = -end.x * sa + end.z * ca;
+          const dx = -(tan.x * ca + tan.z * sa), dz = -(-tan.x * sa + tan.z * ca);
+          const sp = rand(1.4, 3.2);
+          emit(group.position.x + nx, group.position.y + 0.006, group.position.z + nz, dx * sp + rand(-0.35, 0.35), rand(0.1, 0.9), dz * sp + rand(-0.35, 0.35),
+            { life: rand(0.4, 0.9), size: 0.005, drag: 1.4, grav: 1, streak: 0.022, pal: Math.random() < 0.25 ? PAL.SILVER : PAL.GOLD });
+        }
+        ring.material.opacity = 0.75 * s * s; ring.scale.setScalar(1 + 0.15 * Math.sin(e * 30));
+        nozzleGlow.position.copy(end).applyEuler(spinner.rotation); nozzleGlow.position.y += 0.01;
+        nozzleGlow.material.opacity = s; nozzleGlow.scale.setScalar(0.06 + 0.04 * s);
+        pool.material.opacity = 0.7 * s; it.glow = 2.2 * s;
+        if (voice) { voice.move(group.position); voice.set(0.45 * s, 600 + 1100 * s); }
+        if (Math.random() < dt * 25 * s) crackle(nozzleW, 0.1);
+        if (Math.random() < dt * 2 * s) puff(nozzleW.x, nozzleW.y, nozzleW.z, 1);
+        return true;
+      }
+      if (voice) { voice.stop(); voice = null; }
+      spin *= Math.exp(-3 * dt); ang -= spin * dt; spinner.rotation.y = ang;
+      const g = Math.max(0, 1 - (e - BURN) / 1.2);
+      ring.material.opacity = 0; nozzleGlow.material.opacity = 0.3 * g; pool.material.opacity = 0.1 * g; it.glow = 0.2 * g;
+      chakriMat.color && spinner.children[0].material === chakriMat && (spinner.children[0].material = wickTipMat);
+      return true;
+    },
+    dispose() { if (voice) voice.stop(); },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6d. LADI: a string of little red crackers woven on a fuse ----------
+   One InstancedMesh draws all 44 crackers in one go (cheap for the phone).
+   Each one is hidden the moment it pops.                                     */
+const ladiTex = canvasTex(64, 128, (g, w, h) => {
+  g.fillStyle = '#c4231c'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 600; i++) { g.fillStyle = `rgba(${rand(80, 140)},0,0,.25)`; g.fillRect(rand(0, w), rand(0, h), 2, 3); }
+  g.fillStyle = 'rgba(255,240,220,.5)'; for (let y = 30; y < 100; y += 12) g.fillRect(18, y, 28, 3);   // faint print (no text)
+  g.fillStyle = '#e0b040'; g.fillRect(0, 4, w, 5); g.fillRect(0, h - 9, w, 5);
+});
+const ladiGeo = new THREE.CylinderGeometry(0.0046, 0.0046, 0.034, 10); ladiGeo.userData.shared = true;
+const ladiMat = new THREE.MeshStandardMaterial({ map: ladiTex, roughness: 0.75 });
+const ladiFuseMat = new THREE.MeshStandardMaterial({ color: 0x6e6a5a, roughness: 1 });
+
+function makeLadi(pos) {
+  const N = 44, LEN = 0.44;
+  const group = new THREE.Group(); group.position.copy(pos);
+  group.rotation.y = facingYaw(pos) + Math.PI / 2;     // lies across your view
+  const inner = new THREE.Group(); inner.position.x = -LEN / 2; group.add(inner);
+  const mesh = new THREE.InstancedMesh(ladiGeo, ladiMat, N); inner.add(mesh);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3(1, 1, 1);
+  const spots = [];
+  for (let i = 0; i < N; i++) {
+    const s = Math.floor(i / 2) * (LEN / (N / 2)), side = i % 2 ? 1 : -1, ang = side * 0.95 + rand(-0.12, 0.12);
+    const p = new THREE.Vector3(s + 0.008 * Math.cos(ang), 0.0048, side * 0.014 + rand(-0.002, 0.002));
+    e.set(rand(-0.15, 0.15), ang, Math.PI / 2); q.setFromEuler(e);
+    m4.compose(p, q, sc); mesh.setMatrixAt(i, m4); spots.push(p);
+  }
+  const fusePts = []; for (let i = -6; i <= 24; i++) fusePts.push(new THREE.Vector3(i * LEN / 22, 0.004 + 0.001 * Math.sin(i * 2.2), 0.002 * Math.sin(i * 1.3)));
+  inner.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(fusePts), 60, 0.0016, 5), ladiFuseMat));
+  // when each one pops: the last ones go faster and sometimes in pairs
+  const times = []; let tt = 1.4;
+  for (let i = 0; i < N; i++) { times.push(tt); tt += Math.random() < 0.2 ? 0 : rand(0.035, 0.12) * (1 - 0.4 * i / N); }
+  const flash = glowSprite(0xfff2d0, 0.25, 0); group.add(flash);
+  let t0 = 0, next = 0, flashT = 0;
+  const hide = new THREE.Matrix4().makeScale(0, 0, 0);
+  const it = {
+    type: 'ladi', group, glow: 0, flamePos: () => flash.getWorldPosition(_v2),
+    update(dt) {
+      t0 += dt;
+      if (t0 < 1.4) {   // the lead fuse fizzes
+        _v.set(-LEN / 22 * 6 * (1 - t0 / 1.4), 0.005, 0); inner.localToWorld(_v);
+        const d = randDir(); emit(_v.x, _v.y, _v.z, d.x * 0.4, Math.abs(d.y) * 0.5, d.z * 0.4, { life: rand(0.1, 0.25), size: 0.003, drag: 2, grav: 0.5 });
+        it.glow = 0.2;
+      }
+      while (next < N && t0 >= times[next]) {
+        const i = next++;
+        mesh.setMatrixAt(i, hide); mesh.instanceMatrix.needsUpdate = true;
+        _v.copy(spots[i]); inner.localToWorld(_v);
+        for (let j = 0; j < 22 * quality; j++) { const d = randDir(), sp = rand(1, 3.5);
+          emit(_v.x, _v.y, _v.z, d.x * sp, Math.abs(d.y) * sp, d.z * sp, { life: rand(0.08, 0.25), size: 0.006, drag: 4, grav: 0.6, streak: 0.012, pal: PAL.SILVER }); }
+        flash.position.copy(spots[i]).add(inner.position); flash.position.y = 0.03; flashT = 0.06;
+        if (Math.random() < 0.5) puff(_v.x, _v.y + 0.02, _v.z, 0.8);
+        if (MODE[A.mode].bangs) clip('pop' + (1 + (Math.random() * 4 | 0)), _v, { gain: rand(0.6, 1), rate: rand(0.85, 1.2) });
+        else crackle(_v, 0.08);       // Pet-safe: a soft tick only
+        // the ladi jumps and dances a little with each pop
+        group.position.x += rand(-0.008, 0.008); group.position.z += rand(-0.008, 0.008); group.rotation.y += rand(-0.05, 0.05);
+        if (next === N) clip('bang' + (1 + (Math.random() * 4 | 0)), _v, { gain: 0.8 });   // one bigger bang at the end
+      }
+      flashT -= dt;
+      flash.material.opacity = flashT > 0 ? 1 : 0; flash.scale.setScalar(0.22 + Math.random() * 0.1);
+      it.glow = flashT > 0 ? 2.5 : (t0 < 1.4 ? 0.2 : 0);
+      return true;
+    },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6e. ROCKET: the model from your zip, standing in a glass bottle ---------- */
+const loader = new GLTFLoader();
+let rocketModel = null, samaiModel = null, samaiLoading = null;
+loader.load('models/rocket.glb', (g) => { rocketModel = g.scene; }, undefined, () => {});
+function loadSamai() {
+  if (!samaiLoading) samaiLoading = new Promise((res, rej) => loader.load('models/samai.glb', (g) => { samaiModel = g.scene; res(); }, undefined, rej));
+  return samaiLoading;
+}
+const bottleGeo = (() => {
+  const pts = [[0, 0], [0.034, 0], [0.036, 0.004], [0.036, 0.15], [0.03, 0.18], [0.014, 0.205], [0.013, 0.24], [0.015, 0.243], [0.012, 0.246]]
+    .map(([r, y]) => new THREE.Vector2(r, y));
+  const g = new THREE.LatheGeometry(pts, 32); g.userData.shared = true; return g;
+})();
+const glassMat = new THREE.MeshStandardMaterial({ color: 0x6fbf8a, roughness: 0.08, metalness: 0, transparent: true, opacity: 0.32, depthWrite: false });
+
+function makeRocket(pos) {
+  const group = new THREE.Group(); group.position.copy(pos);
+  group.add(new THREE.Mesh(bottleGeo, glassMat));
+  const pivot = new THREE.Group(); group.add(pivot);
+  const LEN = 0.52, S = LEN / 1.75;              // model is 1.75 units long, nose along +x
+  if (rocketModel) {
+    const m = rocketModel.clone(); m.position.set(1.33, -0.075, -2.075);   // stick end to the pivot
+    const holder = new THREE.Group(); holder.add(m); holder.rotation.z = Math.PI / 2; holder.scale.setScalar(S);
+    pivot.add(holder);
+  } else {   // fallback if the model didn't load: a plain paper rocket
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.11, 14), ladiMat); body.position.y = 0.38; pivot.add(body);
+    const nose = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.035, 14), new THREE.MeshStandardMaterial({ color: 0xd8a530, metalness: 0.6, roughness: 0.3 }));
+    nose.position.y = 0.45; pivot.add(nose);
+    const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0015, 0.33, 6), ladiFuseMat); stick.position.y = 0.165; pivot.add(stick);
+  }
+  pivot.position.y = 0.02; pivot.rotation.z = rand(-0.08, 0.08);
+  const BODY_LOW = 1.14 * S;                       // where the exhaust comes out
+  const flare = glowSprite(0xffd28a, 0.12, 0); group.add(flare);
+  const hue = new THREE.Color().setHSL(Math.random(), 1, 0.55);
+  let t0 = 0, phase = 'fuse', y = 0, vy = 0, burstAt = null;
+  const it = {
+    type: 'rocket', group, glow: 0, flamePos: () => flare.getWorldPosition(_v2),
+    update(dt) {
+      t0 += dt;
+      _v.set(0, BODY_LOW, 0); pivot.localToWorld(_v);
+      if (phase === 'fuse') {
+        const d = randDir(); emit(_v.x, _v.y, _v.z, d.x * 0.3, d.y * 0.3, d.z * 0.3, { life: rand(0.1, 0.25), size: 0.003, drag: 2, grav: 0.4 });
+        it.glow = 0.2;
+        if (t0 > 1.5) {
+          phase = 'fly';
+          if (MODE[A.mode].bangs) clip('rocket', _v, { gain: 0.9 }); else whoosh(_v, 1.3, 0.2);
+        }
+        return true;
+      }
+      if (phase === 'fly') {
+        vy += 26 * dt; y += vy * dt; pivot.position.y = 0.02 + y;
+        pivot.position.x += Math.sin(t0 * 7) * 0.02 * dt; pivot.position.z += Math.cos(t0 * 5) * 0.02 * dt;
+        for (let i = 0; i < 14; i++) emit(_v.x + rand(-0.003, 0.003), _v.y, _v.z + rand(-0.003, 0.003), rand(-0.3, 0.3), -rand(1, 3) + vy * 0.6, rand(-0.3, 0.3),
+          { life: rand(0.3, 0.7), size: 0.006, drag: 1.5, grav: 0.8, streak: 0.03 });
+        flare.position.set(pivot.position.x, pivot.position.y + BODY_LOW, pivot.position.z); flare.material.opacity = 1; flare.scale.setScalar(0.15);
+        it.glow = 1.5;
+        if (t0 > 1.5 + 1.22) {   // matches the bang in the sound clip
+          phase = 'burst'; pivot.visible = false; flare.material.opacity = 0;
+          burstAt = _v.clone();
+          shell(burstAt, Math.random() < 0.5 ? 'peony' : 'chrys', hue, 1);
+          it.glow = 0;
+        }
+        return true;
+      }
+      return true;
+    },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6f. SAMAI: the brass lamp from your zip, eight wicks around the top ---------- */
+function makeSamai(pos) {
+  const group = new THREE.Group(); group.position.copy(pos); group.rotation.y = rand(0, 6.3);
+  const S = 0.45 / 4.035;                          // model is 4 units tall → 45 cm
+  const lamp = samaiModel.clone(); lamp.scale.setScalar(S);
+  lamp.traverse((o) => { if (o.isMesh) o.material.envMapIntensity = 0.9; });
+  group.add(lamp);
+  const flames = [], halos = [];
+  for (let k = 0; k < 8; k++) {
+    const a = (30 + k * 45) * Math.PI / 180, r = 1.12 * S;
+    const f = makeFlame(0.03, 0.013); f.position.set(Math.cos(a) * r, 3.6 * S + 0.002, Math.sin(a) * r); f.scale.setScalar(0.01);
+    const h = glowSprite(0xffa040, 0.12, 0); h.position.copy(f.position); h.position.y += 0.01;
+    group.add(f, h); flames.push(f); halos.push(h);
+  }
+  const pool = lightPool(0xff9a3a, 1.1); group.add(pool);
+  const seed = rand(0, 99);
+  let t0 = 0;
+  const it = {
+    type: 'samai', group, glow: 0, flamePos: () => _v2.set(0, 3.7 * S, 0).applyMatrix4(group.matrixWorld),
+    flames: () => flames.filter((f) => f.scale.x > 0.5).map((f) => f.getWorldPosition(new THREE.Vector3())),
+    update(dt, t) {
+      t0 += dt; let lit = 0;
+      flames.forEach((f, k) => {
+        const on = clamp((t0 - 0.4 - k * 0.3) * 2, 0, 1);
+        const fl = flick(t, seed + k * 7) * on;
+        f.scale.setScalar(Math.max(0.01, on)); f.material.uniforms.uTime.value = t; f.material.uniforms.uBright.value = fl;
+        halos[k].material.opacity = 0.4 * fl; lit += on;
+      });
+      const fl = flick(t, seed);
+      pool.material.opacity = 0.55 * (lit / 8) * fl; it.glow = 1.6 * (lit / 8) * fl;
+      return true;
+    },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6j. SAANP KI GOLI: an ash snake that grows out of a tiny black tablet ----------
+   The snake follows a fixed "track" (a curve), like a train on rails: new ash
+   comes out at the base and pushes the older ash along, so the head rises,
+   arches over, comes down and curls on the floor — as in your photo.
+   The tube for the whole track is built once; each frame we only show the
+   first part of it (setDrawRange), which is very cheap for the phone.        */
+const snakePath = new THREE.CatmullRomCurve3([
+  [0, 0.004, 0], [0.004, 0.05, 0.002], [0.02, 0.11, 0.006], [0.055, 0.16, 0.01], [0.1, 0.185, 0.014], [0.15, 0.175, 0.02],
+  [0.19, 0.135, 0.028], [0.21, 0.085, 0.038], [0.205, 0.04, 0.05], [0.185, 0.016, 0.062], [0.16, 0.02, 0.05], [0.152, 0.04, 0.035],
+  [0.168, 0.055, 0.022], [0.192, 0.045, 0.025], [0.205, 0.022, 0.04], [0.2, 0.009, 0.06]].map((a) => new THREE.Vector3(...a)));
+const SNAKE_SEG = 160, SNAKE_RAD = 10, SNAKE_R = 0.0068;
+const snakeGeo = (() => {
+  const g = new THREE.TubeGeometry(snakePath, SNAKE_SEG, SNAKE_R, SNAKE_RAD, false);
+  const p = g.attributes.position, n = g.attributes.normal;
+  for (let j = 0; j <= SNAKE_SEG; j++) {             // lumpy, wrinkled ash
+    const ring = 0.07 * Math.sin(j * 0.55) + 0.05 * Math.sin(j * 1.9 + 1) + 0.035 * Math.sin(j * 5.3);
+    for (let i = 0; i <= SNAKE_RAD; i++) {
+      const k = j * (SNAKE_RAD + 1) + i, ii = i % SNAKE_RAD;
+      const r = SNAKE_R * (ring + 0.07 * Math.sin(ii * 2.3 + j * 1.1) + 0.04 * Math.sin(ii * 5.7 - j * 0.7));
+      p.setXYZ(k, p.getX(k) + n.getX(k) * r, p.getY(k) + n.getY(k) * r, p.getZ(k) + n.getZ(k) * r);
+    }
+  }
+  g.computeVertexNormals(); g.userData.shared = true; return g;
+})();
+const ashTex = canvasTex(256, 64, (g, w, h) => {
+  g.fillStyle = '#2b2927'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 2600; i++) { const v = rand(-30, 45) | 0;
+    g.fillStyle = `rgb(${50 + v},${47 + v},${44 + v})`; g.fillRect(rand(0, w), rand(0, h), rand(1, 4), rand(1, 3)); }
+  g.strokeStyle = 'rgba(10,9,8,.8)'; g.lineWidth = 1.2;      // cracks across the ash
+  for (let x = 0; x < w; x += rand(5, 11)) { g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + rand(-6, 6), h * 0.3, x + rand(-6, 6), h * 0.7, x + rand(-4, 4), h); g.stroke(); }
+}, [22, 1]);
+const ashMat = new THREE.MeshStandardMaterial({ map: ashTex, color: 0x9c968f, roughness: 1, metalness: 0 });
+const tabletMat = new THREE.MeshStandardMaterial({ color: 0x141210, roughness: 0.9 });
+
+function makeSnake(pos) {
+  const group = new THREE.Group(); group.position.copy(pos); group.rotation.y = rand(0, 6.283);
+  group.scale.setScalar(rand(0.9, 1.15));
+  const body = new THREE.Mesh(snakeGeo, ashMat); body.geometry = snakeGeo; group.add(body);
+  const drawn = new THREE.BufferGeometry();              // a view onto the shared tube, so each snake has its own length
+  drawn.index = snakeGeo.index; drawn.attributes = snakeGeo.attributes; drawn.userData.shared = true;
+  drawn.boundingSphere = new THREE.Sphere(new THREE.Vector3(0.1, 0.1, 0.03), 0.3);
+  body.geometry = drawn; drawn.setDrawRange(0, 0);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(SNAKE_R * 1.15, 10, 8), ashMat); group.add(head);
+  const tablet = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.0095, 0.005, 16), tabletMat); tablet.position.y = 0.0025; group.add(tablet);
+  const flame = makeFlame(0.045, 0.028); flame.position.set(-0.006, 0.004, 0.002); group.add(flame);
+  const ember = glowSprite(0xff6a1a, 0.07, 0.8); ember.position.set(-0.002, 0.008, 0); group.add(ember);
+  const pool = lightPool(0xff7a2a, 0.5); group.add(pool);
+  const BURN = 26, seed = rand(0, 50);
+  let t0 = 0, voice = null;
+  const it = {
+    type: 'snake', group, glow: 0, flamePos: () => flame.getWorldPosition(_v2),
+    update(dt, t) {
+      t0 += dt;
+      const on = t0 < BURN ? Math.min(1, t0 * 2) : Math.max(0, 1 - (t0 - BURN) / 1.5);
+      if (on > 0 && !voice && t0 < BURN) voice = noiseVoice(group.position, { type: 'lowpass', freq: 700, q: 0.7 });
+      // grows fast at first, then slower and slower (like the real thing)
+      const frac = Math.min(1, (1 - Math.exp(-t0 / 8)) / (1 - Math.exp(-BURN / 8)));
+      const segs = Math.max(1, Math.ceil(frac * SNAKE_SEG));
+      drawn.setDrawRange(0, segs * SNAKE_RAD * 6);
+      head.position.copy(snakePath.getPointAt(Math.min(1, segs / SNAKE_SEG)));
+      tablet.scale.setScalar(Math.max(0.3, 1 - frac * 0.7));
+      const f = flick(t, seed) * on;
+      flame.material.uniforms.uTime.value = t; flame.material.uniforms.uBright.value = f; flame.scale.setScalar(Math.max(0.01, on * (0.8 + 0.3 * Math.sin(t * 3 + seed))));
+      ember.material.opacity = 0.8 * f; pool.material.opacity = 0.45 * f; it.glow = 0.7 * f;
+      if (on > 0) {   // thick smoke from the base, and some off the snake itself
+        if (Math.random() < dt * 4 * on) { _v.set(rand(-0.01, 0.01), 0.02, rand(-0.01, 0.01)); group.localToWorld(_v); puff(_v.x, _v.y, _v.z, 1.0, 1.9); }
+        if (Math.random() < dt * 1.5 * on) { _v.copy(snakePath.getPointAt(rand(0, frac))); group.localToWorld(_v); puff(_v.x, _v.y + 0.01, _v.z, 0.8, 1.4); }
+        if (Math.random() < dt * 8 * on) crackle(group.position, 0.03);
+        if (voice) voice.set(0.12 * on);
+      }
+      if (t0 >= BURN && voice) { voice.stop(); voice = null; }
+      return true;
+    },
+    dispose() { if (voice) voice.stop(); },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6k. AKASH DEEP: a paper sky lantern that floats away ----------
+   It warms up on the floor (the paper fills out and glows), then rises,
+   sways and drifts with a gentle breeze until it is a tiny glowing dot.     */
+const WIND = new THREE.Vector3(rand(-1, 1), 0, rand(-1, 1)).normalize().multiplyScalar(0.14);   // one breeze for the whole evening
+const lanternGeo = (() => {
+  const pts = [[0.105, 0], [0.12, 0.08], [0.133, 0.18], [0.139, 0.27], [0.13, 0.32], [0.09, 0.355], [0.0, 0.366]].map(([r, y]) => new THREE.Vector2(r, y));
+  const g = new THREE.LatheGeometry(pts, 40); g.userData.shared = true; return g;
+})();
+const lanternTex = canvasTex(256, 256, (g, w, h) => {
+  const gr = g.createLinearGradient(0, h, 0, 0);       // canvas bottom = lantern bottom (near the flame) = brightest
+  gr.addColorStop(0, '#fff6dc'); gr.addColorStop(0.45, '#ffe2a6'); gr.addColorStop(1, '#f7b768');
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  g.strokeStyle = 'rgba(150,80,20,.22)'; g.lineWidth = 2;
+  for (let x = 0; x < w; x += w / 8) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }   // paper seams
+  for (let i = 0; i < 1500; i++) { g.fillStyle = `rgba(255,255,255,${rand(0, 0.08)})`; g.fillRect(rand(0, w), rand(0, h), 2, 2); }
+});
+const LANTERN_TINTS = [0xffffff, 0xffc08a, 0xff9e7a, 0xffd36b, 0xffa8c8];
+const ringGeo = new THREE.TorusGeometry(0.105, 0.0016, 6, 40).rotateX(Math.PI / 2); ringGeo.userData.shared = true;
+const wireMat = new THREE.MeshStandardMaterial({ color: 0x3a3028, roughness: 0.8 });
+
+function makeLantern(pos) {
+  const group = new THREE.Group(); group.position.copy(pos);
+  const S = 1.25;
+  const paper = new THREE.Mesh(lanternGeo, new THREE.MeshBasicMaterial({ map: lanternTex, color: LANTERN_TINTS[Math.random() * LANTERN_TINTS.length | 0],
+    side: THREE.DoubleSide, transparent: true, opacity: 0.94, toneMapped: false }));
+  const shell = new THREE.Group(); shell.scale.setScalar(S); group.add(shell); shell.add(paper);
+  shell.add(new THREE.Mesh(ringGeo, wireMat));
+  const flame = makeFlame(0.04, 0.02); flame.position.y = 0.01; shell.add(flame);
+  const inner = glowSprite(0xffb050, 0.28, 0.6); inner.position.y = 0.12; shell.add(inner);
+  const halo = glowSprite(0xff9a40, 1.1, 0.3); halo.position.y = 0.2; shell.add(halo);      // keeps it visible as a glowing dot far away
+  const pool = lightPool(0xffa050, 0.7); group.add(pool);
+  const base = pos.y, seed = rand(0, 50), baseColour = paper.material.color.clone();
+  let t0 = 0, vy = 0, rise = 0;
+  const it = {
+    type: 'lantern', group, glow: 0, flamePos: () => flame.getWorldPosition(_v2),
+    update(dt, t) {
+      t0 += dt;
+      const warm = Math.min(1, t0 / 2.6);
+      shell.scale.set(S, S * (0.55 + 0.45 * warm), S);          // paper fills out with hot air
+      const f = flick(t, seed) * (0.35 + 0.65 * warm);
+      flame.material.uniforms.uTime.value = t; flame.material.uniforms.uBright.value = f;
+      paper.material.color.copy(baseColour).multiplyScalar(0.55 + 0.5 * f);
+      inner.material.opacity = 0.6 * f; halo.material.opacity = 0.3 * f;
+      if (t0 > 2.6) {                                            // lift-off
+        if (!it.lifted) { it.lifted = true; whoosh(group.position, 1.6, 0.05); }
+        vy = Math.min(0.45, vy + 0.12 * dt); rise += vy * dt;
+        const k = Math.min(1, rise / 2);
+        group.position.y = base + rise;
+        group.position.x += (WIND.x * k + Math.sin(t * 0.7 + seed) * 0.03) * dt;
+        group.position.z += (WIND.z * k + Math.cos(t * 0.6 + seed) * 0.03) * dt;
+        shell.rotation.y += 0.15 * dt; shell.rotation.z = Math.sin(t * 0.9 + seed) * 0.06;
+      }
+      pool.position.y = base - group.position.y + 0.002;          // the light pool stays on the floor and fades as it rises
+      pool.material.opacity = 0.5 * f * Math.max(0, 1 - rise / 2.5);
+      it.glow = 0.9 * f * Math.max(0, 1 - rise / 3);
+      return !(rise > 70 || t0 > 120);                            // gone when it's far away
+    },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6l. KHADI PHULJHADI: a phuljhadi standing in a little pot of sand ----------
+   It lights itself; then you can light the one in your hand from it.        */
+const potGeo = (() => {
+  const pts = [[0, 0], [0.03, 0], [0.034, 0.004], [0.042, 0.045], [0.046, 0.05], [0.043, 0.053], [0.039, 0.047], [0, 0.046]].map(([r, y]) => new THREE.Vector2(r, y));
+  const g = new THREE.LatheGeometry(pts, 32); g.userData.shared = true; return g;
+})();
+const sandMat = new THREE.MeshStandardMaterial({ color: 0xc9b38a, roughness: 1 });
+const sparkWireMat = new THREE.MeshStandardMaterial({ color: 0x55504a, metalness: 0.7, roughness: 0.5 });
+const sparkCoatMat = new THREE.MeshStandardMaterial({ color: 0x86817a, roughness: 1 });
+// the sparks every phuljhadi throws out (used by the one in your hand and the standing one)
+function sparklerSparks(pos, dt) {
+  const n = Math.round(380 * quality * dt + Math.random());
+  for (let i = 0; i < n; i++) { const d = randDir(), sp = rand(0.7, 2.0);
+    emit(pos.x, pos.y, pos.z, d.x * sp, d.y * sp, d.z * sp, { life: rand(0.18, 0.5), size: 0.0035, drag: 2.2, grav: 0.5, streak: 0.03,
+      split: Math.random() < 0.55 ? 1 : 0, pal: Math.random() < 0.15 ? PAL.SILVER : PAL.GOLD, floor: floorY }); }
+  if (Math.random() < dt * 3) puff(pos.x, pos.y + 0.03, pos.z, 0.7);
+  if (Math.random() < dt * 35) crackle(pos, 0.05);
+}
+function makeStanding(pos) {
+  const LEN = 0.32, C0 = LEN * 0.35, BURN = 40;
+  const group = new THREE.Group(); group.position.copy(pos);
+  group.add(new THREE.Mesh(potGeo, diyaMat));
+  const sand = new THREE.Mesh(new THREE.CircleGeometry(0.039, 24).rotateX(-Math.PI / 2), sandMat); sand.position.y = 0.047; group.add(sand);
+  const holder = new THREE.Group(); holder.position.y = 0.03; holder.rotation.set(rand(-0.12, 0.12), 0, rand(-0.18, 0.18)); group.add(holder);
+  holder.add(new THREE.Mesh(new THREE.CylinderGeometry(0.0009, 0.0009, LEN, 6).translate(0, LEN / 2, 0), sparkWireMat));
+  const coat = new THREE.Mesh(new THREE.CylinderGeometry(0.0034, 0.0034, 1, 8).translate(0, 0.5, 0), sparkCoatMat); coat.position.y = C0; holder.add(coat);
+  const bead = glowSprite(0xfff4d8, 0.05, 1); holder.add(bead);
+  const halo = glowSprite(0xffb050, 0.22, 0.5); holder.add(halo);
+  const pool = lightPool(0xffb060, 0.8); group.add(pool);
+  const tip = new THREE.Vector3(), seed = rand(0, 50);
+  let t0 = 0, voice = null;
+  const it = {
+    type: 'standing', group, glow: 0, flamePos: () => tip,
+    update(dt, t) {
+      t0 += dt;
+      const f = Math.min(1, t0 / BURN), at = LEN - (LEN - C0) * f, lit = t0 < BURN;
+      coat.scale.set(1, Math.max(0.0001, at - C0), 1); bead.position.y = at; halo.position.y = at;
+      tip.set(0, at, 0); holder.localToWorld(tip);
+      if (lit) {
+        if (!voice) voice = noiseVoice(tip, { type: 'bandpass', freq: 5200, q: 0.7, hp: 2500 });
+        sparklerSparks(tip, dt); voice.move(tip); voice.set(0.2);
+        bead.scale.setScalar(0.04 + 0.015 * Math.random());
+      } else if (voice) { voice.stop(); voice = null; }
+      const g = lit ? flick(t, seed) : 0;
+      bead.material.opacity = lit ? 1 : 0; halo.material.opacity = 0.55 * g; pool.material.opacity = 0.5 * g; it.glow = 1.1 * g;
+      return true;
+    },
+    dispose() { if (voice) voice.stop(); },
+  };
+  return addItem(it);
+}
+
+/* ---------- Which flames are burning right now? (to light your phuljhadi from) ---------- */
+function flamePoints() {
+  const out = [];
+  for (const it of items) {
+    if (it.flames) out.push(...it.flames());
+    else if (it.glow > 0.3 && it.flamePos && it.type !== 'ladi' && it.type !== 'rocket') out.push(it.flamePos().clone());
+  }
+  return out;
+}
+// "Touching" = the phuljhadi tip and a flame line up on screen (within ~40 px),
+// or are really within 6 cm. Lining up on screen works in AR, camera view and 3D.
+const _pa = new THREE.Vector3(), _pb = new THREE.Vector3();
+function touchingFlame(tipPos) {
+  const cam = renderer.xr.isPresenting ? renderer.xr.getCamera() : camera;
+  _pa.copy(tipPos).project(cam); if (_pa.z > 1) return false;
+  for (const f of flamePoints()) {
+    if (f.distanceTo(tipPos) < 0.06) return true;
+    if (f.distanceTo(camPosV) > 3) continue;
+    _pb.copy(f).project(cam); if (_pb.z > 1) continue;
+    const dx = (_pa.x - _pb.x) * innerWidth / 2, dy = (_pa.y - _pb.y) * innerHeight / 2;
+    if (dx * dx + dy * dy < 1600) return true;
+  }
+  return false;
+}
+
+/* ---------- 6g. RANGOLI: dot rangoli drawn in coloured powder on your floor ----------
+   We paint on an invisible 1024 × 1024 "canvas" and show it as a picture on
+   the floor. First the white dots, then the lines join them (sprinkled grain
+   by grain like powder), then the colours fill in.                          */
+const RANGOLI_SIZE = 1.0;   // metres across
+const PALETTES = [
+  ['#ff3d8b', '#ffb000', '#2f6bff', '#18b34a', '#ff6a00'],
+  ['#e8197a', '#ffd400', '#7b2ff7', '#00a8a8', '#ff5a1f'],
+  ['#ff4f1f', '#ffc21a', '#c01580', '#1f9d55', '#1a4fd6'],
+];
+function leaf(p, q, bulge) {   // a leaf/petal joining two dots: two curves bowing apart
+  const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2, dx = q[0] - p[0], dy = q[1] - p[1];
+  const nx = -dy * bulge, ny = dx * bulge;
+  const path = new Path2D(); path.moveTo(p[0], p[1]);
+  path.quadraticCurveTo(mx + nx, my + ny, q[0], q[1]); path.quadraticCurveTo(mx - nx, my - ny, p[0], p[1]);
+  const line = [];
+  for (let s = 0; s <= 1.001; s += 0.05) line.push(quad(p, [mx + nx, my + ny], q, s));
+  for (let s = 0; s <= 1.001; s += 0.05) line.push(quad(q, [mx - nx, my - ny], p, s));
+  return { path, line };
+}
+const quad = (a, c, b, s) => [(1 - s) * (1 - s) * a[0] + 2 * (1 - s) * s * c[0] + s * s * b[0], (1 - s) * (1 - s) * a[1] + 2 * (1 - s) * s * c[1] + s * s * b[1]];
+function circleShape(cx, cy, r) { const path = new Path2D(); path.arc(cx, cy, r, 0, Math.PI * 2);
+  const line = []; for (let a = 0; a <= Math.PI * 2 + 0.01; a += 0.12) line.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); return { path, line }; }
+function polyShape(pts) { const path = new Path2D(); pts.forEach((p, i) => i ? path.lineTo(p[0], p[1]) : path.moveTo(p[0], p[1])); path.closePath();
+  return { path, line: [...pts, pts[0]] }; }
+
+// Three patterns. Each returns { dots: [[x,y]...], shapes: [{path, line, colour}] }
+const PATTERNS = [
+  { name: 'पंखुड़ी · Petal grid', make(pal) {   // dots in a diamond, joined by petals (like your Bittu's references)
+    const dots = [], shapes = [], sp = 92, c = 512;
+    const at = (i, j) => [c + (i - j) * sp * 0.7071, c + (i + j - 6) * sp * 0.7071];
+    for (let i = 0; i <= 6; i++) for (let j = 0; j <= 6; j++) dots.push(at(i, j));
+    for (let i = 0; i <= 6; i++) for (let j = 0; j <= 6; j++) {
+      const ring = Math.max(Math.abs(i - 3), Math.abs(j - 3));
+      if (i < 6) { const s = leaf(at(i, j), at(i + 1, j), 0.3); s.colour = pal[(ring + (j % 2)) % pal.length]; shapes.push(s); }
+      if (j < 6) { const s = leaf(at(i, j), at(i, j + 1), 0.3); s.colour = pal[(ring + 2 + (i % 2)) % pal.length]; shapes.push(s); }
+    }
+    const s = circleShape(c, c, 40); s.colour = pal[1]; shapes.unshift(s);
+    return { dots, shapes };
+  } },
+  { name: 'कमल · Lotus', make(pal) {          // two layers of eight petals with a ring of dots
+    const dots = [], shapes = [], c = 512;
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4;
+      const s = leaf([c + Math.cos(a) * 70, c + Math.sin(a) * 70], [c + Math.cos(a) * 300, c + Math.sin(a) * 300], 0.22); s.colour = pal[k % 2 ? 0 : 4]; shapes.push(s);
+      dots.push([c + Math.cos(a) * 300, c + Math.sin(a) * 300]); }
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + Math.PI / 8;
+      const s = leaf([c + Math.cos(a) * 160, c + Math.sin(a) * 160], [c + Math.cos(a) * 400, c + Math.sin(a) * 400], 0.2); s.colour = pal[k % 2 ? 1 : 2]; shapes.push(s);
+      dots.push([c + Math.cos(a) * 400, c + Math.sin(a) * 400]); }
+    for (let k = 0; k < 24; k++) { const a = k * Math.PI / 12; dots.push([c + Math.cos(a) * 460, c + Math.sin(a) * 460]);
+      const s = circleShape(c + Math.cos(a) * 460, c + Math.sin(a) * 460, 18); s.colour = pal[3]; shapes.push(s); }
+    const s = circleShape(c, c, 62); s.colour = pal[1]; shapes.unshift(s);
+    dots.push([c, c]);
+    return { dots, shapes };
+  } },
+  { name: 'दीप · Diya star', make(pal) {        // an eight-point star with four little diyas
+    const dots = [], shapes = [], c = 512;
+    const starPts = []; for (let k = 0; k < 16; k++) { const a = k * Math.PI / 8 - Math.PI / 2, r = k % 2 ? 130 : 270;
+      starPts.push([c + Math.cos(a) * r, c + Math.sin(a) * r]); if (!(k % 2)) dots.push(starPts[k]); }
+    for (let k = 0; k < 16; k += 2) {   // star in coloured triangles
+      const s = polyShape([[c, c], starPts[k], starPts[(k + 1) % 16]]); s.colour = pal[0]; shapes.push(s);
+      const s2 = polyShape([[c, c], starPts[(k + 1) % 16], starPts[(k + 2) % 16]]); s2.colour = pal[4]; shapes.push(s2);
+    }
+    for (let k = 0; k < 4; k++) {        // a diya at N, E, S, W
+      const a = k * Math.PI / 2, x = c + Math.cos(a) * 385, y = c + Math.sin(a) * 385, rot = a + Math.PI / 2;
+      const P2 = (u, v) => [x + u * Math.cos(rot) - v * Math.sin(rot), y + u * Math.sin(rot) + v * Math.cos(rot)];
+      const bowl = new Path2D(); const bl = [];
+      for (let s = 0; s <= 1.0001; s += 0.08) { const p = P2(-62 + 124 * s, 8 + 42 * Math.sin(Math.PI * s)); bl.push(p); }
+      bowl.moveTo(...bl[0]); bl.forEach((p) => bowl.lineTo(...p)); bowl.closePath();
+      shapes.push({ path: bowl, line: [...bl, bl[0]], colour: pal[1] });
+      const fl = []; for (let s = 0; s <= 1.0001; s += 0.08) { const ang = s * Math.PI * 2;
+        fl.push(P2(Math.sin(ang) * 16 * (1 - 0.5 * (1 - Math.cos(ang)) / 2), -10 - 52 * (1 - Math.cos(ang)) / 2)); }
+      const fp = new Path2D(); fp.moveTo(...fl[0]); fl.forEach((p) => fp.lineTo(...p)); fp.closePath();
+      shapes.push({ path: fp, line: fl, colour: pal[1] === '#ffd400' ? '#ff6a00' : '#ffd400' });
+      dots.push(P2(-62, 8), P2(62, 8), P2(0, 50));
+    }
+    for (let k = 0; k < 32; k++) { const a = k * Math.PI / 16; dots.push([c + Math.cos(a) * 470, c + Math.sin(a) * 470]); }
+    const s = circleShape(c, c, 48); s.colour = pal[2]; shapes.push(s);
+    return { dots, shapes };
+  } },
+];
+let patternIdx = 0;
+const rangoliGeo = new THREE.PlaneGeometry(RANGOLI_SIZE, RANGOLI_SIZE).rotateX(-Math.PI / 2); rangoliGeo.userData.shared = true;
+
+function powderDot(g, x, y, r, col, n) {    // sprinkle n grains around (x, y)
+  g.fillStyle = col;
+  for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, d = r * Math.sqrt(Math.random());
+    g.globalAlpha = rand(0.55, 1); g.fillRect(x + Math.cos(a) * d, y + Math.sin(a) * d, rand(1, 2.6), rand(1, 2.6)); }
+  g.globalAlpha = 1;
+}
+function makeRangoli(pos) {
+  const pat = PATTERNS[patternIdx], pal = PALETTES[(Math.random() * PALETTES.length) | 0];
+  patternIdx = (patternIdx + 1) % PATTERNS.length;
+  const { dots, shapes } = pat.make(pal);
+  const cv = document.createElement('canvas'); cv.width = cv.height = 1024;
+  const g = cv.getContext('2d');
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1 });
+  const group = new THREE.Group(); group.position.copy(pos); group.position.y += 0.001;
+  group.rotation.y = facingYaw(pos);
+  const plane = new THREE.Mesh(rangoliGeo, mat); plane.renderOrder = 1; group.add(plane);
+  // plan the drawing: total outline length, so lines draw at an even speed
+  const segs = []; let total = 0;
+  shapes.forEach((s) => { for (let i = 1; i < s.line.length; i++) { const a = s.line[i - 1], b = s.line[i];
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1]); segs.push({ a, b, L }); total += L; } });
+  const T_DOTS = 1.0, T_LINES = 3.6, T_FILL = 3.0;
+  let t0 = 0, dotsDone = 0, lineDone = 0, segIdx = 0, fillDone = 0, finished = false;
+  hint(`Drawing a ${pat.name} rangoli…`);
+  const it = {
+    type: 'rangoli', group, glow: 0, radius: RANGOLI_SIZE * 0.5,
+    update(dt) {
+      if (finished) return true;
+      t0 += dt; let dirty = false;
+      // 1) dots appear
+      const nd = Math.min(dots.length, Math.floor(dots.length * t0 / T_DOTS));
+      for (; dotsDone < nd; dotsDone++) { const [x, y] = dots[dotsDone]; powderDot(g, x, y, 7, '#fffaf0', 70); dirty = true; }
+      // 2) white outlines join them, sprinkled along the path
+      if (t0 > T_DOTS) {
+        const want = total * Math.min(1, (t0 - T_DOTS) / T_LINES);
+        while (lineDone < want && segIdx < segs.length) {
+          const s = segs[segIdx], steps = Math.max(1, Math.ceil(s.L / 3));
+          for (let k = 0; k <= steps; k++) { const f = k / steps; powderDot(g, s.a[0] + (s.b[0] - s.a[0]) * f, s.a[1] + (s.b[1] - s.a[1]) * f, 2.6, '#fffaf0', 3); }
+          lineDone += s.L; segIdx++; dirty = true;
+        }
+      }
+      // 3) colours fill in, shape by shape, as powder
+      if (t0 > T_DOTS + T_LINES) {
+        const nf = Math.min(shapes.length, Math.ceil(shapes.length * (t0 - T_DOTS - T_LINES) / T_FILL));
+        for (; fillDone < nf; fillDone++) {
+          const s = shapes[fillDone]; g.save(); g.clip(s.path);
+          g.globalAlpha = 0.9; g.fillStyle = s.colour; g.fill(s.path); g.globalAlpha = 1;
+          const xs = s.line.map((p) => p[0]), ys = s.line.map((p) => p[1]);
+          const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+          const n = Math.min(2500, (x1 - x0) * (y1 - y0) * 0.12);
+          const base = new THREE.Color(s.colour);
+          for (let i = 0; i < n; i++) {   // grains a shade lighter or darker: that's what makes it look like powder
+            const k = rand(0.75, 1.25); g.fillStyle = `rgb(${Math.min(255, base.r * 255 * k) | 0},${Math.min(255, base.g * 255 * k) | 0},${Math.min(255, base.b * 255 * k) | 0})`;
+            g.fillRect(rand(x0, x1), rand(y0, y1), rand(1, 3), rand(1, 3));
+          }
+          g.restore(); dirty = true;
+        }
+        if (fillDone === shapes.length) {   // crisp white lines and dots on top, and done
+          shapes.forEach((s) => { for (let i = 1; i < s.line.length; i++) { const a = s.line[i - 1], b = s.line[i], st = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 3);
+            for (let k = 0; k <= st; k++) powderDot(g, a[0] + (b[0] - a[0]) * k / st, a[1] + (b[1] - a[1]) * k / st, 2.4, '#fffaf0', 2); } });
+          dots.forEach(([x, y]) => powderDot(g, x, y, 7, '#ffffff', 50));
+          finished = true; dirty = true;
+          if (tool === 'rangoli') hint('शुभ दीपावली! Shubh Dipawali! Now pick दीया Diya and tap around the rangoli. Tap the rangoli again for a new pattern.');
+        }
+      }
+      if (dirty) tex.needsUpdate = true;
+      return true;
+    },
+    // where diyas snap: 4 tips + 4 corners of the rangoli
+    slots() {
+      const r = RANGOLI_SIZE * 0.48, out = [];
+      for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, rr = k % 2 ? r * 0.8 : r;
+        out.push(new THREE.Vector3(Math.cos(a) * rr, 0, Math.sin(a) * rr).applyMatrix4(group.matrixWorld)); }
+      return out;
+    },
+    dispose() { tex.dispose(); mat.dispose(); },
+  };
+  return addItem(it);
+}
+
+/* ---------- 6h. PHULJHADI: the sparkler you hold (it comes out of your phone) ----------
+   Every frame we take the phone's position and direction, and hold the
+   sparkler a little below and in front of it, pointing up and away.
+   The sparks are left behind in the room (world space), so waving the
+   phone draws trails — and a glowing "light-writing" ribbon lingers 2 s.   */
+const sparkler = new THREE.Group(); sparkler.visible = false; sparkler.matrixAutoUpdate = false; scene.add(sparkler);
+const SPK = { base: new THREE.Vector3(0.10, -0.17, -0.18), tip: new THREE.Vector3(0.015, -0.03, -0.42), len: 0, burn: 0, lit: false, voice: null };
+{
+  const dir = SPK.tip.clone().sub(SPK.base); SPK.len = dir.length();
+  const holder = new THREE.Group(); holder.position.copy(SPK.base);
+  holder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+  sparkler.add(holder); SPK.holder = holder;
+  const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.0009, 0.0009, SPK.len, 6).translate(0, SPK.len / 2, 0),
+    new THREE.MeshStandardMaterial({ color: 0x55504a, metalness: 0.7, roughness: 0.5 }));
+  holder.add(wire);
+  // the grey coating (the part that burns), from 35% up the wire to the tip
+  SPK.c0 = SPK.len * 0.35; SPK.c1 = SPK.len;
+  const coat = new THREE.Mesh(new THREE.CylinderGeometry(0.0034, 0.0034, 1, 8).translate(0, 0.5, 0),
+    new THREE.MeshStandardMaterial({ color: 0x77736d, roughness: 1, map: canvasTex(32, 128, (g, w, h) => {
+      g.fillStyle = '#86817a'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 500; i++) { g.fillStyle = `rgba(${rand(40, 140)},${rand(40, 130)},${rand(40, 120)},.5)`; g.fillRect(rand(0, w), rand(0, h), 2, 2); } }) }));
+  holder.add(coat); SPK.coat = coat;
+  SPK.hot = new THREE.Mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 0.012, 6).translate(0, 0.006, 0),
+    new THREE.MeshBasicMaterial({ color: 0xff7a20, toneMapped: false })); holder.add(SPK.hot);
+  SPK.bead = glowSprite(0xfff4d8, 0.05, 1); holder.add(SPK.bead);
+  SPK.halo = glowSprite(0xffb050, 0.22, 0.5); holder.add(SPK.halo);
+}
+// light-writing ribbon
+const TRAIL = 600;
+const trailGeo = new THREE.BufferGeometry();
+const trPos = new Float32Array(TRAIL * 2 * 3), trCol = new Float32Array(TRAIL * 2 * 3);
+trailGeo.setAttribute('position', new THREE.BufferAttribute(trPos, 3).setUsage(THREE.DynamicDrawUsage));
+trailGeo.setAttribute('color', new THREE.BufferAttribute(trCol, 3).setUsage(THREE.DynamicDrawUsage));
+{ const idx = []; for (let i = 0; i < TRAIL - 1; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } trailGeo.setIndex(idx); }
+const TRAIL_SECS = 6;   // how long the light-writing stays
+const trail = new THREE.Mesh(trailGeo, lightOnlyMat(THREE.DoubleSide));
+trail.frustumCulled = false; trail.renderOrder = 6; scene.add(trail);
+const trailPts = [];   // {p: Vector3, t: time}
+
+function lightSparkler() {
+  SPK.burn = 0; SPK.lit = true; SPK.waiting = false; sparkler.visible = true;
+  if (!SPK.voice) SPK.voice = noiseVoice(new THREE.Vector3(), { type: 'bandpass', freq: 5200, q: 0.7, hp: 2500 });
+}
+// a fresh, unlit phuljhadi in your hand, waiting to be touched to a flame
+function readySparkler() {
+  SPK.burn = 0; SPK.lit = false; SPK.waiting = true; sparkler.visible = true;
+  if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
+}
+const HINT_READY = 'Your phuljhadi is ready. Touch its tip to a flame (a diya, the samai or a standing phuljhadi) by lining them up on screen, or just tap to light it.';
+function putOutSparkler() {
+  SPK.lit = false; SPK.waiting = false; sparkler.visible = false; trailPts.length = 0;
+  if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
+}
+const SPK_BURN = 45;   // seconds
+const _bp = new THREE.Vector3(), _last = new THREE.Vector3();
+function updateSparkler(dt, t, camM, camPos) {
+  if (!sparkler.visible) { trail.visible = false; return; }
+  sparkler.matrix.copy(camM); sparkler.matrixWorldNeedsUpdate = true; sparkler.updateMatrixWorld(true);
+  if (SPK.lit) SPK.burn += dt / SPK_BURN;
+  const f = Math.min(1, SPK.burn);
+  const at = SPK.c1 - (SPK.c1 - SPK.c0) * f;                 // where it's burning along the wire
+  SPK.coat.position.y = SPK.c0; SPK.coat.scale.set(1, Math.max(0.0001, at - SPK.c0), 1);
+  SPK.hot.position.y = at; SPK.bead.position.y = at; SPK.halo.position.y = at;
+  _bp.set(0, at, 0); SPK.holder.localToWorld(_bp);
+  if (SPK.lit && f >= 1) {
+    SPK.lit = false; if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
+    if (flamePoints().length) { readySparkler(); hint('All burnt out. Here is a fresh one: ' + HINT_READY.slice(25)); }
+    else if (tool === 'phuljhadi') hint('All burnt out. Tap to light another phuljhadi.');
+  }
+  if (SPK.waiting && !SPK.lit && touchingFlame(_bp)) {          // lit from a flame!
+    lightSparkler(); crackle(_bp, 0.25); crackle(_bp, 0.2);
+    hint('Lit from the flame! Wave it slowly to write in the air.');
+  }
+  const on = SPK.lit ? 1 : 0;
+  SPK.bead.material.opacity = on; SPK.halo.material.opacity = 0.55 * on * flick(t, 3);
+  SPK.bead.scale.setScalar(0.04 + 0.015 * Math.random());
+  SPK.hot.visible = SPK.lit;
+  if (SPK.lit) {
+    sparklerSparks(_bp, dt);
+    if (SPK.voice) { SPK.voice.move(_bp); const speed = _last.distanceTo(_bp) / Math.max(dt, 0.001); SPK.voice.set(0.22 + Math.min(0.25, speed * 0.1)); }
+    // add a ribbon point if the tip moved
+    if (!trailPts.length || trailPts[trailPts.length - 1].p.distanceTo(_bp) > 0.003) {
+      trailPts.push({ p: _bp.clone(), t }); if (trailPts.length > TRAIL) trailPts.shift();
+    }
+  }
+  _last.copy(_bp);
+  // build the ribbon: each point gets two vertices, side by side, facing the camera
+  while (trailPts.length && t - trailPts[0].t > TRAIL_SECS) trailPts.shift();
+  trail.visible = trailPts.length > 1;
+  const n = trailPts.length;
+  for (let i = 0; i < n; i++) {
+    const p = trailPts[i].p, q = trailPts[Math.min(n - 1, i + 1)].p, o = trailPts[Math.max(0, i - 1)].p;
+    const dir = _v.subVectors(q, o); if (dir.lengthSq() < 1e-10) dir.set(1, 0, 0);
+    const side = _v2.subVectors(p, camPos).cross(dir).normalize();
+    const age = (t - trailPts[i].t) / TRAIL_SECS, w = 0.001 * (1 - 0.5 * age);   // 2 mm wide line
+    trPos[i * 6] = p.x + side.x * w; trPos[i * 6 + 1] = p.y + side.y * w; trPos[i * 6 + 2] = p.z + side.z * w;
+    trPos[i * 6 + 3] = p.x - side.x * w; trPos[i * 6 + 4] = p.y - side.y * w; trPos[i * 6 + 5] = p.z - side.z * w;
+    const hot = Math.max(0, 1 - age * 12), fade = 1 - age * age * age;   // stays bright, fades at the very end
+    const r = fade, g = fade * (0.55 + 0.4 * hot), b = fade * (0.15 + 0.7 * hot);
+    trCol.set([r, g, b, r, g, b], i * 6);
+  }
+  trailGeo.setDrawRange(0, Math.max(0, (n - 1) * 6));
+  trailGeo.attributes.position.needsUpdate = true; trailGeo.attributes.color.needsUpdate = true;
+}
+
+/* ---------- 6i. SKY SHOW: fireworks bursting above, a little ahead of you ---------- */
+const shells = [];
+const SKY_COLOURS = [0xff3b3b, 0x3bff6a, 0x3b7bff, 0xffd23b, 0xff4fd8, 0xb06bff, 0x4cf0ff, 0xff8a1a, 0xffffff];
+const SKY_TYPES = ['peony', 'chrys', 'willow', 'ring', 'palm', 'crossette', 'twotone', 'strobe', 'peony', 'twotone'];
+const brighten = (col) => [Math.min(1, col.r * 1.2 + 0.08), Math.min(1, col.g * 1.2 + 0.08), Math.min(1, col.b * 1.2 + 0.08)];
+const randSkyColour = () => new THREE.Color(SKY_COLOURS[Math.random() * SKY_COLOURS.length | 0]);
+/* One firework shell bursting at "at". Eight patterns:
+   peony (ball of colour) · chrys (with gold tails) · willow (long hanging gold)
+   ring (faces you) · palm (a few huge comets) · crossette (stars that split)
+   twotone (outer colour + inner core) · strobe (blinking white glitter)       */
+function shell(at, type, colour, scale = 1) {
+  const dist = at.distanceTo(viewerPos());
+  const c = brighten(colour), c2 = brighten(randSkyColour());
+  const Q = quality * Math.max(scale, 0.6);
+  const star = (d, sp, o) => { o.size *= scale; o.floor = -999; emit(at.x, at.y, at.z, d.x * sp * scale, d.y * sp * scale, d.z * sp * scale, o); };
+  if (type === 'ring') {
+    const toView = viewerPos().clone().sub(at).normalize();
+    const u = new THREE.Vector3().crossVectors(toView, new THREE.Vector3(0, 1, 0)).normalize();
+    const v = new THREE.Vector3().crossVectors(u, toView).normalize();
+    const tilt = rand(-0.6, 0.6), N = Math.round(160 * Q), d = new THREE.Vector3();
+    for (let i = 0; i < N; i++) { const th = i / N * 6.283;
+      d.copy(u).multiplyScalar(Math.cos(th)).addScaledVector(v, Math.sin(th) * Math.cos(tilt)).addScaledVector(toView, Math.sin(th) * Math.sin(tilt));
+      star(d, rand(8.6, 9.2), { life: rand(1.6, 2.2), size: 0.58, drag: 1.3, grav: 0.25, streak: 0.12, pal: PAL.COLOUR, rgb: c }); }
+    for (let i = 0; i < 70 * Q; i++) star(randDir(), rand(2, 3.5), { life: rand(1.2, 1.7), size: 0.48, drag: 1.4, grav: 0.3, streak: 0.08, pal: PAL.COLOUR, rgb: c2 });
+  } else if (type === 'willow') {
+    for (let i = 0; i < 220 * Q; i++) star(randDir(), rand(5, 7), { life: rand(3, 4.2), size: 0.48, drag: 1.2, grav: 0.4, streak: 0.22, pal: PAL.GOLD, split: Math.random() < 0.12 ? 1 : 0 });
+  } else if (type === 'palm') {
+    for (let i = 0; i < 28 * Q; i++) { const d = randDir(); d.y = Math.abs(d.y) * 0.8 + 0.2; d.normalize();
+      star(d, rand(9, 11), { life: rand(2, 2.6), size: 0.95, drag: 1.1, grav: 0.45, streak: 0.32, pal: PAL.GOLD }); }
+    for (let i = 0; i < 90 * Q; i++) star(randDir(), rand(3, 6), { life: rand(1.2, 1.8), size: 0.42, drag: 1.4, grav: 0.3, streak: 0.1, pal: PAL.COLOUR, rgb: c });
+  } else if (type === 'crossette') {
+    for (let i = 0; i < 50 * Q; i++) star(randDir(), rand(6, 8), { life: rand(1.2, 1.5), size: 0.68, drag: 1.2, grav: 0.3, streak: 0.14, pal: PAL.COLOUR, rgb: c, split: 1 });
+  } else if (type === 'strobe') {
+    for (let i = 0; i < 280 * Q; i++) star(randDir(), rand(6, 9), { life: rand(1.8, 2.6), size: 0.46, drag: 1.4, grav: 0.3, streak: 0.04, pal: PAL.STROBE });
+  } else {   // peony, chrys, twotone
+    const N = Math.round(320 * Q);
+    for (let i = 0; i < N; i++) {
+      const inner = type === 'twotone' && i % 3 === 0;
+      star(randDir(), inner ? rand(3.5, 5) : rand(7.5, 9.5), { life: rand(1.5, 2.2), size: 0.58, drag: 1.4, grav: 0.3,
+        streak: type === 'chrys' ? 0.22 : 0.12, pal: type === 'chrys' && Math.random() < 0.5 ? PAL.GOLD : PAL.COLOUR, rgb: inner ? c2 : c,
+        split: type === 'chrys' && Math.random() < 0.25 ? 1 : 0 });
+    }
+  }
+  // light in the air: a quick white flash, plus a soft coloured glow that lingers
+  const fl = glowSprite(0xffffff, 8 * scale, 1); fl.position.copy(at); scene.add(fl);
+  const gl = glowSprite(colour, 24 * scale, 0.45); gl.position.copy(at); scene.add(gl);
+  shells.push({ flash: fl, glow: gl, t: 0, pos: at.clone(), power: 6 * scale });
+  // the sound arrives later: light travels faster than sound!
+  clip(Math.random() < 0.5 ? 'burst1' : 'burst2', at, { gain: 1, delay: dist / 343, ref: 25, rate: rand(0.9, 1.1) });
+}
+const SKY_SECS = 32;
+let skyUntil = 0, skyNext = 0, skyRising = [], skyFinale = false;
+function launch(type, colour, delay = 0) {   // send one shell up from the ground, somewhere ahead
+  const c = viewerPos(), fwd = viewerForward();
+  const dist = rand(26, 42), side = rand(-16, 16);
+  const top = new THREE.Vector3(c.x + fwd.x * dist - fwd.z * side, floorY + rand(16, 30), c.z + fwd.z * dist + fwd.x * side);
+  skyRising.push({ from: new THREE.Vector3(top.x + rand(-2, 2), floorY, top.z + rand(-2, 2)), to: top, t: -delay, dur: rand(0.9, 1.3), type, colour });
+}
+function startSkyShow(t) {
+  skyUntil = t + SKY_SECS; skyNext = t + 0.2; skyFinale = false; startCity();
+  if (MODE[A.mode].bangs) clip('whistles', viewerPos().clone().add(new THREE.Vector3(0, 10, -20)), { gain: 0.6, ref: 15, delay: 0.2 });
+  hint('Look up and a little ahead. Best on a balcony or by a window.');
+}
+function updateSky(dt, t) {
+  if (t < skyUntil - 4 && t >= skyNext) {
+    skyNext = t + rand(0.35, 0.95);
+    const salvo = Math.random() < 0.3 ? 2 + (Math.random() * 2 | 0) : 1;     // sometimes 2–3 go up together
+    const type = SKY_TYPES[Math.random() * SKY_TYPES.length | 0];
+    for (let k = 0; k < salvo; k++) launch(type, randSkyColour(), k * 0.15);
+  }
+  if (!skyFinale && skyUntil > 0 && t >= skyUntil - 4) {    // grand finale: six at once
+    skyFinale = true;
+    for (let k = 0; k < 6; k++) launch(SKY_TYPES[Math.random() * SKY_TYPES.length | 0], randSkyColour(), k * 0.1);
+  }
+  if (t > skyUntil && skyUntil > 0 && !skyRising.length) { skyUntil = 0; stopCity(); }
+  for (let i = skyRising.length - 1; i >= 0; i--) {
+    const r = skyRising[i]; r.t += dt; if (r.t < 0) continue;
+    const f = Math.min(1, r.t / r.dur), e = 1 - (1 - f) * (1 - f);
+    _v.lerpVectors(r.from, r.to, e);
+    emit(_v.x, _v.y, _v.z, rand(-0.3, 0.3), -1, rand(-0.3, 0.3), { life: rand(0.4, 0.8), size: 0.12, drag: 1, grav: 0.3, streak: 0.06, floor: -999 });
+    if (f >= 1) { shell(r.to, r.type, r.colour); skyRising.splice(i, 1); }
+  }
+  for (let i = shells.length - 1; i >= 0; i--) {
+    const s = shells[i]; s.t += dt;
+    s.flash.material.opacity = Math.max(0, 1 - s.t / 0.3);
+    s.glow.material.opacity = 0.45 * Math.max(0, 1 - s.t / 1.6);
+    if (s.t > 1.7) { scene.remove(s.flash, s.glow); s.flash.material.dispose(); s.glow.material.dispose(); shells.splice(i, 1); }
+  }
+}
+
+/* =====================================================================
+   PART 7 — Where am I looking? (works the same in all three modes)
+   ===================================================================== */
+let mode = 'home', xrPose = null, hitSource = null, controls = null, stream = null;
+const camM = new THREE.Matrix4(), camPosV = new THREE.Vector3();
+function viewerPos() { return camPosV; }
+function viewerForward() { const e = camM.elements; return new THREE.Vector3(-e[8], 0, -e[10]).normalize(); }
+
+/* =====================================================================
+   PART 8 — The tray, taps and placing things
+   ===================================================================== */
+const TOOLS = [
+  { id: 'rangoli', dv: 'रंगोली', en: 'Rangoli', hint: 'Point at the floor and tap to draw a rangoli. Tap on it again for a new pattern.' },
+  { id: 'diya', dv: 'दीया', en: 'Diya', hint: 'Tap the floor to place a diya. Near a rangoli, it settles on the pattern.' },
+  { id: 'phuljhadi', dv: 'फुलझड़ी', en: 'Phuljhadi', hint: "You're holding a phuljhadi! Wave your phone slowly to write in the air. Tap to light a new one." },
+  { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Standing', hint: 'Tap the floor to plant a phuljhadi in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
+  { id: 'anar', dv: 'अनार', en: 'Anar', hint: 'Tap the floor to light an anar, then step back a little.' },
+  { id: 'chakri', dv: 'चकरी', en: 'Chakri', hint: 'Tap the floor to light a chakri.' },
+  { id: 'ladi', dv: 'लड़ी', en: 'Ladi', hint: 'Tap the floor to lay a ladi and light it.' },
+  { id: 'rocket', dv: 'रॉकेट', en: 'Rocket', hint: 'Tap the floor to set a rocket in a bottle. Look up when it goes!' },
+  { id: 'samai', dv: 'समई', en: 'Samai', hint: 'Tap the floor to place a brass samai with eight wicks.' },
+  { id: 'lantern', dv: 'आकाश दीप', en: 'Sky lantern', hint: 'Tap the floor to light a sky lantern and watch it float away. Best on a balcony.' },
+  { id: 'snake', dv: 'साँप की गोली', en: 'Snake tablet', hint: 'Tap the floor to light a saanp ki goli and watch the ash snake grow.' },
+  { id: 'sky', dv: 'आसमान', en: 'Sky show', hint: '' },
+];
+let tool = 'rangoli';
+TOOLS.forEach((T) => {
+  const b = document.createElement('button'); b.className = 'chip'; b.dataset.id = T.id;
+  b.innerHTML = `<span class="dv">${T.dv}</span><span class="en">${T.en}</span>`;
+  b.addEventListener('click', () => selectTool(T.id));
+  $('tray').appendChild(b);
+});
+function selectTool(id) {
+  ensureAudio();
+  if (id === 'sky') { startSkyShow(simT); flashChip('sky'); return; }
+  tool = id;
+  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.id === id));
+  const ready = id === 'phuljhadi' && flamePoints().length > 0;   // a flame is burning: light yours from it
+  if (id === 'phuljhadi') { ready ? readySparkler() : lightSparkler(); if (controls) controls.enableRotate = false; }
+  else { putOutSparkler(); if (controls) controls.enableRotate = true; }
+  hint((ready ? HINT_READY : toolHint(id)) + (mode === '3d' && id === 'phuljhadi' ? ' (On a laptop: move your mouse.)' : ''));
+}
+function flashChip(id) { const c = document.querySelector(`.chip[data-id="${id}"]`); c.classList.add('act'); setTimeout(() => c.classList.remove('act'), 1200); }
+function hint(t) { $('hint').textContent = t; }
+function toolHint(id) { return TOOLS.find((T) => T.id === id).hint; }
+
+const LIMITS = { diya: 16, anar: 3, chakri: 3, ladi: 2, rocket: 3, samai: 2, rangoli: 3, standing: 5, lantern: 8, snake: 3 };
+async function placeAt(p) {
+  ensureAudio();
+  if (tool === 'phuljhadi') { lightSparkler(); hint(toolHint('phuljhadi')); return; }
+  if (tool === 'rangoli') {   // tapping on an existing rangoli swaps it for the next pattern
+    const old = items.find((i) => i.type === 'rangoli' && i.group.position.distanceTo(p) < i.radius);
+    if (old) { const at = old.group.position.clone(); at.y -= 0.001; removeItem(old); makeRangoli(at); return; }
+  }
+  // keep the scene light on the phone: oldest of a kind goes when there are too many
+  const same = items.filter((i) => i.type === tool);
+  if (same.length >= LIMITS[tool]) removeItem(same[0]);
+  const pos = p.clone();
+  if (tool === 'diya') {      // snap to a rangoli slot if close
+    for (const r of items.filter((i) => i.type === 'rangoli')) {
+      if (r.group.position.distanceTo(pos) < r.radius + 0.12) {
+        const taken = items.filter((i) => i.type === 'diya').map((d) => d.group.position);
+        const free = r.slots().filter((s) => !taken.some((q) => q.distanceTo(s) < 0.05));
+        if (free.length) { free.sort((a, b) => a.distanceTo(pos) - b.distanceTo(pos)); pos.x = free[0].x; pos.z = free[0].z; }
+      }
+    }
+    makeDiya(pos);
+  } else if (tool === 'anar') makeAnar(pos);
+  else if (tool === 'chakri') makeChakri(pos);
+  else if (tool === 'ladi') makeLadi(pos);
+  else if (tool === 'rocket') makeRocket(pos);
+  else if (tool === 'rangoli') makeRangoli(pos);
+  else if (tool === 'samai') {
+    if (!samaiModel) { hint('Bringing the samai…'); try { await loadSamai(); } catch (e) { hint('The samai could not load. Please try again.'); return; } hint(toolHint('samai')); }
+    makeSamai(pos);
+  } else if (tool === 'standing') makeStanding(pos);
+  else if (tool === 'lantern') { makeLantern(pos); hint('Real sky lanterns can land on roofs, trees and wires and start fires; many cities ban them. This one floats away safely.'); }
+  else if (tool === 'snake') { makeSnake(pos); hint("Real saanp ki goli gives off thick, harmful smoke, worst for children and anyone with breathing trouble. This smoke is only pixels."); }
+}
+$('undo').addEventListener('click', () => {   // remove the last thing you placed
+  if (items.length) removeItem(items[items.length - 1]); else hint('Nothing to undo yet.');
+});
+$('clear').addEventListener('click', () => {
+  while (items.length) removeItem(items[0]);
+  clearSparks(); skyUntil = 0; skyRising = []; stopCity();
+  if (tool === 'phuljhadi') lightSparkler();
+  hint('All clear. Pick something from the tray.');
+});
+
+/* ---------- Mode A: real AR (Android Chrome) ---------- */
+let placingTimer = null, switchToCamera = false;
+async function startAR() {
+  try {
+    $('hud').style.display = 'block';
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay'], domOverlay: { root: $('hud') } });
+    renderer.xr.setReferenceSpaceType('local');
+    await renderer.xr.setSession(session);
+    mode = 'ar'; enterViewing();
+    const viewerSpace = await session.requestReferenceSpace('viewer');
+    hitSource = await session.requestHitTestSource({ space: viewerSpace });
+    hint('Move your phone slowly over the floor until the orange ring appears.');
+    placingTimer = setTimeout(() => { if (!reticle.visible) { hint("Can't find the floor yet. Turn on a light, point at a rug or textured floor (shiny floors are tricky) and move slowly."); $('fallback').hidden = false; } }, 9000);
+    session.addEventListener('select', () => {
+      if (tool === 'phuljhadi') { placeAt(new THREE.Vector3()); return; }
+      if (!reticle.visible) return;
+      placeAt(new THREE.Vector3().setFromMatrixPosition(reticle.matrix));
+    });
+    session.addEventListener('end', () => {
+      hitSource = null; reticle.visible = false; clearTimeout(placingTimer);
+      backHome(!switchToCamera);
+      if (switchToCamera) { switchToCamera = false; setTimeout(startCamera, 300); }
+    });
+  } catch (e) { $('hud').style.display = 'none'; $('err').textContent = 'Could not start AR: ' + e.message; }
+}
+// taps on our buttons should not also place a cracker in AR
+['tray', 'topbar', 'hint', 'fallback', 'stamp'].forEach((id) => $(id).addEventListener('beforexrselect', (e) => e.preventDefault()));
+$('fallback').addEventListener('click', () => { switchToCamera = true; const s = renderer.xr.getSession(); if (s) s.end(); });
+
+/* ---------- Mode B: camera view (iPhone and others) ----------
+   No floor tracking here, so we imagine the floor 1.25 m below the phone,
+   and turn the 3D camera with the phone's gyroscope. Things stay put as you
+   turn, but drift a little if you walk.                                     */
+const EYE = 1.25;
+let orient = null, alpha0 = null;
+const zee = new THREE.Vector3(0, 0, 1), q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)), qTmp = new THREE.Quaternion(), eTmp = new THREE.Euler();
+function onOrient(e) { if (e.alpha == null) return; if (alpha0 === null) alpha0 = e.alpha; orient = e; }
+function applyOrientation() {
+  if (!orient) return;
+  const a = THREE.MathUtils.degToRad(orient.alpha - alpha0), b = THREE.MathUtils.degToRad(orient.beta), g = THREE.MathUtils.degToRad(orient.gamma);
+  const so = THREE.MathUtils.degToRad((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+  eTmp.set(b, a, -g, 'YXZ'); camera.quaternion.setFromEuler(eTmp); camera.quaternion.multiply(q1);
+  camera.quaternion.multiply(qTmp.setFromAxisAngle(zee, -so));
+}
+async function startCamera() {
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      try { await DeviceOrientationEvent.requestPermission(); } catch (e) {} }
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    const v = $('cam'); v.srcObject = stream; v.style.display = 'block'; await v.play();
+    mode = 'camera'; enterViewing(); floorY = 0;
+    camera.position.set(0, EYE, 0); camera.quaternion.set(0, 0, 0, 1);
+    // start looking down at the floor, until the gyroscope takes over
+    camera.rotation.set(-0.8, 0, 0);
+    alpha0 = null; orient = null;
+    window.addEventListener('deviceorientation', onOrient);
+    hint('Point your phone at the floor and tap to place. ' + TOOLS.find((T) => T.id === tool).hint);
+  } catch (e) { $('err').textContent = 'Camera not available: ' + e.message; stopCamera(); }
+}
+function stopCamera() {
+  window.removeEventListener('deviceorientation', onOrient);
+  if (stream) stream.getTracks().forEach((t) => t.stop()); stream = null; $('cam').style.display = 'none';
+}
+const ray = new THREE.Raycaster(), floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), ndc = new THREE.Vector2();
+function floorHit(x, y, out) {   // screen point (−1…1) → spot on the floor, or null
+  ndc.set(x, y); ray.setFromCamera(ndc, camera); floorPlane.constant = -floorY;
+  const hit = ray.ray.intersectPlane(floorPlane, out);
+  if (!hit || hit.distanceTo(camera.position) > 6) return null;
+  return hit;
+}
+
+/* ---------- Mode C: 3D view (laptop) ---------- */
+function start3D() {
+  mode = '3d'; enterViewing(); floorY = 0; terrace.visible = true;
+  renderer.setClearColor(0x05060a, 1);
+  camera.position.set(0, 1.05, 1.55);
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0.25, 0); controls.enableDamping = true; controls.maxPolarAngle = 1.45;
+  controls.minDistance = 0.4; controls.maxDistance = 8; controls.update();
+  hint('Click the floor to place. Drag to look around, scroll to zoom. ' + TOOLS.find((T) => T.id === tool).hint);
+}
+
+// pointer: tap/click on the floor (camera view and 3D view); in 3D the sparkler follows the mouse
+let downAt = null; const pointerNDC = new THREE.Vector2(0.15, -0.1);
+renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
+renderer.domElement.addEventListener('pointermove', (e) => { pointerNDC.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!downAt || mode === 'ar') return;
+  const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y); downAt = null;
+  if (moved > 8) return;   // that was a drag, not a tap
+  if (tool === 'phuljhadi') { placeAt(new THREE.Vector3()); return; }
+  const p = mode === 'camera' ? floorHit(0, 0, new THREE.Vector3()) : floorHit(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1, new THREE.Vector3());
+  if (p) placeAt(p);
+});
+
+/* Warm-up: the first time the phone draws a new kind of material it has to
+   "compile" a small program for the graphics chip, which can cause a stutter.
+   So we show it one of everything, hidden far away, before you start.        */
+let warmed = false;
+function warmUp() {
+  if (warmed) return; warmed = true;
+  const g = new THREE.Group(); g.position.set(0, -50, 0);
+  const add = (m) => { g.add(m); return m; };
+  add(new THREE.Mesh(diyaGeo, diyaMat)); add(new THREE.Mesh(oilGeo, oilMat)); add(new THREE.Mesh(wickGeo, wickMat));
+  add(new THREE.Mesh(wickGeo, wickTipMat)); add(makeFlame(0.03, 0.015)); add(glowSprite(0xffffff, 0.1)); add(lightPool(0xffffff, 0.2));
+  add(new THREE.Mesh(anarGeo, new THREE.MeshStandardMaterial({ map: anarSchemes[0], roughness: 0.75 }))); add(new THREE.Mesh(anarGeo, capMat));
+  add(new THREE.Mesh(chakriGeo, chakriMat)); add(new THREE.Mesh(bottleGeo, glassMat)); add(new THREE.Mesh(ladiGeo, ladiFuseMat));
+  add(new THREE.InstancedMesh(ladiGeo, ladiMat, 1)); add(new THREE.Mesh(rangoliGeo, new THREE.MeshLambertMaterial({ transparent: true, depthWrite: false })));
+  add(new THREE.Mesh(blurRingGeo, new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+  add(new THREE.Mesh(snakeGeo, ashMat)); add(new THREE.Mesh(snakeGeo, tabletMat)); add(new THREE.Mesh(potGeo, sandMat));
+  add(new THREE.Mesh(wickGeo, sparkWireMat)); add(new THREE.Mesh(wickGeo, sparkCoatMat)); add(new THREE.Mesh(ringGeo, wireMat));
+  add(new THREE.Mesh(lanternGeo, new THREE.MeshBasicMaterial({ map: lanternTex, side: THREE.DoubleSide, transparent: true, toneMapped: false })));
+  g.traverse((o) => { o.frustumCulled = false; });
+  scene.add(g);
+  const done = () => scene.remove(g);
+  if (renderer.compileAsync) renderer.compileAsync(scene, camera).then(done, done); else { renderer.compile(scene, camera); done(); }
+}
+function enterViewing() {
+  warmUp(); setTimeout(drawTorans, 0);
+  $('home').style.display = 'none'; $('hud').style.display = 'block';
+  document.querySelector('.card').classList.remove('after');
+  selectTool(tool);
+}
+function backHome(showFinale = true) {
+  stopCamera(); putOutSparkler();
+  while (items.length) removeItem(items[0]);
+  clearSparks(); skyUntil = 0; skyRising = []; stopCity();
+  if (controls) { controls.dispose(); controls = null; }
+  terrace.visible = false; renderer.setClearColor(0x000000, 0);
+  mode = 'home'; $('hud').style.display = 'none'; $('home').style.display = 'flex'; $('fallback').hidden = true;
+  if (showFinale) document.querySelector('.card').classList.add('after');
+}
+$('exit').addEventListener('click', () => { const s = renderer.xr.getSession(); if (s) s.end(); else backHome(); });
+$('again').addEventListener('click', () => document.querySelector('.card').classList.remove('after'));
+$('b-ar').addEventListener('click', () => { ensureAudio(); $('err').textContent = ''; startAR(); });
+$('b-cam').addEventListener('click', () => { ensureAudio(); $('err').textContent = ''; startCamera(); });
+$('b-3d').addEventListener('click', () => { ensureAudio(); $('err').textContent = ''; start3D(); });
+
+// tap the build stamp to show the frame rate (handy when testing on a mid-range phone)
+let showFps = false;
+$('stamp').addEventListener('click', () => { showFps = !showFps; $('fps').style.display = showFps ? 'block' : 'none'; });
+
+/* ---------- QR code for computers ---------- */
+function makeQR() {
+  if (typeof qrcode === 'undefined') return;
+  const qr = qrcode(0, 'M'); qr.addData(location.href.split('?')[0]); qr.make();
+  const n = qr.getModuleCount(), cell = 6, quiet = 4, c = $('qr'); c.width = c.height = (n + quiet * 2) * cell;
+  const g = c.getContext('2d'); g.fillStyle = '#ecebff'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#05060A';
+  for (let r = 0; r < n; r++) for (let q = 0; q < n; q++) if (qr.isDark(r, q)) g.fillRect((q + quiet) * cell, (r + quiet) * cell, cell, cell);
+  $('qrbox').hidden = false;
+}
+if (matchMedia('(pointer: fine)').matches && !('ontouchstart' in window)) makeQR();
+
+/* =====================================================================
+   PART 9 — Every frame
+   ===================================================================== */
+function simulate(dt, t) {
+  let best = null, bestPow = 0, total = 0;
+  const gone = [];
+  for (const it of items) { if (it.update(dt, t) === false) { gone.push(it); continue; } total += it.glow; if (it.glow > bestPow) { bestPow = it.glow; best = it; } }
+  gone.forEach(removeItem);
+  if (SPK.lit && 1.2 > bestPow) { bestPow = 1.2; best = { flamePos: () => _bp }; }
+  shells.forEach((s) => { if (s.t < 0.3 && s.power > bestPow) { bestPow = s.power; best = { flamePos: () => s.pos }; } });
+  if (best) { fireLight.position.copy(best.flamePos()); fireLight.position.y += 0.05; }
+  fireLight.intensity = Math.min(4, bestPow * 1.2 + total * 0.15);
+  fireLight.distance = bestPow > 5 ? 80 : 5;
+  updateSparks(dt); updateSmoke(dt); updateSky(dt, t);
+
+}
+const clock = new THREE.Clock();
+const _size = new THREE.Vector2(), _rh = new THREE.Vector3();
+let fpsAcc = 0, fpsN = 0, slowFor = 0;
+let simT = 0;
+renderer.setAnimationLoop((time, frame) => {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  if (mode === 'home') return;
+  simT += dt; const t = simT;
+
+  // 1) where is the phone / camera this frame?
+  if (frame && mode === 'ar') {
+    const ref = renderer.xr.getReferenceSpace(), pose = frame.getViewerPose(ref);
+    if (pose) camM.fromArray(pose.transform.matrix);
+    if (hitSource) {
+      const res = frame.getHitTestResults(hitSource);
+      if (res.length) {
+        const hp = res[0].getPose(ref);
+        reticle.visible = tool !== 'phuljhadi'; reticle.matrix.fromArray(hp.transform.matrix); reticle.matrixAutoUpdate = false;
+        _rh.setFromMatrixPosition(reticle.matrix); floorY = _rh.y;
+        if (placingTimer) { clearTimeout(placingTimer); placingTimer = null; $('fallback').hidden = true; hint(TOOLS.find((T) => T.id === tool).hint); }
+      } else reticle.visible = false;
+    }
+    const base = renderer.xr.getBaseLayer && renderer.xr.getBaseLayer();
+    headMat.uniforms.uH.value = base ? base.framebufferHeight : innerHeight * devicePixelRatio;
+  } else {
+    if (mode === 'camera') applyOrientation();
+    if (controls) controls.update();
+    camera.updateMatrixWorld(); camM.copy(camera.matrixWorld);
+    renderer.getDrawingBufferSize(_size); headMat.uniforms.uH.value = _size.y;
+    if (mode === 'camera') {    // reticle: where the middle of the screen meets the floor
+      const p = floorHit(0, 0, _rh);
+      reticle.visible = !!p && tool !== 'phuljhadi'; reticle.matrixAutoUpdate = true;
+      if (p) reticle.position.copy(p);
+    } else reticle.visible = false;
+  }
+  camPosV.setFromMatrixPosition(camM);
+  updateListener(camM);
+
+  // 2) the sparkler: on a laptop it follows the mouse; on a phone it's in your hand
+  if (mode === '3d' && sparkler.visible) {
+    ray.setFromCamera(pointerNDC, camera);
+    const tipW = ray.ray.at(1.1, new THREE.Vector3());
+    const handM = new THREE.Matrix4().lookAt(camera.position, tipW, camera.up);   // aim along the mouse ray
+    handM.setPosition(camera.position);
+    const localTip = SPK.tip.clone().applyMatrix4(handM);
+    handM.setPosition(camera.position.clone().add(tipW.sub(localTip)));
+    updateSparkler(dt, t, handM, camPosV);
+  } else updateSparkler(dt, t, camM, camPosV);
+
+  simulate(dt, t);
+
+  // 4) keep it smooth: if frames are slow for a while, use fewer sparks
+  fpsAcc += dt; fpsN++;
+  if (fpsAcc > 0.5) {
+    const fps = fpsN / fpsAcc;
+    if (fps < 40) slowFor += fpsAcc; else slowFor = Math.max(0, slowFor - fpsAcc);
+    if (slowFor > 2 && quality > 0.45) { quality -= 0.15; slowFor = 0; }
+    if (showFps) $('fps').textContent = `${fps.toFixed(0)} fps · ${liveSparks} sparks · quality ${quality.toFixed(2)}`;
+    fpsAcc = 0; fpsN = 0;
+  }
+
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('resize', () => {
+  if (renderer.xr.isPresenting) return;
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+});
+
+// For testing on a computer: window.GD.place('anar', 0, 0) etc.
+window.GD = { get controls() { return controls; }, P, place: (id, x, z) => { tool = id; return placeAt(new THREE.Vector3(x, floorY, z)); }, selectTool, start3D, items, camera,
+  sky: () => startSkyShow(simT),
+  advance(sec) { for (let k = 0; k < sec * 30; k++) { simT += 1 / 30; simulate(1 / 30, simT); } }, get sparks() { return liveSparks; } };
+</script>
+</body>
+</html>
