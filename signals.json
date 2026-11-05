@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-11-04T21:52:33+05:30",
+ "REFRESHED": "2026-11-05T21:51:31+05:30",
  "SIGNALS": [
+  {
+   "id": "2117921571364847904",
+   "handle": "Trecopo1",
+   "name": "Trecopo",
+   "url": "https://x.com/Trecopo1/status/2117921571364847904",
+   "posted": "2026-11-04T15:37:06+05:30",
+   "topic": "Open models",
+   "kind": "Report",
+   "summary": "A post says Mistral released the weights of Mistral Large 4, a 1T-parameter model with 52B active, on Hugging Face on October 29, after a public preview on October 6."
+  },
   {
    "id": "2117874543893074141",
    "handle": "appleinsider",
@@ -42,6 +52,26 @@
    "summary": "Users can now auto-connect plugins when they log in to Claude, for MCP servers that accept Claude as a trusted issuer, so no re-authorizing is needed."
   },
   {
+   "id": "2117647994048704588",
+   "handle": "Vectorizeio",
+   "name": "Vectorize",
+   "url": "https://x.com/Vectorizeio/status/2117647994048704588",
+   "posted": "2026-11-03T21:30:00+05:30",
+   "topic": "Open models",
+   "kind": "Official",
+   "summary": "Vectorize introduces Hindsight Models, saying its memory is now 2.5x cheaper and 2x faster; weights are open on Hugging Face or hosted via an API."
+  },
+  {
+   "id": "2117615015197098258",
+   "handle": "pankajkumar_dev",
+   "name": "Pankaj Kumar",
+   "url": "https://x.com/pankajkumar_dev/status/2117615015197098258",
+   "posted": "2026-11-03T19:18:57+05:30",
+   "topic": "Models",
+   "kind": "Leak",
+   "summary": "Claims GPT-6.2 Astra is routing on some accounts with a new checkpoint and produces strong SVG output. Unconfirmed by OpenAI."
+  },
+  {
    "id": "2117425418454384677",
    "handle": "MTSlive",
    "name": "MTS",
@@ -60,36 +90,6 @@
    "topic": "AI",
    "kind": "Report",
    "summary": "At ADIPEC in Abu Dhabi, Sam Altman said the internal model behind OpenAI's Navier-Stokes result is the next GPT, due to be released soon."
-  },
-  {
-   "id": "2117323044213625181",
-   "handle": "mark_k",
-   "name": "Mark Kretschmann",
-   "url": "https://x.com/mark_k/status/2117323044213625181",
-   "posted": "2026-11-02T23:58:46+05:30",
-   "topic": "Models",
-   "kind": "Leak",
-   "summary": "Lists model releases rumored for November, including GPT-6.2 Astra (Nov 2-15) and GPT-6.2 Sol (Nov 10-15). Dates are unconfirmed rumors from the poster."
-  },
-  {
-   "id": "2117287409750561163",
-   "handle": "kimmonismus",
-   "name": "Chubby♨️",
-   "url": "https://x.com/kimmonismus/status/2117287409750561163",
-   "posted": "2026-11-02T21:37:10+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Posts that Anthropic says its internal estimates suggest it may soon reach its threshold for dramatically accelerated, AI-driven progress in AI development."
-  },
-  {
-   "id": "2117279303247523852",
-   "handle": "wallstengine",
-   "name": "Wall St Engine",
-   "url": "https://x.com/wallstengine/status/2117279303247523852",
-   "posted": "2026-11-02T21:04:57+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "OpenAI announced a Grid Protectors program to cut power use at future AI data centers during grid stress; a planned Georgia campus needs 3.2GW."
   }
  ]
 }

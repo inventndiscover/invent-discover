@@ -1220,6 +1220,32 @@
   "desc": "Three poets and three AI-assisted contestants each get five minutes to write shayari, and the audience votes for a winner.",
   "firstSeen": "2026-09-28"
  },
+ "ship-safe-devcon-mumbai": {
+  "id": "ship-safe-devcon-mumbai",
+  "title": "Ship Safe: Devcon Mumbai Security Sessions by QuillAudits",
+  "cat": "Tech",
+  "tags": [
+   "Security",
+   "Web3",
+   "Devcon week"
+  ],
+  "area": "BKC",
+  "venue": "BKC, Mumbai (exact venue shared with confirmed guests)",
+  "start": "2026-11-06T16:00",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free · registrations are reviewed",
+  "aud": [
+   "Developer"
+  ],
+  "src": "StartupGrants India",
+  "url": "https://www.startupgrantsindia.com/events/ship-safe-devcon-mumbai-security-sessions-by-quillaudits",
+  "org": "QuillAudits Events",
+  "access": "approval",
+  "desc": "An evening of security-focused sessions for builders during Devcon week, run by a smart-contract audit firm. Seats are limited and each registration is reviewed.",
+  "firstSeen": "2026-11-05"
+ },
  "singularity-2-thane": {
   "tags": [
    "Hackathon",
