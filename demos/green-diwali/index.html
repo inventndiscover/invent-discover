@@ -95,6 +95,7 @@
   #undo{border-color:var(--blue);box-shadow:0 0 12px rgba(76,201,255,.4)}
   #stamp{position:absolute;top:calc(116px + env(safe-area-inset-top));left:12px;font-size:10.5px;color:#c9c6e6;padding:4px 9px;border-radius:999px;background:rgba(5,6,10,.7);
     border:1px solid rgba(155,107,255,.3);pointer-events:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+  @media (min-width:700px){ #topbar{top:calc(100px + env(safe-area-inset-top))} #stamp{top:calc(142px + env(safe-area-inset-top))} #fps{top:calc(168px + env(safe-area-inset-top)) !important} }
   #fps{position:absolute;top:calc(142px + env(safe-area-inset-top));left:12px;font:11px ui-monospace,monospace;color:var(--ok);
     background:rgba(5,6,10,.7);padding:3px 7px;border-radius:6px;display:none}
   #bottom{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
@@ -165,9 +166,9 @@
         <li><span>Camera access</span><span id="c-cam">…</span></li>
       </ul>
 
-      <button class="btn" id="b-ar" hidden><span class="ico"></span>Light up your room</button>
-      <button class="btn" id="b-cam" hidden><span class="ico"></span>Open camera view</button>
-      <button class="btn" id="b-3d"><span class="ico"></span>View in 3D</button>
+      <button class="btn" id="b-ar" hidden><span class="ico"></span>Light up your room<span class="ico"></span></button>
+      <button class="btn" id="b-cam" hidden><span class="ico"></span>Open camera view<span class="ico"></span></button>
+      <button class="btn" id="b-3d"><span class="ico"></span>View in 3D<span class="ico"></span></button>
       <p id="err"></p>
     </div>
     <p class="note"><b>Notice before you begin.</b> Everything here is virtual: nothing burns and nothing is real. It has bright, flashing light and loud bangs (choose Quiet or Pet-safe above, and you can switch any time). Use it at home with some space around you, standing still, not while walking. On iPhone, turn the silent switch off for sound.<br><span id="stamp-home"></span></p>
@@ -198,7 +199,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const BUILD = 'Green Diwali · v1.0';
+const BUILD = 'Green Diwali · v1.1';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -214,8 +215,10 @@ const clamp = THREE.MathUtils.clamp;
    with mango leaves — and शुभ hanging on the left end, लाभ on the right.
    A thin neon cord along the top ties it to the site's theme.              */
 function buildToran(el, id) {
-  const W = Math.round(Math.max(280, el.clientWidth || innerWidth)), H = 80;
-  const end = 48;                                              // room for the शुभ / लाभ hangings
+  const W = Math.round(Math.max(280, el.clientWidth || innerWidth));
+  const big = W >= 700;                                        // laptop: bigger शुभ / लाभ
+  const H = big ? 94 : 80, end = big ? 66 : 48;
+  el.style.height = H + 'px';                                              // room for the शुभ / लाभ hangings
   const n = Math.max(3, Math.round((W - 2 * end) / 60));       // how many swags fit
   const sw = (W - 2 * end) / n;
   const u = (k) => `url(#${id}${k})`;
@@ -256,11 +259,12 @@ function buildToran(el, id) {
       o += `<circle cx="${X}" cy="${py}" r="2.4" fill="#c25a00"/>`;
     }
   });
-  [[20, 'शुभ'], [W - 20, 'लाभ']].forEach(([x, word]) => {      // शुभ left, लाभ right
-    for (let k = 0; k < 4; k++) o += pearl(x, 27 + k * 4.6, 2.2);
-    o += `<circle cx="${x}" cy="56" r="15.5" fill="#f2b400"/><circle cx="${x}" cy="56" r="13.3" fill="${u('med')}"/>`;
-    o += `<text x="${x}" y="60.5" text-anchor="middle" font-family="'Tiro Devanagari Hindi', serif" font-size="13.5" fill="#ffe08a">${word}</text>`;
-    o += `<circle cx="${x}" cy="73.5" r="2.4" fill="#c8201a"/><circle cx="${x}" cy="78" r="2.2" fill="#1c6a2b"/>`;
+  const mx = big ? 30 : 20, mr = big ? 21 : 13.3, cy = big ? 60 : 56, fs = big ? 21 : 13.5;
+  [[mx, 'शुभ'], [W - mx, 'लाभ']].forEach(([x, word]) => {     // शुभ left, लाभ right
+    for (let k = 0; k < 4; k++) o += pearl(x, 27 + k * (big ? 3.6 : 4.6), 2.2);
+    o += `<circle cx="${x}" cy="${cy}" r="${mr + 2.2}" fill="#f2b400"/><circle cx="${x}" cy="${cy}" r="${mr}" fill="${u('med')}"/>`;
+    o += `<text x="${x}" y="${cy + fs * 0.34}" text-anchor="middle" font-family="'Tiro Devanagari Hindi', serif" font-size="${fs}" fill="#ffe08a">${word}</text>`;
+    o += `<circle cx="${x}" cy="${cy + mr + 5}" r="2.4" fill="#c8201a"/><circle cx="${x}" cy="${cy + mr + 9.5}" r="2.2" fill="#1c6a2b"/>`;
   });
   el.innerHTML = o + '</svg>';
 }
@@ -317,10 +321,37 @@ const fireLight = new THREE.PointLight(0xff9a3c, 0, 5, 2); scene.add(fireLight);
 const world = new THREE.Group(); scene.add(world);   // everything you place goes in here
 let floorY = 0;                                      // height of the floor (AR finds it; other modes use 0)
 
-// The 3D view (laptop) gets a dark terrace floor so the light pools show
-const terrace = new THREE.Mesh(new THREE.CircleGeometry(7, 64),
-  new THREE.MeshStandardMaterial({ color: 0x2a221c, roughness: 0.92 }));
+// The 3D view (laptop): a kota-stone terrace that runs off into the night,
+// fading into a night-blue horizon under a black sky with faint stars.
+const HORIZON = 0x0a1328;
+const kotaTex = canvasTex(512, 512, (g, w) => {
+  const T = w / 2;                                   // 2 × 2 tiles per picture (each tile 60 cm)
+  for (let ty = 0; ty < 2; ty++) for (let tx = 0; tx < 2; tx++) {
+    const v = rand(-8, 8);
+    g.fillStyle = `rgb(${56 + v},${61 + v},${54 + v})`; g.fillRect(tx * T, ty * T, T, T);
+    for (let i = 0; i < 2500; i++) { const k = rand(-14, 14);
+      g.fillStyle = `rgba(${70 + k},${76 + k},${68 + k},.5)`; g.fillRect(tx * T + rand(0, T), ty * T + rand(0, T), rand(1, 3), rand(1, 3)); }
+    g.strokeStyle = 'rgba(30,34,30,.35)'; g.lineWidth = 1;          // faint veins in the stone
+    for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(tx * T + rand(0, T), ty * T); g.bezierCurveTo(tx * T + rand(0, T), ty * T + T * 0.3, tx * T + rand(0, T), ty * T + T * 0.7, tx * T + rand(0, T), ty * T + T); g.stroke(); }
+  }
+  g.fillStyle = '#1e201d'; for (let k = 0; k <= 2; k++) { g.fillRect(k * T - 1.5, 0, 3, w); g.fillRect(0, k * T - 1.5, w, 3); }   // grout
+});
+kotaTex.repeat.set(233, 233); kotaTex.wrapS = kotaTex.wrapT = THREE.RepeatWrapping; kotaTex.anisotropy = 8;
+const terrace = new THREE.Mesh(new THREE.CircleGeometry(140, 64),
+  new THREE.MeshStandardMaterial({ map: kotaTex, roughness: 0.62, metalness: 0, envMapIntensity: 0.12 }));
 terrace.rotation.x = -Math.PI / 2; terrace.visible = false; scene.add(terrace);
+const skyDome = new THREE.Mesh(new THREE.SphereGeometry(190, 32, 16), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { uHor: { value: new THREE.Color(HORIZON) } },
+  vertexShader: `varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform vec3 uHor; varying vec3 vD;
+    float h(vec3 p){ return fract(sin(dot(p, vec3(12.9898,78.233,37.719))) * 43758.5453); }
+    void main(){ float y = max(vD.y, 0.0);
+      vec3 col = mix(uHor, vec3(0.008,0.01,0.02), smoothstep(0.0, 0.6, y));
+      vec3 c = floor(vD * 260.0); float st = step(0.9975, h(c)) * smoothstep(0.08, 0.35, y) * (0.5 + 0.5 * h(c + 1.0));
+      gl_FragColor = vec4(col + vec3(st * 0.7), 1.0); }`,
+}));
+skyDome.visible = false; skyDome.renderOrder = -1; scene.add(skyDome);
 
 // Floor ring that shows where a tap will place things (AR and camera view)
 const reticle = new THREE.Group();
@@ -362,7 +393,7 @@ const poolTex = canvasTex(128, 128, (g, w) => {
 poolTex.colorSpace = THREE.NoColorSpace;
 
 function glowSprite(color, size, opacity = 1) {
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity,
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, fog: false,
     blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
   s.scale.setScalar(size); return s;
 }
@@ -1198,8 +1229,8 @@ const snakePath = new THREE.CatmullRomCurve3([
   [0.19, 0.135, 0.028], [0.21, 0.085, 0.038], [0.205, 0.04, 0.05], [0.185, 0.016, 0.062], [0.16, 0.02, 0.05], [0.152, 0.04, 0.035],
   [0.168, 0.055, 0.022], [0.192, 0.045, 0.025], [0.205, 0.022, 0.04], [0.2, 0.009, 0.06]].map((a) => new THREE.Vector3(...a)));
 const SNAKE_SEG = 160, SNAKE_RAD = 10, SNAKE_R = 0.0068;
-const snakeGeo = (() => {
-  const g = new THREE.TubeGeometry(snakePath, SNAKE_SEG, SNAKE_R, SNAKE_RAD, false);
+function buildSnakeGeo(path) {
+  const g = new THREE.TubeGeometry(path, SNAKE_SEG, SNAKE_R, SNAKE_RAD, false);
   const p = g.attributes.position, n = g.attributes.normal;
   for (let j = 0; j <= SNAKE_SEG; j++) {             // lumpy, wrinkled ash
     const ring = 0.07 * Math.sin(j * 0.55) + 0.05 * Math.sin(j * 1.9 + 1) + 0.035 * Math.sin(j * 5.3);
@@ -1209,8 +1240,26 @@ const snakeGeo = (() => {
       p.setXYZ(k, p.getX(k) + n.getX(k) * r, p.getY(k) + n.getY(k) * r, p.getZ(k) + n.getZ(k) * r);
     }
   }
-  g.computeVertexNormals(); g.userData.shared = true; return g;
-})();
+  g.computeVertexNormals(); return g;
+}
+const snakeGeo = buildSnakeGeo(snakePath); snakeGeo.userData.shared = true;   // only used to warm up the graphics chip
+/* A new track for every snake: it rises a few cm, flops over to one side, then
+   runs along the floor in a loose, wandering line (never the same twice).    */
+function randomSnakePath() {
+  const pts = [new THREE.Vector3(0, 0.004, 0)];
+  const h = rand(0.035, 0.07);
+  let a = rand(-0.4, 0.4), x = rand(0.002, 0.008), z = rand(-0.004, 0.004);
+  pts.push(new THREE.Vector3(x * 0.5, h * 0.55, z * 0.5), new THREE.Vector3(x, h, z));
+  x += Math.cos(a) * 0.03; z += Math.sin(a) * 0.03; pts.push(new THREE.Vector3(x, h * 0.75, z));
+  x += Math.cos(a) * 0.03; z += Math.sin(a) * 0.03; pts.push(new THREE.Vector3(x, h * 0.3, z));
+  const n = 6 + (Math.random() * 4 | 0);
+  for (let i = 0; i < n; i++) {                       // along the floor, wandering
+    a += rand(-0.55, 0.55); const step = rand(0.032, 0.05);
+    x += Math.cos(a) * step; z += Math.sin(a) * step;
+    pts.push(new THREE.Vector3(x, SNAKE_R + rand(0.001, 0.009), z));
+  }
+  return new THREE.CatmullRomCurve3(pts);
+}
 const ashTex = canvasTex(256, 64, (g, w, h) => {
   g.fillStyle = '#2b2927'; g.fillRect(0, 0, w, h);
   for (let i = 0; i < 2600; i++) { const v = rand(-30, 45) | 0;
@@ -1224,11 +1273,9 @@ const tabletMat = new THREE.MeshStandardMaterial({ color: 0x141210, roughness: 0
 function makeSnake(pos) {
   const group = new THREE.Group(); group.position.copy(pos); group.rotation.y = rand(0, 6.283);
   group.scale.setScalar(rand(0.9, 1.15));
-  const body = new THREE.Mesh(snakeGeo, ashMat); body.geometry = snakeGeo; group.add(body);
-  const drawn = new THREE.BufferGeometry();              // a view onto the shared tube, so each snake has its own length
-  drawn.index = snakeGeo.index; drawn.attributes = snakeGeo.attributes; drawn.userData.shared = true;
-  drawn.boundingSphere = new THREE.Sphere(new THREE.Vector3(0.1, 0.1, 0.03), 0.3);
-  body.geometry = drawn; drawn.setDrawRange(0, 0);
+  const path = randomSnakePath();
+  const drawn = buildSnakeGeo(path); drawn.setDrawRange(0, 0);
+  const body = new THREE.Mesh(drawn, ashMat); body.frustumCulled = false; group.add(body);
   const head = new THREE.Mesh(new THREE.SphereGeometry(SNAKE_R * 1.15, 10, 8), ashMat); group.add(head);
   const tablet = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.0095, 0.005, 16), tabletMat); tablet.position.y = 0.0025; group.add(tablet);
   const flame = makeFlame(0.045, 0.028); flame.position.set(-0.006, 0.004, 0.002); group.add(flame);
@@ -1246,14 +1293,14 @@ function makeSnake(pos) {
       const frac = Math.min(1, (1 - Math.exp(-t0 / 8)) / (1 - Math.exp(-BURN / 8)));
       const segs = Math.max(1, Math.ceil(frac * SNAKE_SEG));
       drawn.setDrawRange(0, segs * SNAKE_RAD * 6);
-      head.position.copy(snakePath.getPointAt(Math.min(1, segs / SNAKE_SEG)));
+      head.position.copy(path.getPointAt(Math.min(1, segs / SNAKE_SEG)));
       tablet.scale.setScalar(Math.max(0.3, 1 - frac * 0.7));
       const f = flick(t, seed) * on;
       flame.material.uniforms.uTime.value = t; flame.material.uniforms.uBright.value = f; flame.scale.setScalar(Math.max(0.01, on * (0.8 + 0.3 * Math.sin(t * 3 + seed))));
       ember.material.opacity = 0.8 * f; pool.material.opacity = 0.45 * f; it.glow = 0.7 * f;
       if (on > 0) {   // thick smoke from the base, and some off the snake itself
         if (Math.random() < dt * 4 * on) { _v.set(rand(-0.01, 0.01), 0.02, rand(-0.01, 0.01)); group.localToWorld(_v); puff(_v.x, _v.y, _v.z, 1.0, 1.9); }
-        if (Math.random() < dt * 1.5 * on) { _v.copy(snakePath.getPointAt(rand(0, frac))); group.localToWorld(_v); puff(_v.x, _v.y + 0.01, _v.z, 0.8, 1.4); }
+        if (Math.random() < dt * 1.5 * on) { _v.copy(path.getPointAt(rand(0, frac))); group.localToWorld(_v); puff(_v.x, _v.y + 0.01, _v.z, 0.8, 1.4); }
         if (Math.random() < dt * 8 * on) crackle(group.position, 0.03);
         if (voice) voice.set(0.12 * on);
       }
@@ -1275,27 +1322,28 @@ const lanternGeo = (() => {
 })();
 const lanternTex = canvasTex(256, 256, (g, w, h) => {
   const gr = g.createLinearGradient(0, h, 0, 0);       // canvas bottom = lantern bottom (near the flame) = brightest
-  gr.addColorStop(0, '#fff6dc'); gr.addColorStop(0.45, '#ffe2a6'); gr.addColorStop(1, '#f7b768');
+  gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.45, '#f2eeea'); gr.addColorStop(1, '#bdb6c4');   // neutral paper: the neon tint gives the colour
   g.fillStyle = gr; g.fillRect(0, 0, w, h);
   g.strokeStyle = 'rgba(150,80,20,.22)'; g.lineWidth = 2;
   for (let x = 0; x < w; x += w / 8) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }   // paper seams
   for (let i = 0; i < 1500; i++) { g.fillStyle = `rgba(255,255,255,${rand(0, 0.08)})`; g.fillRect(rand(0, w), rand(0, h), 2, 2); }
 });
-const LANTERN_TINTS = [0xffffff, 0xffc08a, 0xff9e7a, 0xffd36b, 0xffa8c8];
+const LANTERN_TINTS = [0xff4fd8, 0x9b6bff, 0x4cc9ff, 0x3dffb0, 0xffab1a, 0xff5a7a];   // neon pink, violet, blue, mint, marigold, rose
 const ringGeo = new THREE.TorusGeometry(0.105, 0.0016, 6, 40).rotateX(Math.PI / 2); ringGeo.userData.shared = true;
 const wireMat = new THREE.MeshStandardMaterial({ color: 0x3a3028, roughness: 0.8 });
 
 function makeLantern(pos) {
   const group = new THREE.Group(); group.position.copy(pos);
-  const S = 1.25;
-  const paper = new THREE.Mesh(lanternGeo, new THREE.MeshBasicMaterial({ map: lanternTex, color: LANTERN_TINTS[Math.random() * LANTERN_TINTS.length | 0],
-    side: THREE.DoubleSide, transparent: true, opacity: 0.94, toneMapped: false }));
+  const S = 0.95;
+  const tint = LANTERN_TINTS[Math.random() * LANTERN_TINTS.length | 0];
+  const paper = new THREE.Mesh(lanternGeo, new THREE.MeshBasicMaterial({ map: lanternTex, color: tint,
+    side: THREE.DoubleSide, transparent: true, opacity: 0.94, toneMapped: false, fog: false }));
   const shell = new THREE.Group(); shell.scale.setScalar(S); group.add(shell); shell.add(paper);
   shell.add(new THREE.Mesh(ringGeo, wireMat));
   const flame = makeFlame(0.04, 0.02); flame.position.y = 0.01; shell.add(flame);
-  const inner = glowSprite(0xffb050, 0.28, 0.6); inner.position.y = 0.12; shell.add(inner);
-  const halo = glowSprite(0xff9a40, 1.1, 0.3); halo.position.y = 0.2; shell.add(halo);      // keeps it visible as a glowing dot far away
-  const pool = lightPool(0xffa050, 0.7); group.add(pool);
+  const inner = glowSprite(tint, 0.28, 0.6); inner.position.y = 0.12; shell.add(inner);
+  const halo = glowSprite(tint, 0.9, 0.3); halo.position.y = 0.2; shell.add(halo);      // keeps it visible as a glowing dot far away
+  const pool = lightPool(tint, 0.6); group.add(pool);
   const base = pos.y, seed = rand(0, 50), baseColour = paper.material.color.clone();
   let t0 = 0, vy = 0, rise = 0;
   const it = {
@@ -1548,7 +1596,7 @@ function makeRangoli(pos) {
             for (let k = 0; k <= st; k++) powderDot(g, a[0] + (b[0] - a[0]) * k / st, a[1] + (b[1] - a[1]) * k / st, 2.4, '#fffaf0', 2); } });
           dots.forEach(([x, y]) => powderDot(g, x, y, 7, '#ffffff', 50));
           finished = true; dirty = true;
-          if (tool === 'rangoli') hint('शुभ दीपावली! Shubh Dipawali! Now pick दीया Diya and tap around the rangoli. Tap the rangoli again for a new pattern.');
+          if (tool === 'rangoli') hint('शुभ दीपावली! Now pick दीया and tap around the rangoli. Tap the rangoli again for a new pattern.');
         }
       }
       if (dirty) tex.needsUpdate = true;
@@ -1924,8 +1972,9 @@ function floorHit(x, y, out) {   // screen point (−1…1) → spot on the floo
 
 /* ---------- Mode C: 3D view (laptop) ---------- */
 function start3D() {
-  mode = '3d'; enterViewing(); floorY = 0; terrace.visible = true;
-  renderer.setClearColor(0x05060a, 1);
+  scene.fog = new THREE.FogExp2(HORIZON, 0.045);      // the floor fades into the horizon: endless
+  mode = '3d'; enterViewing(); floorY = 0; terrace.visible = true; skyDome.visible = true;
+  renderer.setClearColor(HORIZON, 1);
   camera.position.set(0, 1.05, 1.55);
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0.25, 0); controls.enableDamping = true; controls.maxPolarAngle = 1.45;
@@ -1979,7 +2028,7 @@ function backHome(showFinale = true) {
   while (items.length) removeItem(items[0]);
   clearSparks(); skyUntil = 0; skyRising = []; stopCity();
   if (controls) { controls.dispose(); controls = null; }
-  terrace.visible = false; renderer.setClearColor(0x000000, 0);
+  terrace.visible = false; skyDome.visible = false; scene.fog = null; renderer.setClearColor(0x000000, 0);
   mode = 'home'; $('hud').style.display = 'none'; $('home').style.display = 'flex'; $('fallback').hidden = true;
   if (showFinale) document.querySelector('.card').classList.add('after');
 }
