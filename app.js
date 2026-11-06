@@ -154,15 +154,6 @@ const DEMOS = [
  {id:"paper-fan",name:"Paper Fan",line:"A neon, step-by-step origami tutorial",cat:"Design",kind:"tutorial",status:"Live",makers:["Mohit Bhardwaj"],inst:"Real",tools:["Claude","Python","FFmpeg"],
   gif:"media/paper-fan.gif",video:"media/paper-fan-tutorial.mp4",poster:"media/paper-fan-poster.jpg",
   desc:"Eight folds, from a flat sheet to a finished fan, drawn as glowing line art. A one-minute animated tutorial made with AI, as part of a series turning origami into screen-based lessons."},
- {id:"tapri",name:"Tapri",line:"Voice-first ordering for neighbourhood tea stalls",cat:"Civic",status:"Prototype",makers:["Two design students"],inst:"Example",tools:["Speech-to-text","React Native"],desc:"Customers speak an order in Hindi, Marathi or English; the stall owner sees a running tab without typing."},
- {id:"local-lines",name:"Local Lines",line:"AR help for first-time train riders",cat:"XR",status:"Concept",makers:["XR studio team"],inst:"Example",tools:["Unity","AR Foundation"],desc:"Point a phone at a platform indicator board and see which coach to board and which side the doors open."},
- {id:"dabba-route",name:"Dabba Route",line:"An interactive map of how lunchboxes cross the city",cat:"UX",status:"Live",makers:["Independent designer"],inst:"Example",tools:["D3.js","Mapbox"],desc:"A visual explainer tracing one tiffin from a Borivali kitchen to a Fort office, stop by stop."},
- {id:"kolam-kit",name:"Kolam Kit",line:"Generative floor-pattern tool for designers",cat:"Design",status:"Live",makers:["Creative coder"],inst:"Example",tools:["p5.js"],desc:"Draw kolam and rangoli-style grids with rules you can tweak, then export for print or textile."},
- {id:"handloom-lens",name:"Handloom Lens",line:"Identify a weave from a photo",cat:"AI",status:"Prototype",makers:["Textile and ML duo"],inst:"Example",tools:["TensorFlow Lite","Flutter"],desc:"A phone model that recognises common Indian weave types and links to the craft clusters that make them."},
- {id:"stilt",name:"Stilt",line:"A water-level sensor for flood-prone buildings",cat:"Hardware",status:"Prototype",makers:["Engineering students"],inst:"Example",tools:["ESP32","LoRa"],desc:"Sends an alert to a building's WhatsApp group when water in the compound crosses a set level."},
- {id:"chawl-vr",name:"Chawl Stories VR",line:"Oral histories you can walk through",cat:"XR",status:"Prototype",makers:["Immersive media class"],inst:"Example",tools:["Unity","Meta Quest"],desc:"A recreated chawl corridor where each doorway opens a recorded memory from a former resident."},
- {id:"pav-stack",name:"Pav Stack",line:"A one-thumb stacking game",cat:"Games",status:"Live",makers:["Game design student"],inst:"Example",tools:["Godot"],desc:"Stack pav, bhaji and chutney as the vendor's cart speeds up. Built in a 48-hour jam."},
- {id:"bhasha-captions",name:"Bhasha Captions",line:"Live classroom captions in Hindi and Marathi",cat:"AI",status:"Concept",makers:["Accessibility research group"],inst:"Example",tools:["Whisper","WebSockets"],desc:"Captions a lecture in the listener's chosen language on their own phone, for students who are hard of hearing."}
 ];
 
 // Real posts from inventndiscover.com
@@ -728,13 +719,12 @@ const OWNER = "Mohit Bhardwaj";     // "Also live" lists only this maker's demos
 const lcFirst = s=>s.charAt(0).toLowerCase()+s.slice(1);       // "A walk" -> "a walk"
 const andList = a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];  // [A,B,C] -> "A, B and C"
 function inventBanner(){
+  // Short on purpose: the two newest demos, then two more, then a count. The grid below shows everything.
   const real=DEMOS.filter(d=>d.kind!=="tutorial"&&d.inst==="Real")
     .sort((a,b)=>(b.added||"").localeCompare(a.added||""));   // dates are YYYY-MM-DD, so text order = date order
-  const fresh=real.slice(0,BANNER_NEW);
-  const rest=real.slice(BANNER_NEW).filter(d=>(d.makers||[]).includes(OWNER));
-  const newText=fresh.map((d,i)=>`${i?"Also new":"New"}: ${d.name}, ${lcFirst(d.line)}.`).join(" ");
-  const restText=rest.length?` Also live: ${andList(rest.map(d=>d.name))}.`:"";
-  return `<div class="banner"><span aria-hidden="true">✦</span><span><b>${esc(newText+restText)}</b> The origami tutorials now live in <a href="#learn" data-go="learn">Learn</a>. Cards marked "Example" only show the format. Submit yours and it replaces one of them once a curator checks the link works.</span></div>`;
+  const fresh=real.slice(0,BANNER_NEW), more=real.slice(BANNER_NEW,BANNER_NEW+2), left=real.length-fresh.length-more.length;
+  const text=`New: ${andList(fresh.map(d=>d.name))}.`+(more.length?` Also live: ${andList(more.map(d=>d.name))}${left>0?`, plus ${left} more below`:""}.`:"");
+  return `<div class="banner"><span aria-hidden="true">✦</span><span><b>${esc(text)}</b></span></div>`;
 }
 
 function viewInvent(){
@@ -1191,7 +1181,7 @@ function resultsHTML(raw){
   return grp("Events",ev.map(e=>`<button type="button" data-open-event="${e.id}"><span>${esc(e.title)}</span><span class="src">${rel(e.day)}</span></button>`))
     +grp("Communities",co.map(c=>`<button type="button" data-go="communities"><span>${esc(c.name)}</span><span class="src">${esc(c.area)}</span></button>`))
     +grp("Insights",ar.map(a=>`<button type="button" data-ext="${a.url}"><span>${esc(a.title)}</span><span class="src">↗</span></button>`))
-    +grp("Example demos",de.map(d=>`<button type="button" data-open-demo="${d.id}"><span>${esc(d.name)}</span><span class="src">${esc(d.cat)}</span></button>`))
+    +grp("Demos",de.map(d=>`<button type="button" data-open-demo="${d.id}"><span>${esc(d.name)}</span><span class="src">${esc(d.cat)}</span></button>`))
     || `<p style="margin:10px;color:var(--ink2)">Nothing matches “${esc(raw)}”. Press Enter to search events by meaning instead.</p>`;
 }
 const hq=document.getElementById("hq"), hres=document.getElementById("hres");
@@ -1222,7 +1212,7 @@ function openSearch(){
     box.innerHTML=grp("Events",ev.map(e=>`<button data-open-event="${e.id}"><span>${esc(e.title)}</span><span class="src">${rel(e.day)}</span></button>`))
       +grp("Communities",co.map(c=>`<button data-go="communities"><span>${esc(c.name)}</span><span class="src">${esc(c.area)}</span></button>`))
       +grp("Insights",ar.map(a=>`<button data-ext="${a.url}"><span>${esc(a.title)}</span><span class="src">↗</span></button>`))
-      +grp("Example demos",de.map(d=>`<button data-open-demo="${d.id}"><span>${esc(d.name)}</span><span class="src">${esc(d.cat)}</span></button>`))
+      +grp("Demos",de.map(d=>`<button data-open-demo="${d.id}"><span>${esc(d.name)}</span><span class="src">${esc(d.cat)}</span></button>`))
       || `<p style="margin:10px;color:var(--ink2)">Nothing matches “${esc(inp.value)}”. Press Enter to search events by meaning instead.</p>`;
   });
 }
