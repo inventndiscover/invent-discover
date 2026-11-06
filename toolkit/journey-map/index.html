@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>User Journey Map tool · Invent + Discover</title>
+<meta name="description" content="Map one person's journey stage by stage: touchpoints, actions, thoughts, an emotion curve, pain points and opportunities. Free, in your browser, with a printable A4 sheet.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/journey-map/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="User Journey Map tool · Invent + Discover">
+<meta property="og:description" content="Stages, touchpoints, actions, thoughts, an emotion curve, pain points and opportunities. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/journey-map/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"User Journey Map tool","url":"https://inventndiscover.com/toolkit/journey-map/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same tokens as the other tools. The map is a grid: one column
+  per stage, one row per kind of information.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --line-2: rgba(255,255,255,0.16);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --pink: #EC4899;
+    --ok: #46D69A;
+    --warn: #FFB23F;
+    --stage: #2EE6D6;          /* the stage chevrons: neon teal, like the classic template */
+    /* the five moods, from very unhappy (1) to delighted (5) */
+    --m1: #FF3B6B; --m2: #FF8A3D; --m3: #FFD43B; --m4: #8BE36B; --m5: #19E3A0;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(46,230,214,0.12), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed; min-height: 100vh;
+  }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+  /* ---------- Header: intro on the left, the definition on the right ---------- */
+  header { padding: 40px 0 20px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px 40px; align-items: end; }
+  @media (max-width: 960px) { header { grid-template-columns: minmax(0, 1fr); } }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD; box-shadow: 0 0 18px rgba(139,92,246,0.25); }
+  h1 { margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1; text-wrap: balance;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(46,230,214,0.25); }
+  .lede { color: var(--muted); max-width: 640px; font-size: 17px; line-height: 1.55; }
+  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .credit a, .about a, blockquote a { color: #C4B5FD; }
+  blockquote { margin: 0; padding: 18px 20px; border: 1px solid var(--line); border-left: 3px solid var(--stage); border-radius: var(--radius); background: var(--panel); }
+  blockquote p { margin: 0 0 10px; font-size: 16px; line-height: 1.6; color: var(--text); }
+  blockquote footer { font-size: 13px; color: var(--muted); }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(6px); }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text] { width: 100%; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font: inherit; font-size: 15.5px; }
+  input[type=text]:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+  button { font: inherit; font-size: 15px; color: var(--text); cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; }
+  button:hover { border-color: rgba(255,255,255,0.25); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; color: #fff; }
+  button.danger { border-color: rgba(236,72,153,0.6); color: #F9A8D4; }
+  .spacer { flex: 1; }
+  .setup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1.3fr); gap: 14px; }
+  @media (max-width: 860px) { .setup { grid-template-columns: minmax(0, 1fr); } }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; }
+  .banner { margin: 0 0 14px; padding: 12px 16px; border: 1px solid rgba(139,92,246,0.45); border-radius: 12px; font-size: 14.5px; color: #DDD6FE; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .banner b { color: var(--text); }
+  /* "On the sheet": the student's name and the date, printed on the A4 sheet */
+  .sheetfor { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); }
+  .sheetfor span { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sheetfor input[type=text], .sheetfor input[type=date] { width: 170px; padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); color-scheme: dark; }
+  .sheetfor input[type=date] { width: 150px; }
+  @media (max-width: 560px) { .sheetfor { width: 100%; } .sheetfor input[type=text], .sheetfor input[type=date] { flex: 1 1 140px; width: auto; } }
+
+  /* ---------- The journey grid ---------- */
+  /* Wide maps scroll sideways inside this box (the page itself never does) */
+  .scroller { overflow-x: auto; border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.78); }
+  .jgrid { --lab: 150px; display: grid; grid-template-columns: var(--lab) repeat(var(--n), minmax(190px, 1fr)); min-width: calc(var(--lab) + var(--n) * 190px); }
+  @media (max-width: 560px) { .jgrid { --lab: 104px; } .rowlab span { display: none; } }
+  .rowlab { position: sticky; left: 0; z-index: 3; padding: 14px 12px; background: #11131C; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line); display: grid; align-content: center; gap: 4px; }
+  .rowlab b { font-size: 14.5px; }
+  .rowlab span { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+  .cell { padding: 8px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; }
+  .cell:last-child { border-right: none; }
+  .cell textarea { display: block; width: 100%; min-height: 66px; resize: none; overflow: hidden; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; color: var(--text); font: inherit; font-size: 13.5px; line-height: 1.45; }
+  .cell textarea:hover { border-color: var(--line); }
+  .cell textarea:focus { outline: none; border-color: var(--violet); background: rgba(0,0,0,0.3); }
+  .cell textarea::placeholder { color: rgba(138,143,163,0.55); }
+  .cell.row-pains textarea { color: #FFC2CF; }
+  .cell.row-opps textarea { color: #B8F5DD; }
+  /* stage chevrons */
+  .corner { position: sticky; left: 0; z-index: 3; background: #11131C; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding: 12px; display: grid; align-content: center; }
+  .corner b { font-size: 12px; letter-spacing: .12em; color: var(--stage); }
+  .stagecell { padding: 10px 6px 10px 8px; border-bottom: 1px solid var(--line-2); }
+  .chev { position: relative; display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 22px 0 12px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 10px 50%);
+    background: linear-gradient(90deg, rgba(46,230,214,0.28), rgba(46,230,214,0.16)); box-shadow: inset 0 0 0 1px var(--stage); }
+  .chev.first { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%); }
+  .chev .k { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #05060A; background: var(--stage); box-shadow: 0 0 10px var(--stage); margin-left: 6px; }
+  .chev input { flex: 1; min-width: 0; background: transparent; border: none; color: #E6FFFC; font: inherit; font-weight: 700; font-size: 14px; padding: 4px 2px; }
+  .chev input:focus { outline: none; }
+  .chev .rm { flex: none; border: none; background: transparent; color: rgba(230,255,252,0.6); padding: 0 2px; font-size: 16px; line-height: 1; }
+  .chev .rm:hover { color: #fff; }
+  .stagebar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+  .stagebar button { padding: 7px 12px; font-size: 13px; border-radius: 8px; }
+
+  /* the Experience row: five faces per stage, and the curve through the chosen ones */
+  .mood { grid-column: 2 / -1; position: relative; border-bottom: 1px solid var(--line); }
+  .mood svg.curve { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .moodgrid { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .moodcol { display: grid; grid-template-rows: repeat(5, 40px); justify-items: center; align-items: center; padding: 6px 0; border-right: 1px solid var(--line); }
+  .moodcol:last-child { border-right: none; }
+  .face { width: 30px; height: 30px; padding: 0; border: none; background: transparent; border-radius: 50%; opacity: .22; transition: opacity .12s, transform .12s; }
+  .face:hover { opacity: .7; }
+  .face svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .face[aria-pressed="true"] { opacity: 1; transform: scale(1.35); }
+  .face[aria-pressed="true"] svg { filter: drop-shadow(0 0 6px var(--fc)); }
+  .moodcol.low { background: rgba(255,59,107,0.07); }
+
+  /* ---------- Coach, below the map ---------- */
+  .coach { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+  @media (max-width: 960px) { .coach { grid-template-columns: minmax(0, 1fr); } }
+  .coach h4 { margin: 0 0 10px; font-size: 15px; }
+  .big { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+  .big small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .meter { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 10px; }
+  .meter span { display: block; height: 100%; background: linear-gradient(90deg, var(--violet), var(--stage)); }
+  .next { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .next b { color: var(--text); }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 13px; line-height: 1.4; }
+  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .checks span { color: var(--muted); }
+  .moment { display: grid; gap: 8px; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+  .moment b { color: var(--text); }
+  .moment .tag { display: inline-block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; margin-right: 6px; }
+
+  /* ---------- How-to + credits ---------- */
+  .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
+  .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
+  .how h3 { margin: 6px 0 6px; font-size: 16px; }
+  .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .how b { color: var(--text); }
+  .about { margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .about { grid-template-columns: minmax(0, 1fr); } }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  .about .panel { border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); padding: 14px 16px; margin-bottom: 14px; }
+  .about h3 { margin: 0 0 8px; font-size: 15px; }
+  .about .panel p { margin: 0; font-size: 14px; }
+  .about .sources { font-size: 13px; }
+  .sitefoot { margin-top: 36px; }
+  .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  .sitefoot a:hover { color: var(--text); }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
+    background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  The grid and the coach are drawn by JavaScript from the data.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <div>
+      <a class="back" href="/#tools">← All tools</a><br>
+      <span class="pill">TOOL · USER JOURNEY MAP</span>
+      <h1>User Journey Map</h1>
+      <p class="lede">Follow one person through a task, stage by stage. Note where they meet you, what they do and think, how they feel along the way, and where it hurts. The lowest point on the curve is usually where to design first.</p>
+      <p class="credit">Definition from <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">UX Design Institute</a>. Layout after the classic customer journey map template. <a href="#where">Credits</a></p>
+    </div>
+    <blockquote>
+      <p>“A customer journey map (otherwise known as a user journey map) is a visual representation of how a user or customer interacts with your product. It maps out the steps they go through to complete a specific task or to achieve a particular goal, for example, purchasing a product from an e-commerce website or creating a profile on a dating app.”</p>
+      <footer>Emily Stevens, <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">How to design a customer journey map</a>, UX Design Institute</footer>
+    </blockquote>
+  </header>
+
+  <div class="card setup">
+    <div><label for="persona">Who is on this journey?</label><input type="text" id="persona" maxlength="80" placeholder="e.g. Kabir, 20, design student with a 30-minute lunch break"></div>
+    <div><label for="scenario">What are they trying to do?</label><input type="text" id="scenario" maxlength="120" placeholder="e.g. Order lunch on a food delivery app between classes"></div>
+    <div><label for="expect">What do they expect?</label><input type="text" id="expect" maxlength="120" placeholder="e.g. Hot food at the campus gate before the break ends"></div>
+  </div>
+
+  <div class="bar">
+    <button id="exampleBtn" type="button">Load example</button>
+    <button id="clearBtn" type="button">Clear map</button>
+    <span class="spacer"></span>
+    <button id="copyBtn" type="button">Copy as text</button>
+    <div class="sheetfor" aria-label="Printed on the sheet">
+      <span>On the sheet</span>
+      <input type="text" id="sName" maxlength="40" placeholder="Your name" aria-label="Your name, printed on the sheet">
+      <input type="date" id="sDate" aria-label="Date, printed on the sheet">
+    </div>
+    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print or upload">Save A4 sheet</button>
+  </div>
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="stagebar">
+    <button id="addStage" type="button">+ Add stage</button>
+    <span id="stageNote"></span>
+  </div>
+  <div class="scroller"><div class="jgrid" id="grid"></div></div>
+
+  <div class="coach">
+    <div class="card">
+      <h4>Progress</h4>
+      <div class="big" id="pct">0<small>% filled</small></div>
+      <div class="meter"><span id="pctBar" style="width:0%"></span></div>
+      <div class="next" id="next"></div>
+    </div>
+    <div class="card">
+      <h4>Coach</h4>
+      <ul class="checks" id="checks"></ul>
+    </div>
+    <div class="card">
+      <h4>Moment that matters</h4>
+      <div class="moment" id="moment"></div>
+    </div>
+  </div>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1 · 5 MIN</div><h3>Set the scene</h3><p>Pick one person and one task, and say what they expect. Name the stages they go through, from first noticing the need to the end. Use 3 to 7 stages.</p></div>
+    <div class="card"><div class="step">STEP 2 · 15 MIN</div><h3>Walk the journey</h3><p>For each stage, fill in the <b>touchpoints</b>, what they <b>do</b> and what they <b>think</b>, from your research. Then pick a face for how they <b>feel</b>. The curve draws itself.</p></div>
+    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Find the gaps</h3><p>Note the <b>pain points</b>, especially where the curve dips, and an <b>opportunity</b> for each one. Then save the A4 sheet.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <div>
+      <h2>About journey maps</h2>
+      <p>A journey map tells the story of one person trying to get something done. Columns are the <b>stages</b> of that story; rows are the layers you want to see across it: where they meet the product (<b>touchpoints</b>), what they <b>do</b> and <b>think</b>, how they <b>feel</b>, and the <b>pain points</b> and <b>opportunities</b> that follow.</p>
+      <p>The layout here follows the classic customer journey map template, with stage chevrons across the top and an emotion curve in the middle. We added a <b>Thoughts</b> row, a persona and scenario, and a coach that points to the lowest moment on the curve.</p>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Where your map is kept</h3>
+        <p>Your map stays in this browser and is never uploaded. Use Save A4 sheet or Copy as text to keep a copy.</p>
+      </div>
+      <p class="sources">Sources: <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">Emily Stevens, UX Design Institute, How to design a customer journey map</a> (definition quoted above) · Further reading: <a href="https://www.nngroup.com/articles/journey-mapping-101/" target="_blank" rel="noopener">Nielsen Norman Group, Journey Mapping 101</a>. The grid, emotion curve, coach and A4 sheet are made by Invent + Discover.</p>
+    </div>
+  </section>
+
+  <footer class="sitefoot">
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+// ---------- 3a. The rows ----------
+// Each text row has an id, a label, a hint and a placeholder for empty cells.
+// The Experience row is special: it's the five faces and the curve.
+const ROWS = [
+  { id: 'touch',    name: 'Touchpoints',    hint: 'Where they meet the product or service', ph: 'App, website, store, person…' },
+  { id: 'actions',  name: 'Actions',        hint: 'What they do',                           ph: 'What do they do here?' },
+  { id: 'thoughts', name: 'Thoughts',       hint: 'What they think or ask',                 ph: '“…?”' },
+  { id: 'mood',     name: 'Experience',     hint: 'How they feel: pick a face',             ph: '' },
+  { id: 'pains',    name: 'Pain points',    hint: 'What gets in their way',                 ph: 'What goes wrong?' },
+  { id: 'opps',     name: 'Opportunities',  hint: 'How we could make it better',            ph: 'How could we help?' },
+];
+const TEXT_ROWS = ROWS.filter(r => r.id !== 'mood');
+const MOODS = ['', 'Very unhappy', 'Unhappy', 'Okay', 'Happy', 'Delighted'];   // 1 to 5
+const MOOD_COLORS = ['', '#FF3B6B', '#FF8A3D', '#FFD43B', '#8BE36B', '#19E3A0'];
+const DEFAULT_STAGES = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
+const MIN_STAGES = 3, MAX_STAGES = 7, MAX_TEXT = 300;
+const SAVE_KEY = 'ind-journey-v1';
+
+// ---------- 3b. The example ----------
+const EXAMPLE = {
+  persona: 'Kabir, 20, design student with a 30-minute lunch break',
+  scenario: 'Order lunch on a food delivery app between classes',
+  expect: 'Hot food at the campus gate before the break ends',
+  stages: [
+    ['Feels hungry', 3, 'Class timetable\nPhone notification', 'Checks how long the break is', '“Can I get food in 30 minutes?”', 'The break is short and fixed', 'A “before your break ends” filter'],
+    ['Browses', 4, 'App home, offers, reviews', 'Compares offers across three apps', '“Which deal is actually cheapest?”', 'Too many similar offers', 'One clear best deal for his budget'],
+    ['Orders & pays', 2, 'Cart, coupon, UPI app', 'Applies a coupon, pays by UPI', '“Why didn’t the coupon apply?”', 'Coupon fails, payment retried', 'Explain coupon rules before checkout'],
+    ['Waits', 1, 'Live tracking, rider’s call', 'Watches the map, waits at the gate', '“He’s been at the signal for ten minutes.”', 'No idea when food will really arrive; late for class', 'Honest arrival time and a campus gate drop point'],
+    ['Eats & rates', 4, 'Food box, rating screen', 'Eats quickly, gives four stars', '“Worth it, but I rushed.”', 'Eats in a hurry', 'Pre-order for break time'],
+  ],
+};
+
+// ---------- 3c. State ----------
+// One object holds the whole map. We change it, then call render().
+//   stages: [{ id: 's1abc', name: 'Browses', mood: 4, touch: '…', actions: '…', thoughts: '…', pains: '…', opps: '…' }]
+// mood is 1 (very unhappy) to 5 (delighted), or 0 if not picked yet.
+const state = { persona: '', scenario: '', expect: '', stages: [], isExample: false, confirmClear: false, confirmRm: null };
+
+// ---------- 3d. Helpers ----------
+const $ = q => document.querySelector(q);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const newId = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
+const blankStage = name => ({ id: newId(), name, mood: 0, touch: '', actions: '', thoughts: '', pains: '', opps: '' });
+const stageName = (s, i) => s.name.trim() || `Stage ${i + 1}`;
+const lines = t => String(t || '').split('\n').map(l => l.trim()).filter(Boolean);
+
+// ---------- 3e. Saving in this browser ----------
+function save() {
+  const { persona, scenario, expect, stages, isExample } = state;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ persona, scenario, expect, stages, isExample })); } catch (e) {}
+}
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (d && Array.isArray(d.stages) && d.stages.length) { Object.assign(state, d); return true; } } catch (e) {}
+  return false;
+}
+function loadExample() {
+  Object.assign(state, { persona: EXAMPLE.persona, scenario: EXAMPLE.scenario, expect: EXAMPLE.expect, isExample: true });
+  state.stages = EXAMPLE.stages.map(([name, mood, touch, actions, thoughts, pains, opps]) => ({ id: newId(), name, mood, touch, actions, thoughts, pains, opps }));
+}
+function emptyMap() {
+  Object.assign(state, { persona: '', scenario: '', expect: '', isExample: false });
+  state.stages = DEFAULT_STAGES.map(blankStage);
+}
+function changed() { if (state.isExample) { state.isExample = false; $('#banner').hidden = true; } save(); }
+
+// ---------- 3f. A face for each mood ----------
+// Drawn as a small SVG: a ring in the mood's colour, two eyes, and a mouth
+// that curves down for unhappy (1) and up for delighted (5).
+function faceSVG(level) {
+  const c = MOOD_COLORS[level], bend = [0, -7, -3.5, 0, 4, 7][level];
+  const mouth = level === 3 ? '<path d="M10 21 H22" />' : `<path d="M10 ${20 - bend / 2} Q16 ${20 + bend} 22 ${20 - bend / 2}" />`;
+  const brows = level === 1 ? '<path d="M9 10 L13 12 M23 10 L19 12" />' : '';
+  return `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#0B0D14" stroke="${c}" stroke-width="2.5"/>
+    <g stroke="${c}" stroke-width="2.5" stroke-linecap="round" fill="none">${mouth}${brows}</g>
+    <circle cx="12" cy="13.5" r="1.8" fill="${c}"/><circle cx="20" cy="13.5" r="1.8" fill="${c}"/></svg>`;
+}
+
+// ---------- 3g. Drawing the grid ----------
+function autoGrow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
+// A smooth line through the points (Catmull-Rom turned into Bézier curves)
+function smoothPath(pts) {
+  if (pts.length < 2) return '';
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+function lowestStages() {
+  const rated = state.stages.filter(s => s.mood);
+  if (rated.length < 2) return [];
+  const min = Math.min(...rated.map(s => s.mood));
+  return min <= 3 ? rated.filter(s => s.mood === min).map(s => s.id) : [];
+}
+
+function render() {
+  const a = document.activeElement, keep = a && a.id && a.closest && a.closest('#grid') ? a.id : null;
+  const sel = keep && a.setSelectionRange ? [a.selectionStart, a.selectionEnd] : null;
+  const n = state.stages.length, g = $('#grid');
+  g.style.setProperty('--n', n); g.innerHTML = '';
+
+  // Row 1: the stage chevrons
+  const corner = el('div', 'corner'); corner.append(el('b', null, 'STAGES')); g.append(corner);
+  state.stages.forEach((s, i) => {
+    const c = el('div', 'stagecell'), ch = el('div', 'chev' + (i === 0 ? ' first' : ''));
+    ch.append(el('span', 'k', String(i + 1)));
+    const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'name-' + s.id; inp.maxLength = 30; inp.value = s.name; inp.placeholder = `Stage ${i + 1}`; inp.setAttribute('aria-label', `Stage ${i + 1} name`);
+    inp.addEventListener('input', () => { s.name = inp.value; changed(); coach(); });
+    ch.append(inp);
+    const sure = state.confirmRm === s.id;
+    const rm = el('button', 'rm', sure ? '✓' : '×'); rm.type = 'button'; rm.disabled = n <= MIN_STAGES;
+    rm.title = n <= MIN_STAGES ? `A journey needs at least ${MIN_STAGES} stages` : sure ? 'Click again to remove this stage' : 'Remove this stage';
+    rm.setAttribute('aria-label', rm.title);
+    rm.onclick = () => {
+      if (!sure) { state.confirmRm = s.id; render(); setTimeout(() => { if (state.confirmRm === s.id) { state.confirmRm = null; render(); } }, 3000); return; }
+      state.confirmRm = null; state.stages = state.stages.filter(x => x.id !== s.id); changed(); render();
+    };
+    ch.append(rm); c.append(ch); g.append(c);
+  });
+
+  const low = lowestStages();
+  for (const r of ROWS) {
+    const lab = el('div', 'rowlab'); lab.append(el('b', null, r.name), el('span', null, r.hint)); g.append(lab);
+    if (r.id === 'mood') { g.append(moodRow(low)); continue; }
+    state.stages.forEach((s, i) => {
+      const c = el('div', 'cell row-' + r.id);
+      const t = document.createElement('textarea'); t.id = `${r.id}-${s.id}`; t.rows = 2; t.maxLength = MAX_TEXT; t.value = s[r.id] || '';
+      t.placeholder = r.ph; t.setAttribute('aria-label', `${r.name}, ${stageName(s, i)}`);
+      t.addEventListener('input', () => { s[r.id] = t.value; autoGrow(t); changed(); coach(); });
+      c.append(t); g.append(c);
+    });
+  }
+  g.querySelectorAll('textarea').forEach(autoGrow);
+  $('#addStage').disabled = n >= MAX_STAGES;
+  $('#stageNote').textContent = `${n} stages · ${MIN_STAGES} to ${MAX_STAGES}. The text boxes take one point per line.`;
+
+  const ban = $('#banner'); ban.hidden = !state.isExample; ban.innerHTML = '';
+  if (state.isExample) {
+    const s = el('span'); s.append(el('b', null, 'This is an example journey. '), 'Change anything to make it yours, or start with an empty map.');
+    const b = el('button', null, 'Start an empty map'); b.type = 'button'; b.onclick = () => { emptyMap(); save(); render(); };
+    ban.append(s, b);
+  }
+  for (const k of ['persona', 'scenario', 'expect']) if (document.activeElement !== $('#' + k)) $('#' + k).value = state[k];
+  $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear map';
+  $('#clearBtn').className = state.confirmClear ? 'danger' : '';
+  coach();
+  if (keep) { const t = document.getElementById(keep); if (t) { t.focus(); if (sel) t.setSelectionRange(sel[0], sel[1]); } }
+}
+
+// The Experience row: one column of five faces per stage, best at the top,
+// with the curve drawn behind through the faces that were picked.
+function moodRow(low) {
+  const n = state.stages.length, wrap = el('div', 'mood');
+  const svgNS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('class', 'curve'); svg.setAttribute('viewBox', `0 0 ${n * 100} 212`); svg.setAttribute('preserveAspectRatio', 'none');
+  // y for each mood: the middle of its 40px band, after 6px of padding
+  const yOf = m => 6 + (5 - m) * 40 + 20;
+  const pts = state.stages.map((s, i) => s.mood ? [i * 100 + 50, yOf(s.mood)] : null).filter(Boolean);
+  svg.innerHTML = `<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0.1" stop-color="${MOOD_COLORS[5]}"/><stop offset="0.5" stop-color="${MOOD_COLORS[3]}"/><stop offset="0.9" stop-color="${MOOD_COLORS[1]}"/></linearGradient></defs>
+    <path d="${smoothPath(pts)}" fill="none" stroke="url(#mg)" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(255,255,255,.35))"/>`;
+  wrap.append(svg);
+  const grid = el('div', 'moodgrid');
+  state.stages.forEach((s, i) => {
+    const col = el('div', 'moodcol' + (low.includes(s.id) ? ' low' : ''));
+    col.setAttribute('role', 'radiogroup'); col.setAttribute('aria-label', `How they feel at ${stageName(s, i)}`);
+    for (let m = 5; m >= 1; m--) {
+      const b = el('button', 'face'); b.type = 'button'; b.innerHTML = faceSVG(m);
+      b.style.setProperty('--fc', MOOD_COLORS[m]);
+      b.setAttribute('aria-pressed', String(s.mood === m)); b.setAttribute('aria-label', MOODS[m]); b.title = MOODS[m];
+      b.onclick = () => { s.mood = s.mood === m ? 0 : m; changed(); render(); };
+      col.append(b);
+    }
+    grid.append(col);
+  });
+  wrap.append(grid);
+  return wrap;
+}
+
+// ---------- 3h. The coach ----------
+function coach() {
+  const st = state.stages, n = st.length;
+  const filled = st.reduce((sum, s) => sum + TEXT_ROWS.filter(r => (s[r.id] || '').trim()).length + (s.mood ? 1 : 0), 0);
+  const total = n * ROWS.length, pct = Math.round(filled / total * 100);
+  $('#pct').firstChild.textContent = pct; $('#pctBar').style.width = pct + '%';
+
+  const noAct = st.filter(s => !s.actions.trim()), noMood = st.filter(s => !s.mood);
+  const sad = st.filter(s => s.mood && s.mood <= 2), sadNoPain = sad.filter(s => !s.pains.trim());
+  const painNoOpp = st.filter(s => s.pains.trim() && !s.opps.trim());
+  const nx = $('#next'); nx.innerHTML = '';
+  const tell = (h, t) => nx.append('Next: ', el('b', null, h), ' · ' + t);
+  if (!state.persona.trim()) tell('Who', 'name the person on this journey.');
+  else if (!state.scenario.trim()) tell('Task', 'say what they are trying to do.');
+  else if (noAct.length) tell('Actions', `what do they do at “${stageName(noAct[0], st.indexOf(noAct[0]))}”?`);
+  else if (noMood.length) tell('Experience', `pick a face for “${stageName(noMood[0], st.indexOf(noMood[0]))}”.`);
+  else if (sadNoPain.length) tell('Pain points', `what went wrong at “${stageName(sadNoPain[0], st.indexOf(sadNoPain[0]))}”?`);
+  else if (painNoOpp.length) tell('Opportunities', `how could we help at “${stageName(painNoOpp[0], st.indexOf(painNoOpp[0]))}”?`);
+  else nx.append(el('b', null, 'Done. '), 'Save the A4 sheet.');
+
+  const out = [];
+  const g = state.persona.trim().toLowerCase();
+  if (/^(users?|customers?|people|students|everyone)\b/.test(g)) out.push(['warn', 'Who', 'That reads like a group. Follow one real person.']);
+  else out.push([state.persona.trim() ? 'ok' : 'todo', 'Who', state.persona.trim() ? 'One person, one journey.' : 'Name the person on this journey.']);
+  out.push([noMood.length ? 'todo' : 'ok', 'Curve', noMood.length ? `${noMood.length} stage${noMood.length > 1 ? 's have' : ' has'} no face yet.` : 'Every stage has a feeling.']);
+  if (sadNoPain.length) out.push(['warn', 'Dips', `The curve dips at ${sadNoPain.map(s => `“${stageName(s, st.indexOf(s))}”`).join(', ')}, but there's no pain point there.`]);
+  if (painNoOpp.length) out.push(['warn', 'Opportunities', `${painNoOpp.length} pain point${painNoOpp.length > 1 ? 's have' : ' has'} no opportunity yet.`]);
+  const flat = st.filter(s => s.mood).map(s => s.mood);
+  if (flat.length === n && new Set(flat).size === 1) out.push(['warn', 'Flat curve', 'Every stage feels the same. Real journeys have highs and lows. Check your research.']);
+  if (!sadNoPain.length && !painNoOpp.length && !noMood.length) out.push(['ok', 'Gaps', 'Every dip has a pain point, and every pain point an opportunity.']);
+  const ul = $('#checks'); ul.innerHTML = '';
+  for (const [s, h, t] of out) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
+
+  // The moment that matters: the lowest point, and the highest
+  const m = $('#moment'); m.innerHTML = '';
+  const rated = st.filter(s => s.mood);
+  if (rated.length < 2) { m.append('Pick faces for at least two stages, and the lowest and highest moments show up here.'); return; }
+  const lo = rated.reduce((a, b) => b.mood < a.mood ? b : a), hi = rated.reduce((a, b) => b.mood > a.mood ? b : a);
+  const row = (label, color, s) => {
+    const d = el('div'); const t = el('span', 'tag', label); t.style.border = `1px solid ${color}`; t.style.color = color;
+    d.append(t, el('b', null, stageName(s, st.indexOf(s))), ` · ${MOODS[s.mood].toLowerCase()}`);
+    return d;
+  };
+  m.append(row('Lowest', MOOD_COLORS[1], lo));
+  if (lo.pains.trim()) { const p = el('div'); p.append(el('b', null, 'Pain: '), lines(lo.pains).join('; ')); m.append(p); }
+  if (lo.opps.trim()) { const p = el('div'); p.append(el('b', null, 'Opportunity: '), lines(lo.opps).join('; ')); m.append(p); }
+  else m.append(el('div', null, 'Start here: what would lift this moment?'));
+  if (hi.id !== lo.id) m.append(row('Highest', MOOD_COLORS[5], hi), el('div', null, 'Protect what works here.'));
+}
+
+// ---------- 3i. Copy as text ----------
+function asText() {
+  let out = `# User journey map\n`;
+  if (state.persona.trim()) out += `Who: ${state.persona.trim()}\n`;
+  if (state.scenario.trim()) out += `Task: ${state.scenario.trim()}\n`;
+  if (state.expect.trim()) out += `Expects: ${state.expect.trim()}\n`;
+  state.stages.forEach((s, i) => {
+    out += `\n## ${i + 1}. ${stageName(s, i)}${s.mood ? ` (${MOODS[s.mood].toLowerCase()})` : ''}\n`;
+    for (const r of TEXT_ROWS) if (s[r.id].trim()) out += `${r.name}: ${lines(s[r.id]).join('; ')}\n`;
+  });
+  return out;
+}
+
+// ---------- 3j. Save A4 sheet ----------
+// The screen keeps the dark theme; the sheet is redrawn from the data on
+// white A4 landscape at 300 dpi (297 × 210 mm = 3508 × 2480 px): the same
+// grid, teal stage chevrons, the faces and curve, in dark ink for any printer.
+const UI_F = 'Geist, Arial, sans-serif';
+const STAGE_INK = '#00A99D';
+function wrapText(x, text, maxW) {
+  const out = [];
+  for (const para of String(text).split('\n')) {
+    let line = '';
+    for (let word of para.split(/\s+/).filter(Boolean)) {
+      while (x.measureText(word).width > maxW) { let i = word.length; while (i > 1 && x.measureText(word.slice(0, i)).width > maxW) i--; if (line) { out.push(line); line = ''; } out.push(word.slice(0, i)); word = word.slice(i); }
+      const test = line ? line + ' ' + word : word;
+      if (x.measureText(test).width > maxW && line) { out.push(line); line = word; } else line = test;
+    }
+    out.push(line);
+  }
+  return out;
+}
+function fitOneLine(x, text, maxW) { if (x.measureText(text).width <= maxW) return text; while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
+// Bullet points in a cell, shrinking the text until they fit
+function cellText(x, text, box, fsMax, fsMin, color) {
+  const items = lines(text); if (!items.length) return;
+  for (let fs = fsMax; fs >= fsMin; fs -= 2) {
+    x.font = `400 ${fs}px ${UI_F}`;
+    const lh = fs * 1.28, rows = items.map(t => wrapText(x, t, box.w - (items.length > 1 ? fs : 0)));
+    const h = rows.reduce((s, r) => s + r.length * lh, 0) + (rows.length - 1) * fs * 0.4;
+    if (h <= box.h || fs - 2 < fsMin) {
+      let y = box.y;
+      rows.forEach(r => {
+        if (items.length > 1) { x.fillStyle = color; x.beginPath(); x.arc(box.x + fs * 0.25, y + fs * 0.6, fs * 0.16, 0, Math.PI * 2); x.fill(); }
+        x.fillStyle = '#1A1A1A';
+        r.forEach((l, k) => { if (y + k * lh + fs <= box.y + box.h + 4) x.fillText(l, box.x + (items.length > 1 ? fs * 0.75 : 0), y + fs * 0.95 + k * lh); });
+        y += r.length * lh + fs * 0.4;
+      });
+      return;
+    }
+  }
+}
+function drawFace(x, cx, cy, r, level) {
+  const c = MOOD_COLORS[level], k = r / 14, bend = [0, -7, -3.5, 0, 4, 7][level];
+  x.save(); x.translate(cx - 16 * k, cy - 16 * k); x.scale(k, k);
+  x.fillStyle = '#FFFFFF'; x.strokeStyle = c; x.lineWidth = 2.5; x.beginPath(); x.arc(16, 16, 14, 0, Math.PI * 2); x.fill(); x.stroke();
+  x.lineCap = 'round'; x.beginPath();
+  if (level === 3) { x.moveTo(10, 21); x.lineTo(22, 21); } else { x.moveTo(10, 20 - bend / 2); x.quadraticCurveTo(16, 20 + bend, 22, 20 - bend / 2); }
+  if (level === 1) { x.moveTo(9, 10); x.lineTo(13, 12); x.moveTo(23, 10); x.lineTo(19, 12); }
+  x.stroke(); x.fillStyle = c;
+  x.beginPath(); x.arc(12, 13.5, 1.8, 0, Math.PI * 2); x.arc(20, 13.5, 1.8, 0, Math.PI * 2); x.fill();
+  x.restore();
+}
+async function drawSheet() {
+  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist')]); } catch (e) {}
+  const W = 3508, H = 2480, M = 110, INK = '#111111', GREY = '#555555', LINE = '#CFCFCF';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+
+  // Header
+  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`; x.fillText('USER JOURNEY MAP  ·  INVENTNDISCOVER.COM', M, M + 28);
+  x.fillStyle = INK; x.font = `800 60px ${UI_F}`; x.fillText(fitOneLine(x, state.scenario.trim() || 'Untitled journey', 2200), M, M + 100);
+  x.font = `400 32px ${UI_F}`; x.fillStyle = GREY;
+  const sub = [state.persona.trim() && 'Who: ' + state.persona.trim(), state.expect.trim() && 'Expects: ' + state.expect.trim()].filter(Boolean).join('   ·   ');
+  if (sub) x.fillText(fitOneLine(x, sub, 2250), M, M + 150);
+  const rx = W - M - 860, filled = { Name: sheetName(), Date: sheetDate() };
+  x.strokeStyle = INK; x.lineWidth = 3;
+  [['Name', M + 56], ['Date', M + 132]].forEach(([l, y]) => {
+    x.fillStyle = INK; x.font = `600 34px ${UI_F}`; x.fillText(l, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
+    if (filled[l]) { x.font = `500 36px ${UI_F}`; x.fillText(fitOneLine(x, filled[l], W - M - rx - 130), rx + 124, y - 6); }
+  });
+
+  // Grid geometry: a label column, then one column per stage
+  const st = state.stages, n = st.length, top = M + 200, bottom = H - M - 40;
+  const labW = 330, colW = (W - 2 * M - labW) / n, headH = 120;
+  const weights = { touch: 1, actions: 1.2, thoughts: 1.15, mood: 1.55, pains: 1.15, opps: 1.15 };
+  const sumW = ROWS.reduce((s, r) => s + weights[r.id], 0), avail = bottom - top - headH - 12;
+  let y = top;
+
+  // Stage chevrons
+  st.forEach((s, i) => {
+    const sx = M + labW + i * colW + 8, w = colW - 16, h = headH - 24, sy = y + 12, tip = 34;
+    x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + w - tip, sy); x.lineTo(sx + w, sy + h / 2); x.lineTo(sx + w - tip, sy + h); x.lineTo(sx, sy + h);
+    if (i) x.lineTo(sx + tip * 0.7, sy + h / 2); x.closePath();
+    x.fillStyle = '#E3FAF7'; x.fill(); x.strokeStyle = STAGE_INK; x.lineWidth = 4; x.stroke();
+    x.fillStyle = STAGE_INK; x.beginPath(); x.arc(sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2, 22, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#FFFFFF'; x.font = `800 24px ${UI_F}`; x.textAlign = 'center'; x.fillText(String(i + 1), sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2 + 9); x.textAlign = 'left';
+    x.fillStyle = '#0B3D39'; x.font = `800 32px ${UI_F}`; x.fillText(fitOneLine(x, stageName(s, i), w - tip - 100), sx + (i ? tip * 0.7 : 0) + 80, sy + h / 2 + 11);
+  });
+  x.fillStyle = STAGE_INK; x.font = `800 26px ${UI_F}`; x.fillText('STAGES', M + 20, y + headH / 2 + 10);
+  y += headH + 12;
+
+  // Rows
+  for (const r of ROWS) {
+    const rh = avail * weights[r.id] / sumW;
+    x.fillStyle = '#F3F1FA'; x.fillRect(M, y, labW - 12, rh - 10);
+    x.font = `400 22px ${UI_F}`; const hl = wrapText(x, r.hint, labW - 50).slice(0, 2);
+    x.fillStyle = INK; x.font = `800 32px ${UI_F}`; x.fillText(r.name, M + 20, y + rh / 2 - 6 - (hl.length - 1) * 13);
+    x.fillStyle = GREY; x.font = `400 22px ${UI_F}`; hl.forEach((l, k) => x.fillText(l, M + 20, y + rh / 2 + 28 - (hl.length - 1) * 13 + k * 27));
+    if (r.id === 'mood') {
+      // faces and the curve
+      const yOf = m => y + 24 + (5 - m) * (rh - 58) / 4;
+      x.strokeStyle = LINE; x.lineWidth = 2; x.strokeRect(M + labW, y, W - 2 * M - labW, rh - 10);
+      const pts = st.map((s, i) => s.mood ? [M + labW + i * colW + colW / 2, yOf(s.mood)] : null).filter(Boolean);
+      if (pts.length > 1) {
+        const grad = x.createLinearGradient(0, y, 0, y + rh); grad.addColorStop(0.1, MOOD_COLORS[5]); grad.addColorStop(0.5, '#E0B000'); grad.addColorStop(0.9, MOOD_COLORS[1]);
+        x.strokeStyle = grad; x.lineWidth = 7; x.lineCap = 'round';
+        x.beginPath(); x.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+          x.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
+        }
+        x.stroke();
+      }
+      const low = lowestStages();
+      st.forEach((s, i) => {
+        if (!s.mood) return;
+        const cx = M + labW + i * colW + colW / 2, cy = yOf(s.mood);
+        drawFace(x, cx, cy, 44, s.mood);
+        x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.textAlign = 'center';
+        x.fillText(low.includes(s.id) ? 'LOWEST POINT' : MOODS[s.mood], cx, s.mood <= 2 ? cy - 60 : cy + 76); x.textAlign = 'left';
+      });
+    } else {
+      st.forEach((s, i) => {
+        const cx = M + labW + i * colW;
+        x.strokeStyle = LINE; x.lineWidth = 2; x.strokeRect(cx, y, colW, rh - 10);
+        const color = r.id === 'pains' ? '#E8325D' : r.id === 'opps' ? '#12A877' : STAGE_INK;
+        cellText(x, s[r.id], { x: cx + 18, y: y + 14, w: colW - 36, h: rh - 38 }, 30, 16, color);
+      });
+    }
+    y += rh;
+  }
+  x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.textAlign = 'right';
+  x.fillText('Journey map layout after the classic customer journey map template · Definition: UX Design Institute · Sheet: Invent + Discover', W - M, H - M + 30); x.textAlign = 'left';
+  return cv;
+}
+async function exportSheet() {
+  const cv = await drawSheet();
+  const a = document.createElement('a');
+  a.download = [fileSlug(sheetName()), fileSlug(state.scenario).slice(0, 30), 'journey-map-a4'].filter(Boolean).join('-') + '.png';
+  a.href = cv.toDataURL('image/png'); a.click();
+  toast('Saved. When printing, choose "Fit to page".');
+}
+
+// ---------- 3k. "On the sheet": the student's name and the date ----------
+// Today's date by default (YYYY-MM-DD, as date boxes need it), and the
+// student's name, remembered in this browser for every tool on the site.
+const NAME_KEY = 'ind-student-name';
+function niceDate(v) {   // '2026-11-06' → '6 Nov 2026'
+  if (!v) return '';
+  const [y, m, d] = v.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+const sheetName = () => $('#sName').value.trim();
+const sheetDate = () => niceDate($('#sDate').value);
+const fileSlug = t => String(t || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+{
+  const t = new Date(), pad = n => String(n).padStart(2, '0');
+  $('#sDate').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+  try { $('#sName').value = localStorage.getItem(NAME_KEY) || ''; } catch (e) {}
+  $('#sName').addEventListener('input', e => { try { localStorage.setItem(NAME_KEY, e.target.value.trim()); } catch (er) {} });
+}
+
+// ---------- 3l. Wiring ----------
+for (const k of ['persona', 'scenario', 'expect']) $('#' + k).addEventListener('input', e => { state[k] = e.target.value; changed(); coach(); });
+$('#addStage').onclick = () => {
+  if (state.stages.length >= MAX_STAGES) return;
+  const s = blankStage(''); state.stages.push(s); changed(); render();
+  const i = document.getElementById('name-' + s.id); if (i) i.focus();
+  document.querySelector('.scroller').scrollLeft = 99999;
+};
+$('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; save(); render(); };
+$('#clearBtn').onclick = () => {
+  if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
+  emptyMap(); state.confirmClear = false; save(); render(); toast('Map cleared.');
+};
+$('#copyBtn').onclick = () => navigator.clipboard.writeText(asText()).then(() => toast('Copied. Paste it into your research doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
+$('#exportBtn').onclick = exportSheet;
+window.addEventListener('resize', () => document.querySelectorAll('#grid textarea').forEach(autoGrow));
+
+// ---------- 3m. Start ----------
+if (!load()) loadExample();
+render();
+</script>
+</body>
+</html>
