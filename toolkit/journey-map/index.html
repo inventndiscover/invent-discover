@@ -103,25 +103,27 @@
   .jgrid { --lab: 150px; display: grid; grid-template-columns: var(--lab) repeat(var(--n), minmax(190px, 1fr)); min-width: calc(var(--lab) + var(--n) * 190px); }
   @media (max-width: 560px) { .jgrid { --lab: 104px; } .rowlab span { display: none; } }
   .rowlab { position: sticky; left: 0; z-index: 3; padding: 14px 12px; background: #11131C; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line); display: grid; align-content: center; gap: 4px; }
-  .rowlab b { font-size: 14.5px; }
+  .rowlab { box-shadow: inset 3px 0 0 var(--rc), inset 14px 0 18px -14px var(--rc); }
+  .rowlab b { font-size: 14.5px; color: var(--rc); text-shadow: 0 0 12px color-mix(in srgb, var(--rc) 65%, transparent); letter-spacing: .02em; }
   .rowlab span { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
-  .cell { padding: 8px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; }
+  .cell { padding: 8px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--rc) 7%, transparent), transparent 70%); }
   .cell:last-child { border-right: none; }
   .cell textarea { display: block; width: 100%; min-height: 66px; resize: none; overflow: hidden; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; color: var(--text); font: inherit; font-size: 13.5px; line-height: 1.45; }
   .cell textarea:hover { border-color: var(--line); }
-  .cell textarea:focus { outline: none; border-color: var(--violet); background: rgba(0,0,0,0.3); }
+  .cell textarea:focus { outline: none; border-color: var(--rc); background: rgba(0,0,0,0.35); box-shadow: 0 0 14px color-mix(in srgb, var(--rc) 35%, transparent); }
   .cell textarea::placeholder { color: rgba(138,143,163,0.55); }
   .cell.row-pains textarea { color: #FFC2CF; }
   .cell.row-opps textarea { color: #B8F5DD; }
+  .cell.row-thoughts textarea { font-style: italic; color: #E4D6FF; }
   /* stage chevrons */
   .corner { position: sticky; left: 0; z-index: 3; background: #11131C; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding: 12px; display: grid; align-content: center; }
   .corner b { font-size: 12px; letter-spacing: .12em; color: var(--stage); }
-  .stagecell { padding: 10px 6px 10px 8px; border-bottom: 1px solid var(--line-2); }
+  .stagecell { padding: 12px 6px 12px 8px; border-bottom: 1px solid var(--line-2); filter: drop-shadow(0 0 7px color-mix(in srgb, var(--sc) 70%, transparent)); }
   .chev { position: relative; display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 22px 0 12px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 10px 50%);
-    background: linear-gradient(90deg, rgba(46,230,214,0.28), rgba(46,230,214,0.16)); box-shadow: inset 0 0 0 1px var(--stage); }
+    background: linear-gradient(90deg, color-mix(in srgb, var(--sc) 42%, #07080D), color-mix(in srgb, var(--sc) 14%, #07080D)); box-shadow: inset 0 0 0 1.5px var(--sc), inset 0 0 14px color-mix(in srgb, var(--sc) 35%, transparent); }
   .chev.first { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%); }
-  .chev .k { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #05060A; background: var(--stage); box-shadow: 0 0 10px var(--stage); margin-left: 6px; }
-  .chev input { flex: 1; min-width: 0; background: transparent; border: none; color: #E6FFFC; font: inherit; font-weight: 700; font-size: 14px; padding: 4px 2px; }
+  .chev .k { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #05060A; background: var(--sc); box-shadow: 0 0 10px var(--sc); margin-left: 6px; }
+  .chev input { flex: 1; min-width: 0; background: transparent; border: none; color: #fff; text-shadow: 0 0 10px color-mix(in srgb, var(--sc) 80%, transparent); font: inherit; font-weight: 700; font-size: 14px; padding: 4px 2px; }
   .chev input:focus { outline: none; }
   .chev .rm { flex: none; border: none; background: transparent; color: rgba(230,255,252,0.6); padding: 0 2px; font-size: 16px; line-height: 1; }
   .chev .rm:hover { color: #fff; }
@@ -130,7 +132,19 @@
 
   /* the Experience row: five faces per stage, and the curve through the chosen ones */
   .mood { grid-column: 2 / -1; position: relative; border-bottom: 1px solid var(--line); }
-  .mood svg.curve { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .mood { background:
+      radial-gradient(120% 90% at 50% 120%, rgba(139,92,246,0.18), transparent 60%),
+      repeating-linear-gradient(180deg, transparent 0 25px, rgba(255,255,255,0.05) 25px 26px, transparent 26px 46px) 0 0 / 100% 40px,
+      #07080F; }
+  .mood { background-position: 0 0, 0 0, 0 0; }
+  .mood svg.curve { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .curve .glow { filter: blur(6px); opacity: .55; }
+  .curve .pulse { stroke-dasharray: 3 97; animation: pulse 3.2s linear infinite; }
+  @keyframes pulse { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  .face.lowest::after { content: ""; position: absolute; inset: -9px; border-radius: 50%; border: 2px solid var(--m1); animation: ring 1.8s ease-out infinite; }
+  .face { position: relative; }
+  @keyframes ring { from { transform: scale(.7); opacity: .9; } to { transform: scale(1.5); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .curve .pulse { display: none; } .face.lowest::after { animation: none; opacity: .6; } }
   .moodgrid { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
   .moodcol { display: grid; grid-template-rows: repeat(5, 40px); justify-items: center; align-items: center; padding: 6px 0; border-right: 1px solid var(--line); }
   .moodcol:last-child { border-right: none; }
@@ -139,7 +153,7 @@
   .face svg { width: 100%; height: 100%; display: block; overflow: visible; }
   .face[aria-pressed="true"] { opacity: 1; transform: scale(1.35); }
   .face[aria-pressed="true"] svg { filter: drop-shadow(0 0 6px var(--fc)); }
-  .moodcol.low { background: rgba(255,59,107,0.07); }
+  .moodcol.low { background: linear-gradient(180deg, transparent, rgba(255,59,107,0.12)); }
 
   /* ---------- Coach, below the map ---------- */
   .coach { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
@@ -301,6 +315,10 @@ const MOODS = ['', 'Very unhappy', 'Unhappy', 'Okay', 'Happy', 'Delighted'];   /
 const MOOD_COLORS = ['', '#FF3B6B', '#FF8A3D', '#FFD43B', '#8BE36B', '#19E3A0'];
 const DEFAULT_STAGES = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
 const MIN_STAGES = 3, MAX_STAGES = 7, MAX_TEXT = 300;
+// Neon colours. Rows each have their own; stages shift from violet through
+// blue to teal as the journey moves forward.
+const ROW_COLORS = { touch: '#2EC4FF', actions: '#6E8BFF', thoughts: '#B26BFF', mood: '#FFD43B', pains: '#FF3B6B', opps: '#19E3A0' };
+const stageColor = (i, n) => `hsl(${Math.round(275 - (n > 1 ? i / (n - 1) : 0) * 105)} 95% 64%)`;
 const SAVE_KEY = 'ind-journey-v1';
 
 // ---------- 3b. The example ----------
@@ -393,6 +411,7 @@ function render() {
   const corner = el('div', 'corner'); corner.append(el('b', null, 'STAGES')); g.append(corner);
   state.stages.forEach((s, i) => {
     const c = el('div', 'stagecell'), ch = el('div', 'chev' + (i === 0 ? ' first' : ''));
+    c.style.setProperty('--sc', stageColor(i, n));
     ch.append(el('span', 'k', String(i + 1)));
     const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'name-' + s.id; inp.maxLength = 30; inp.value = s.name; inp.placeholder = `Stage ${i + 1}`; inp.setAttribute('aria-label', `Stage ${i + 1} name`);
     inp.addEventListener('input', () => { s.name = inp.value; changed(); coach(); });
@@ -410,10 +429,10 @@ function render() {
 
   const low = lowestStages();
   for (const r of ROWS) {
-    const lab = el('div', 'rowlab'); lab.append(el('b', null, r.name), el('span', null, r.hint)); g.append(lab);
+    const lab = el('div', 'rowlab'); lab.style.setProperty('--rc', ROW_COLORS[r.id]); lab.append(el('b', null, r.name), el('span', null, r.hint)); g.append(lab);
     if (r.id === 'mood') { g.append(moodRow(low)); continue; }
     state.stages.forEach((s, i) => {
-      const c = el('div', 'cell row-' + r.id);
+      const c = el('div', 'cell row-' + r.id); c.style.setProperty('--rc', ROW_COLORS[r.id]);
       const t = document.createElement('textarea'); t.id = `${r.id}-${s.id}`; t.rows = 2; t.maxLength = MAX_TEXT; t.value = s[r.id] || '';
       t.placeholder = r.ph; t.setAttribute('aria-label', `${r.name}, ${stageName(s, i)}`);
       t.addEventListener('input', () => { s[r.id] = t.value; autoGrow(t); changed(); coach(); });
@@ -448,14 +467,18 @@ function moodRow(low) {
   const pts = state.stages.map((s, i) => s.mood ? [i * 100 + 50, yOf(s.mood)] : null).filter(Boolean);
   svg.innerHTML = `<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="212" gradientUnits="userSpaceOnUse">
       <stop offset="0.1" stop-color="${MOOD_COLORS[5]}"/><stop offset="0.5" stop-color="${MOOD_COLORS[3]}"/><stop offset="0.9" stop-color="${MOOD_COLORS[1]}"/></linearGradient></defs>
-    <path d="${smoothPath(pts)}" fill="none" stroke="url(#mg)" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(255,255,255,.35))"/>`;
+    <linearGradient id="ma" x1="0" y1="0" x2="0" y2="212" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".28"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient>
+    ${pts.length > 1 ? `<path d="${smoothPath(pts)} L${pts[pts.length - 1][0]},212 L${pts[0][0]},212 Z" fill="url(#ma)"/>` : ''}
+    <path class="glow" d="${smoothPath(pts)}" fill="none" stroke="url(#mg)" stroke-width="10" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+    <path d="${smoothPath(pts)}" fill="none" stroke="url(#mg)" stroke-width="3.5" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+    <path class="pulse" pathLength="100" d="${smoothPath(pts)}" fill="none" stroke="#fff" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #fff)"/>`;
   wrap.append(svg);
   const grid = el('div', 'moodgrid');
   state.stages.forEach((s, i) => {
     const col = el('div', 'moodcol' + (low.includes(s.id) ? ' low' : ''));
     col.setAttribute('role', 'radiogroup'); col.setAttribute('aria-label', `How they feel at ${stageName(s, i)}`);
     for (let m = 5; m >= 1; m--) {
-      const b = el('button', 'face'); b.type = 'button'; b.innerHTML = faceSVG(m);
+      const b = el('button', 'face' + (s.mood === m && low.includes(s.id) ? ' lowest' : '')); b.type = 'button'; b.innerHTML = faceSVG(m);
       b.style.setProperty('--fc', MOOD_COLORS[m]);
       b.setAttribute('aria-pressed', String(s.mood === m)); b.setAttribute('aria-label', MOODS[m]); b.title = MOODS[m];
       b.onclick = () => { s.mood = s.mood === m ? 0 : m; changed(); render(); };
@@ -536,6 +559,10 @@ function asText() {
 // grid, teal stage chevrons, the faces and curve, in dark ink for any printer.
 const UI_F = 'Geist, Arial, sans-serif';
 const STAGE_INK = '#00A99D';
+// Print versions of the neon colours: same hues, a touch deeper so they read on white
+const PRINT_ROW = { touch: '#00A8F0', actions: '#4B6BFF', thoughts: '#9B4DFF', mood: '#E0A800', pains: '#FF2D5E', opps: '#00C98A' };
+const printStage = (i, n) => `hsl(${Math.round(275 - (n > 1 ? i / (n - 1) : 0) * 105)} 85% 50%)`;
+function glowStroke(x, color, width, blur, draw) { x.save(); x.shadowColor = color; x.shadowBlur = blur; x.strokeStyle = color; x.lineWidth = width; draw(); x.stroke(); x.restore(); }
 function wrapText(x, text, maxW) {
   const out = [];
   for (const para of String(text).split('\n')) {
@@ -612,40 +639,46 @@ async function drawSheet() {
     const sx = M + labW + i * colW + 8, w = colW - 16, h = headH - 24, sy = y + 12, tip = 34;
     x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + w - tip, sy); x.lineTo(sx + w, sy + h / 2); x.lineTo(sx + w - tip, sy + h); x.lineTo(sx, sy + h);
     if (i) x.lineTo(sx + tip * 0.7, sy + h / 2); x.closePath();
-    x.fillStyle = '#E3FAF7'; x.fill(); x.strokeStyle = STAGE_INK; x.lineWidth = 4; x.stroke();
-    x.fillStyle = STAGE_INK; x.beginPath(); x.arc(sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2, 22, 0, Math.PI * 2); x.fill();
+    const sc = printStage(i, n);
+    x.save(); x.globalAlpha = 0.1; x.fillStyle = sc; x.fill(); x.restore();
+    x.save(); x.shadowColor = sc; x.shadowBlur = 22; x.strokeStyle = sc; x.lineWidth = 6; x.stroke(); x.restore();
+    x.fillStyle = sc; x.beginPath(); x.arc(sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2, 22, 0, Math.PI * 2); x.fill();
     x.fillStyle = '#FFFFFF'; x.font = `800 24px ${UI_F}`; x.textAlign = 'center'; x.fillText(String(i + 1), sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2 + 9); x.textAlign = 'left';
-    x.fillStyle = '#0B3D39'; x.font = `800 32px ${UI_F}`; x.fillText(fitOneLine(x, stageName(s, i), w - tip - 100), sx + (i ? tip * 0.7 : 0) + 80, sy + h / 2 + 11);
+    x.fillStyle = INK; x.font = `800 32px ${UI_F}`; x.fillText(fitOneLine(x, stageName(s, i), w - tip - 100), sx + (i ? tip * 0.7 : 0) + 80, sy + h / 2 + 11);
   });
-  x.fillStyle = STAGE_INK; x.font = `800 26px ${UI_F}`; x.fillText('STAGES', M + 20, y + headH / 2 + 10);
+  x.fillStyle = printStage(0, n); x.font = `800 26px ${UI_F}`; x.fillText('STAGES', M + 20, y + headH / 2 + 10);
   y += headH + 12;
 
   // Rows
   for (const r of ROWS) {
     const rh = avail * weights[r.id] / sumW;
-    x.fillStyle = '#F3F1FA'; x.fillRect(M, y, labW - 12, rh - 10);
+    const rc = PRINT_ROW[r.id];
+    glowStroke(x, rc, 5, 18, () => { x.beginPath(); x.roundRect(M + 4, y + 4, labW - 20, rh - 18, 26); });
     x.font = `400 22px ${UI_F}`; const hl = wrapText(x, r.hint, labW - 50).slice(0, 2);
-    x.fillStyle = INK; x.font = `800 32px ${UI_F}`; x.fillText(r.name, M + 20, y + rh / 2 - 6 - (hl.length - 1) * 13);
+    x.fillStyle = rc; x.font = `800 32px ${UI_F}`; x.fillText(r.name, M + 20, y + rh / 2 - 6 - (hl.length - 1) * 13);
     x.fillStyle = GREY; x.font = `400 22px ${UI_F}`; hl.forEach((l, k) => x.fillText(l, M + 20, y + rh / 2 + 28 - (hl.length - 1) * 13 + k * 27));
     if (r.id === 'mood') {
       // faces and the curve
-      const yOf = m => y + 24 + (5 - m) * (rh - 58) / 4;
-      x.strokeStyle = LINE; x.lineWidth = 2; x.strokeRect(M + labW, y, W - 2 * M - labW, rh - 10);
+      const yOf = m => y + 70 + (5 - m) * (rh - 160) / 4;   // room above and below for the faces and labels
+      glowStroke(x, rc, 5, 18, () => { x.beginPath(); x.roundRect(M + labW + 4, y + 4, W - 2 * M - labW - 8, rh - 18, 26); });
+      x.strokeStyle = '#EEEEEE'; x.lineWidth = 2; for (let m = 1; m <= 5; m++) { x.beginPath(); x.moveTo(M + labW + 30, yOf(m)); x.lineTo(W - M - 30, yOf(m)); x.stroke(); }
       const pts = st.map((s, i) => s.mood ? [M + labW + i * colW + colW / 2, yOf(s.mood)] : null).filter(Boolean);
       if (pts.length > 1) {
         const grad = x.createLinearGradient(0, y, 0, y + rh); grad.addColorStop(0.1, MOOD_COLORS[5]); grad.addColorStop(0.5, '#E0B000'); grad.addColorStop(0.9, MOOD_COLORS[1]);
-        x.strokeStyle = grad; x.lineWidth = 7; x.lineCap = 'round';
+        x.save(); x.shadowColor = 'rgba(155,77,255,0.55)'; x.shadowBlur = 24;
+        x.strokeStyle = grad; x.lineWidth = 9; x.lineCap = 'round';
         x.beginPath(); x.moveTo(pts[0][0], pts[0][1]);
         for (let i = 0; i < pts.length - 1; i++) {
           const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
           x.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
         }
-        x.stroke();
+        x.stroke(); x.restore();
       }
       const low = lowestStages();
       st.forEach((s, i) => {
         if (!s.mood) return;
         const cx = M + labW + i * colW + colW / 2, cy = yOf(s.mood);
+        if (low.includes(s.id)) glowStroke(x, MOOD_COLORS[1], 4, 20, () => { x.beginPath(); x.arc(cx, cy, 62, 0, Math.PI * 2); });
         drawFace(x, cx, cy, 44, s.mood);
         x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.textAlign = 'center';
         x.fillText(low.includes(s.id) ? 'LOWEST POINT' : MOODS[s.mood], cx, s.mood <= 2 ? cy - 60 : cy + 76); x.textAlign = 'left';
@@ -653,9 +686,9 @@ async function drawSheet() {
     } else {
       st.forEach((s, i) => {
         const cx = M + labW + i * colW;
-        x.strokeStyle = LINE; x.lineWidth = 2; x.strokeRect(cx, y, colW, rh - 10);
-        const color = r.id === 'pains' ? '#E8325D' : r.id === 'opps' ? '#12A877' : STAGE_INK;
-        cellText(x, s[r.id], { x: cx + 18, y: y + 14, w: colW - 36, h: rh - 38 }, 30, 16, color);
+        glowStroke(x, rc, 4, 14, () => { x.beginPath(); x.roundRect(cx + 8, y + 4, colW - 16, rh - 18, 22); });
+        const color = rc;
+        cellText(x, s[r.id], { x: cx + 30, y: y + 22, w: colW - 60, h: rh - 52 }, 30, 16, color);
       });
     }
     y += rh;
