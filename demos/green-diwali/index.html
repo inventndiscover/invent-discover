@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Green Diwali</title>
-<meta name="description" content="Light diyas, a phuljhadi, an anar and a chakri in your own room, and draw a rangoli on your floor. No smoke, no burns, no frightened pets. AR on Android, camera view on iPhone, 3D on a laptop.">
+<meta name="description" content="Light diyas, a sparkler, a cone and a spinner in your own room, and draw a rangoli on your floor. No smoke, no burns, no frightened pets. AR on Android, camera view on iPhone, 3D on a laptop.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <style>
@@ -151,7 +151,7 @@
       <div class="eyebrow">Invent · AR · Civic</div>
       <h1>Green Diwali</h1>
       <div class="deva-title">हरित दीपावली</div>
-      <p class="sub">Draw a rangoli, light diyas, wave a phuljhadi and set off an anar and a chakri, right on your own floor. No smoke, no burns, no frightened pets.</p>
+      <p class="sub">Draw a rangoli, light diyas, wave a sparkler and set off a cone and a spinner, right on your own floor. No smoke, no burns, no frightened pets.</p>
 
       <div class="label">Sound</div>
       <div class="seg" id="modes">
@@ -179,7 +179,7 @@
     </div>
     <p id="credit">
       Rocket model based on <a href="https://sketchfab.com/3d-models/fire-crackers-8bdb2b1a58b04a81ab03838eb44e8bee" target="_blank" rel="noopener">"Fire Crackers"</a> by <a href="https://sketchfab.com/Ankitimation" target="_blank" rel="noopener">Ankitimation</a>; brass samai based on <a href="https://sketchfab.com/3d-models/diya-divli-lamp-c1b7a1dc96194b73b9c9af5ac0015add" target="_blank" rel="noopener">"Diya | Divli | Lamp"</a> by <a href="https://sketchfab.com/verlekarshaunak" target="_blank" rel="noopener">ShonkV</a>; both <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, reduced in size for phones.
-      Cracker sounds from <a href="https://mixkit.co/free-sound-effects/fireworks/" target="_blank" rel="noopener">Mixkit</a> and <a href="https://pixabay.com/sound-effects/" target="_blank" rel="noopener">Pixabay</a> (tanweraman, freesound_community), trimmed. The diyas, anar, chakri, phuljhadi, ladi and rangoli are built in code, and the fizz, hiss and whirr are made live in the page.
+      Cracker sounds from <a href="https://mixkit.co/free-sound-effects/fireworks/" target="_blank" rel="noopener">Mixkit</a> and <a href="https://pixabay.com/sound-effects/" target="_blank" rel="noopener">Pixabay</a> (tanweraman, freesound_community), trimmed. The diyas, cone, spinner, sparkler, string crackers and rangoli are built in code, and the fizz, hiss and whirr are made live in the page.
       Music by <a href="https://pixabay.com/users/sigmamusicart-36860929/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=627508" target="_blank" rel="noopener">Mikhail Smusev</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=627508" target="_blank" rel="noopener">Pixabay</a>.
     </p>
   </div>
@@ -199,7 +199,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const BUILD = 'Green Diwali · v1.2';
+const BUILD = 'Green Diwali · v1.3';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -1662,7 +1662,7 @@ function readySparkler() {
   SPK.burn = 0; SPK.lit = false; SPK.waiting = true; sparkler.visible = true;
   if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
 }
-const HINT_READY = 'Your phuljhadi is ready. Touch its tip to a flame (a diya, the samai or a standing phuljhadi) by lining them up on screen, or just tap to light it.';
+const HINT_READY = 'Your sparkler is ready. Touch its tip to a flame (a diya, the samai or a standing sparkler) by lining them up on screen, or just tap to light it.';
 function putOutSparkler() {
   SPK.lit = false; SPK.waiting = false; sparkler.visible = false; trailPts.length = 0;
   if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
@@ -1680,8 +1680,8 @@ function updateSparkler(dt, t, camM, camPos) {
   _bp.set(0, at, 0); SPK.holder.localToWorld(_bp);
   if (SPK.lit && f >= 1) {
     SPK.lit = false; if (SPK.voice) { SPK.voice.stop(); SPK.voice = null; }
-    if (flamePoints().length) { readySparkler(); hint('All burnt out. Here is a fresh one: ' + HINT_READY.slice(25)); }
-    else if (tool === 'phuljhadi') hint('All burnt out. Tap to light another phuljhadi.');
+    if (flamePoints().length) { readySparkler(); hint('All burnt out. Here is a fresh one: ' + HINT_READY.slice(24)); }
+    else if (tool === 'phuljhadi') hint('All burnt out. Tap to light another sparkler.');
   }
   if (SPK.waiting && !SPK.lit && touchingFlame(_bp)) {          // lit from a flame!
     lightSparkler(); crackle(_bp, 0.25); crackle(_bp, 0.2);
@@ -1823,15 +1823,15 @@ function viewerForward() { const e = camM.elements; return new THREE.Vector3(-e[
 const TOOLS = [
   { id: 'rangoli', dv: 'रंगोली', en: 'Rangoli', hint: 'Point at the floor and tap to draw a rangoli. Tap on it again for a new pattern.' },
   { id: 'diya', dv: 'दीया', en: 'Diya', hint: 'Tap the floor to place a diya. Near a rangoli, it settles on the pattern.' },
-  { id: 'phuljhadi', dv: 'फुलझड़ी', en: 'Sparkler', hint: "You're holding a phuljhadi! Wave your phone slowly to write in the air. Tap to light a new one." },
-  { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Sparklers', hint: 'Tap the floor to plant a phuljhadi in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
-  { id: 'anar', dv: 'अनार', en: 'Cone', hint: 'Tap the floor to light an anar, then step back a little.' },
-  { id: 'chakri', dv: 'चकरी', en: 'Spinner', hint: 'Tap the floor to light a chakri.' },
-  { id: 'ladi', dv: 'लड़ी', en: 'String Crackers', hint: 'Tap the floor to lay a ladi and light it.' },
+  { id: 'phuljhadi', dv: 'फुलझड़ी', en: 'Sparkler', hint: "You're holding a sparkler! Wave your phone slowly to write in the air. Tap to light a new one." },
+  { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Sparklers', hint: 'Tap the floor to plant a sparkler in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
+  { id: 'anar', dv: 'अनार', en: 'Cone', hint: 'Tap the floor to light a cone, then step back a little.' },
+  { id: 'chakri', dv: 'चकरी', en: 'Spinner', hint: 'Tap the floor to light a spinner.' },
+  { id: 'ladi', dv: 'लड़ी', en: 'String Crackers', hint: 'Tap the floor to lay a string of crackers and light it.' },
   { id: 'rocket', dv: 'रॉकेट', en: 'Rocket', hint: 'Tap the floor to set a rocket in a bottle. Look up when it goes!' },
   { id: 'samai', dv: 'समई', en: 'Samai', hint: 'Tap the floor to place a brass samai with eight wicks.' },
   { id: 'lantern', dv: 'आकाश दीप', en: 'Sky lantern', hint: 'Tap the floor to light a sky lantern and watch it float away. Best on a balcony.' },
-  { id: 'snake', dv: 'साँप की गोली', en: 'Snake tablet', hint: 'Tap the floor to light a saanp ki goli and watch the ash snake grow.' },
+  { id: 'snake', dv: 'साँप की गोली', en: 'Snake tablet', hint: 'Tap the floor to light a snake tablet and watch the ash snake grow.' },
   { id: 'sky', dv: 'आतिशबाजियाँ', en: 'Sky show', hint: '' },
 ];
 let tool = 'rangoli';
@@ -1886,7 +1886,7 @@ async function placeAt(p) {
     makeSamai(pos);
   } else if (tool === 'standing') makeStanding(pos);
   else if (tool === 'lantern') { makeLantern(pos); hint('Real sky lanterns can land on roofs, trees and wires and start fires; many cities ban them. This one floats away safely.'); }
-  else if (tool === 'snake') { makeSnake(pos); hint("Real saanp ki goli gives off thick, harmful smoke, worst for children and anyone with breathing trouble. This smoke is only pixels."); }
+  else if (tool === 'snake') { makeSnake(pos); hint("A real snake tablet gives off thick, harmful smoke, worst for children and anyone with breathing trouble. This smoke is only pixels."); }
 }
 $('undo').addEventListener('click', () => {   // remove the last thing you placed
   if (items.length) removeItem(items[items.length - 1]); else hint('Nothing to undo yet.');
