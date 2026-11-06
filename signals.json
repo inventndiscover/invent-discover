@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-11-05T21:51:31+05:30",
+ "REFRESHED": "2026-11-06T21:51:26+05:30",
  "SIGNALS": [
+  {
+   "id": "2118390406316728555",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2118390406316728555",
+   "posted": "2026-11-05T22:40:05+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google announced Gemini Omni 1.2 Flash, an updated video generation model from DeepMind with better consistency, more creative control, and 30% lower cost."
+  },
+  {
+   "id": "2118390190246879554",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2118390190246879554",
+   "posted": "2026-11-05T22:39:13+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "OpenAI introduced GPT-6 Cyber, a model for security research. It says the model powered its Linux kernel research and is being used by teams at Mozilla, Palo Alto Networks and Cisco."
+  },
+  {
+   "id": "2118124966055223755",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2118124966055223755",
+   "posted": "2026-11-05T05:05:19+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "OpenAI says Images 2.6 is now in ChatGPT and Codex on all tiers, with GPT-Image-2.6 Flare and Sunburst also available in the API."
+  },
   {
    "id": "2117921571364847904",
    "handle": "Trecopo1",
@@ -50,46 +80,6 @@
    "topic": "AI",
    "kind": "Official",
    "summary": "Users can now auto-connect plugins when they log in to Claude, for MCP servers that accept Claude as a trusted issuer, so no re-authorizing is needed."
-  },
-  {
-   "id": "2117647994048704588",
-   "handle": "Vectorizeio",
-   "name": "Vectorize",
-   "url": "https://x.com/Vectorizeio/status/2117647994048704588",
-   "posted": "2026-11-03T21:30:00+05:30",
-   "topic": "Open models",
-   "kind": "Official",
-   "summary": "Vectorize introduces Hindsight Models, saying its memory is now 2.5x cheaper and 2x faster; weights are open on Hugging Face or hosted via an API."
-  },
-  {
-   "id": "2117615015197098258",
-   "handle": "pankajkumar_dev",
-   "name": "Pankaj Kumar",
-   "url": "https://x.com/pankajkumar_dev/status/2117615015197098258",
-   "posted": "2026-11-03T19:18:57+05:30",
-   "topic": "Models",
-   "kind": "Leak",
-   "summary": "Claims GPT-6.2 Astra is routing on some accounts with a new checkpoint and produces strong SVG output. Unconfirmed by OpenAI."
-  },
-  {
-   "id": "2117425418454384677",
-   "handle": "MTSlive",
-   "name": "MTS",
-   "url": "https://x.com/MTSlive/status/2117425418454384677",
-   "posted": "2026-11-03T06:45:34+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "SemiAnalysis built GDPx, a benchmark of 206 multi-step tasks in 11 fields such as chip design and biology. The best model scores 12%, with Claude Opus 5.5 on top."
-  },
-  {
-   "id": "2117375881999942080",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2117375881999942080",
-   "posted": "2026-11-03T03:28:43+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "At ADIPEC in Abu Dhabi, Sam Altman said the internal model behind OpenAI's Navier-Stokes result is the next GPT, due to be released soon."
   }
  ]
 }

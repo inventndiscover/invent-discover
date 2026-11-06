@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-05T21:45:00+05:30",
+ "REFRESHED": "2026-11-06T21:40:00+05:30",
  "EVENTS_RAW": [
   {
    "id": "media-accelerator-cohort",
@@ -82,33 +82,6 @@
    "url": "https://ethglobal.com/events/mumbai",
    "org": "ETHGlobal",
    "desc": "A multi-day Ethereum hackathon in Mumbai during the Devcon week."
-  },
-  {
-   "id": "opentechsummit-india-2026",
-   "title": "OpenTechSummit India 2026",
-   "cat": "Tech",
-   "tags": [
-    "Open source",
-    "Developers",
-    "Ethereum"
-   ],
-   "area": "BKC",
-   "venue": "Jio World Centre, BKC",
-   "start": "2026-11-05T09:00",
-   "end": "18:00",
-   "fmt": "Offline",
-   "price": 1500,
-   "priceNote": "From ₹1,500 (Community Pass); free contributor pass via voucher; entry also needs a Devcon 8 ticket or Day Pass",
-   "aud": [
-    "Developer",
-    "Student",
-    "Founder"
-   ],
-   "src": "Eventyay",
-   "url": "https://eventyay.com/fossasia/ots2026/",
-   "org": "FOSSASIA",
-   "access": "open",
-   "desc": "A one-day open-source and community gathering held alongside Devcon 8, with talks, workshops and project showcases for contributors, developers, researchers and startups."
   },
   {
    "tags": [
@@ -946,53 +919,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai, discover/ai, tech, arts (not on fetch allowlist); event pages via search",
-   "found": 3,
+   "what": "mumbai, discover/ai, tech, arts listings",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 3,
-   "note": "Listing pages not fetchable. Mumbai Meets AI 04/05/06 pages were past; no new dated Luma events found."
+   "skip": 0,
+   "note": "Listing and event pages not on the fetch allowlist this run; existing queue items could not be re-checked."
   },
   {
    "src": "AllEvents",
-   "what": "technology, startup (not on fetch allowlist)",
+   "what": "technology and startup categories",
    "found": 0,
    "pub": 0,
-   "review": 1,
+   "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable. AICD Mumbai date conflicts with another listing (21 Nov vs 7 Nov); moved to the queue."
+   "note": "Not fetchable this run."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups and conferences (not on fetch allowlist)",
+   "what": "Mumbai meetups and conferences",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable this run."
+   "note": "Not fetchable this run."
   },
   {
    "src": "hiddenevents",
-   "what": "not on fetch allowlist (hint-only mirror)",
+   "what": "Mumbai mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not reachable."
+   "note": "Not fetchable this run."
   },
   {
    "src": "web search",
-   "what": "AI meetup, hackathon, design/UX, XR queries; StartupGrants India and Internshala pages",
-   "found": 5,
-   "pub": 1,
-   "review": 1,
-   "dup": 1,
-   "skip": 2,
-   "note": "Added Ship Safe (6 Nov, confirmed; was queued). Mumbai Builds 2027 queued (finale Feb 2027). NobleProg paid business-owner workshop skipped. No upcoming AI Tinkerers or design/XR events found. Removed past: monad-blitz-mumbai, eva-symposium-3."
+   "what": "AI, design/UX, XR searches",
+   "found": 0,
+   "pub": 0,
+   "review": 0,
+   "dup": 0,
+   "skip": 0,
+   "note": "Searches surfaced only past events (Mumbai Meets AI editions, Design Samvaad in Gurugram, AI Tinkerers with no upcoming date). Removed OpenTechSummit India 2026 (ended)."
   }
  ],
  "COMMUNITIES": [
