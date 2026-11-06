@@ -199,7 +199,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const BUILD = 'Green Diwali · v1.1';
+const BUILD = 'Green Diwali · v1.2';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -1823,16 +1823,16 @@ function viewerForward() { const e = camM.elements; return new THREE.Vector3(-e[
 const TOOLS = [
   { id: 'rangoli', dv: 'रंगोली', en: 'Rangoli', hint: 'Point at the floor and tap to draw a rangoli. Tap on it again for a new pattern.' },
   { id: 'diya', dv: 'दीया', en: 'Diya', hint: 'Tap the floor to place a diya. Near a rangoli, it settles on the pattern.' },
-  { id: 'phuljhadi', dv: 'फुलझड़ी', en: 'Phuljhadi', hint: "You're holding a phuljhadi! Wave your phone slowly to write in the air. Tap to light a new one." },
-  { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Standing', hint: 'Tap the floor to plant a phuljhadi in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
-  { id: 'anar', dv: 'अनार', en: 'Anar', hint: 'Tap the floor to light an anar, then step back a little.' },
-  { id: 'chakri', dv: 'चकरी', en: 'Chakri', hint: 'Tap the floor to light a chakri.' },
-  { id: 'ladi', dv: 'लड़ी', en: 'Ladi', hint: 'Tap the floor to lay a ladi and light it.' },
+  { id: 'phuljhadi', dv: 'फुलझड़ी', en: 'Sparkler', hint: "You're holding a phuljhadi! Wave your phone slowly to write in the air. Tap to light a new one." },
+  { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Sparklers', hint: 'Tap the floor to plant a phuljhadi in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
+  { id: 'anar', dv: 'अनार', en: 'Cone', hint: 'Tap the floor to light an anar, then step back a little.' },
+  { id: 'chakri', dv: 'चकरी', en: 'Spinner', hint: 'Tap the floor to light a chakri.' },
+  { id: 'ladi', dv: 'लड़ी', en: 'String Crackers', hint: 'Tap the floor to lay a ladi and light it.' },
   { id: 'rocket', dv: 'रॉकेट', en: 'Rocket', hint: 'Tap the floor to set a rocket in a bottle. Look up when it goes!' },
   { id: 'samai', dv: 'समई', en: 'Samai', hint: 'Tap the floor to place a brass samai with eight wicks.' },
   { id: 'lantern', dv: 'आकाश दीप', en: 'Sky lantern', hint: 'Tap the floor to light a sky lantern and watch it float away. Best on a balcony.' },
   { id: 'snake', dv: 'साँप की गोली', en: 'Snake tablet', hint: 'Tap the floor to light a saanp ki goli and watch the ash snake grow.' },
-  { id: 'sky', dv: 'आसमान', en: 'Sky show', hint: '' },
+  { id: 'sky', dv: 'आतिशबाजियाँ', en: 'Sky show', hint: '' },
 ];
 let tool = 'rangoli';
 TOOLS.forEach((T) => {
