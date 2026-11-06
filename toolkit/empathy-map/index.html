@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empathy Map tool · Invent + Discover</title>
+<meta name="description" content="Map what one person says, thinks, does and feels, plus their pains and gains, then turn it into an insight. Free, in your browser, with a printable A4 sheet.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/empathy-map/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Empathy Map tool · Invent + Discover">
+<meta property="og:description" content="Says, Thinks, Does, Feels, Pains and Gains for one person, then an insight. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/empathy-map/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Empathy Map tool","url":"https://inventndiscover.com/toolkit/empathy-map/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same tokens as the other tools. Each of the six sections has
+  its own note colour, so a note's colour tells you where it belongs.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --line-2: rgba(255,255,255,0.16);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --pink: #EC4899;
+    --ok: #46D69A;
+    --warn: #FFB23F;
+    /* one note colour per section */
+    --says: #FFE58A; --thinks: #D9CCFF; --does: #BFDCFF; --feels: #FFC2D4; --pains: #FFD0B0; --gains: #BFEFD6;
+    --note-ink: #17141F;
+    --radius: 14px;
+    --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(139,92,246,0.22), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(236,72,153,0.14), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(59,130,246,0.14), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed; min-height: 100vh;
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+  /* ---------- Header: intro on the left, the four questions on the right ---------- */
+  header { padding: 40px 0 20px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px 40px; align-items: end; }
+  @media (max-width: 960px) { header { grid-template-columns: minmax(0, 1fr); } }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD; box-shadow: 0 0 18px rgba(139,92,246,0.25); }
+  h1 { margin: 0; font-size: clamp(40px, 7vw, 72px); line-height: 1; text-wrap: balance;
+    text-shadow: 0 0 24px rgba(139,92,246,0.55), 0 0 60px rgba(236,72,153,0.25); }
+  .lede { color: var(--muted); max-width: 640px; font-size: 17px; line-height: 1.55; }
+  .credit { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .credit a, .about a { color: #C4B5FD; }
+  .qcards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .qcard { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px; align-items: center; }
+  .qcard i { width: 14px; height: 14px; border-radius: 3px; grid-row: span 2; }
+  .qcard b { font-size: 15px; }
+  .qcard span { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.35; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(6px); }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text], textarea.field { width: 100%; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font: inherit; font-size: 15.5px; }
+  input[type=text]:focus, textarea.field:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+  button { font: inherit; font-size: 15px; color: var(--text); cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; }
+  button:hover { border-color: rgba(255,255,255,0.25); }
+  button.primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; color: #fff; }
+  button.danger { border-color: rgba(236,72,153,0.6); color: #F9A8D4; }
+  button.small { font-size: 13px; padding: 6px 11px; border-radius: 8px; }
+  .spacer { flex: 1; }
+
+  /* persona */
+  .persona { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1.6fr); gap: 14px; }
+  @media (max-width: 860px) { .persona { grid-template-columns: minmax(0, 1fr); } }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; }
+  .banner { margin: 0 0 14px; padding: 12px 16px; border: 1px solid rgba(139,92,246,0.45); border-radius: 12px; font-size: 14.5px; color: #DDD6FE; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .banner b { color: var(--text); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ---------- The map: four quadrants around the person ---------- */
+  .map { position: relative; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; background: rgba(11,13,20,0.72); }
+  .quad { padding: 14px; display: grid; gap: 10px; align-content: start; min-height: 260px; min-width: 0; transition: background .15s, box-shadow .15s; }
+  .quad[data-s="says"] { border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding-right: 70px; }
+  .quad[data-s="thinks"] { border-bottom: 1px solid var(--line-2); padding-left: 70px; }
+  .quad[data-s="does"] { border-right: 1px solid var(--line-2); padding-right: 70px; padding-top: 50px; }
+  .quad[data-s="feels"] { padding-left: 70px; padding-top: 50px; }
+  /* the person in the middle */
+  .face { position: absolute; left: 50%; top: var(--mid, 50%); transform: translate(-50%, -50%); width: 120px; height: 120px; border-radius: 50%; z-index: 2;
+    background: radial-gradient(circle at 50% 40%, #241B3D, #0B0D14 70%); border: 2px solid var(--violet); box-shadow: 0 0 30px rgba(139,92,246,0.5);
+    display: grid; place-items: center; text-align: center; padding: 10px; }
+  .face b { display: block; font-size: 15px; line-height: 1.15; overflow-wrap: anywhere; }
+  .face span { display: block; font-size: 11px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+  @media (max-width: 720px) {
+    .map { grid-template-columns: minmax(0, 1fr); }
+    .quad[data-s] { border-right: none; padding: 14px; border-bottom: 1px solid var(--line-2); }
+    .face { position: static; transform: none; margin: 14px auto 0; grid-row: 1; }
+  }
+  .below { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 720px) { .below { grid-template-columns: minmax(0, 1fr); } }
+  .below .quad { border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.72); min-height: 170px; }
+  .qhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .qhead i { width: 14px; height: 14px; border-radius: 3px; flex: none; }
+  .qhead h2 { margin: 0; font-size: 17px; letter-spacing: .02em; }
+  .count { font-size: 12px; font-weight: 700; color: #C4B5FD; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums; }
+  .qhint { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+  .over { background: rgba(139,92,246,0.14) !important; box-shadow: inset 0 0 0 1px var(--violet); }
+  .add { display: flex; gap: 6px; }
+  .add input { flex: 1; min-width: 0; padding: 7px 10px; font-size: 14px; border-radius: 8px; }
+  .add button { padding: 6px 12px; font-size: 13px; border-radius: 8px; }
+
+  /* sticky notes */
+  .notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .note { position: relative; min-width: 0; padding: 8px 26px 8px 9px; border-radius: 2px; color: var(--note-ink); min-height: 54px;
+    transform: rotate(var(--tilt,0deg)); transition: transform .12s; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 8px 18px -6px rgba(0,0,0,.6); }
+  .note:hover { transform: rotate(0deg) translateY(-1px); }
+  .note[draggable="true"] { cursor: grab; }
+  .note.dragging { opacity: .35; }
+  .note p { margin: 0; font-family: var(--hand); font-size: 14.5px; line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .note .more { position: absolute; right: 3px; top: 3px; border: none; background: rgba(0,0,0,0.08); color: var(--note-ink); border-radius: 999px; padding: 0 6px; font-size: 12px; font-weight: 800; line-height: 1.5; }
+  .note .more:hover { background: rgba(0,0,0,0.18); }
+  .s-says { background: var(--says); } .s-thinks { background: var(--thinks); } .s-does { background: var(--does); } .s-feels { background: var(--feels); } .s-pains { background: var(--pains); } .s-gains { background: var(--gains); }
+  .editor { grid-column: 1 / -1; display: grid; gap: 8px; padding: 8px; border-radius: 4px; color: var(--note-ink); box-shadow: 0 8px 22px -6px rgba(0,0,0,.7); }
+  .editor textarea { width: 100%; min-height: 56px; resize: vertical; border: none; border-radius: 3px; padding: 6px; background: rgba(255,255,255,0.5); font-family: var(--hand); font-size: 16px; color: var(--note-ink); }
+  .editor .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .editor select { border: 1px solid rgba(0,0,0,0.3); background: rgba(255,255,255,0.55); border-radius: 6px; padding: 4px 6px; font: inherit; font-size: 13px; color: var(--note-ink); }
+  .editor button { color: var(--note-ink); background: rgba(255,255,255,0.55); border: 1px solid rgba(0,0,0,0.35); border-radius: 8px; padding: 5px 11px; font-size: 13px; }
+  .editor button.go { background: var(--note-ink); color: #fff; border-color: var(--note-ink); font-weight: 700; }
+  .editor button.danger { color: #9F1239; border-color: #9F1239; }
+
+  /* ---------- Coach + insight ---------- */
+  .coach { display: grid; gap: 14px; position: sticky; top: 14px; }
+  @media (max-width: 1100px) { .coach { position: static; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+  .coach h4 { margin: 0 0 10px; font-size: 15px; }
+  .meter { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-bottom: 10px; }
+  .meter span { height: 8px; border-radius: 3px; background: rgba(255,255,255,0.1); }
+  .big { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+  .big small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .next { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .next b { color: var(--text); }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 13px; line-height: 1.4; }
+  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .checks span { color: var(--muted); }
+  .insight { display: grid; gap: 8px; }
+  .insight p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+  .sentence { font-size: 15px; line-height: 1.5; color: var(--text); padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); }
+  .sentence em { font-style: normal; color: #C4B5FD; }
+  .insight textarea.field { min-height: 44px; resize: vertical; font-size: 14px; padding: 8px 10px; }
+  .insight a.go { display: inline-block; text-align: center; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--violet), var(--pink)); box-shadow: 0 0 18px rgba(139,92,246,0.4); }
+  .insight a.go[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+
+  /* ---------- How-to + credits ---------- */
+  .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
+  .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
+  .how h3 { margin: 6px 0 6px; font-size: 16px; }
+  .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .about { margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .about { grid-template-columns: minmax(0, 1fr); } }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  .about .panel { border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); padding: 14px 16px; margin-bottom: 14px; }
+  .about h3 { margin: 0 0 8px; font-size: 15px; }
+  .about .panel p { margin: 0; font-size: 14px; }
+  .about .sources { font-size: 13px; }
+  .sitefoot { margin-top: 36px; }
+  .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  .sitefoot a:hover { color: var(--text); }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
+    background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .note { transform: none !important; } }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  The map, notes and coach are drawn by JavaScript from the data.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <div>
+      <a class="back" href="/#tools">← All tools</a><br>
+      <span class="pill">TOOL · EMPATHY MAP</span>
+      <h1>Empathy Map</h1>
+      <p class="lede">Step into one person's shoes. Fill in what they say, think, do and feel, plus their pains and gains, from your interviews and observations. Then turn the gaps you notice into one insight.</p>
+      <p class="credit">Created by <b style="color:var(--text)">Dave Gray</b> at XPLANE and published in <i>Gamestorming</i> (2010). The four-quadrant version follows <a href="https://www.nngroup.com/videos/empathy-map/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
+    </div>
+    <div class="qcards" aria-label="The four quadrants">
+      <div class="qcard"><i style="background:var(--says)"></i><b>Says</b><span>Their actual words, in quotes</span></div>
+      <div class="qcard"><i style="background:var(--thinks)"></i><b>Thinks</b><span>What's on their mind but unsaid</span></div>
+      <div class="qcard"><i style="background:var(--does)"></i><b>Does</b><span>What you saw them do</span></div>
+      <div class="qcard"><i style="background:var(--feels)"></i><b>Feels</b><span>Their emotions, and what causes them</span></div>
+    </div>
+  </header>
+
+  <div class="card persona">
+    <div><label for="pName">Who is this person?</label><input type="text" id="pName" maxlength="40" placeholder="e.g. Riya"></div>
+    <div><label for="pAbout">One line about them</label><input type="text" id="pAbout" maxlength="90" placeholder="e.g. 19, first-year design student, commutes 90 minutes by Mumbai local"></div>
+    <div><label for="pGoal">What are they trying to get done?</label><input type="text" id="pGoal" maxlength="120" placeholder="e.g. Get to her 9 am class on time without arriving exhausted"></div>
+  </div>
+
+  <div class="bar">
+    <button id="exampleBtn" type="button">Load example</button>
+    <button id="clearBtn" type="button">Clear map</button>
+    <span class="spacer"></span>
+    <button id="copyBtn" type="button">Copy as text</button>
+    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print">Save A4 sheet</button>
+  </div>
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="layout">
+    <div>
+      <div class="map" id="map"></div>
+      <div class="below" id="below"></div>
+    </div>
+    <aside class="coach" aria-label="Coach">
+      <div class="card">
+        <h4>Progress</h4>
+        <div class="meter" id="meter"></div>
+        <div class="big" id="total">0<small> notes</small></div>
+        <div class="next" id="next"></div>
+      </div>
+      <div class="card">
+        <h4>Coach</h4>
+        <ul class="checks" id="checks"></ul>
+      </div>
+      <div class="card insight">
+        <h4 style="margin:0">Your insight</h4>
+        <p>Look for gaps: what they say vs. what they think or do. Then finish the sentence.</p>
+        <div class="sentence" id="sentence"></div>
+        <label for="iNeed" style="margin:0">needs a way to…</label>
+        <textarea class="field" id="iNeed" maxlength="140" rows="2" placeholder="e.g. use standing time on the train for something useful"></textarea>
+        <label for="iWhy" style="margin:0">because… (the surprising part)</label>
+        <textarea class="field" id="iWhy" maxlength="200" rows="2" placeholder="e.g. the crowd decides what she can do, and her phone is often out of reach"></textarea>
+        <a class="go" id="toPov" href="/toolkit/pov/" target="_blank" rel="noopener">Open in POV Statement →</a>
+      </div>
+    </aside>
+  </div>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1 · 5 MIN</div><h3>Pick one person</h3><p>One real person you interviewed or watched, not “users”. Give them a name, one line about them and the goal they're trying to get done.</p></div>
+    <div class="card"><div class="step">STEP 2 · 15 MIN</div><h3>Fill the map</h3><p>Add notes to each section from your research: their exact words in <b style="color:var(--text)">Says</b>, guesses about their mind in <b style="color:var(--text)">Thinks</b>, what you saw in <b style="color:var(--text)">Does</b>, emotions in <b style="color:var(--text)">Feels</b>. Then their pains and gains.</p></div>
+    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Find the insight</h3><p>Look for contradictions, like saying “It's fine” while feeling anxious. Write one insight, then open it in the POV Statement tool and save the A4 sheet.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <div>
+      <h2>Where the empathy map comes from</h2>
+      <p>The empathy map was created by <b>Dave Gray</b>, founder of the visual-thinking company <b>XPLANE</b>. It grew out of the caricature-style “big head” drawings that XPLANE's creative director <b>Scott Matthews</b> made in the mid-2000s, and Gray refined it into the empathy map published in <b><i>Gamestorming</i></b> (2010), the facilitation playbook he wrote with Sunni Brown and James Macanufo.</p>
+      <p>The idea is simple: put one person in the middle and look at them from every side, what they say, think, do and feel, so the team designs for a real human and not an average “user”. The four-quadrant <b>Says / Thinks / Does / Feels</b> layout used here is the one taught by <b>Nielsen Norman Group</b>. Gray later updated his canvas with See, Hear, Pains and Gains; this tool keeps Pains and Gains too.</p>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Where your map is kept</h3>
+        <p>Your map stays in this browser and is never uploaded. Use Save A4 sheet or Copy as text to keep a copy.</p>
+      </div>
+      <p class="sources">Sources: <a href="https://xplane.com/the-empathy-map-a-human-centered-tool-for-understanding-how-your-audience-thinks/" target="_blank" rel="noopener">XPLANE, The Empathy Map</a> · <a href="https://www.nngroup.com/videos/empathy-map/" target="_blank" rel="noopener">Nielsen Norman Group, How to Empathy Map</a> · <a href="https://en.wikipedia.org/wiki/Empathy_map" target="_blank" rel="noopener">Wikipedia, Empathy map</a>. The map, coach, insight builder and A4 sheet are made by Invent + Discover.</p>
+    </div>
+  </section>
+
+  <footer class="sitefoot">
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+// ---------- 3a. The six sections ----------
+// Each section has an id, a name, a hint and a prompt for its add box.
+const SECTIONS = [
+  { id: 'says',   name: 'Says',   hint: 'Their actual words, in quotes.',                      ph: '“…”' },
+  { id: 'thinks', name: 'Thinks', hint: "What's on their mind that they might not say out loud.", ph: 'What are they thinking?' },
+  { id: 'does',   name: 'Does',   hint: 'Actions and habits you saw.',                          ph: 'What did they do?' },
+  { id: 'feels',  name: 'Feels',  hint: 'Emotions, and what causes them.',                      ph: 'e.g. Anxious when…' },
+  { id: 'pains',  name: 'Pains',  hint: 'Fears, frustrations, obstacles.',                      ph: 'What gets in their way?' },
+  { id: 'gains',  name: 'Gains',  hint: 'What they want, and what success looks like to them.', ph: 'What would make it better?' },
+];
+const S = Object.fromEntries(SECTIONS.map(s => [s.id, s]));
+const SAVE_KEY = 'ind-empathy-v1';
+const MAX_PER = 12;          // notes per section
+const MAX_TEXT = 140;        // characters per note
+
+// ---------- 3b. The example ----------
+const EXAMPLE = {
+  name: 'Riya', about: '19, first-year design student, commutes 90 minutes each way by Mumbai local',
+  goal: 'Get to her 9 am class on time without arriving exhausted',
+  notes: {
+    says: ['“I’ll just study on the train.”', '“The 8:14 is my train. I never miss it.”', '“It’s fine, everyone does this commute.”'],
+    thinks: ['If I miss this one, I lose attendance', 'Will my bag get stuck in the door?', 'I wish I lived closer to campus'],
+    does: ['Stands near the door from Dadar onwards', 'Downloads episodes at home the night before', 'Checks the train app three times before leaving'],
+    feels: ['Anxious when the platform is packed', 'Drained before her first class starts', 'Proud she has the routine figured out'],
+    pains: ['Loses three hours a day travelling', "Can't use her phone when it's crowded"],
+    gains: ['A seat after Dadar means 20 minutes of reading', 'Friends to travel with on Fridays'],
+  },
+  need: 'use standing time on the train for something useful',
+  why: 'the crowd decides what she can do, and her phone is often out of reach',
+};
+
+// ---------- 3c. State ----------
+// One object holds the whole map. We change it, then call render().
+//   notes: [{ id: 'n1abc', s: 'says', text: '“I’ll just study on the train.”', at: 1730… }]
+const state = { name: '', about: '', goal: '', notes: [], need: '', why: '', isExample: false, editing: null, confirmDel: null, confirmClear: false, drafts: {}, focusId: null };
+
+// ---------- 3d. Helpers ----------
+const $ = q => document.querySelector(q);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const newId = () => 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const tilt = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) | 0; return ((Math.abs(h) % 5) - 2) * 0.6 + 'deg'; };
+const inS = s => state.notes.filter(n => n.s === s).sort((a, b) => a.at - b.at);
+const who = () => state.name.trim() || 'This person';
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
+
+// ---------- 3e. Saving in this browser ----------
+function save() {
+  const { name, about, goal, notes, need, why, isExample } = state;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ name, about, goal, notes, need, why, isExample })); } catch (e) {}
+}
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (d && Array.isArray(d.notes)) { Object.assign(state, d); return true; } } catch (e) {}
+  return false;
+}
+function loadExample() {
+  Object.assign(state, { name: EXAMPLE.name, about: EXAMPLE.about, goal: EXAMPLE.goal, need: EXAMPLE.need, why: EXAMPLE.why, isExample: true, notes: [] });
+  let t = 0;
+  for (const s of Object.keys(EXAMPLE.notes)) for (const text of EXAMPLE.notes[s]) state.notes.push({ id: 'ex' + t, s, text, at: t++ });
+}
+function changed() { state.isExample = false; save(); }
+
+// ---------- 3f. Changing the map ----------
+function addNote(s, text) {
+  text = text.trim().slice(0, MAX_TEXT); if (!text) return false;
+  if (inS(s).length >= MAX_PER) { toast(`${S[s].name} holds up to ${MAX_PER} notes. Keep the strongest ones.`); return false; }
+  state.notes.push({ id: newId(), s, text, at: Date.now() }); changed(); render(); return true;
+}
+function patchNote(id, patch) { const n = state.notes.find(n => n.id === id); if (!n) return; Object.assign(n, patch); changed(); render(); }
+function deleteNote(id) { state.notes = state.notes.filter(n => n.id !== id); changed(); render(); }
+
+// ---------- 3g. Drawing ----------
+function noteCard(n) {
+  if (state.editing === n.id) return editor(n);
+  const c = el('article', 'note s-' + n.s);
+  c.style.setProperty('--tilt', tilt(n.id));
+  c.append(el('p', null, n.text));
+  const m = el('button', 'more', '⋯'); m.type = 'button'; m.setAttribute('aria-label', 'Edit, move or delete');
+  m.onclick = () => { state.editing = n.id; state.confirmDel = null; state.focusId = 'edit-' + n.id; render(); };
+  c.append(m);
+  c.draggable = true;
+  c.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', n.id); c.classList.add('dragging'); });
+  c.addEventListener('dragend', () => c.classList.remove('dragging'));
+  return c;
+}
+function editor(n) {
+  const key = 'edit-' + n.id, d = state.drafts[key];
+  const ed = el('div', 'editor s-' + n.s);
+  const ta = document.createElement('textarea'); ta.id = key; ta.maxLength = MAX_TEXT; ta.value = d ? d.text : n.text; ta.setAttribute('aria-label', 'Edit note');
+  const sel = document.createElement('select'); sel.setAttribute('aria-label', 'Move to section');
+  SECTIONS.forEach(s => { const o = el('option', null, s.name); o.value = s.id; sel.append(o); });
+  sel.value = d ? d.s : n.s;
+  const keep = () => { state.drafts[key] = { text: ta.value, s: sel.value }; };
+  ta.addEventListener('input', keep); sel.addEventListener('change', keep);
+  const row = el('div', 'row');
+  const close = () => { state.editing = state.confirmDel = null; delete state.drafts[key]; render(); };
+  const commit = () => {
+    const p = {}; const t = ta.value.trim();
+    if (t && t !== n.text) p.text = t.slice(0, MAX_TEXT);
+    if (sel.value !== n.s) p.s = sel.value;
+    state.editing = null; delete state.drafts[key];
+    Object.keys(p).length ? patchNote(n.id, p) : render();
+  };
+  const go = el('button', 'go', 'Save'); go.type = 'button'; go.onclick = commit;
+  const cancel = el('button', null, 'Cancel'); cancel.type = 'button'; cancel.onclick = close;
+  const sure = state.confirmDel === n.id;
+  const del = el('button', 'danger', sure ? 'Confirm delete' : 'Delete'); del.type = 'button';
+  del.onclick = () => { if (sure) { state.editing = state.confirmDel = null; delete state.drafts[key]; deleteNote(n.id); } else { state.confirmDel = n.id; render(); } };
+  row.append(el('span', null, 'Move to'), sel, go, cancel, del);
+  ed.append(ta, row);
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(); } if (e.key === 'Escape') { e.preventDefault(); close(); } });
+  return ed;
+}
+function section(s) {
+  const box = el('section', 'quad'); box.dataset.s = s.id; box.setAttribute('aria-label', s.name);
+  const list = inS(s.id);
+  const h = el('div', 'qhead'); const sw = el('i'); sw.style.background = `var(--${s.id})`;
+  h.append(sw, el('h2', null, s.name.toUpperCase()), el('span', 'count', String(list.length)));
+  box.append(h, el('p', 'qhint', s.hint));
+  // the add box: type and press Enter
+  const add = el('div', 'add');
+  const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'add-' + s.id; inp.maxLength = MAX_TEXT; inp.placeholder = s.ph; inp.setAttribute('aria-label', 'Add to ' + s.name);
+  inp.value = state.drafts['add-' + s.id] || '';
+  inp.addEventListener('input', () => { state.drafts['add-' + s.id] = inp.value; });
+  const go = () => { if (addNote(s.id, inp.value)) { state.drafts['add-' + s.id] = ''; state.focusId = 'add-' + s.id; render(); } };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+  const b = el('button', null, 'Add'); b.type = 'button'; b.onclick = go;
+  add.append(inp, b); box.append(add);
+  const ns = el('div', 'notes'); list.forEach(n => ns.append(noteCard(n))); box.append(ns);
+  // drop a note here to move it into this section
+  box.addEventListener('dragover', e => { e.preventDefault(); box.classList.add('over'); });
+  box.addEventListener('dragleave', e => { if (!box.contains(e.relatedTarget)) box.classList.remove('over'); });
+  box.addEventListener('drop', e => { e.preventDefault(); box.classList.remove('over'); const id = e.dataTransfer.getData('text/plain'); const n = state.notes.find(x => x.id === id); if (n && n.s !== s.id) patchNote(id, { s: s.id }); });
+  return box;
+}
+
+function coach() {
+  const counts = SECTIONS.map(s => inS(s.id).length), total = counts.reduce((a, b) => a + b, 0);
+  const meter = $('#meter'); meter.innerHTML = '';
+  SECTIONS.forEach((s, i) => { const sp = el('span'); if (counts[i]) sp.style.background = `var(--${s.id})`; sp.title = `${s.name}: ${counts[i]}`; meter.append(sp); });
+  $('#total').firstChild.textContent = total;
+  const empty = SECTIONS.find((s, i) => !counts[i]);
+  const nx = $('#next'); nx.innerHTML = '';
+  if (!state.name.trim()) nx.append('Next: ', el('b', null, 'Name your person'), ' · one real person, not “users”.');
+  else if (empty) nx.append('Next: ', el('b', null, empty.name), ' · ' + empty.hint);
+  else if (!state.need.trim() || !state.why.trim()) nx.append('Next: ', el('b', null, 'Your insight'), ' · finish the sentence below.');
+  else nx.append(el('b', null, 'Done. '), 'Save the A4 sheet, or open your insight in POV Statement.');
+
+  // What a facilitator would point out
+  const out = [];
+  const nm = state.name.trim().toLowerCase();
+  if (['users', 'user', 'customers', 'people', 'students', 'everyone'].includes(nm)) out.push(['warn', 'Person', `“${state.name.trim()}” is a group. Pick one real person and give them a name.`]);
+  else out.push([state.name.trim() ? 'ok' : 'todo', 'Person', state.name.trim() ? `Mapping one person: ${state.name.trim()}.` : 'Name the person you are mapping.']);
+  const says = inS('says');
+  if (says.length) {
+    const unquoted = says.filter(n => !/["“”'‘’]/.test(n.text)).length;
+    out.push([unquoted ? 'warn' : 'ok', 'Says', unquoted ? `${unquoted} note${unquoted > 1 ? 's' : ''} in Says ${unquoted > 1 ? 'have' : 'has'} no quotes. Use their exact words.` : 'Says uses their own words.']);
+  }
+  const thin = SECTIONS.slice(0, 4).filter(s => inS(s.id).length === 1);
+  if (thin.length) out.push(['warn', 'Depth', `${thin.map(s => s.name).join(', ')} ${thin.length > 1 ? 'have' : 'has'} only one note. Aim for two or three.`]);
+  if (inS('says').length && inS('thinks').length) out.push(['ok', 'Gaps', 'Compare Says with Thinks and Feels. Where do they disagree? That gap is often your insight.']);
+  if (!inS('pains').length || !inS('gains').length) out.push(['todo', 'Pains & gains', 'Add at least one pain and one gain.']);
+  const ul = $('#checks'); ul.innerHTML = '';
+  for (const [st, h, t] of out) { const li = el('li'); li.dataset.s = st; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
+
+  // The insight sentence, live
+  const sen = $('#sentence'); sen.innerHTML = '';
+  sen.append(el('em', null, who()), ' needs a way to ', el('em', null, state.need.trim() || '…'), ' because ', el('em', null, state.why.trim() || '…'), '.');
+  const pov = $('#toPov'), ready = state.need.trim() && state.why.trim();
+  const q = new URLSearchParams({ who: state.name.trim() ? `${state.name.trim()}${state.about.trim() ? ', ' + state.about.trim() : ''}` : '', need: state.need.trim(), why: state.why.trim() });
+  pov.href = '/toolkit/pov/?' + q.toString();
+  pov.setAttribute('aria-disabled', String(!ready));
+}
+
+function render() {
+  const a = document.activeElement, keep = a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && a.id && a.closest('#map, #below') ? a.id : null;
+  const sel = keep ? [a.selectionStart, a.selectionEnd] : null;
+  const ban = $('#banner'); ban.hidden = !state.isExample; ban.innerHTML = '';
+  if (state.isExample) {
+    const s = el('span'); s.append(el('b', null, 'This is an example map. '), 'Change anything to make it yours, or start with an empty map.');
+    const b = el('button', null, 'Start an empty map'); b.type = 'button'; b.onclick = () => { reset(); save(); render(); };
+    ban.append(s, b);
+  }
+  for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal'], ['#iNeed', 'need'], ['#iWhy', 'why']]) if (document.activeElement !== $(id)) $(id).value = state[k];
+  $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear map';
+  $('#clearBtn').className = state.confirmClear ? 'danger' : '';
+
+  const map = $('#map'); map.innerHTML = '';
+  const face = el('div', 'face'); face.append(el('b', null, state.name.trim() || 'Your person'), el('span', null, 'Persona'));
+  map.append(section(S.says), section(S.thinks), section(S.does), section(S.feels), face);
+  const below = $('#below'); below.innerHTML = '';
+  below.append(section(S.pains), section(S.gains));
+  // keep the face on the line between the top and bottom rows
+  requestAnimationFrame(() => { const top = map.querySelector('.quad[data-s="says"]'); if (top) map.style.setProperty('--mid', top.offsetHeight + 'px'); });
+  coach();
+
+  const want = state.focusId && document.getElementById(state.focusId);
+  if (want) { state.focusId = null; want.focus(); }
+  else if (keep) { const t = document.getElementById(keep); if (t) { t.focus(); if (sel) t.setSelectionRange(sel[0], sel[1]); } }
+}
+function reset() { Object.assign(state, { name: '', about: '', goal: '', notes: [], need: '', why: '', isExample: false, drafts: {}, editing: null }); }
+
+// ---------- 3h. Copy as text ----------
+function asText() {
+  let out = `# Empathy map: ${who()}\n`;
+  if (state.about.trim()) out += `${state.about.trim()}\n`;
+  if (state.goal.trim()) out += `Goal: ${state.goal.trim()}\n`;
+  for (const s of SECTIONS) out += `\n## ${s.name}\n` + (inS(s.id).map(n => `- ${n.text}`).join('\n') || '- (empty)') + '\n';
+  if (state.need.trim() || state.why.trim()) out += `\n## Insight\n${who()} needs a way to ${state.need.trim() || '…'} because ${state.why.trim() || '…'}.\n`;
+  return out;
+}
+
+// ---------- 3i. Save A4 sheet ----------
+// The screen keeps the dark theme; the sheet is redrawn from the data on
+// white A4 landscape at 300 dpi (297 × 210 mm = 3508 × 2480 px), in dark
+// ink with pale section tints, so it prints well on any printer.
+const PRINT_TINT = { says: '#FFF3B8', thinks: '#ECE5FD', does: '#DEEEFD', feels: '#FFE0E7', pains: '#FFE6D5', gains: '#DDF5E7' };
+const UI_F = 'Geist, Arial, sans-serif', HAND_F = 'Kalam, "Comic Sans MS", cursive';
+function wrapText(x, text, maxW) {
+  const out = [];
+  for (const para of String(text).split('\n')) {
+    let line = '';
+    for (let word of para.split(/\s+/).filter(Boolean)) {
+      while (x.measureText(word).width > maxW) { let i = word.length; while (i > 1 && x.measureText(word.slice(0, i)).width > maxW) i--; if (line) { out.push(line); line = ''; } out.push(word.slice(0, i)); word = word.slice(i); }
+      const test = line ? line + ' ' + word : word;
+      if (x.measureText(test).width > maxW && line) { out.push(line); line = word; } else line = test;
+    }
+    out.push(line);
+  }
+  return out;
+}
+function fitOneLine(x, text, maxW) { if (x.measureText(text).width <= maxW) return text; while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
+// Notes in `cols` columns, shortest first; text shrinks until all fit
+function planNotes(x, list, box, cols, fsMax, fsMin) {
+  const gap = 12, nw = (box.w - gap * (cols - 1)) / cols, np = 10;
+  let plan = null;
+  for (let fs = fsMax; fs >= fsMin && !plan; fs -= 2) {
+    x.font = `400 ${fs}px ${HAND_F}`;
+    const colY = Array(cols).fill(box.y), placed = []; let ok = true;
+    for (const n of list) {
+      const lines = wrapText(x, n.text, nw - 2 * np), lh = fs * 1.15, h = np * 2 + lines.length * lh;
+      const ci = colY.indexOf(Math.min(...colY));
+      if (colY[ci] + h > box.y + box.h) { ok = false; break; }
+      placed.push({ n, lines, lh, h, x: box.x + ci * (nw + gap), y: colY[ci] }); colY[ci] += h + gap;
+    }
+    if (ok || fs - 2 < fsMin) plan = { fs, nw, np, placed, hidden: list.length - placed.length };
+  }
+  return plan;
+}
+async function drawSheet() {
+  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist'), document.fonts.load('400 30px Kalam')]); } catch (e) {}
+  const W = 3508, H = 2480, M = 120, INK = '#111111', GREY = '#555555';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+
+  // Header: who, about, goal; Name and Date lines on the right
+  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`; x.fillText('EMPATHY MAP  ·  INVENTNDISCOVER.COM', M, M + 28);
+  x.fillStyle = INK; x.font = `800 64px ${UI_F}`; x.fillText(fitOneLine(x, who(), 2100), M, M + 104);
+  x.font = `400 32px ${UI_F}`; x.fillStyle = GREY;
+  if (state.about.trim()) x.fillText(fitOneLine(x, state.about.trim(), 2150), M, M + 152);
+  if (state.goal.trim()) { x.fillStyle = INK; x.font = `600 32px ${UI_F}`; x.fillText(fitOneLine(x, 'Goal: ' + state.goal.trim(), 2150), M, M + 198); }
+  const rx = W - M - 860;
+  x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK; x.font = `600 34px ${UI_F}`;
+  [['Name', M + 56], ['Date', M + 132]].forEach(([l, y]) => { x.fillText(l, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke(); });
+
+  const top = M + 236, insightH = (state.need.trim() || state.why.trim()) ? 110 : 0;
+  const bottom = H - M - 40 - insightH, gap = 30;
+  const belowH = 430, mapB = bottom - belowH - gap, mapW = W - 2 * M, midX = M + mapW / 2, midY = top + (mapB - top) / 2;
+
+  // The four quadrants and the face in the middle
+  const quads = [['says', M, top], ['thinks', midX, top], ['does', M, midY], ['feels', midX, midY]];
+  const qw = mapW / 2, qh = (mapB - top) / 2, R = 150;
+  for (const [s, qx, qy] of quads) {
+    x.fillStyle = '#FFFFFF'; x.fillRect(qx, qy, qw, qh);
+    const left = s === 'says' || s === 'does', isTop = s === 'says' || s === 'thinks';
+    x.fillStyle = INK; x.font = `800 36px ${UI_F}`;
+    const lx = left ? qx + 26 : qx + qw - 26; x.textAlign = left ? 'left' : 'right';
+    x.fillText(S[s].name.toUpperCase(), lx, isTop ? qy + 50 : qy + qh - 24);
+    x.textAlign = 'left';
+    // keep notes clear of the face and the label
+    const padIn = R + 40, box = { x: left ? qx + 26 : qx + padIn, y: isTop ? qy + 76 : qy + 26, w: qw - 26 - padIn, h: qh - 76 - 26 };
+    const p = planNotes(x, inS(s), box, 2, 34, 16);
+    for (const q of p.placed) { x.fillStyle = PRINT_TINT[s]; x.fillRect(q.x, q.y, p.nw, q.h); x.strokeStyle = '#333333'; x.lineWidth = 2; x.strokeRect(q.x, q.y, p.nw, q.h); x.fillStyle = INK; x.font = `400 ${p.fs}px ${HAND_F}`; q.lines.forEach((l, i) => x.fillText(l, q.x + p.np, q.y + p.np + p.fs * 0.9 + i * q.lh)); }
+    if (p.hidden) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${p.hidden} more on screen`, box.x, isTop ? qy + qh - 14 : qy + qh - 70); }
+  }
+  x.strokeStyle = INK; x.lineWidth = 5; x.strokeRect(M, top, mapW, mapB - top);
+  x.beginPath(); x.moveTo(midX, top); x.lineTo(midX, mapB); x.moveTo(M, midY); x.lineTo(M + mapW, midY); x.stroke();
+  x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(midX, midY, R, 0, Math.PI * 2); x.fill(); x.lineWidth = 5; x.stroke();
+  x.fillStyle = INK; x.textAlign = 'center'; x.font = `800 40px ${UI_F}`;
+  const nl = wrapText(x, who(), R * 1.6).slice(0, 2); nl.forEach((l, i) => x.fillText(l, midX, midY + 12 - (nl.length - 1) * 22 + i * 46)); x.textAlign = 'left';
+
+  // Pains and gains
+  const bw = (mapW - gap) / 2;
+  [['pains', M], ['gains', M + bw + gap]].forEach(([s, bx]) => {
+    const by = mapB + gap;
+    x.strokeStyle = INK; x.lineWidth = 4; x.strokeRect(bx, by, bw, belowH);
+    x.fillStyle = INK; x.font = `800 34px ${UI_F}`; x.fillText(S[s].name.toUpperCase(), bx + 24, by + 48);
+    const p = planNotes(x, inS(s), { x: bx + 24, y: by + 70, w: bw - 48, h: belowH - 94 }, 3, 30, 16);
+    for (const q of p.placed) { x.fillStyle = PRINT_TINT[s]; x.fillRect(q.x, q.y, p.nw, q.h); x.strokeStyle = '#333333'; x.lineWidth = 2; x.strokeRect(q.x, q.y, p.nw, q.h); x.fillStyle = INK; x.font = `400 ${p.fs}px ${HAND_F}`; q.lines.forEach((l, i) => x.fillText(l, q.x + p.np, q.y + p.np + p.fs * 0.9 + i * q.lh)); }
+    if (!inS(s).length) { x.strokeStyle = '#999999'; x.lineWidth = 2; for (let y = by + 130; y < by + belowH - 20; y += 70) { x.beginPath(); x.moveTo(bx + 24, y); x.lineTo(bx + bw - 24, y); x.stroke(); } }
+  });
+
+  // The insight
+  if (insightH) {
+    const iy = bottom + gap;
+    x.fillStyle = INK; x.font = `800 30px ${UI_F}`; x.fillText('INSIGHT', M, iy + 36);
+    x.font = `italic 400 32px ${UI_F}`;
+    x.fillText(fitOneLine(x, `${who()} needs a way to ${state.need.trim() || '…'} because ${state.why.trim() || '…'}.`, mapW - 170), M + 170, iy + 36);
+  }
+  x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.textAlign = 'right';
+  x.fillText('Empathy map: Dave Gray, XPLANE (Gamestorming, 2010) · Quadrants as taught by Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 14); x.textAlign = 'left';
+  return cv;
+}
+async function exportSheet() {
+  const cv = await drawSheet();
+  const a = document.createElement('a');
+  a.download = (state.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'empathy-map') + '-empathy-map-a4.png';
+  a.href = cv.toDataURL('image/png'); a.click();
+  toast('Saved. When printing, choose "Fit to page".');
+}
+
+// ---------- 3j. Wiring ----------
+for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal'], ['#iNeed', 'need'], ['#iWhy', 'why']]) {
+  $(id).addEventListener('input', e => {
+    state[k] = e.target.value; state.isExample = false; save(); $('#banner').hidden = true;
+    if (k === 'name') { const b = document.querySelector('.face b'); if (b) b.textContent = state.name.trim() || 'Your person'; }
+    coach();
+  });
+}
+$('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; save(); render(); };
+$('#clearBtn').onclick = () => {
+  if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
+  reset(); state.confirmClear = false; save(); render(); toast('Map cleared.');
+};
+$('#copyBtn').onclick = () => navigator.clipboard.writeText(asText()).then(() => toast('Copied. Paste it into your research doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
+$('#exportBtn').onclick = exportSheet;
+window.addEventListener('resize', () => { const m = $('#map'), t = m.querySelector('.quad[data-s="says"]'); if (t) m.style.setProperty('--mid', t.offsetHeight + 'px'); });
+
+// ---------- 3k. Start ----------
+if (!load()) loadExample();
+render();
+</script>
+</body>
+</html>

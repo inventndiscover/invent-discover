@@ -565,8 +565,16 @@ for (const ex of EXAMPLES) {
   });
   $('#examples').appendChild(b);
 }
+// An insight sent over from the Empathy Map arrives in the link as
+// /toolkit/pov/?who=Riya…&need=…&why=… : fill the boxes and show the finished POV.
+const fromLink = new URLSearchParams(location.search);
 booted = false;
-goTo(1);
+if (fromLink.get('who') && fromLink.get('need') && fromLink.get('why')) {
+  $('#who').value = fromLink.get('who').slice(0, 120);
+  $('#need').value = fromLink.get('need').slice(0, 140);
+  $('#why').value = fromLink.get('why').slice(0, 200);
+  step = 3; goTo(4);
+} else goTo(1);
 booted = true;
 </script>
 </body>
