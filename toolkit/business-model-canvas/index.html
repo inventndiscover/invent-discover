@@ -214,6 +214,13 @@
   .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
     background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .note { transform: none !important; } }
+
+  /* "On the sheet": the student's name and the date, printed on the A4 sheet */
+  .sheetfor { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); }
+  .sheetfor span { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sheetfor input[type=text], .sheetfor input[type=date] { width: 170px; padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); color-scheme: dark; }
+  .sheetfor input[type=date] { width: 150px; }
+  @media (max-width: 560px) { .sheetfor { width: 100%; } .sheetfor input[type=text], .sheetfor input[type=date] { flex: 1 1 140px; width: auto; } }
 </style>
 </head>
 
@@ -254,7 +261,12 @@
     <button id="clearBtn" type="button">Clear canvas</button>
     <span class="spacer"></span>
     <button id="copyBtn" type="button">Copy as text</button>
-    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print">Save A4 sheet</button>
+    <div class="sheetfor" aria-label="Printed on the sheet">
+      <span>On the sheet</span>
+      <input type="text" id="sName" maxlength="40" placeholder="Your name" aria-label="Your name, printed on the sheet">
+      <input type="date" id="sDate" aria-label="Date, printed on the sheet">
+    </div>
+    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print or upload">Save A4 sheet</button>
   </div>
 
   <div class="card team" id="teamPanel" hidden></div>
@@ -681,11 +693,12 @@ async function drawSheet() {
   x.fillStyle = GREY; x.font = `400 38px ${UI_F}`;
   if (state.tagline) x.fillText(fitOneLine(x, state.tagline, 2050), M, M + 180);
 
-  // Header (right): Name and Date lines to write on
-  const rx = W - M - 900;
-  x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK; x.font = `600 34px ${UI_F}`;
+  // Header (right): Name and Date, printed if typed on the page, else lines to write on
+  const rx = W - M - 900, filled = { Name: sheetName(), Date: sheetDate() };
+  x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK;
   [['Name', M + 60], ['Date', M + 140]].forEach(([label, y]) => {
-    x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
+    x.font = `600 34px ${UI_F}`; x.fillText(label, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
+    if (filled[label]) { x.font = `500 36px ${UI_F}`; x.fillText(fitOneLine(x, filled[label], W - M - rx - 130), rx + 124, y - 6); }
   });
   if (state.team) { x.fillStyle = GREY; x.font = `400 30px ${UI_F}`; x.fillText('Team code: ' + state.team.code, rx, M + 215); }
 
@@ -753,7 +766,7 @@ async function exportSheet() {
   const cv = await drawSheet();
   const link = document.createElement('a');
   const base = (state.name || (state.team && state.team.code) || 'business-model-canvas').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'business-model-canvas';
-  link.download = base + '-bmc-a4.png';
+  link.download = [fileSlug(sheetName()), base, 'bmc-a4'].filter(Boolean).join('-') + '.png';
   link.href = cv.toDataURL('image/png');
   link.click();
   toast('Saved. When printing, choose "Fit to page".');
@@ -898,6 +911,25 @@ $('#modeSeg').addEventListener('click', e => {
   if (m === 'solo') { if (state.teamView) leaveTeam(true); }
   else if (!state.teamView) { save(); state.teamView = true; state.notes = []; state.name = state.tagline = ''; state.isExample = false; teamMsg = ''; render(); }
 });
+
+// ---------- "On the sheet": the student's name and the date ----------
+// Today's date by default (YYYY-MM-DD, as date boxes need it), and the
+// student's name, remembered in this browser for every tool on the site.
+const NAME_KEY = 'ind-student-name';
+function niceDate(v) {   // '2026-11-06' → '6 Nov 2026'
+  if (!v) return '';
+  const [y, m, d] = v.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+const sheetName = () => $('#sName').value.trim();
+const sheetDate = () => niceDate($('#sDate').value);
+const fileSlug = t => String(t || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+{
+  const t = new Date(), pad = n => String(n).padStart(2, '0');
+  $('#sDate').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+  try { $('#sName').value = localStorage.getItem(NAME_KEY) || ''; } catch (e) {}
+  $('#sName').addEventListener('input', e => { try { localStorage.setItem(NAME_KEY, e.target.value.trim()); } catch (er) {} });
+}
 
 // ---------- 3m. Start ----------
 // First visit: show the example. Later visits: bring back your own canvas.

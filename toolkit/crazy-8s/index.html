@@ -191,6 +191,13 @@
   .step { color: var(--pink); font-weight: 700; font-size: 13px; letter-spacing: 0.1em; }
   footer { margin-top: 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
   footer a { color: #C4B5FD; }
+
+  /* "On the sheet": the student's name and the date, printed on the A4 sheet */
+  .sheetfor { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); }
+  .sheetfor span { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sheetfor input[type=text], .sheetfor input[type=date] { width: 170px; padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); color-scheme: dark; }
+  .sheetfor input[type=date] { width: 150px; }
+  @media (max-width: 560px) { .sheetfor { width: 100%; } .sheetfor input[type=text], .sheetfor input[type=date] { flex: 1 1 140px; width: auto; } }
 </style>
 </head>
 
@@ -253,7 +260,12 @@
     <button class="tool-btn" id="undoBtn">Undo</button>
     <button class="tool-btn" id="soundBtn">Sound: on</button>
     <span class="spacer"></span>
-    <button id="exportBtn" title="White A4 sheet, ready to print">Save A4 sheet</button>
+    <div class="sheetfor" aria-label="Printed on the sheet">
+      <span>On the sheet</span>
+      <input type="text" id="sName" maxlength="40" placeholder="Your name" aria-label="Your name, printed on the sheet">
+      <input type="date" id="sDate" aria-label="Date, printed on the sheet">
+    </div>
+    <button id="exportBtn" title="White A4 sheet, ready to print or upload">Save A4 sheet</button>
   </div>
 
   <div class="card done" id="done">
@@ -630,10 +642,13 @@ function exportSheet() {
   ctx.fillStyle = SOFT; ctx.font = '400 48px "Geist", sans-serif';
   ctx.fillText(fitText(ctx, $('#challenge').value || 'Untitled challenge', PAGE_W - 2 * M - 1000), M, M + 160);
   ctx.font = '400 40px "Geist", sans-serif'; ctx.strokeStyle = LINE; ctx.lineWidth = 3;
+  const filled = { Name: sheetName(), Date: sheetDate() };
   [['Name', M + 70], ['Date', M + 160]].forEach(([label, y]) => {
     const x = PAGE_W - M - 900;
-    ctx.fillText(label, x, y);
+    ctx.font = '400 40px "Geist", sans-serif'; ctx.fillText(label, x, y);
     ctx.beginPath(); ctx.moveTo(x + 130, y + 8); ctx.lineTo(PAGE_W - M, y + 8); ctx.stroke();
+    // typed on the page: print it on the line; empty: leave the line for writing by hand
+    if (filled[label]) { const keep = ctx.fillStyle; ctx.fillStyle = INK; ctx.font = '500 42px "Geist", sans-serif'; ctx.fillText(fitText(ctx, filled[label], 740), x + 146, y - 4); ctx.fillStyle = keep; }
   });
 
   // The 8 frames, 4 across and 2 down
@@ -684,7 +699,7 @@ function exportSheet() {
   ctx.fillText('Made with the Crazy 8s tool · inventndiscover.com', M, PAGE_H - M + 20);
 
   const link = document.createElement('a');
-  link.download = 'crazy-8s-a4.png';
+  link.download = [fileSlug(sheetName()), 'crazy-8s-a4'].filter(Boolean).join('-') + '.png';
   link.href = out.toDataURL('image/png');
   link.click();
 }
@@ -694,6 +709,25 @@ function fitText(ctx, text, maxW) {
   if (ctx.measureText(text).width <= maxW) return text;
   while (text.length && ctx.measureText(text + '…').width > maxW) text = text.slice(0, -1);
   return text + '…';
+}
+
+// ---------- "On the sheet": the student's name and the date ----------
+// Today's date by default (YYYY-MM-DD, as date boxes need it), and the
+// student's name, remembered in this browser for every tool on the site.
+const NAME_KEY = 'ind-student-name';
+function niceDate(v) {   // '2026-11-06' → '6 Nov 2026'
+  if (!v) return '';
+  const [y, m, d] = v.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+const sheetName = () => $('#sName').value.trim();
+const sheetDate = () => niceDate($('#sDate').value);
+const fileSlug = t => String(t || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+{
+  const t = new Date(), pad = n => String(n).padStart(2, '0');
+  $('#sDate').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+  try { $('#sName').value = localStorage.getItem(NAME_KEY) || ''; } catch (e) {}
+  $('#sName').addEventListener('input', e => { try { localStorage.setItem(NAME_KEY, e.target.value.trim()); } catch (er) {} });
 }
 
 $('#exportBtn').addEventListener('click', exportSheet);
