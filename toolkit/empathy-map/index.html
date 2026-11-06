@@ -5,11 +5,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Empathy Map tool · Invent + Discover</title>
-<meta name="description" content="Map what one person says, thinks, does and feels, plus their pains and gains, then turn it into an insight. Free, in your browser, with a printable A4 sheet.">
+<meta name="description" content="Map what one person says, thinks, does and feels, plus their pains and gains. Free, in your browser, with a printable A4 sheet.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/empathy-map/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="Empathy Map tool · Invent + Discover">
-<meta property="og:description" content="Says, Thinks, Does, Feels, Pains and Gains for one person, then an insight. Free, in your browser.">
+<meta property="og:description" content="Says, Thinks, Does, Feels, Pains and Gains for one person. Free, in your browser.">
 <meta property="og:url" content="https://inventndiscover.com/toolkit/empathy-map/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Empathy Map tool","url":"https://inventndiscover.com/toolkit/empathy-map/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
@@ -36,8 +36,13 @@
     --pink: #EC4899;
     --ok: #46D69A;
     --warn: #FFB23F;
-    /* one note colour per section */
-    --says: #FFE58A; --thinks: #D9CCFF; --does: #BFDCFF; --feels: #FFC2D4; --pains: #FFD0B0; --gains: #BFEFD6;
+    /* each section: a neon outline colour, and a pale note colour (n-) */
+    --says: #2EC4FF;   --n-says: #C9EEFF;
+    --thinks: #FF3B6B; --n-thinks: #FFD0DB;
+    --does: #19E3A0;   --n-does: #C4F7E4;
+    --feels: #FFD43B;  --n-feels: #FFF2B8;
+    --pains: #FF8A3D;  --n-pains: #FFDCC4;
+    --gains: #B26BFF;  --n-gains: #E8D8FF;
     --note-ink: #17141F;
     --radius: 14px;
     --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
@@ -74,7 +79,7 @@
   .credit a, .about a { color: #C4B5FD; }
   .qcards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .qcard { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px; align-items: center; }
-  .qcard i { width: 14px; height: 14px; border-radius: 3px; grid-row: span 2; }
+  .qcard i { width: 14px; height: 14px; border-radius: 50%; grid-row: span 2; box-shadow: 0 0 10px currentColor; }
   .qcard b { font-size: 15px; }
   .qcard span { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.35; }
 
@@ -99,33 +104,39 @@
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
   @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 
-  /* ---------- The map: four quadrants around the person ---------- */
-  .map { position: relative; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; background: rgba(11,13,20,0.72); }
-  .quad { padding: 14px; display: grid; gap: 10px; align-content: start; min-height: 260px; min-width: 0; transition: background .15s, box-shadow .15s; }
-  .quad[data-s="says"] { border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding-right: 70px; }
-  .quad[data-s="thinks"] { border-bottom: 1px solid var(--line-2); padding-left: 70px; }
-  .quad[data-s="does"] { border-right: 1px solid var(--line-2); padding-right: 70px; padding-top: 50px; }
-  .quad[data-s="feels"] { padding-left: 70px; padding-top: 50px; }
+  /* ---------- The map: four rounded neon boxes around the person ---------- */
+  .map { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .quad { --c: var(--violet); padding: 16px; display: grid; gap: 10px; align-content: start; min-height: 260px; min-width: 0;
+    border: 2px solid var(--c); border-radius: 26px; background: rgba(11,13,20,0.78);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--c) 35%, transparent), inset 0 0 22px color-mix(in srgb, var(--c) 10%, transparent);
+    transition: background .15s, box-shadow .15s; }
+  .quad[data-s="says"] { --c: var(--says); padding-right: 64px; }
+  .quad[data-s="thinks"] { --c: var(--thinks); padding-left: 64px; }
+  .quad[data-s="does"] { --c: var(--does); padding-right: 64px; padding-top: 46px; }
+  .quad[data-s="feels"] { --c: var(--feels); padding-left: 64px; padding-top: 46px; }
+  .quad[data-s="pains"] { --c: var(--pains); }
+  .quad[data-s="gains"] { --c: var(--gains); }
   /* the person in the middle */
   .face { position: absolute; left: 50%; top: var(--mid, 50%); transform: translate(-50%, -50%); width: 120px; height: 120px; border-radius: 50%; z-index: 2;
-    background: radial-gradient(circle at 50% 40%, #241B3D, #0B0D14 70%); border: 2px solid var(--violet); box-shadow: 0 0 30px rgba(139,92,246,0.5);
+    background: radial-gradient(circle at 50% 40%, #1E2233, #0B0D14 70%); border: 2px solid rgba(255,255,255,0.75); box-shadow: 0 0 0 6px var(--bg), 0 0 26px rgba(255,255,255,0.25);
     display: grid; place-items: center; text-align: center; padding: 10px; }
-  .face b { display: block; font-size: 15px; line-height: 1.15; overflow-wrap: anywhere; }
-  .face span { display: block; font-size: 11px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+  .face b { display: block; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+  .face span { display: block; font-size: 10.5px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-top: 3px; }
   @media (max-width: 720px) {
     .map { grid-template-columns: minmax(0, 1fr); }
-    .quad[data-s] { border-right: none; padding: 14px; border-bottom: 1px solid var(--line-2); }
-    .face { position: static; transform: none; margin: 14px auto 0; grid-row: 1; }
+    .quad[data-s] { padding: 16px; }
+    .face { position: static; transform: none; margin: 0 auto; grid-row: 1; }
   }
-  .below { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .below { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
   @media (max-width: 720px) { .below { grid-template-columns: minmax(0, 1fr); } }
-  .below .quad { border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.72); min-height: 170px; }
-  .qhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .qhead i { width: 14px; height: 14px; border-radius: 3px; flex: none; }
-  .qhead h2 { margin: 0; font-size: 17px; letter-spacing: .02em; }
+  .below .quad { min-height: 170px; }
+  .qhead { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .qhead i { display: none; }
+  .qhead h2 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: .06em; color: var(--c); text-shadow: 0 0 14px color-mix(in srgb, var(--c) 60%, transparent); }
+  .qhint { text-align: center; }
   .count { font-size: 12px; font-weight: 700; color: #C4B5FD; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums; }
   .qhint { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
-  .over { background: rgba(139,92,246,0.14) !important; box-shadow: inset 0 0 0 1px var(--violet); }
+  .over { background: color-mix(in srgb, var(--c, var(--violet)) 14%, #0B0D14) !important; }
   .add { display: flex; gap: 6px; }
   .add input { flex: 1; min-width: 0; padding: 7px 10px; font-size: 14px; border-radius: 8px; }
   .add button { padding: 6px 12px; font-size: 13px; border-radius: 8px; }
@@ -140,7 +151,7 @@
   .note p { margin: 0; font-family: var(--hand); font-size: 14.5px; line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; }
   .note .more { position: absolute; right: 3px; top: 3px; border: none; background: rgba(0,0,0,0.08); color: var(--note-ink); border-radius: 999px; padding: 0 6px; font-size: 12px; font-weight: 800; line-height: 1.5; }
   .note .more:hover { background: rgba(0,0,0,0.18); }
-  .s-says { background: var(--says); } .s-thinks { background: var(--thinks); } .s-does { background: var(--does); } .s-feels { background: var(--feels); } .s-pains { background: var(--pains); } .s-gains { background: var(--gains); }
+  .s-says { background: var(--n-says); } .s-thinks { background: var(--n-thinks); } .s-does { background: var(--n-does); } .s-feels { background: var(--n-feels); } .s-pains { background: var(--n-pains); } .s-gains { background: var(--n-gains); }
   .editor { grid-column: 1 / -1; display: grid; gap: 8px; padding: 8px; border-radius: 4px; color: var(--note-ink); box-shadow: 0 8px 22px -6px rgba(0,0,0,.7); }
   .editor textarea { width: 100%; min-height: 56px; resize: vertical; border: none; border-radius: 3px; padding: 6px; background: rgba(255,255,255,0.5); font-family: var(--hand); font-size: 16px; color: var(--note-ink); }
   .editor .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -149,7 +160,7 @@
   .editor button.go { background: var(--note-ink); color: #fff; border-color: var(--note-ink); font-weight: 700; }
   .editor button.danger { color: #9F1239; border-color: #9F1239; }
 
-  /* ---------- Coach + insight ---------- */
+  /* ---------- Coach ---------- */
   .coach { display: grid; gap: 14px; position: sticky; top: 14px; }
   @media (max-width: 1100px) { .coach { position: static; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
   .coach h4 { margin: 0 0 10px; font-size: 15px; }
@@ -165,16 +176,9 @@
   .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
   .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
   .checks span { color: var(--muted); }
-  .insight { display: grid; gap: 8px; }
-  .insight p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
-  .sentence { font-size: 15px; line-height: 1.5; color: var(--text); padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); }
-  .sentence em { font-style: normal; color: #C4B5FD; }
-  .insight textarea.field { min-height: 44px; resize: vertical; font-size: 14px; padding: 8px 10px; }
-  .insight a.go { display: inline-block; text-align: center; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--violet), var(--pink)); box-shadow: 0 0 18px rgba(139,92,246,0.4); }
-  .insight a.go[aria-disabled="true"] { opacity: .45; pointer-events: none; }
 
   /* ---------- How-to + credits ---------- */
-  .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  .how { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
   @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
   .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
   .how h3 { margin: 6px 0 6px; font-size: 16px; }
@@ -210,14 +214,14 @@
       <a class="back" href="/#tools">← All tools</a><br>
       <span class="pill">TOOL · EMPATHY MAP</span>
       <h1>Empathy Map</h1>
-      <p class="lede">Step into one person's shoes. Fill in what they say, think, do and feel, plus their pains and gains, from your interviews and observations. Then turn the gaps you notice into one insight.</p>
+      <p class="lede">Step into one person's shoes. Fill in what they say, think, do and feel, plus their pains and gains, from your interviews and observations, and print it as a sheet.</p>
       <p class="credit">Created by <b style="color:var(--text)">Dave Gray</b> at XPLANE and published in <i>Gamestorming</i> (2010). The four-quadrant version follows <a href="https://www.nngroup.com/videos/empathy-map/" target="_blank" rel="noopener">Nielsen Norman Group</a>. <a href="#where">Where it comes from</a></p>
     </div>
     <div class="qcards" aria-label="The four quadrants">
-      <div class="qcard"><i style="background:var(--says)"></i><b>Says</b><span>Their actual words, in quotes</span></div>
-      <div class="qcard"><i style="background:var(--thinks)"></i><b>Thinks</b><span>What's on their mind but unsaid</span></div>
-      <div class="qcard"><i style="background:var(--does)"></i><b>Does</b><span>What you saw them do</span></div>
-      <div class="qcard"><i style="background:var(--feels)"></i><b>Feels</b><span>Their emotions, and what causes them</span></div>
+      <div class="qcard"><i style="background:var(--says);color:var(--says)"></i><b>Says</b><span>Their actual words, in quotes</span></div>
+      <div class="qcard"><i style="background:var(--thinks);color:var(--thinks)"></i><b>Thinks</b><span>What's on their mind but unsaid</span></div>
+      <div class="qcard"><i style="background:var(--does);color:var(--does)"></i><b>Does</b><span>What you saw them do</span></div>
+      <div class="qcard"><i style="background:var(--feels);color:var(--feels)"></i><b>Feels</b><span>Their emotions, and what causes them</span></div>
     </div>
   </header>
 
@@ -252,23 +256,13 @@
         <h4>Coach</h4>
         <ul class="checks" id="checks"></ul>
       </div>
-      <div class="card insight">
-        <h4 style="margin:0">Your insight</h4>
-        <p>Look for gaps: what they say vs. what they think or do. Then finish the sentence.</p>
-        <div class="sentence" id="sentence"></div>
-        <label for="iNeed" style="margin:0">needs a way to…</label>
-        <textarea class="field" id="iNeed" maxlength="140" rows="2" placeholder="e.g. use standing time on the train for something useful"></textarea>
-        <label for="iWhy" style="margin:0">because… (the surprising part)</label>
-        <textarea class="field" id="iWhy" maxlength="200" rows="2" placeholder="e.g. the crowd decides what she can do, and her phone is often out of reach"></textarea>
-        <a class="go" id="toPov" href="/toolkit/pov/" target="_blank" rel="noopener">Open in POV Statement →</a>
-      </div>
     </aside>
   </div>
 
   <section class="how">
     <div class="card"><div class="step">STEP 1 · 5 MIN</div><h3>Pick one person</h3><p>One real person you interviewed or watched, not “users”. Give them a name, one line about them and the goal they're trying to get done.</p></div>
     <div class="card"><div class="step">STEP 2 · 15 MIN</div><h3>Fill the map</h3><p>Add notes to each section from your research: their exact words in <b style="color:var(--text)">Says</b>, guesses about their mind in <b style="color:var(--text)">Thinks</b>, what you saw in <b style="color:var(--text)">Does</b>, emotions in <b style="color:var(--text)">Feels</b>. Then their pains and gains.</p></div>
-    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Find the insight</h3><p>Look for contradictions, like saying “It's fine” while feeling anxious. Write one insight, then open it in the POV Statement tool and save the A4 sheet.</p></div>
+
   </section>
 
   <section class="card about" id="where">
@@ -282,7 +276,7 @@
         <h3>Where your map is kept</h3>
         <p>Your map stays in this browser and is never uploaded. Use Save A4 sheet or Copy as text to keep a copy.</p>
       </div>
-      <p class="sources">Sources: <a href="https://xplane.com/the-empathy-map-a-human-centered-tool-for-understanding-how-your-audience-thinks/" target="_blank" rel="noopener">XPLANE, The Empathy Map</a> · <a href="https://www.nngroup.com/videos/empathy-map/" target="_blank" rel="noopener">Nielsen Norman Group, How to Empathy Map</a> · <a href="https://en.wikipedia.org/wiki/Empathy_map" target="_blank" rel="noopener">Wikipedia, Empathy map</a>. The map, coach, insight builder and A4 sheet are made by Invent + Discover.</p>
+      <p class="sources">Sources: <a href="https://xplane.com/the-empathy-map-a-human-centered-tool-for-understanding-how-your-audience-thinks/" target="_blank" rel="noopener">XPLANE, The Empathy Map</a> · <a href="https://www.nngroup.com/videos/empathy-map/" target="_blank" rel="noopener">Nielsen Norman Group, How to Empathy Map</a> · <a href="https://en.wikipedia.org/wiki/Empathy_map" target="_blank" rel="noopener">Wikipedia, Empathy map</a>. The map, coach and A4 sheet are made by Invent + Discover.</p>
     </div>
   </section>
 
@@ -326,14 +320,12 @@ const EXAMPLE = {
     pains: ['Loses three hours a day travelling', "Can't use her phone when it's crowded"],
     gains: ['A seat after Dadar means 20 minutes of reading', 'Friends to travel with on Fridays'],
   },
-  need: 'use standing time on the train for something useful',
-  why: 'the crowd decides what she can do, and her phone is often out of reach',
 };
 
 // ---------- 3c. State ----------
 // One object holds the whole map. We change it, then call render().
 //   notes: [{ id: 'n1abc', s: 'says', text: '“I’ll just study on the train.”', at: 1730… }]
-const state = { name: '', about: '', goal: '', notes: [], need: '', why: '', isExample: false, editing: null, confirmDel: null, confirmClear: false, drafts: {}, focusId: null };
+const state = { name: '', about: '', goal: '', notes: [], isExample: false, editing: null, confirmDel: null, confirmClear: false, drafts: {}, focusId: null };
 
 // ---------- 3d. Helpers ----------
 const $ = q => document.querySelector(q);
@@ -346,15 +338,15 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = fal
 
 // ---------- 3e. Saving in this browser ----------
 function save() {
-  const { name, about, goal, notes, need, why, isExample } = state;
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ name, about, goal, notes, need, why, isExample })); } catch (e) {}
+  const { name, about, goal, notes, isExample } = state;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ name, about, goal, notes, isExample })); } catch (e) {}
 }
 function load() {
   try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (d && Array.isArray(d.notes)) { Object.assign(state, d); return true; } } catch (e) {}
   return false;
 }
 function loadExample() {
-  Object.assign(state, { name: EXAMPLE.name, about: EXAMPLE.about, goal: EXAMPLE.goal, need: EXAMPLE.need, why: EXAMPLE.why, isExample: true, notes: [] });
+  Object.assign(state, { name: EXAMPLE.name, about: EXAMPLE.about, goal: EXAMPLE.goal, isExample: true, notes: [] });
   let t = 0;
   for (const s of Object.keys(EXAMPLE.notes)) for (const text of EXAMPLE.notes[s]) state.notes.push({ id: 'ex' + t, s, text, at: t++ });
 }
@@ -443,8 +435,7 @@ function coach() {
   const nx = $('#next'); nx.innerHTML = '';
   if (!state.name.trim()) nx.append('Next: ', el('b', null, 'Name your person'), ' · one real person, not “users”.');
   else if (empty) nx.append('Next: ', el('b', null, empty.name), ' · ' + empty.hint);
-  else if (!state.need.trim() || !state.why.trim()) nx.append('Next: ', el('b', null, 'Your insight'), ' · finish the sentence below.');
-  else nx.append(el('b', null, 'Done. '), 'Save the A4 sheet, or open your insight in POV Statement.');
+  else nx.append(el('b', null, 'Done. '), 'Every section has notes. Save the A4 sheet.');
 
   // What a facilitator would point out
   const out = [];
@@ -458,18 +449,12 @@ function coach() {
   }
   const thin = SECTIONS.slice(0, 4).filter(s => inS(s.id).length === 1);
   if (thin.length) out.push(['warn', 'Depth', `${thin.map(s => s.name).join(', ')} ${thin.length > 1 ? 'have' : 'has'} only one note. Aim for two or three.`]);
-  if (inS('says').length && inS('thinks').length) out.push(['ok', 'Gaps', 'Compare Says with Thinks and Feels. Where do they disagree? That gap is often your insight.']);
+  if (inS('says').length && inS('thinks').length) out.push(['ok', 'Gaps', 'Compare Says with Thinks and Feels. Where do they disagree?']);
   if (!inS('pains').length || !inS('gains').length) out.push(['todo', 'Pains & gains', 'Add at least one pain and one gain.']);
   const ul = $('#checks'); ul.innerHTML = '';
   for (const [st, h, t] of out) { const li = el('li'); li.dataset.s = st; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
 
-  // The insight sentence, live
-  const sen = $('#sentence'); sen.innerHTML = '';
-  sen.append(el('em', null, who()), ' needs a way to ', el('em', null, state.need.trim() || '…'), ' because ', el('em', null, state.why.trim() || '…'), '.');
-  const pov = $('#toPov'), ready = state.need.trim() && state.why.trim();
-  const q = new URLSearchParams({ who: state.name.trim() ? `${state.name.trim()}${state.about.trim() ? ', ' + state.about.trim() : ''}` : '', need: state.need.trim(), why: state.why.trim() });
-  pov.href = '/toolkit/pov/?' + q.toString();
-  pov.setAttribute('aria-disabled', String(!ready));
+
 }
 
 function render() {
@@ -481,24 +466,24 @@ function render() {
     const b = el('button', null, 'Start an empty map'); b.type = 'button'; b.onclick = () => { reset(); save(); render(); };
     ban.append(s, b);
   }
-  for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal'], ['#iNeed', 'need'], ['#iWhy', 'why']]) if (document.activeElement !== $(id)) $(id).value = state[k];
+  for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal']]) if (document.activeElement !== $(id)) $(id).value = state[k];
   $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear map';
   $('#clearBtn').className = state.confirmClear ? 'danger' : '';
 
   const map = $('#map'); map.innerHTML = '';
-  const face = el('div', 'face'); face.append(el('b', null, state.name.trim() || 'Your person'), el('span', null, 'Persona'));
+  const face = el('div', 'face'); face.append(el('b', null, state.name.trim() || 'User'), el('span', null, 'Persona'));
   map.append(section(S.says), section(S.thinks), section(S.does), section(S.feels), face);
   const below = $('#below'); below.innerHTML = '';
   below.append(section(S.pains), section(S.gains));
   // keep the face on the line between the top and bottom rows
-  requestAnimationFrame(() => { const top = map.querySelector('.quad[data-s="says"]'); if (top) map.style.setProperty('--mid', top.offsetHeight + 'px'); });
+  requestAnimationFrame(() => { const top = map.querySelector('.quad[data-s="says"]'); if (top) map.style.setProperty('--mid', (top.offsetHeight + 8) + 'px'); });
   coach();
 
   const want = state.focusId && document.getElementById(state.focusId);
   if (want) { state.focusId = null; want.focus(); }
   else if (keep) { const t = document.getElementById(keep); if (t) { t.focus(); if (sel) t.setSelectionRange(sel[0], sel[1]); } }
 }
-function reset() { Object.assign(state, { name: '', about: '', goal: '', notes: [], need: '', why: '', isExample: false, drafts: {}, editing: null }); }
+function reset() { Object.assign(state, { name: '', about: '', goal: '', notes: [], isExample: false, drafts: {}, editing: null }); }
 
 // ---------- 3h. Copy as text ----------
 function asText() {
@@ -506,16 +491,18 @@ function asText() {
   if (state.about.trim()) out += `${state.about.trim()}\n`;
   if (state.goal.trim()) out += `Goal: ${state.goal.trim()}\n`;
   for (const s of SECTIONS) out += `\n## ${s.name}\n` + (inS(s.id).map(n => `- ${n.text}`).join('\n') || '- (empty)') + '\n';
-  if (state.need.trim() || state.why.trim()) out += `\n## Insight\n${who()} needs a way to ${state.need.trim() || '…'} because ${state.why.trim() || '…'}.\n`;
+
   return out;
 }
 
 // ---------- 3i. Save A4 sheet ----------
 // The screen keeps the dark theme; the sheet is redrawn from the data on
-// white A4 landscape at 300 dpi (297 × 210 mm = 3508 × 2480 px), in dark
-// ink with pale section tints, so it prints well on any printer.
-const PRINT_TINT = { says: '#FFF3B8', thinks: '#ECE5FD', does: '#DEEEFD', feels: '#FFE0E7', pains: '#FFE6D5', gains: '#DDF5E7' };
-const UI_F = 'Geist, Arial, sans-serif', HAND_F = 'Kalam, "Comic Sans MS", cursive';
+// white A4 landscape at 300 dpi (297 × 210 mm = 3508 × 2480 px): four rounded
+// boxes in neon colours around a circle with the person's name, notes as
+// bullet points, and Pains and Gains underneath.
+// Neon colours, slightly deepened so titles stay readable on white paper:
+const INKS = { says: '#00A8F0', thinks: '#FF2D5E', does: '#00C98A', feels: '#F2B800', pains: '#FF7A1F', gains: '#9B4DFF' };
+const UI_F = 'Geist, Arial, sans-serif';
 function wrapText(x, text, maxW) {
   const out = [];
   for (const para of String(text).split('\n')) {
@@ -530,25 +517,39 @@ function wrapText(x, text, maxW) {
   return out;
 }
 function fitOneLine(x, text, maxW) { if (x.measureText(text).width <= maxW) return text; while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
-// Notes in `cols` columns, shortest first; text shrinks until all fit
-function planNotes(x, list, box, cols, fsMax, fsMin) {
-  const gap = 12, nw = (box.w - gap * (cols - 1)) / cols, np = 10;
-  let plan = null;
-  for (let fs = fsMax; fs >= fsMin && !plan; fs -= 2) {
-    x.font = `400 ${fs}px ${HAND_F}`;
-    const colY = Array(cols).fill(box.y), placed = []; let ok = true;
+// A rounded box with a coloured outline and a soft glow of the same colour
+function neonBox(x, bx, by, w, h, color, r) {
+  x.save();
+  x.shadowColor = color; x.shadowBlur = 28;
+  x.strokeStyle = color; x.lineWidth = 9;
+  x.beginPath(); x.roundRect(bx, by, w, h, r); x.stroke();
+  x.restore();
+}
+// Bullet points in a box: try big text, step down until every note fits.
+// Returns how many notes didn't fit even at the smallest size.
+function bullets(x, list, box, color, fsMax, fsMin) {
+  for (let fs = fsMax; fs >= fsMin; fs -= 2) {
+    x.font = `400 ${fs}px ${UI_F}`;
+    const lh = fs * 1.3, gap = fs * 0.45, rows = [];
+    let y = box.y, fit = 0;
     for (const n of list) {
-      const lines = wrapText(x, n.text, nw - 2 * np), lh = fs * 1.15, h = np * 2 + lines.length * lh;
-      const ci = colY.indexOf(Math.min(...colY));
-      if (colY[ci] + h > box.y + box.h) { ok = false; break; }
-      placed.push({ n, lines, lh, h, x: box.x + ci * (nw + gap), y: colY[ci] }); colY[ci] += h + gap;
+      const lines = wrapText(x, n.text, box.w - fs * 1.2);
+      const h = lines.length * lh;
+      if (y + h > box.y + box.h) break;
+      rows.push({ lines, y }); y += h + gap; fit++;
     }
-    if (ok || fs - 2 < fsMin) plan = { fs, nw, np, placed, hidden: list.length - placed.length };
+    if (fit === list.length || fs - 2 < fsMin) {
+      for (const r of rows) {
+        x.fillStyle = color; x.beginPath(); x.arc(box.x + fs * 0.3, r.y + fs * 0.62, fs * 0.2, 0, Math.PI * 2); x.fill();
+        x.fillStyle = '#1A1A1A'; r.lines.forEach((l, i) => x.fillText(l, box.x + fs * 1.0, r.y + fs * 0.95 + i * lh));
+      }
+      return list.length - fit;
+    }
   }
-  return plan;
+  return 0;
 }
 async function drawSheet() {
-  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist'), document.fonts.load('400 30px Kalam')]); } catch (e) {}
+  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist')]); } catch (e) {}
   const W = 3508, H = 2480, M = 120, INK = '#111111', GREY = '#555555';
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
@@ -564,52 +565,41 @@ async function drawSheet() {
   x.strokeStyle = INK; x.lineWidth = 3; x.fillStyle = INK; x.font = `600 34px ${UI_F}`;
   [['Name', M + 56], ['Date', M + 132]].forEach(([l, y]) => { x.fillText(l, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke(); });
 
-  const top = M + 236, insightH = (state.need.trim() || state.why.trim()) ? 110 : 0;
-  const bottom = H - M - 40 - insightH, gap = 30;
-  const belowH = 430, mapB = bottom - belowH - gap, mapW = W - 2 * M, midX = M + mapW / 2, midY = top + (mapB - top) / 2;
-
-  // The four quadrants and the face in the middle
-  const quads = [['says', M, top], ['thinks', midX, top], ['does', M, midY], ['feels', midX, midY]];
-  const qw = mapW / 2, qh = (mapB - top) / 2, R = 150;
-  for (const [s, qx, qy] of quads) {
-    x.fillStyle = '#FFFFFF'; x.fillRect(qx, qy, qw, qh);
-    const left = s === 'says' || s === 'does', isTop = s === 'says' || s === 'thinks';
-    x.fillStyle = INK; x.font = `800 36px ${UI_F}`;
-    const lx = left ? qx + 26 : qx + qw - 26; x.textAlign = left ? 'left' : 'right';
-    x.fillText(S[s].name.toUpperCase(), lx, isTop ? qy + 50 : qy + qh - 24);
-    x.textAlign = 'left';
-    // keep notes clear of the face and the label
-    const padIn = R + 40, box = { x: left ? qx + 26 : qx + padIn, y: isTop ? qy + 76 : qy + 26, w: qw - 26 - padIn, h: qh - 76 - 26 };
-    const p = planNotes(x, inS(s), box, 2, 34, 16);
-    for (const q of p.placed) { x.fillStyle = PRINT_TINT[s]; x.fillRect(q.x, q.y, p.nw, q.h); x.strokeStyle = '#333333'; x.lineWidth = 2; x.strokeRect(q.x, q.y, p.nw, q.h); x.fillStyle = INK; x.font = `400 ${p.fs}px ${HAND_F}`; q.lines.forEach((l, i) => x.fillText(l, q.x + p.np, q.y + p.np + p.fs * 0.9 + i * q.lh)); }
-    if (p.hidden) { x.fillStyle = GREY; x.font = `600 22px ${UI_F}`; x.fillText(`+ ${p.hidden} more on screen`, box.x, isTop ? qy + qh - 14 : qy + qh - 70); }
+  // Layout: 2 × 2 boxes, then Pains | Gains
+  const top = M + 250, bottom = H - M - 50, gap = 44, belowH = 420;
+  const mapW = W - 2 * M, mapH = bottom - top - belowH - gap;
+  const bw = (mapW - gap) / 2, bh = (mapH - gap) / 2, R = 70, CR = 165;
+  const cx = M + mapW / 2, cy = top + mapH / 2;
+  const boxes = [['says', M, top, 'left'], ['thinks', M + bw + gap, top, 'right'], ['does', M, top + bh + gap, 'left'], ['feels', M + bw + gap, top + bh + gap, 'right']];
+  for (const [s, bx, by, side] of boxes) {
+    neonBox(x, bx, by, bw, bh, INKS[s], R);
+    x.fillStyle = INKS[s]; x.font = `800 64px ${UI_F}`; x.textAlign = 'center';
+    x.fillText(S[s].name.toUpperCase(), bx + bw / 2, by + 96); x.textAlign = 'left';
+    // keep the bullets clear of the circle in the middle
+    const inner = CR - gap / 2 + 40;
+    const box = { x: bx + 70 + (side === 'right' ? inner * 0.55 : 0), y: by + 140, w: bw - 140 - inner * 0.55, h: bh - 140 - 60 };
+    const more = bullets(x, inS(s), box, INKS[s], 46, 20);
+    if (more) { x.fillStyle = GREY; x.font = `600 24px ${UI_F}`; x.fillText(`+ ${more} more on screen`, box.x, by + bh - 34); }
   }
-  x.strokeStyle = INK; x.lineWidth = 5; x.strokeRect(M, top, mapW, mapB - top);
-  x.beginPath(); x.moveTo(midX, top); x.lineTo(midX, mapB); x.moveTo(M, midY); x.lineTo(M + mapW, midY); x.stroke();
-  x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(midX, midY, R, 0, Math.PI * 2); x.fill(); x.lineWidth = 5; x.stroke();
-  x.fillStyle = INK; x.textAlign = 'center'; x.font = `800 40px ${UI_F}`;
-  const nl = wrapText(x, who(), R * 1.6).slice(0, 2); nl.forEach((l, i) => x.fillText(l, midX, midY + 12 - (nl.length - 1) * 22 + i * 46)); x.textAlign = 'left';
+  // The circle with the person's name
+  x.save(); x.shadowColor = 'rgba(0,0,0,0.18)'; x.shadowBlur = 30;
+  x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(cx, cy, CR, 0, Math.PI * 2); x.fill(); x.restore();
+  x.strokeStyle = '#D8D8D8'; x.lineWidth = 8; x.beginPath(); x.arc(cx, cy, CR, 0, Math.PI * 2); x.stroke();
+  x.fillStyle = INK; x.textAlign = 'center'; x.font = `800 54px ${UI_F}`;
+  const nl = wrapText(x, state.name.trim() || 'User', CR * 1.6).slice(0, 2);
+  nl.forEach((l, i) => x.fillText(l, cx, cy + 18 - (nl.length - 1) * 30 + i * 60)); x.textAlign = 'left';
 
   // Pains and gains
-  const bw = (mapW - gap) / 2;
-  [['pains', M], ['gains', M + bw + gap]].forEach(([s, bx]) => {
-    const by = mapB + gap;
-    x.strokeStyle = INK; x.lineWidth = 4; x.strokeRect(bx, by, bw, belowH);
-    x.fillStyle = INK; x.font = `800 34px ${UI_F}`; x.fillText(S[s].name.toUpperCase(), bx + 24, by + 48);
-    const p = planNotes(x, inS(s), { x: bx + 24, y: by + 70, w: bw - 48, h: belowH - 94 }, 3, 30, 16);
-    for (const q of p.placed) { x.fillStyle = PRINT_TINT[s]; x.fillRect(q.x, q.y, p.nw, q.h); x.strokeStyle = '#333333'; x.lineWidth = 2; x.strokeRect(q.x, q.y, p.nw, q.h); x.fillStyle = INK; x.font = `400 ${p.fs}px ${HAND_F}`; q.lines.forEach((l, i) => x.fillText(l, q.x + p.np, q.y + p.np + p.fs * 0.9 + i * q.lh)); }
-    if (!inS(s).length) { x.strokeStyle = '#999999'; x.lineWidth = 2; for (let y = by + 130; y < by + belowH - 20; y += 70) { x.beginPath(); x.moveTo(bx + 24, y); x.lineTo(bx + bw - 24, y); x.stroke(); } }
+  const pw = (mapW - gap) / 2, py = top + mapH + gap;
+  [['pains', M], ['gains', M + pw + gap]].forEach(([s, bx]) => {
+    neonBox(x, bx, py, pw, belowH, INKS[s], 56);
+    x.fillStyle = INKS[s]; x.font = `800 52px ${UI_F}`; x.textAlign = 'center'; x.fillText(S[s].name.toUpperCase(), bx + pw / 2, py + 78); x.textAlign = 'left';
+    const more = bullets(x, inS(s), { x: bx + 64, y: py + 112, w: pw - 128, h: belowH - 150 }, INKS[s], 34, 20);
+    if (more) { x.fillStyle = GREY; x.font = `600 24px ${UI_F}`; x.fillText(`+ ${more} more on screen`, bx + 64, py + belowH - 26); }
   });
 
-  // The insight
-  if (insightH) {
-    const iy = bottom + gap;
-    x.fillStyle = INK; x.font = `800 30px ${UI_F}`; x.fillText('INSIGHT', M, iy + 36);
-    x.font = `italic 400 32px ${UI_F}`;
-    x.fillText(fitOneLine(x, `${who()} needs a way to ${state.need.trim() || '…'} because ${state.why.trim() || '…'}.`, mapW - 170), M + 170, iy + 36);
-  }
   x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.textAlign = 'right';
-  x.fillText('Empathy map: Dave Gray, XPLANE (Gamestorming, 2010) · Quadrants as taught by Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 14); x.textAlign = 'left';
+  x.fillText('Empathy map: Dave Gray, XPLANE (Gamestorming, 2010) · Quadrants as taught by Nielsen Norman Group · Sheet: Invent + Discover', W - M, H - M + 30); x.textAlign = 'left';
   return cv;
 }
 async function exportSheet() {
@@ -621,10 +611,10 @@ async function exportSheet() {
 }
 
 // ---------- 3j. Wiring ----------
-for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal'], ['#iNeed', 'need'], ['#iWhy', 'why']]) {
+for (const [id, k] of [['#pName', 'name'], ['#pAbout', 'about'], ['#pGoal', 'goal']]) {
   $(id).addEventListener('input', e => {
     state[k] = e.target.value; state.isExample = false; save(); $('#banner').hidden = true;
-    if (k === 'name') { const b = document.querySelector('.face b'); if (b) b.textContent = state.name.trim() || 'Your person'; }
+    if (k === 'name') { const b = document.querySelector('.face b'); if (b) b.textContent = state.name.trim() || 'User'; }
     coach();
   });
 }
@@ -635,7 +625,7 @@ $('#clearBtn').onclick = () => {
 };
 $('#copyBtn').onclick = () => navigator.clipboard.writeText(asText()).then(() => toast('Copied. Paste it into your research doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
 $('#exportBtn').onclick = exportSheet;
-window.addEventListener('resize', () => { const m = $('#map'), t = m.querySelector('.quad[data-s="says"]'); if (t) m.style.setProperty('--mid', t.offsetHeight + 'px'); });
+window.addEventListener('resize', () => { const m = $('#map'), t = m.querySelector('.quad[data-s="says"]'); if (t) m.style.setProperty('--mid', (t.offsetHeight + 8) + 'px'); });
 
 // ---------- 3k. Start ----------
 if (!load()) loadExample();
