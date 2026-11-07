@@ -630,6 +630,11 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
    and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
+{id:"tie-dye-silicon",added:"2026-11-09T12:30:00+05:30",title:"Tie, Dye, Silicon",board:"TIE DYE SILICON",
+  line:"How bandhani tie-dye protects a cloth thread by thread — and how the same idea, protect some spots and etch the rest, makes a microchip today.",
+  url:"discover/tie-dye-silicon/", img:"media/stories/tie-dye-silicon.jpg",
+  alt:"A red bandhani dupatta flowing into a glowing silicon wafer, its white tie-dye dots becoming gold chips",
+  read:"5 min read"},
  {id:"ones-zeros-and-zari",added:"2026-11-02T12:30:00+05:30",title:"Ones, Zeros and Zari",board:"ONES ZEROS ZARI",
   line:"How 1800s punch cards told handlooms which threads to lift to weave a Banarasi saree — and how that same idea can hide a secret message inside a photo today.",
   url:"discover/ones-zeros-and-zari/", img:"media/stories/ones-zeros-and-zari.jpg",
