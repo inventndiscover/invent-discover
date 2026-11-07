@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Value Proposition Canvas tool · Invent + Discover</title>
+<meta name="description" content="Map your customer's jobs, pains and gains, then the products, pain relievers and gain creators that answer them. Link them to see the fit. Free, in your browser, with a printable A4 sheet.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/value-proposition-canvas/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Value Proposition Canvas tool · Invent + Discover">
+<meta property="og:description" content="Customer jobs, pains and gains on one side; products, pain relievers and gain creators on the other. Link them to see the fit.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/value-proposition-canvas/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Value Proposition Canvas tool","url":"https://inventndiscover.com/toolkit/value-proposition-canvas/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  PART 1 — CSS (how it looks)
+  Same tokens as the other tools. Each section has a neon colour:
+  products cyan, everything about gains green, everything about
+  pains pink, customer jobs yellow.
+  ============================================================
+-->
+<style>
+  :root {
+    --bg: #05060A;
+    --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.09);
+    --line-2: rgba(255,255,255,0.16);
+    --text: #EDEEF5;
+    --muted: #8A8FA3;
+    --violet: #8B5CF6;
+    --pink: #EC4899;
+    --ok: #46D69A;
+    --warn: #FFB23F;
+    --c-products: #2EC4FF; --n-products: #C9EEFF;
+    --c-gain: #19E3A0;     --n-gain: #C4F7E4;
+    --c-pain: #FF3B6B;     --n-pain: #FFD0DB;
+    --c-jobs: #FFD43B;     --n-jobs: #FFF2B8;
+    --note-ink: #17141F;
+    --radius: 14px;
+    --hand: "Kalam", "Comic Sans MS", "Segoe Print", cursive;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; color: var(--text);
+    font-family: "Geist", -apple-system, "Segoe UI", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(600px 400px at 10% -5%, rgba(46,196,255,0.16), transparent 70%),
+      radial-gradient(500px 400px at 95% 10%, rgba(25,227,160,0.12), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(255,59,107,0.12), transparent 70%),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px, 40px 40px;
+    background-attachment: fixed; min-height: 100vh;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+  /* ---------- Header: just the title ---------- */
+  header { padding: 40px 0 16px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.12em; color: #C4B5FD; box-shadow: 0 0 18px rgba(139,92,246,0.25); }
+  h1 { margin: 0; font-size: clamp(38px, 6.5vw, 68px); line-height: 1; text-wrap: balance;
+    text-shadow: 0 0 24px rgba(46,196,255,0.45), 0 0 60px rgba(25,227,160,0.25); }
+  .tag { margin: 12px 0 0; color: var(--muted); font-size: 16px; }
+  .tag a, .credit a, .about a, blockquote a { color: #C4B5FD; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(6px); }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input[type=text], textarea.field, select.field { width: 100%; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font: inherit; font-size: 15.5px; }
+  input[type=text]:focus, textarea.field:focus, select.field:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); }
+  select.field { color-scheme: dark; }
+  button { font: inherit; font-size: 15px; color: var(--text); cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; }
+  button:hover { border-color: rgba(255,255,255,0.25); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: linear-gradient(135deg, var(--violet), var(--pink)); border: none; box-shadow: 0 0 22px rgba(139,92,246,0.45); font-weight: 700; color: #fff; }
+  button.danger { border-color: rgba(236,72,153,0.6); color: #F9A8D4; }
+  .spacer { flex: 1; }
+  .setup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .setup { grid-template-columns: minmax(0, 1fr); } }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; }
+  .banner { margin: 0 0 14px; padding: 12px 16px; border: 1px solid rgba(139,92,246,0.45); border-radius: 12px; font-size: 14.5px; color: #DDD6FE; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .banner b { color: var(--text); }
+  .sheetfor { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); }
+  .sheetfor span { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sheetfor input[type=text], .sheetfor input[type=date] { width: 170px; padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.35); color: var(--text); border: 1px solid var(--line); color-scheme: dark; }
+  .sheetfor input[type=date] { width: 150px; }
+  @media (max-width: 560px) { .sheetfor { width: 100%; } .sheetfor input[type=text], .sheetfor input[type=date] { flex: 1 1 140px; width: auto; } }
+
+  /* ---------- The canvas: Value Map (square) ↔ Customer Profile (circle) ---------- */
+  .board { position: relative; height: 700px; margin-top: 8px; }
+  .shape { position: absolute; top: 64px; }
+  .shape.sq { left: 0; width: 560px; height: 560px; }
+  .shape.ci { right: 0; width: 560px; height: 560px; }
+  .shape > svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .shape-title { position: absolute; top: -26px; font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--muted); }
+  .shape.sq .shape-title { left: 0; } .shape.ci .shape-title { right: 0; }
+  /* the badge in the middle of each shape */
+  .badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 58px; height: 58px; border-radius: 50%; z-index: 2;
+    display: grid; place-items: center; background: #07080D; border: 2px solid rgba(255,255,255,0.8); box-shadow: 0 0 0 6px var(--bg), 0 0 22px rgba(255,255,255,0.3); }
+  .badge svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  /* zones: where each section's notes sit inside its region */
+  .zone { position: absolute; display: flex; flex-direction: column; gap: 6px; min-width: 0; z-index: 1; }
+  .zhead { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .zhead svg { width: 18px; height: 18px; fill: none; stroke: var(--c); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 4px var(--c)); flex: none; }
+  .zhead b { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--c); text-shadow: 0 0 10px color-mix(in srgb, var(--c) 60%, transparent); }
+  .zhead .plus { margin-left: auto; padding: 1px 9px; border-radius: 999px; font-size: 14px; font-weight: 800; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: rgba(0,0,0,0.4); }
+  .zhead .plus:hover { background: color-mix(in srgb, var(--c) 18%, #07080D); }
+  .znotes { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; overflow: auto; min-height: 0; }
+  .zone.right .zhead { flex-direction: row-reverse; } .zone.right .zhead .plus { margin-left: 0; margin-right: auto; }
+  .zone.right .znotes { justify-content: flex-end; }
+  .note { position: relative; max-width: 126px; padding: 6px 8px; border-radius: 2px; color: var(--note-ink); background: var(--n); cursor: pointer; text-align: left;
+    font-family: var(--hand); font-size: 13.5px; line-height: 1.15; border: none; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 6px 14px -4px rgba(0,0,0,.6);
+    transform: rotate(var(--tilt, 0deg)); transition: transform .12s, box-shadow .12s; }
+  .note:hover { transform: rotate(0) translateY(-1px); }
+  .note.sel { box-shadow: 0 0 0 2px #fff, 0 0 18px var(--c); transform: none; }
+  .note.lit { box-shadow: 0 0 0 2px var(--c), 0 0 16px var(--c); }
+  .note .lk { display: none; }
+  .addin { display: flex; gap: 4px; }
+  .addin input { flex: 1; min-width: 0; padding: 6px 8px; font-size: 13px; border-radius: 8px; }
+  /* the link lines, drawn over everything */
+  svg.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+  svg.links path.l { fill: none; stroke-width: 2.4; stroke-linecap: round; }
+  svg.links path.g { fill: none; stroke-width: 7; opacity: .25; filter: blur(3px); }
+
+  /* Narrow screens: the two shapes become two stacked lists of sections */
+  @media (max-width: 1060px) {
+    .board { height: auto; display: grid; gap: 14px; }
+    .shape { position: relative; top: 0; width: auto !important; height: auto !important; left: auto; right: auto;
+      display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.78); }
+    .shape > svg.bg, .badge, svg.links, .arrows { display: none; }
+    .shape-title { position: static; transform: none; }
+    .zone { position: static; width: auto !important; height: auto !important; padding: 10px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
+    .zone.right .zhead { flex-direction: row; } .zone.right .zhead .plus { margin-left: auto; margin-right: 0; } .zone.right .znotes { justify-content: flex-start; }
+    .note .lk { display: block; font-family: "Geist", sans-serif; font-size: 11px; margin-top: 4px; opacity: .75; }
+  }
+
+  /* the editor for one note, under the canvas */
+  .inspector { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; margin-top: 14px; border-color: var(--c, var(--line)); box-shadow: 0 0 18px color-mix(in srgb, var(--c, transparent) 25%, transparent); }
+  @media (max-width: 760px) { .inspector { grid-template-columns: minmax(0, 1fr); } }
+  .inspector .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .inspector textarea.field { min-height: 46px; resize: vertical; font-family: var(--hand); font-size: 16px; }
+
+  /* ---------- Coach ---------- */
+  .coach { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+  @media (max-width: 960px) { .coach { grid-template-columns: minmax(0, 1fr); } }
+  .coach h4 { margin: 0 0 10px; font-size: 15px; }
+  .fitrow { display: grid; gap: 4px; margin-bottom: 10px; font-size: 13.5px; }
+  .fitrow .bar2 { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .fitrow .bar2 span { display: block; height: 100%; box-shadow: 0 0 10px currentColor; }
+  .fitrow b { font-variant-numeric: tabular-nums; }
+  .open { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+  .big { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+  .big small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .next { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .next b { color: var(--text); }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .checks li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 13px; line-height: 1.4; }
+  .checks li::before { content: ""; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .checks li[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .checks li[data-s="warn"]::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .checks span { color: var(--muted); }
+
+  /* ---------- Below the tool: what it is, how to use it, credits ---------- */
+  .intro { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .intro { grid-template-columns: minmax(0, 1fr); } }
+  .intro h2 { margin: 0 0 10px; font-size: 22px; }
+  .intro p { color: var(--muted); line-height: 1.6; margin: 0 0 12px; font-size: 16px; }
+  .intro b { color: var(--text); }
+  blockquote { margin: 0; padding: 18px 20px; border: 1px solid var(--line); border-left: 3px solid var(--c-gain); border-radius: var(--radius); background: var(--panel); }
+  blockquote p { margin: 0 0 10px !important; color: var(--text) !important; }
+  blockquote footer { font-size: 13px; color: var(--muted); }
+  .how { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+  @media (max-width: 860px) { .how { grid-template-columns: 1fr; } }
+  .how .step { font-size: 11px; letter-spacing: .12em; color: #C4B5FD; font-weight: 700; }
+  .how h3 { margin: 6px 0 6px; font-size: 16px; }
+  .how p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .how b { color: var(--text); }
+  .about { margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .about { grid-template-columns: minmax(0, 1fr); } }
+  .about h2 { margin: 0 0 10px; font-size: 22px; }
+  .about p { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 0 0 12px; }
+  .about b { color: var(--text); }
+  .about .panel { border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,0.25); padding: 14px 16px; margin-bottom: 14px; }
+  .about h3 { margin: 0 0 8px; font-size: 15px; }
+  .about .panel p { margin: 0; font-size: 14px; }
+  .about .sources { font-size: 13px; }
+  .sitefoot { margin-top: 36px; }
+  .sitefoot a { color: var(--muted); margin-right: 14px; display: inline-block; margin-bottom: 6px; text-decoration: none; }
+  .sitefoot a:hover { color: var(--text); }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px);
+    background: rgba(20,22,32,0.95); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 24px rgba(139,92,246,0.35); color: var(--text); padding: 10px 16px; border-radius: 10px; font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .note { transform: none !important; } }
+</style>
+</head>
+
+<body>
+<!--
+  ============================================================
+  PART 2 — HTML (what's on the page)
+  The canvas, notes, links and coach are drawn by JavaScript.
+  ============================================================
+-->
+<div class="wrap">
+  <header>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · VALUE PROPOSITION CANVAS</span>
+    <h1>Value Proposition Canvas</h1>
+    <p class="tag">Match what you offer to what your customer needs. <a href="#what">What is this?</a></p>
+  </header>
+
+  <div class="card setup">
+    <div><label for="vp">Value proposition: what are you offering?</label><input type="text" id="vp" maxlength="80" placeholder="e.g. BellBox, lunch pre-orders for campus breaks"></div>
+    <div><label for="seg">Customer segment: who is it for?</label><input type="text" id="seg" maxlength="80" placeholder="e.g. College students ordering lunch between classes"></div>
+  </div>
+
+  <div class="bar">
+    <button id="exampleBtn" type="button">Load example</button>
+    <button id="clearBtn" type="button">Clear canvas</button>
+    <span class="spacer"></span>
+    <button id="copyBtn" type="button">Copy as text</button>
+    <div class="sheetfor" aria-label="Printed on the sheet">
+      <span>On the sheet</span>
+      <input type="text" id="sName" maxlength="40" placeholder="Your name" aria-label="Your name, printed on the sheet">
+      <input type="date" id="sDate" aria-label="Date, printed on the sheet">
+    </div>
+    <button class="primary" id="exportBtn" type="button" title="White A4 sheet, ready to print or upload">Save A4 sheet</button>
+  </div>
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="board" id="board"></div>
+  <div class="card inspector" id="inspector" hidden></div>
+
+  <div class="coach">
+    <div class="card">
+      <h4>Fit</h4>
+      <div id="fit"></div>
+    </div>
+    <div class="card">
+      <h4>Progress</h4>
+      <div class="big" id="total">0<small> notes</small></div>
+      <div class="next" id="next"></div>
+    </div>
+    <div class="card">
+      <h4>Coach</h4>
+      <ul class="checks" id="checks"></ul>
+    </div>
+  </div>
+
+  <section class="intro" id="what">
+    <div>
+      <h2>What is the Value Proposition Canvas?</h2>
+      <p>The Value Proposition Canvas is a strategic management tool developed by <b>Dr. Alexander Osterwalder</b> (available via <a href="https://www.strategyzer.com/library/the-value-proposition-canvas" target="_blank" rel="noopener">Strategyzer</a>). It ensures that a product or service is explicitly aligned with what target customers actually value and need.</p>
+      <p>The canvas acts as a detailed zoom-in on two building blocks of the broader <a href="/toolkit/business-model-canvas/">Business Model Canvas</a>: the <b>Customer Profile</b> (the circle) and the <b>Value Map</b> (the square).</p>
+    </div>
+    <blockquote>
+      <p>“Fit is a claim until customers confirm it.”</p>
+      <footer><a href="https://www.strategyzer.com/library/the-value-proposition-canvas" target="_blank" rel="noopener">Strategyzer, The Value Proposition Canvas</a>. Linking a reliever to a pain on this canvas is a guess about fit: test it with real customers.</footer>
+    </blockquote>
+  </section>
+
+  <section class="how">
+    <div class="card"><div class="step">STEP 1 · 10 MIN</div><h3>Start with the customer</h3><p>Fill the circle first. <b>Customer jobs</b>: what are they trying to get done? <b>Pains</b>: what annoys them or gets in the way? <b>Gains</b>: what outcomes or benefits do they want?</p></div>
+    <div class="card"><div class="step">STEP 2 · 10 MIN</div><h3>Map your value</h3><p>Fill the square. <b>Products &amp; services</b>: what you offer. <b>Pain relievers</b>: how it removes specific pains. <b>Gain creators</b>: how it produces specific gains.</p></div>
+    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Link for fit</h3><p>Click a pain reliever or gain creator and pick the pain or gain it answers. A glowing line connects them. Pains with no line are gaps; relievers with no line may be features nobody asked for.</p></div>
+  </section>
+
+  <section class="card about" id="where">
+    <div>
+      <h2>Where it comes from</h2>
+      <p>The Value Proposition Canvas was created by <b>Alexander Osterwalder</b> and is published by <b>Strategyzer</b>. It is set out in the book <b><i>Value Proposition Design: How to Create Products and Services Customers Want</i></b> (Wiley, 2014) by Alexander Osterwalder, Yves Pigneur, Gregory Bernarda, Alan Smith and Trish Papadakos.</p>
+      <p>The <b>Customer Profile</b> describes one customer segment through their jobs, pains and gains. The <b>Value Map</b> lists what you offer and how it relieves those pains and creates those gains. You have <b>fit</b> when your value map answers what matters most in the profile.</p>
+      <p>The square-and-circle layout follows Strategyzer's canvas. The link lines between relievers and pains, and creators and gains, follow the worked example by the <b>Interaction Design Foundation</b> (interaction-design.org).</p>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Where your canvas is kept</h3>
+        <p>Your canvas stays in this browser and is never uploaded. Use Save A4 sheet or Copy as text to keep a copy.</p>
+      </div>
+      <p class="sources">Sources: <a href="https://www.strategyzer.com/library/the-value-proposition-canvas" target="_blank" rel="noopener">Strategyzer, The Value Proposition Canvas</a> · <a href="https://www.oreilly.com/library/view/value-proposition-design/9781118968062/" target="_blank" rel="noopener">Value Proposition Design (Wiley, 2014)</a> · <a href="https://www.b2binternational.com/experience/methods/faq/what-is-the-value-proposition-canvas/" target="_blank" rel="noopener">B2B International, What is the Value Proposition Canvas?</a> · <a href="https://www.canva.com/docs/value-propositions/" target="_blank" rel="noopener">Canva, Value propositions</a>. The Value Proposition Canvas is © Strategyzer AG. This interactive version, its link lines, fit score and A4 sheet are made by Invent + Discover.</p>
+    </div>
+  </section>
+
+  <footer class="sitefoot">
+    <a href="/">Home</a><a href="/#invent">Invent</a><a href="/#discover">Discover</a><a href="/#learn">Learn</a><a href="/#tools">Tools</a><a href="/#insights">Insights</a><a href="/about/">About</a><a href="mailto:hello@inventndiscover.com">hello@inventndiscover.com</a>
+    <div style="margin-top:8px">© Invent + Discover, Mumbai</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<!--
+  ============================================================
+  PART 3 — JavaScript (how it behaves)
+  ============================================================
+-->
+<script>
+// ---------- 3a. The six sections ----------
+// shape: which side they live on (sq = the Value Map square, ci = the
+// Customer Profile circle). zone: where their notes sit, in % of the shape.
+// links: which section a note here can point to (relievers → pains, creators → gains).
+const ICON = {
+  products: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8',
+  creators: 'M4 20h16M6 16v-3M10 16v-6M14 16v-4M18 16V7M15 7h3v3',
+  relievers: 'M10.5 20.5a5 5 0 0 1-7-7l7-7a5 5 0 0 1 7 7zM7 10l7 7',
+  gains: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM8.5 14a4 4 0 0 0 7 0M9 9.5h.01M15 9.5h.01',
+  pains: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM8.5 16.5a4 4 0 0 1 7 0M8 9l2 1M16 9l-2 1',
+  jobs: 'M9 4h6v3H9zM7 5.5H5v15h14v-15h-2M8.5 11h7M8.5 14.5h7M8.5 18h4',
+  gift: 'M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7C10 3 6 4 7.5 6.5 8.3 7.5 12 7 12 7zM12 7c2-4 6-3 4.5-.5C15.7 7.5 12 7 12 7z',
+  face: 'M15.5 3.5c3 1.5 4.5 4.3 4.5 7.5 0 4.5-3 8-7 9v-2.5l-2.5-.5-.5-3-2 .5 2-4.5c-.5-4 1.5-6.5 5.5-6.5zM15 9h.01',
+};
+const SECTIONS = [
+  { id: 'gains',     name: 'Gains',               shape: 'ci', c: 'gain',     zone: [20, 11, 47, 36], hint: 'Outcomes and benefits they want', ph: 'What would delight them?' },
+  { id: 'jobs',      name: 'Customer jobs',       shape: 'ci', c: 'jobs',     zone: [64, 30, 33, 42], hint: 'What they are trying to get done', ph: 'What are they trying to do?', right: true },
+  { id: 'pains',     name: 'Pains',               shape: 'ci', c: 'pain',     zone: [20, 55, 47, 34], hint: 'What annoys them or gets in the way', ph: 'What goes wrong for them?' },
+  { id: 'creators',  name: 'Gain creators',       shape: 'sq', c: 'gain',     zone: [30, 3, 67, 38],  hint: 'How you produce their gains', ph: 'How do you create a gain?', links: 'gains' },
+  { id: 'products',  name: 'Products & services', shape: 'sq', c: 'products', zone: [2, 28, 27, 44],  hint: 'What you offer', ph: 'What do you offer?' },
+  { id: 'relievers', name: 'Pain relievers',      shape: 'sq', c: 'pain',     zone: [30, 59, 67, 38], hint: 'How you take away their pains', ph: 'How do you ease a pain?', links: 'pains' },
+];
+const S = Object.fromEntries(SECTIONS.map(s => [s.id, s]));
+const COL = { products: '#2EC4FF', gain: '#19E3A0', pain: '#FF3B6B', jobs: '#FFD43B' };
+const NOTE = { products: '#C9EEFF', gain: '#C4F7E4', pain: '#FFD0DB', jobs: '#FFF2B8' };
+const SAVE_KEY = 'ind-vpc-v1', MAX_PER = 8, MAX_TEXT = 90;
+
+// ---------- 3b. The example ----------
+// Notes are [section, text, link]; a link is the text of the pain or gain it answers.
+const EXAMPLE = {
+  vp: 'BellBox, lunch pre-orders for campus breaks', seg: 'College students ordering lunch between classes',
+  notes: [
+    ['jobs', 'Eat a proper lunch in a 30-minute break'], ['jobs', 'Stay within a student budget'], ['jobs', 'Get back to class on time'],
+    ['pains', 'Food arrives after the break ends'], ['pains', 'Coupons that fail at checkout'], ['pains', 'Rider can’t find the campus gate'], ['pains', 'Too many confusing offers'],
+    ['gains', 'Hot food waiting when the bell rings'], ['gains', 'Knowing the exact pickup time'], ['gains', 'Ordering together with friends'],
+    ['products', 'Pre-order app for break times'], ['products', 'Pickup lockers at the gate'], ['products', 'Group orders'],
+    ['relievers', 'Delivery slot booked for your break', 'Food arrives after the break ends'], ['relievers', 'One fair price, no coupons', 'Coupons that fail at checkout'], ['relievers', 'Fixed locker at the gate', 'Rider can’t find the campus gate'],
+    ['creators', 'Order in class, food ready at the bell', 'Hot food waiting when the bell rings'], ['creators', 'Live countdown to pickup', 'Knowing the exact pickup time'], ['creators', 'Split-the-bill group orders', 'Ordering together with friends'],
+  ],
+};
+
+// ---------- 3c. State ----------
+//   notes: [{ id: 'n1abc', s: 'relievers', text: 'Fixed locker at the gate', link: 'n9xyz' (a pain's id) or '' , at: … }]
+const state = { vp: '', seg: '', notes: [], isExample: false, sel: null, adding: null, confirmDel: false, confirmClear: false, drafts: {} };
+
+// ---------- 3d. Helpers ----------
+const $ = q => document.querySelector(q);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const newId = () => 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const tilt = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) | 0; return ((Math.abs(h) % 5) - 2) * 0.7 + 'deg'; };
+const inS = s => state.notes.filter(n => n.s === s).sort((a, b) => a.at - b.at);
+const byId = id => state.notes.find(n => n.id === id);
+const linkOf = n => { const t = n.link && byId(n.link); return t && S[n.s].links === t.s ? t : null; };
+const svgIcon = (d, cls) => `<svg viewBox="0 0 24 24" ${cls ? `class="${cls}"` : ''} aria-hidden="true"><path d="${d}"/></svg>`;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
+
+// ---------- 3e. Saving in this browser ----------
+function save() { const { vp, seg, notes, isExample } = state; try { localStorage.setItem(SAVE_KEY, JSON.stringify({ vp, seg, notes, isExample })); } catch (e) {} }
+function load() { try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (d && Array.isArray(d.notes)) { Object.assign(state, d); return true; } } catch (e) {} return false; }
+function loadExample() {
+  Object.assign(state, { vp: EXAMPLE.vp, seg: EXAMPLE.seg, isExample: true, sel: null, adding: null, notes: [] });
+  EXAMPLE.notes.forEach(([s, text], i) => state.notes.push({ id: 'ex' + i, s, text, link: '', at: i }));
+  EXAMPLE.notes.forEach(([s, text, link], i) => { if (link) { const t = state.notes.find(n => n.text === link); if (t) state.notes[i].link = t.id; } });
+}
+function reset() { Object.assign(state, { vp: '', seg: '', notes: [], isExample: false, sel: null, adding: null, drafts: {} }); }
+function changed() { if (state.isExample) { state.isExample = false; $('#banner').hidden = true; } save(); }
+
+// ---------- 3f. Changing the canvas ----------
+function addNote(s, text) {
+  text = text.trim().slice(0, MAX_TEXT); if (!text) return false;
+  if (inS(s).length >= MAX_PER) { toast(`${S[s].name} holds up to ${MAX_PER} notes. Keep the strongest ones.`); return false; }
+  state.notes.push({ id: newId(), s, text, link: '', at: Date.now() }); changed(); render(); return true;
+}
+function deleteNote(id) {
+  state.notes = state.notes.filter(n => n.id !== id);
+  state.notes.forEach(n => { if (n.link === id) n.link = ''; });   // links to it go too
+  state.sel = null; changed(); render();
+}
+
+// ---------- 3g. Drawing the canvas ----------
+// The square: three regions meeting at the gift in the middle. The circle:
+// three wedges meeting at the face. Drawn in a 0–100 box that stretches.
+function squareSVG() {
+  return `<svg class="bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,0 50,50 0,100" fill="${COL.products}" fill-opacity=".10"/>
+    <polygon points="0,0 100,0 100,50 50,50" fill="${COL.gain}" fill-opacity=".09"/>
+    <polygon points="0,100 100,100 100,50 50,50" fill="${COL.pain}" fill-opacity=".09"/>
+    <g fill="none" stroke-width="2" vector-effect="non-scaling-stroke">
+      <path d="M0,0 L50,50 L0,100 M50,50 L100,50" stroke="rgba(255,255,255,.35)" vector-effect="non-scaling-stroke"/>
+      <rect x="0" y="0" width="100" height="100" rx="2" stroke="#fff" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px rgba(46,196,255,.8))"/>
+    </g></svg>`;
+}
+function circleSVG() {
+  const p = a => [50 + 49 * Math.cos(a * Math.PI / 180), 50 + 49 * Math.sin(a * Math.PI / 180)].map(v => v.toFixed(2)).join(',');
+  const wedge = (a1, a2, c) => `<path d="M50,50 L${p(a1)} A49,49 0 0 1 ${p(a2)} Z" fill="${c}" fill-opacity=".09"/>`;
+  return `<svg class="bg" viewBox="0 0 100 100" aria-hidden="true">
+    ${wedge(180, 315, COL.gain)}${wedge(315, 405, COL.jobs)}${wedge(45, 180, COL.pain)}
+    <path d="M50,50 L1,50 M50,50 L${p(315)} M50,50 L${p(45)}" stroke="rgba(255,255,255,.35)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <circle cx="50" cy="50" r="49" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px rgba(25,227,160,.8))"/></svg>`;
+}
+function zone(s) {
+  const z = el('div', 'zone' + (s.right ? ' right' : '')); z.style.setProperty('--c', COL[s.c]);
+  const [l, t, w, h] = s.zone; Object.assign(z.style, { left: l + '%', top: t + '%', width: w + '%', height: h + '%' });
+  const head = el('div', 'zhead'); head.innerHTML = svgIcon(ICON[s.id]);
+  head.append(el('b', null, s.name));
+  const plus = el('button', 'plus', '+'); plus.type = 'button'; plus.title = `Add to ${s.name}: ${s.hint.toLowerCase()}`; plus.setAttribute('aria-label', `Add to ${s.name}`);
+  plus.onclick = () => { state.adding = s.id; state.sel = null; render(); const i = $('#add-' + s.id); if (i) i.focus(); };
+  head.append(plus); z.append(head);
+  const ns = el('div', 'znotes');
+  const list = inS(s.id);
+  list.forEach(n => {
+    const b = el('button', 'note' + (state.sel === n.id ? ' sel' : ''));
+    b.type = 'button'; b.dataset.id = n.id; b.style.setProperty('--n', NOTE[s.c]); b.style.setProperty('--c', COL[s.c]); b.style.setProperty('--tilt', tilt(n.id));
+    b.append(n.text);
+    const t = linkOf(n); if (t) { b.append(el('span', 'lk', (s.id === 'relievers' ? '↔ relieves: ' : '↔ creates: ') + t.text)); b.title = `${s.id === 'relievers' ? 'Relieves' : 'Creates'}: ${t.text}`; }
+    b.onclick = () => { state.sel = state.sel === n.id ? null : n.id; state.adding = null; state.confirmDel = false; render(); };
+    ns.append(b);
+  });
+  if (state.adding === s.id) {
+    const f = el('div', 'addin'); const i = document.createElement('input'); i.type = 'text'; i.id = 'add-' + s.id; i.maxLength = MAX_TEXT; i.placeholder = s.ph;
+    i.value = state.drafts[s.id] || ''; i.addEventListener('input', () => { state.drafts[s.id] = i.value; });
+    i.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); if (addNote(s.id, i.value)) { state.drafts[s.id] = ''; const j = $('#add-' + s.id); if (j) j.focus(); } }
+      if (e.key === 'Escape') { state.adding = null; render(); }
+    });
+    i.addEventListener('blur', () => setTimeout(() => { if (state.adding === s.id && document.activeElement !== $('#add-' + s.id)) { if (i.value.trim()) addNote(s.id, i.value); state.drafts[s.id] = ''; state.adding = null; render(); } }, 120));
+    f.append(i); ns.append(f);
+  } else if (!list.length) ns.append(el('span', null, ''));
+  z.append(ns);
+  return z;
+}
+
+function render() {
+  const board = $('#board'); board.innerHTML = '';
+  const sq = el('div', 'shape sq'), ci = el('div', 'shape ci');
+  sq.innerHTML = squareSVG() + `<div class="shape-title">VALUE MAP</div><div class="badge" title="Your value proposition">${svgIcon(ICON.gift)}</div>`;
+  ci.innerHTML = circleSVG() + `<div class="shape-title">CUSTOMER PROFILE</div><div class="badge" title="Your customer">${svgIcon(ICON.face)}</div>`;
+  SECTIONS.forEach(s => (s.shape === 'sq' ? sq : ci).append(zone(s)));
+  board.append(sq, ci);
+  const links = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); links.setAttribute('class', 'links'); board.append(links);
+  requestAnimationFrame(drawLinks);
+  inspector();
+  for (const k of ['vp', 'seg']) if (document.activeElement !== $('#' + k)) $('#' + k).value = state[k];
+  const ban = $('#banner'); ban.hidden = !state.isExample; ban.innerHTML = '';
+  if (state.isExample) {
+    const sp = el('span'); sp.append(el('b', null, 'This is an example canvas. '), 'Change anything to make it yours, or start with an empty canvas.');
+    const b = el('button', null, 'Start an empty canvas'); b.type = 'button'; b.onclick = () => { reset(); save(); render(); };
+    ban.append(sp, b);
+  }
+  $('#clearBtn').textContent = state.confirmClear ? 'Confirm clear' : 'Clear canvas';
+  $('#clearBtn').className = state.confirmClear ? 'danger' : '';
+  coach();
+}
+
+// Link lines: a glowing curve from each reliever to its pain (pink, below)
+// and from each creator to its gain (green, above), plus the >—< arrows.
+function drawLinks() {
+  const board = $('#board'), svg = board.querySelector('svg.links'); if (!svg) return;
+  if (getComputedStyle(svg).display === 'none') return;
+  const B = board.getBoundingClientRect(), mid = el => { const r = el.getBoundingClientRect(); return [r.left - B.left + r.width / 2, r.top - B.top + r.height / 2, r]; };
+  let out = '';
+  // arrows between the two shapes
+  const sq = board.querySelector('.shape.sq').getBoundingClientRect(), ci = board.querySelector('.shape.ci').getBoundingClientRect();
+  const ay = sq.top - B.top + sq.height / 2, ax1 = sq.right - B.left + 6, ax2 = ci.left - B.left - 6;
+  out += `<path d="M${ax1},${ay} L${ax2},${ay}" stroke="rgba(255,255,255,.7)" stroke-width="2" fill="none"/>
+    <path d="M${ax1 + 16},${ay - 8} L${ax1 + 26},${ay} L${ax1 + 16},${ay + 8} M${ax2 - 16},${ay - 8} L${ax2 - 26},${ay} L${ax2 - 16},${ay + 8}" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const top = sq.top - B.top, bot = sq.bottom - B.top, k = { up: 0, down: 0 };
+  for (const n of state.notes) {
+    const t = linkOf(n); if (!t) continue;
+    const a = board.querySelector(`.note[data-id="${n.id}"]`), b = board.querySelector(`.note[data-id="${t.id}"]`); if (!a || !b) continue;
+    const [x1, , r1] = mid(a), [x2, , r2] = mid(b), up = n.s === 'creators';
+    // gain lines leave the top of the note and arch above the shapes; pain lines arch below
+    const y1 = up ? r1.top - B.top : r1.bottom - B.top, y2 = up ? r2.top - B.top : r2.bottom - B.top;
+    // a curve only reaches 3/4 of the way to its control points, so aim past the target
+    const want = up ? top - 16 - 9 * k.up++ : bot + 16 + 9 * k.down++, yc = (want - 0.125 * (y1 + y2)) / 0.75;
+    const c = COL[S[n.s].c], hi = state.sel && (state.sel === n.id || state.sel === t.id);
+    const d = `M${x1},${y1} C${x1},${yc} ${x2},${yc} ${x2},${y2}`;
+    out += `<path class="g" d="${d}" stroke="${c}"/><path class="l" d="${d}" stroke="${c}" stroke-opacity="${state.sel && !hi ? .3 : .95}"${hi ? ' stroke-width="3.5"' : ''}/>
+      <circle cx="${x1}" cy="${y1}" r="3.5" fill="${c}"/><circle cx="${x2}" cy="${y2}" r="3.5" fill="${c}"/>`;
+  }
+  svg.setAttribute('viewBox', `0 0 ${B.width} ${B.height}`);
+  svg.innerHTML = out;
+  // light up the partner of the selected note
+  board.querySelectorAll('.note.lit').forEach(e => e.classList.remove('lit'));
+  const sel = state.sel && byId(state.sel);
+  if (sel) {
+    const partners = linkOf(sel) ? [linkOf(sel).id] : state.notes.filter(x => x.link === sel.id && linkOf(x)).map(x => x.id);
+    partners.forEach(id => { const e = board.querySelector(`.note[data-id="${id}"]`); if (e) e.classList.add('lit'); });
+  }
+}
+
+// The editor for the selected note: text, which section, what it links to
+function inspector() {
+  const box = $('#inspector'), n = state.sel && byId(state.sel);
+  box.hidden = !n; box.innerHTML = ''; if (!n) return;
+  const s = S[n.s]; box.style.setProperty('--c', COL[s.c]);
+  const a = el('div'); const la = el('label', null, `Edit · ${s.name}`); la.htmlFor = 'edText';
+  const ta = document.createElement('textarea'); ta.className = 'field'; ta.id = 'edText'; ta.maxLength = MAX_TEXT; ta.rows = 2; ta.value = n.text;
+  ta.addEventListener('input', () => { n.text = ta.value; changed(); const b = $(`.note[data-id="${n.id}"]`); if (b) b.firstChild.textContent = ta.value; coach(); requestAnimationFrame(drawLinks); });
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); state.sel = null; render(); } if (e.key === 'Escape') { state.sel = null; render(); } });
+  a.append(la, ta); box.append(a);
+  const b = el('div');
+  if (s.links) {
+    const lb = el('label', null, s.id === 'relievers' ? 'Which pain does it relieve?' : 'Which gain does it create?'); lb.htmlFor = 'edLink';
+    const sel = document.createElement('select'); sel.className = 'field'; sel.id = 'edLink';
+    const o0 = el('option', null, '— not linked —'); o0.value = ''; sel.append(o0);
+    inS(s.links).forEach(t => { const o = el('option', null, t.text); o.value = t.id; sel.append(o); });
+    sel.value = linkOf(n) ? n.link : '';
+    sel.onchange = () => { n.link = sel.value; changed(); render(); };
+    if (!inS(s.links).length) { sel.disabled = true; o0.textContent = `Add a ${s.links === 'pains' ? 'pain' : 'gain'} first`; }
+    b.append(lb, sel);
+  } else {
+    const users = state.notes.filter(x => x.link === n.id && linkOf(x));
+    b.append(el('label', null, n.s === 'pains' ? 'Relieved by' : n.s === 'gains' ? 'Created by' : 'Tip'));
+    const p = el('div', null, n.s === 'pains' || n.s === 'gains' ? (users.length ? users.map(u => u.text).join(' · ') : 'Nothing yet. Link a ' + (n.s === 'pains' ? 'pain reliever' : 'gain creator') + ' to it.') : n.s === 'jobs' ? 'Jobs are what the customer is trying to get done. They set the scene for pains and gains.' : 'Products and services are what you offer. Relievers and creators say how they help.');
+    p.style.cssText = 'font-size:14px;color:var(--muted);line-height:1.45';
+    b.append(p);
+  }
+  box.append(b);
+  const acts = el('div', 'acts');
+  const done = el('button', null, 'Done'); done.type = 'button'; done.onclick = () => { state.sel = null; render(); };
+  const del = el('button', 'danger', state.confirmDel ? 'Confirm delete' : 'Delete'); del.type = 'button';
+  del.onclick = () => { if (state.confirmDel) { state.confirmDel = false; deleteNote(n.id); } else { state.confirmDel = true; inspector(); } };
+  acts.append(done, del); box.append(acts);
+}
+
+// ---------- 3h. The coach: fit, progress, checks ----------
+function coach() {
+  const pains = inS('pains'), gains = inS('gains');
+  const relieved = pains.filter(p => state.notes.some(n => n.s === 'relievers' && n.link === p.id));
+  const created = gains.filter(g => state.notes.some(n => n.s === 'creators' && n.link === g.id));
+  const fit = $('#fit'); fit.innerHTML = '';
+  const row = (label, a, b, c) => {
+    const r = el('div', 'fitrow'); const t = el('div'); t.append(label + ' ', el('b', null, `${a} of ${b}`));
+    const bar = el('div', 'bar2'), sp = el('span'); sp.style.width = (b ? Math.round(a / b * 100) : 0) + '%'; sp.style.background = c; sp.style.color = c; bar.append(sp);
+    r.append(t, bar); return r;
+  };
+  fit.append(row('Pains relieved', relieved.length, pains.length, COL.pain), row('Gains created', created.length, gains.length, COL.gain));
+  const openP = pains.filter(p => !relieved.includes(p)), openG = gains.filter(g => !created.includes(g));
+  const o = el('div', 'open');
+  if (!pains.length && !gains.length) o.append('Add pains and gains, then link relievers and creators to them.');
+  else if (!openP.length && !openG.length) o.append('Every pain and gain has an answer. Now test it with real customers.');
+  else o.append('Not answered yet: ' + [...openP, ...openG].map(x => '“' + x.text + '”').join(', '));
+  fit.append(o);
+
+  $('#total').firstChild.textContent = state.notes.length;
+  const empty = ['jobs', 'pains', 'gains', 'products', 'relievers', 'creators'].find(id => !inS(id).length);
+  const unlinked = state.notes.filter(n => S[n.s].links && !linkOf(n));
+  const nx = $('#next'); nx.innerHTML = '';
+  if (!state.seg.trim()) nx.append('Next: ', el('b', null, 'Customer segment'), ' · who is this for?');
+  else if (empty) nx.append('Next: ', el('b', null, S[empty].name), ' · ' + S[empty].hint.toLowerCase() + '.');
+  else if (unlinked.length) nx.append('Next: ', el('b', null, 'Link'), ` · click “${unlinked[0].text}” and pick what it answers.`);
+  else nx.append(el('b', null, 'Done. '), 'Save the A4 sheet.');
+
+  const out = [];
+  if (!inS('jobs').length && (state.notes.length > 3)) out.push(['warn', 'Customer first', 'Start with the circle: what job is the customer trying to get done?']);
+  if (unlinked.length) out.push(['warn', 'No link', `${unlinked.length} reliever${unlinked.length > 1 ? 's or creators don’t' : ' or creator doesn’t'} answer a listed pain or gain. A feature nobody asked for?`]);
+  if (openP.length) out.push(['warn', 'Gaps', `${openP.length} pain${openP.length > 1 ? 's have' : ' has'} no reliever.`]);
+  if (inS('products').length > inS('relievers').length + inS('creators').length && inS('products').length > 2) out.push(['warn', 'Features', 'More products than ways they help. Say how each one relieves a pain or creates a gain.']);
+  if (!out.length && state.notes.length) out.push(['ok', 'Fit', 'Every reliever and creator answers something real. Test it with customers.']);
+  if (!state.notes.length) out.push(['todo', 'Start', 'Click + on Customer jobs to add the first note.']);
+  const ul = $('#checks'); ul.innerHTML = '';
+  for (const [s, h, t] of out) { const li = el('li'); li.dataset.s = s; const d = el('div'); d.append(el('b', null, h + ' '), el('span', null, t)); li.append(d); ul.append(li); }
+}
+
+// ---------- 3i. Copy as text ----------
+function asText() {
+  let out = `# Value Proposition Canvas\n`;
+  if (state.vp.trim()) out += `Value proposition: ${state.vp.trim()}\n`;
+  if (state.seg.trim()) out += `Customer segment: ${state.seg.trim()}\n`;
+  for (const id of ['jobs', 'pains', 'gains', 'products', 'relievers', 'creators']) {
+    out += `\n## ${S[id].name}\n` + (inS(id).map(n => { const t = linkOf(n); return `- ${n.text}${t ? ` → ${t.text}` : ''}`; }).join('\n') || '- (empty)') + '\n';
+  }
+  return out;
+}
+
+// ---------- 3j. Save A4 sheet ----------
+// The screen keeps the dark theme; the sheet is redrawn from the data on
+// white A4 landscape at 300 dpi (297 × 210 mm = 3508 × 2480 px): the square
+// and circle in neon outlines, notes as small stickies, and the link lines.
+const PRINT = { products: '#00A8F0', gain: '#00B87D', pain: '#FF2D5E', jobs: '#E0A800' };
+const UI_F = 'Geist, Arial, sans-serif', HAND_F = 'Kalam, "Comic Sans MS", cursive';
+function wrapText(x, text, maxW) {
+  const out = []; let line = '';
+  for (let word of String(text).split(/\s+/).filter(Boolean)) {
+    while (x.measureText(word).width > maxW) { let i = word.length; while (i > 1 && x.measureText(word.slice(0, i)).width > maxW) i--; if (line) { out.push(line); line = ''; } out.push(word.slice(0, i)); word = word.slice(i); }
+    const test = line ? line + ' ' + word : word;
+    if (x.measureText(test).width > maxW && line) { out.push(line); line = word; } else line = test;
+  }
+  out.push(line); return out;
+}
+function fitOneLine(x, text, maxW) { if (x.measureText(text).width <= maxW) return text; while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
+// Lay notes out in rows inside a box (right-aligned rows for the jobs zone),
+// shrinking the text until they all fit. Returns each note's box.
+function layoutNotes(x, list, box, right) {
+  for (let fs = 30; fs >= 16; fs -= 2) {
+    x.font = `400 ${fs}px ${HAND_F}`;
+    const pad = fs * 0.4, maxW = Math.min(box.w, fs * 11), gap = fs * 0.45, placed = [];
+    let rowY = box.y, rowH = 0, rowItems = [], ok = true;
+    const flush = () => {
+      const used = rowItems.reduce((s, r) => s + r.w, 0) + gap * (rowItems.length - 1);
+      let cx = right ? box.x + box.w - used : box.x;
+      rowItems.forEach(r => { r.x = cx; r.y = rowY; cx += r.w + gap; placed.push(r); });
+      rowY += rowH + gap; rowH = 0; rowItems = [];
+    };
+    for (const n of list) {
+      const lines = wrapText(x, n.text, maxW - pad * 2), w = Math.max(...lines.map(l => x.measureText(l).width)) + pad * 2, h = lines.length * fs * 1.15 + pad * 2;
+      const rowW = rowItems.reduce((s, r) => s + r.w + gap, 0);
+      if (rowItems.length && rowW + w > box.w) flush();
+      rowItems.push({ n, lines, w, h }); rowH = Math.max(rowH, h);
+    }
+    if (rowItems.length) flush();
+    if (rowY - gap <= box.y + box.h || fs === 16) return { fs, pad, placed: placed.filter(p => p.y + p.h <= box.y + box.h + 2) };
+  }
+}
+function glowStroke(x, color, width, blur, draw) { x.save(); x.shadowColor = color; x.shadowBlur = blur; x.strokeStyle = color; x.lineWidth = width; draw(); x.stroke(); x.restore(); }
+async function drawSheet() {
+  try { await Promise.all([document.fonts.load('800 60px Geist'), document.fonts.load('400 30px Geist'), document.fonts.load('400 30px Kalam')]); } catch (e) {}
+  const W = 3508, H = 2480, M = 120, INK = '#111111', GREY = '#555555';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+
+  // Header
+  x.fillStyle = GREY; x.font = `700 28px ${UI_F}`; x.fillText('VALUE PROPOSITION CANVAS  ·  INVENTNDISCOVER.COM', M, M + 28);
+  x.fillStyle = INK; x.font = `800 60px ${UI_F}`; x.fillText(fitOneLine(x, state.vp.trim() || 'Untitled value proposition', 2150), M, M + 100);
+  x.fillStyle = GREY; x.font = `400 34px ${UI_F}`; if (state.seg.trim()) x.fillText(fitOneLine(x, 'For: ' + state.seg.trim(), 2150), M, M + 152);
+  const rx = W - M - 860, filled = { Name: sheetName(), Date: sheetDate() };
+  x.strokeStyle = INK; x.lineWidth = 3;
+  [['Name', M + 56], ['Date', M + 132]].forEach(([l, y]) => {
+    x.fillStyle = INK; x.font = `600 34px ${UI_F}`; x.fillText(l, rx, y); x.beginPath(); x.moveTo(rx + 110, y + 6); x.lineTo(W - M, y + 6); x.stroke();
+    if (filled[l]) { x.font = `500 36px ${UI_F}`; x.fillText(fitOneLine(x, filled[l], W - M - rx - 130), rx + 124, y - 6); }
+  });
+
+  // Geometry: square on the left, circle on the right, same height
+  const top = M + 330, size = 1500;
+  const sq = { x: M, y: top, w: size, h: size }, ci = { x: W - M - size, y: top, w: size, h: size };
+  const cx = sq.x + sq.w / 2, cy = sq.y + sq.h / 2, ccx = ci.x + size / 2, ccy = ci.y + size / 2, R = size / 2;
+  const tint = (c, a, path) => { x.save(); x.globalAlpha = a; x.fillStyle = c; path(); x.fill(); x.restore(); };
+  // square regions
+  tint(PRINT.products, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(cx, cy); x.lineTo(sq.x, sq.y + sq.h); x.closePath(); });
+  tint(PRINT.gain, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(sq.x + sq.w, sq.y); x.lineTo(sq.x + sq.w, cy); x.lineTo(cx, cy); x.closePath(); });
+  tint(PRINT.pain, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y + sq.h); x.lineTo(sq.x + sq.w, sq.y + sq.h); x.lineTo(sq.x + sq.w, cy); x.lineTo(cx, cy); x.closePath(); });
+  x.strokeStyle = '#BBBBBB'; x.lineWidth = 3; x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(cx, cy); x.lineTo(sq.x, sq.y + sq.h); x.moveTo(cx, cy); x.lineTo(sq.x + sq.w, cy); x.stroke();
+  glowStroke(x, '#00A8F0', 7, 22, () => { x.beginPath(); x.roundRect(sq.x, sq.y, sq.w, sq.h, 10); });
+  // circle wedges
+  const wedge = (a1, a2, c) => tint(c, .07, () => { x.beginPath(); x.moveTo(ccx, ccy); x.arc(ccx, ccy, R, a1 * Math.PI / 180, a2 * Math.PI / 180); x.closePath(); });
+  wedge(180, 315, PRINT.gain); wedge(315, 405, PRINT.jobs); wedge(45, 180, PRINT.pain);
+  x.strokeStyle = '#BBBBBB'; x.lineWidth = 3; x.beginPath();
+  x.moveTo(ccx, ccy); x.lineTo(ccx - R, ccy); x.moveTo(ccx, ccy); x.lineTo(ccx + R * Math.cos(-Math.PI / 4), ccy + R * Math.sin(-Math.PI / 4)); x.moveTo(ccx, ccy); x.lineTo(ccx + R * Math.cos(Math.PI / 4), ccy + R * Math.sin(Math.PI / 4)); x.stroke();
+  glowStroke(x, '#00B87D', 7, 22, () => { x.beginPath(); x.arc(ccx, ccy, R, 0, Math.PI * 2); });
+  // titles over the shapes, and the arrows between them
+  x.fillStyle = GREY; x.font = `800 30px ${UI_F}`; x.fillText('VALUE MAP', sq.x, sq.y - 26); x.textAlign = 'right'; x.fillText('CUSTOMER PROFILE', ci.x + size, ci.y - 26); x.textAlign = 'left';
+  x.strokeStyle = INK; x.lineWidth = 4; x.lineCap = 'round'; x.beginPath(); x.moveTo(sq.x + sq.w + 20, cy); x.lineTo(ci.x - 20, cy);
+  x.moveTo(sq.x + sq.w + 44, cy - 18); x.lineTo(sq.x + sq.w + 64, cy); x.lineTo(sq.x + sq.w + 44, cy + 18);
+  x.moveTo(ci.x - 44, cy - 18); x.lineTo(ci.x - 64, cy); x.lineTo(ci.x - 44, cy + 18); x.stroke();
+  // badges: gift and face
+  const badge = (bx, by, icon) => {
+    x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(bx, by, 62, 0, Math.PI * 2); x.fill(); x.strokeStyle = INK; x.lineWidth = 5; x.stroke();
+    x.save(); x.translate(bx - 36, by - 36); x.scale(3, 3); x.strokeStyle = INK; x.lineWidth = 1.6; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(icon)); x.restore();
+  };
+  badge(cx, cy, ICON.gift); badge(ccx, ccy, ICON.face);
+
+  // notes in their zones, remembering where each one landed (for the links)
+  const pos = {};
+  for (const s of SECTIONS) {
+    const shp = s.shape === 'sq' ? sq : ci, [l, t, w, h] = s.zone;
+    const zx = shp.x + shp.w * l / 100, zy = shp.y + shp.h * t / 100, zw = shp.w * w / 100, zh = shp.h * h / 100, c = PRINT[s.c];
+    // section label with icon
+    x.save(); x.translate(s.right ? zx + zw - 40 : zx, zy); x.scale(40 / 24, 40 / 24); x.strokeStyle = c; x.lineWidth = 1.8; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(ICON[s.id])); x.restore();
+    x.fillStyle = c; x.font = `800 30px ${UI_F}`; x.textAlign = s.right ? 'right' : 'left';
+    x.fillText(s.name.toUpperCase(), s.right ? zx + zw - 52 : zx + 52, zy + 31); x.textAlign = 'left';
+    const L = layoutNotes(x, inS(s.id), { x: zx, y: zy + 56, w: zw, h: zh - 60 }, s.right);
+    for (const p of L.placed) {
+      x.fillStyle = NOTE[s.c]; x.fillRect(p.x, p.y, p.w, p.h); x.strokeStyle = '#444'; x.lineWidth = 2; x.strokeRect(p.x, p.y, p.w, p.h);
+      x.fillStyle = INK; x.font = `400 ${L.fs}px ${HAND_F}`; p.lines.forEach((ln, k) => x.fillText(ln, p.x + L.pad, p.y + L.pad + L.fs * 0.9 + k * L.fs * 1.15));
+      pos[p.n.id] = p;
+    }
+  }
+  // link lines: gains arch above the shapes, pains below
+  const k = { up: 0, down: 0 };
+  for (const n of state.notes) {
+    const t = linkOf(n), a = pos[n.id], b = t && pos[t.id]; if (!a || !b) continue;
+    const c = PRINT[S[n.s].c], up = n.s === 'creators', sx = a.x + a.w / 2, ex = b.x + b.w / 2;
+    const sy = up ? a.y : a.y + a.h, ey = up ? b.y : b.y + b.h, want = up ? top - 50 - 26 * k.up++ : top + size + 50 + 26 * k.down++, yc = (want - 0.125 * (sy + ey)) / 0.75;
+    x.save(); x.shadowColor = c; x.shadowBlur = 14; x.strokeStyle = c; x.lineWidth = 5; x.beginPath(); x.moveTo(sx, sy); x.bezierCurveTo(sx, yc, ex, yc, ex, ey); x.stroke(); x.restore();
+    x.fillStyle = c; x.beginPath(); x.arc(sx, sy, 9, 0, Math.PI * 2); x.arc(ex, ey, 9, 0, Math.PI * 2); x.fill();
+  }
+  x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.textAlign = 'right';
+  x.fillText('Value Proposition Canvas: Alexander Osterwalder, Strategyzer (© Strategyzer AG) · Link lines after the Interaction Design Foundation · Sheet: Invent + Discover', W - M, H - M + 30); x.textAlign = 'left';
+  return cv;
+}
+async function exportSheet() {
+  const cv = await drawSheet();
+  const a = document.createElement('a');
+  a.download = [fileSlug(sheetName()), fileSlug(state.vp).slice(0, 30), 'value-proposition-canvas-a4'].filter(Boolean).join('-') + '.png';
+  a.href = cv.toDataURL('image/png'); a.click();
+  toast('Saved. When printing, choose "Fit to page".');
+}
+
+// ---------- 3k. "On the sheet": the student's name and the date ----------
+const NAME_KEY = 'ind-student-name';
+function niceDate(v) { if (!v) return ''; const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+const sheetName = () => $('#sName').value.trim();
+const sheetDate = () => niceDate($('#sDate').value);
+const fileSlug = t => String(t || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+{
+  const t = new Date(), pad = n => String(n).padStart(2, '0');
+  $('#sDate').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+  try { $('#sName').value = localStorage.getItem(NAME_KEY) || ''; } catch (e) {}
+  $('#sName').addEventListener('input', e => { try { localStorage.setItem(NAME_KEY, e.target.value.trim()); } catch (er) {} });
+}
+
+// ---------- 3l. Wiring ----------
+for (const k of ['vp', 'seg']) $('#' + k).addEventListener('input', e => { state[k] = e.target.value; changed(); coach(); });
+$('#exampleBtn').onclick = () => { loadExample(); state.confirmClear = false; save(); render(); };
+$('#clearBtn').onclick = () => {
+  if (!state.confirmClear) { state.confirmClear = true; render(); setTimeout(() => { state.confirmClear = false; render(); }, 4000); return; }
+  reset(); state.confirmClear = false; save(); render(); toast('Canvas cleared.');
+};
+$('#copyBtn').onclick = () => navigator.clipboard.writeText(asText()).then(() => toast('Copied. Paste it into your doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
+$('#exportBtn').onclick = exportSheet;
+window.addEventListener('resize', () => requestAnimationFrame(drawLinks));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.sel) { state.sel = null; render(); } });
+
+// ---------- 3m. Start ----------
+if (!load()) loadExample();
+render();
+document.fonts && document.fonts.ready.then(() => requestAnimationFrame(drawLinks));
+</script>
+</body>
+</html>
