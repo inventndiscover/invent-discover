@@ -199,7 +199,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const BUILD = 'Green Diwali · v1.3';
+const BUILD = 'Green Diwali · v1.5';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -1112,6 +1112,143 @@ function makeLadi(pos) {
   return addItem(it);
 }
 
+/* ---------- 6m. पॉप पॉप (BANG SNAPS): little paper twists you throw at the floor ----------
+   Swing your phone down as if throwing one: the motion sensor feels the flick, a tiny
+   paper twist flies from your hand in an arc, lands, and goes SNAP: a white flash,
+   a few silver sparks, a wisp of smoke, and torn bits of paper left on the floor.      */
+const snapGeo = new THREE.SphereGeometry(0.006, 8, 6).scale(1, 0.8, 1.3); snapGeo.userData.shared = true;
+const snapMat = new THREE.MeshStandardMaterial({ color: 0xf3ece0, roughness: 1 });
+// the leftover paper bits: ONE InstancedMesh holds all of them (one draw call, kind to phones)
+const BITS = 160;
+const bitGeo = new THREE.PlaneGeometry(0.006, 0.004).rotateX(-Math.PI / 2); bitGeo.userData.shared = true;
+const bitMat = new THREE.MeshStandardMaterial({ roughness: 1, side: THREE.DoubleSide });
+const bits = new THREE.InstancedMesh(bitGeo, bitMat, BITS); bits.count = 0; bits.frustumCulled = false; scene.add(bits);
+{ const white = new THREE.Color(0xf4efe6), pink = new THREE.Color(0xf2b8c8);   // real ones come in white and pink paper
+  for (let i = 0; i < BITS; i++) bits.setColorAt(i, Math.random() < 0.6 ? white : pink); }
+let bitCursor = 0;
+function dropBits(p) {
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), e = new THREE.Euler(), at = new THREE.Vector3();
+  for (let k = 0; k < 5; k++) {
+    const i = bitCursor; bitCursor = (bitCursor + 1) % BITS; bits.count = Math.min(BITS, bits.count + 1);   // oldest bits get reused
+    e.set(rand(-0.3, 0.3), rand(0, 6.28), rand(-0.3, 0.3)); q.setFromEuler(e); const sc = rand(0.6, 1.4); s.set(sc, 1, sc);
+    m.compose(at.set(p.x + rand(-0.05, 0.05), floorY + 0.0006, p.z + rand(-0.05, 0.05)), q, s); bits.setMatrixAt(i, m);
+  }
+  bits.instanceMatrix.needsUpdate = true;
+}
+function clearBits() { bits.count = 0; bitCursor = 0; }
+// the sound: the recorded pop, played faster so it's higher and snappier, plus a 25 ms "crack" of bright noise on top
+function snapSound(p, power) {
+  if (!A.ctx) return;
+  if (!MODE[A.mode].bangs) { crackle(p, 0.12); crackle(p, 0.08); return; }   // Pet-safe: two soft ticks only
+  clip('pop' + (1 + (Math.random() * 4 | 0)), p, { gain: 0.5 + 0.4 * power, rate: rand(1.25, 1.6) });
+  const s = A.ctx.createBufferSource(); s.buffer = A.noise;
+  const f = A.ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 1800;
+  const g = A.ctx.createGain(), t = A.ctx.currentTime;
+  g.gain.setValueAtTime(0.5 + 0.4 * power, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+  s.connect(f); f.connect(g); g.connect(panner(p)); s.start(t, Math.random() * 1.5, 0.04);
+}
+let snapCount = 0;
+const HAND = new THREE.Vector3(0.05, -0.12, -0.2);   // where your hand is, measured from the phone
+function throwSnap(target, power = 0.7, delay = 0, spread = 0.06) {
+  const from = HAND.clone().applyMatrix4(camM);
+  let to;
+  if (target) to = target.clone();
+  else {   // nothing to aim at: it lands on the floor in front of you; a harder swing throws it further
+    const f = viewerForward(), c = viewerPos(), d = 0.8 + 0.7 * power;
+    to = new THREE.Vector3(c.x + f.x * d, floorY, c.z + f.z * d);
+  }
+  to.x += rand(-spread, spread); to.z += rand(-spread, spread); to.y = floorY;
+  const group = new THREE.Group(), ball = new THREE.Mesh(snapGeo, snapMat); group.add(ball);
+  const flash = glowSprite(0xeef4ff, 0.18, 0); group.add(flash);
+  const dur = 0.25 + 0.15 * Math.min(1, from.distanceTo(to) / 1.5);   // flight time in seconds
+  let t0 = -delay, popped = false, flashT = 0;   // a negative start time = it leaves your hand a moment later
+  const it = {
+    type: 'pop', group, glow: 0, flamePos: () => flash.getWorldPosition(_v2),
+    update(dt) {
+      t0 += dt;
+      if (!popped) {   // flying: a straight line from hand to floor, lifted into an arc (4·f·(1−f) is 0 at both ends, 1 in the middle)
+        ball.visible = t0 >= 0;
+        const f = Math.max(0, Math.min(1, t0 / dur));
+        ball.position.lerpVectors(from, to, f); ball.position.y += 0.12 * 4 * f * (1 - f);
+        ball.rotation.x += dt * 25; ball.rotation.z += dt * 17;
+        if (f >= 1) { popped = true; ball.visible = false; flash.position.copy(to); flash.position.y += 0.01; flashT = 0.07; snap(to); }
+        return true;
+      }
+      flashT -= dt;
+      flash.material.opacity = flashT > 0 ? 1 : 0; flash.scale.setScalar(0.12 + Math.random() * 0.1);
+      it.glow = flashT > 0 ? 2.2 : 0;   // lights up the room for a blink
+      return t0 < dur + 0.6;            // then it tidies itself away (the paper bits stay)
+    },
+    dispose() { flash.material.dispose(); },
+  };
+  function snap(p) {
+    snapCount++;
+    for (let j = 0; j < 16 * quality; j++) { const d = randDir(), sp = rand(0.5, 1.6);
+      emit(p.x, p.y + 0.004, p.z, d.x * sp, Math.abs(d.y) * sp, d.z * sp, { life: rand(0.05, 0.14), size: 0.004, drag: 5, grav: 0.5, streak: 0.01, pal: PAL.SILVER }); }
+    puff(p.x, p.y + 0.01, p.z, 0.5);
+    dropBits(p); snapSound(p, power);
+    hint(snapCount === 1 ? "पॉप! Real bang snaps can hurt someone's eyes if thrown at them. These can't hurt anyone. Keep swinging!" : `पॉप! ×${snapCount}`);
+  }
+  return addItem(it);
+}
+/* The swing detector. The motion sensor reports how hard the phone is pushed
+   (acceleration, in m/s²) and how fast it is turning (degrees per second).
+   Looking around slowly stays far below both limits; a quick flick of the wrist
+   goes well past one of them. A short gap stops one swing counting twice.        */
+const SWING_ACC = 13, SWING_ROT = 380, SWING_GAP = 0.32;
+let motionOn = false, motionSeen = 0, lastSwing = 0;
+function onMotion(e) {
+  motionSeen = performance.now();
+  if (tool !== 'pop' || mode === 'home') return;
+  let acc = 0;
+  const a = e.acceleration, ag = e.accelerationIncludingGravity, r = e.rotationRate;
+  if (a && a.x != null) acc = Math.hypot(a.x, a.y, a.z);
+  else if (ag && ag.x != null) acc = Math.abs(Math.hypot(ag.x, ag.y, ag.z) - 9.81);   // older phones: take gravity away ourselves
+  const rot = r && r.alpha != null ? Math.hypot(r.alpha, r.beta, r.gamma) : 0;
+  const power = Math.max(acc / SWING_ACC, rot / SWING_ROT);   // 1 = just a swing, 2+ = a hard one
+  if (power >= 1) swing(power);
+}
+/* How many in one throw (like a fistful):
+   power 1.0–1.6 → 1 · 1.6–2.4 → 2 or 3 · 2.4 and up → 4 or 5
+   e.g. a normal flick ≈ 15 m/s² → power 1.15 → one pop;
+        a big swing ≈ 35 m/s² → power 2.7 → four or five, scattered, popping a few hundredths of a second apart */
+function swing(raw) {
+  const now = performance.now() / 1000;
+  if (now - lastSwing < SWING_GAP) return;
+  lastSwing = now;
+  let target = null;   // aim at the floor ring if it's showing
+  if (reticle.visible) target = mode === 'ar' ? new THREE.Vector3().setFromMatrixPosition(reticle.matrix) : reticle.position.clone();
+  const power = Math.min(1, 0.4 + (raw - 1) / 1.5);   // 0.4 … 1: sets loudness and how far it flies
+  const n = raw < 1.6 ? 1 : raw < 2.4 ? 2 + (Math.random() * 2 | 0) : 4 + (Math.random() * 2 | 0);
+  for (let k = 0; k < n; k++) throwSnap(target, power * rand(0.85, 1), k === 0 ? 0 : rand(0.02, 0.09) * k, n === 1 ? 0.06 : 0.16);
+}
+// iPhone asks the person first; this must run straight from a tap
+let listening = false;
+function askMotion() {
+  if (motionOn) return;
+  const listen = () => { if (!listening) { listening = true; window.addEventListener('devicemotion', onMotion); } };
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then((r) => {
+      listen();
+      if (r === 'granted') motionOn = true;
+      else hint('Motion access was not allowed, so tap the floor to throw instead. (To allow it later, close Safari fully and open this page again.)');
+    }).catch(listen);   // some browsers have the question but never need to ask: just listen
+  } else { listen(); motionOn = true; }
+}
+// Back-up for AR on Android: if the motion sensor is silent, judge the swing from
+// how far the tracked phone moved (metres per second) or turned (radians per second) since the last frame
+const _lp = new THREE.Vector3(), _q = new THREE.Quaternion(), _lq = new THREE.Quaternion();
+let poseReady = false;
+function poseSwing(dt) {
+  _q.setFromRotationMatrix(camM);
+  if (poseReady && mode === 'ar' && tool === 'pop' && performance.now() - motionSeen > 1500 && dt > 0) {
+    const speed = _lp.distanceTo(camPosV) / dt, turn = 2 * Math.acos(Math.min(1, Math.abs(_q.dot(_lq)))) / dt;
+    const power = Math.max(speed / 1.4, turn / 6.5);
+    if (power >= 1) swing(power);
+  }
+  _lp.copy(camPosV); _lq.copy(_q); poseReady = true;
+}
+
 /* ---------- 6e. ROCKET: the model from your zip, standing in a glass bottle ---------- */
 const loader = new GLTFLoader();
 let rocketModel = null, samaiModel = null, samaiLoading = null;
@@ -1827,6 +1964,7 @@ const TOOLS = [
   { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Sparklers', hint: 'Tap the floor to plant a sparkler in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
   { id: 'anar', dv: 'अनार', en: 'Cone', hint: 'Tap the floor to light a cone, then step back a little.' },
   { id: 'chakri', dv: 'चकरी', en: 'Spinner', hint: 'Tap the floor to light a spinner.' },
+  { id: 'pop', dv: 'पॉप पॉप', en: 'Bang snaps', hint: 'Hold your phone tight and flick it down quickly, as if throwing one at the floor: पॉप! Swing harder to throw a fistful. Or just tap the floor.' },
   { id: 'ladi', dv: 'लड़ी', en: 'String Crackers', hint: 'Tap the floor to lay a string of crackers and light it.' },
   { id: 'rocket', dv: 'रॉकेट', en: 'Rocket', hint: 'Tap the floor to set a rocket in a bottle. Look up when it goes!' },
   { id: 'samai', dv: 'समई', en: 'Samai', hint: 'Tap the floor to place a brass samai with eight wicks.' },
@@ -1845,6 +1983,7 @@ function selectTool(id) {
   ensureAudio();
   if (id === 'sky') { startSkyShow(simT); flashChip('sky'); return; }
   tool = id;
+  if (id === 'pop') askMotion();
   document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.id === id));
   const ready = id === 'phuljhadi' && flamePoints().length > 0;   // a flame is burning: light yours from it
   if (id === 'phuljhadi') { ready ? readySparkler() : lightSparkler(); if (controls) controls.enableRotate = false; }
@@ -1859,6 +1998,7 @@ const LIMITS = { diya: 16, anar: 3, chakri: 3, ladi: 2, rocket: 3, samai: 2, ran
 async function placeAt(p) {
   ensureAudio();
   if (tool === 'phuljhadi') { lightSparkler(); hint(toolHint('phuljhadi')); return; }
+  if (tool === 'pop') { throwSnap(p); return; }   // a tap throws one at that spot
   if (tool === 'rangoli') {   // tapping on an existing rangoli swaps it for the next pattern
     const old = items.find((i) => i.type === 'rangoli' && i.group.position.distanceTo(p) < i.radius);
     if (old) { const at = old.group.position.clone(); at.y -= 0.001; removeItem(old); makeRangoli(at); return; }
@@ -1893,7 +2033,7 @@ $('undo').addEventListener('click', () => {   // remove the last thing you place
 });
 $('clear').addEventListener('click', () => {
   while (items.length) removeItem(items[0]);
-  clearSparks(); skyUntil = 0; skyRising = []; stopCity();
+  clearSparks(); clearBits(); skyUntil = 0; skyRising = []; stopCity();
   if (tool === 'phuljhadi') lightSparkler();
   hint('All clear. Pick something from the tray.');
 });
@@ -1914,6 +2054,7 @@ async function startAR() {
     placingTimer = setTimeout(() => { if (!reticle.visible) { hint("Can't find the floor yet. Turn on a light, point at a rug or textured floor (shiny floors are tricky) and move slowly."); $('fallback').hidden = false; } }, 9000);
     session.addEventListener('select', () => {
       if (tool === 'phuljhadi') { placeAt(new THREE.Vector3()); return; }
+      if (tool === 'pop' && !reticle.visible) { throwSnap(null); return; }
       if (!reticle.visible) return;
       placeAt(new THREE.Vector3().setFromMatrixPosition(reticle.matrix));
     });
@@ -1992,7 +2133,7 @@ renderer.domElement.addEventListener('pointerup', (e) => {
   if (moved > 8) return;   // that was a drag, not a tap
   if (tool === 'phuljhadi') { placeAt(new THREE.Vector3()); return; }
   const p = mode === 'camera' ? floorHit(0, 0, new THREE.Vector3()) : floorHit(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1, new THREE.Vector3());
-  if (p) placeAt(p);
+  if (p) placeAt(p); else if (tool === 'pop') throwSnap(null);
 });
 
 /* Warm-up: the first time the phone draws a new kind of material it has to
@@ -2011,6 +2152,8 @@ function warmUp() {
   add(new THREE.Mesh(blurRingGeo, new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
   add(new THREE.Mesh(snakeGeo, ashMat)); add(new THREE.Mesh(snakeGeo, tabletMat)); add(new THREE.Mesh(potGeo, sandMat));
   add(new THREE.Mesh(wickGeo, sparkWireMat)); add(new THREE.Mesh(wickGeo, sparkCoatMat)); add(new THREE.Mesh(ringGeo, wireMat));
+  add(new THREE.Mesh(snapGeo, snapMat));
+  { const wb = new THREE.InstancedMesh(bitGeo, bitMat, 1); wb.setColorAt(0, new THREE.Color(1, 1, 1)); add(wb); }
   add(new THREE.Mesh(lanternGeo, new THREE.MeshBasicMaterial({ map: lanternTex, side: THREE.DoubleSide, transparent: true, toneMapped: false })));
   g.traverse((o) => { o.frustumCulled = false; });
   scene.add(g);
@@ -2026,7 +2169,7 @@ function enterViewing() {
 function backHome(showFinale = true) {
   stopCamera(); putOutSparkler();
   while (items.length) removeItem(items[0]);
-  clearSparks(); skyUntil = 0; skyRising = []; stopCity();
+  clearSparks(); clearBits(); skyUntil = 0; skyRising = []; stopCity();
   if (controls) { controls.dispose(); controls = null; }
   terrace.visible = false; skyDome.visible = false; scene.fog = null; renderer.setClearColor(0x000000, 0);
   mode = 'home'; $('hud').style.display = 'none'; $('home').style.display = 'flex'; $('fallback').hidden = true;
@@ -2106,6 +2249,7 @@ renderer.setAnimationLoop((time, frame) => {
   }
   camPosV.setFromMatrixPosition(camM);
   updateListener(camM);
+  if (tool === 'pop') poseSwing(dt);
 
   // 2) the sparkler: on a laptop it follows the mouse; on a phone it's in your hand
   if (mode === '3d' && sparkler.visible) {
@@ -2140,7 +2284,7 @@ window.addEventListener('resize', () => {
 
 // For testing on a computer: window.GD.place('anar', 0, 0) etc.
 window.GD = { get controls() { return controls; }, P, place: (id, x, z) => { tool = id; return placeAt(new THREE.Vector3(x, floorY, z)); }, selectTool, start3D, items, camera,
-  sky: () => startSkyShow(simT),
+  sky: () => startSkyShow(simT), snap: (power) => throwSnap(null, power), swing: (raw) => swing(raw ?? 1.2),
   advance(sec) { for (let k = 0; k < sec * 30; k++) { simT += 1 / 30; simulate(1 / 30, simT); } }, get sparks() { return liveSparks; } };
 </script>
 </body>
