@@ -116,17 +116,25 @@
   .cell.row-opps textarea { color: #B8F5DD; }
   .cell.row-thoughts textarea { font-style: italic; color: #E4D6FF; }
   /* stage chevrons */
-  .corner { position: sticky; left: 0; z-index: 3; background: #11131C; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding: 12px; display: grid; align-content: center; }
-  .corner b { font-size: 12px; letter-spacing: .12em; color: var(--stage); }
-  .stagecell { padding: 12px 6px 12px 8px; border-bottom: 1px solid var(--line-2); filter: drop-shadow(0 0 7px color-mix(in srgb, var(--sc) 70%, transparent)); }
-  .chev { position: relative; display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 22px 0 12px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 10px 50%);
-    background: linear-gradient(90deg, color-mix(in srgb, var(--sc) 42%, #07080D), color-mix(in srgb, var(--sc) 14%, #07080D)); box-shadow: inset 0 0 0 1.5px var(--sc), inset 0 0 14px color-mix(in srgb, var(--sc) 35%, transparent); }
-  .chev.first { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%); }
-  .chev .k { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #05060A; background: var(--sc); box-shadow: 0 0 10px var(--sc); margin-left: 6px; }
-  .chev input { flex: 1; min-width: 0; background: transparent; border: none; color: #fff; text-shadow: 0 0 10px color-mix(in srgb, var(--sc) 80%, transparent); font: inherit; font-weight: 700; font-size: 14px; padding: 4px 2px; }
+  /* Row 1 reads like the classic template: a "Stage" chevron, then one filled
+     chevron per stage, locking into each other and shifting colour step by step */
+  .corner { position: sticky; left: 0; z-index: 4; background: #11131C; border-bottom: 1px solid var(--line-2); padding: 12px 0 12px 10px; display: grid; align-content: center; }
+  .stagecell { padding: 12px 0; border-bottom: 1px solid var(--line-2); filter: drop-shadow(0 0 8px color-mix(in srgb, var(--sc) 65%, transparent)); min-width: 0; }
+  .chev { --notch: 16px; position: relative; display: flex; align-items: center; gap: 8px; height: 52px; margin-left: -12px; padding: 0 24px 0 calc(var(--notch) + 6px);
+    clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% 50%, calc(100% - var(--notch)) 100%, 0 100%, var(--notch) 50%);
+    background: linear-gradient(90deg, var(--sc), color-mix(in srgb, var(--sc) 78%, #fff)); }
+  .chev.head { margin-left: 0; padding-left: 16px; clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% 50%, calc(100% - var(--notch)) 100%, 0 100%);
+    background: linear-gradient(90deg, #ECE6FF, #FFFFFF); justify-content: center; font-weight: 800; font-size: 16px; color: #0B0D14; letter-spacing: .02em; }
+  .corner { filter: drop-shadow(0 0 8px rgba(255,255,255,0.35)); }
+  /* the hexagon badge with the stage's icon */
+  .hex { flex: none; width: 34px; height: 34px; display: grid; place-items: center; background: #07080D;
+    clip-path: polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0 50%); }
+  .hex svg { width: 19px; height: 19px; fill: none; stroke: var(--sc); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px var(--sc)); }
+  .hex b { font-size: 13px; font-weight: 800; color: var(--sc); }
+  .chev input { flex: 1; min-width: 0; background: transparent; border: none; color: #05060A; font: inherit; font-weight: 800; font-size: 14.5px; padding: 4px 2px; }
   .chev input:focus { outline: none; }
-  .chev .rm { flex: none; border: none; background: transparent; color: rgba(230,255,252,0.6); padding: 0 2px; font-size: 16px; line-height: 1; }
-  .chev .rm:hover { color: #fff; }
+  .chev .rm { flex: none; border: none; background: transparent; color: rgba(5,6,10,0.55); padding: 0 2px; font-size: 16px; line-height: 1; }
+  .chev .rm:hover { color: #05060A; }
   .stagebar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 10px; color: var(--muted); font-size: 13px; }
   .stagebar button { padding: 7px 12px; font-size: 13px; border-radius: 8px; }
 
@@ -318,6 +326,16 @@ const MIN_STAGES = 3, MAX_STAGES = 7, MAX_TEXT = 300;
 // Neon colours. Rows each have their own; stages shift from violet through
 // blue to teal as the journey moves forward.
 const ROW_COLORS = { touch: '#2EC4FF', actions: '#6E8BFF', thoughts: '#B26BFF', mood: '#FFD43B', pains: '#FF3B6B', opps: '#19E3A0' };
+// Stage icons (24 × 24 line drawings). The stage's name picks one; any
+// other name gets its number instead. The same paths draw on the A4 sheet.
+const ICONS = [
+  [/aware|discover|notic|realis|need|trigger/i, 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z'],
+  [/consider|research|compar|brows|explor|evaluat|search/i, 'M4 4h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM19 8h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3-3h-3'],
+  [/purchas|buy|order|pay|checkout|book|sign|decid/i, 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM14.6 9.4c-.4-.9-1.4-1.4-2.6-1.4-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.2-.6-2.6-1.5M12 6.4v1.6M12 16v1.6'],
+  [/retent|use|using|onboard|repeat|loyal|return|deliver|wait|support|service/i, 'M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 3.8v4.9h-4.9M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20.2v-4.9h4.9'],
+  [/advoca|share|recommend|review|rate|rating|refer|tell/i, 'M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12'],
+];
+const iconFor = name => (ICONS.find(([re]) => re.test(name || '')) || [])[1] || null;
 const stageColor = (i, n) => `hsl(${Math.round(275 - (n > 1 ? i / (n - 1) : 0) * 105)} 95% 64%)`;
 const SAVE_KEY = 'ind-journey-v1';
 
@@ -327,11 +345,11 @@ const EXAMPLE = {
   scenario: 'Order lunch on a food delivery app between classes',
   expect: 'Hot food at the campus gate before the break ends',
   stages: [
-    ['Feels hungry', 3, 'Class timetable\nPhone notification', 'Checks how long the break is', '“Can I get food in 30 minutes?”', 'The break is short and fixed', 'A “before your break ends” filter'],
-    ['Browses', 4, 'App home, offers, reviews', 'Compares offers across three apps', '“Which deal is actually cheapest?”', 'Too many similar offers', 'One clear best deal for his budget'],
-    ['Orders & pays', 2, 'Cart, coupon, UPI app', 'Applies a coupon, pays by UPI', '“Why didn’t the coupon apply?”', 'Coupon fails, payment retried', 'Explain coupon rules before checkout'],
-    ['Waits', 1, 'Live tracking, rider’s call', 'Watches the map, waits at the gate', '“He’s been at the signal for ten minutes.”', 'No idea when food will really arrive; late for class', 'Honest arrival time and a campus gate drop point'],
-    ['Eats & rates', 4, 'Food box, rating screen', 'Eats quickly, gives four stars', '“Worth it, but I rushed.”', 'Eats in a hurry', 'Pre-order for break time'],
+    ['Awareness', 3, 'Class timetable\nFood ads on Instagram', 'Realises the break is only 30 minutes\nSees a lunch offer', '“Can I get food in 30 minutes?”', 'The break is short and fixed', 'A “before your break ends” filter'],
+    ['Consideration', 4, 'App home, offers, reviews', 'Compares offers across three apps', '“Which deal is actually cheapest?”', 'Too many similar offers', 'One clear best deal for his budget'],
+    ['Purchase', 1, 'Cart, coupon, UPI app\nLive tracking, rider’s call', 'Pays by UPI\nWaits at the gate watching the map', '“Why didn’t the coupon apply? Where is he?”', 'Coupon fails, payment retried\nNo idea when food will arrive; late for class', 'Explain coupon rules before checkout\nHonest arrival time and a campus gate drop point'],
+    ['Retention', 3, 'Order history, reorder button\nPush offers', 'Reorders the same meal the next week', '“At least I know this one works.”', 'Push offers every hour', 'A one-tap “usual order” timed for his break'],
+    ['Advocacy', 4, 'Rating screen\nClass WhatsApp group', 'Gives four stars, tells friends about the gate drop', '“Worth it, but I rushed.”', 'No reason to share beyond a rating', 'Group orders for classmates on the same break'],
   ],
 };
 
@@ -408,13 +426,19 @@ function render() {
   g.style.setProperty('--n', n); g.innerHTML = '';
 
   // Row 1: the stage chevrons
-  const corner = el('div', 'corner'); corner.append(el('b', null, 'STAGES')); g.append(corner);
+  const corner = el('div', 'corner'), head = el('div', 'chev head', 'Stage'); corner.append(head); g.append(corner);
   state.stages.forEach((s, i) => {
-    const c = el('div', 'stagecell'), ch = el('div', 'chev' + (i === 0 ? ' first' : ''));
+    const c = el('div', 'stagecell'), ch = el('div', 'chev');
     c.style.setProperty('--sc', stageColor(i, n));
-    ch.append(el('span', 'k', String(i + 1)));
+    const hex = el('span', 'hex'), icon = iconFor(s.name);
+    if (icon) hex.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icon}"/></svg>`; else hex.append(el('b', null, String(i + 1)));
+    ch.append(hex);
     const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'name-' + s.id; inp.maxLength = 30; inp.value = s.name; inp.placeholder = `Stage ${i + 1}`; inp.setAttribute('aria-label', `Stage ${i + 1} name`);
-    inp.addEventListener('input', () => { s.name = inp.value; changed(); coach(); });
+    inp.addEventListener('input', () => {
+      s.name = inp.value; changed(); coach();
+      // swap the icon as the name changes
+      const ic = iconFor(s.name); hex.innerHTML = ''; if (ic) hex.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ic}"/></svg>`; else hex.append(el('b', null, String(i + 1)));
+    });
     ch.append(inp);
     const sure = state.confirmRm === s.id;
     const rm = el('button', 'rm', sure ? '✓' : '×'); rm.type = 'button'; rm.disabled = n <= MIN_STAGES;
@@ -561,7 +585,7 @@ const UI_F = 'Geist, Arial, sans-serif';
 const STAGE_INK = '#00A99D';
 // Print versions of the neon colours: same hues, a touch deeper so they read on white
 const PRINT_ROW = { touch: '#00A8F0', actions: '#4B6BFF', thoughts: '#9B4DFF', mood: '#E0A800', pains: '#FF2D5E', opps: '#00C98A' };
-const printStage = (i, n) => `hsl(${Math.round(275 - (n > 1 ? i / (n - 1) : 0) * 105)} 85% 50%)`;
+const printStage = (i, n) => `hsl(${Math.round(275 - (n > 1 ? i / (n - 1) : 0) * 105)} 80% 44%)`;
 function glowStroke(x, color, width, blur, draw) { x.save(); x.shadowColor = color; x.shadowBlur = blur; x.strokeStyle = color; x.lineWidth = width; draw(); x.stroke(); x.restore(); }
 function wrapText(x, text, maxW) {
   const out = [];
@@ -634,19 +658,29 @@ async function drawSheet() {
   const sumW = ROWS.reduce((s, r) => s + weights[r.id], 0), avail = bottom - top - headH - 12;
   let y = top;
 
-  // Stage chevrons
-  st.forEach((s, i) => {
-    const sx = M + labW + i * colW + 8, w = colW - 16, h = headH - 24, sy = y + 12, tip = 34;
+  // Stage row: a "STAGE" chevron, then filled chevrons that lock together,
+  // each with a hexagon icon, shifting colour step by step
+  const chevPath = (sx, sy, w, h, notch, tip) => {
     x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + w - tip, sy); x.lineTo(sx + w, sy + h / 2); x.lineTo(sx + w - tip, sy + h); x.lineTo(sx, sy + h);
-    if (i) x.lineTo(sx + tip * 0.7, sy + h / 2); x.closePath();
-    const sc = printStage(i, n);
-    x.save(); x.globalAlpha = 0.1; x.fillStyle = sc; x.fill(); x.restore();
-    x.save(); x.shadowColor = sc; x.shadowBlur = 22; x.strokeStyle = sc; x.lineWidth = 6; x.stroke(); x.restore();
-    x.fillStyle = sc; x.beginPath(); x.arc(sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2, 22, 0, Math.PI * 2); x.fill();
-    x.fillStyle = '#FFFFFF'; x.font = `800 24px ${UI_F}`; x.textAlign = 'center'; x.fillText(String(i + 1), sx + (i ? tip * 0.7 : 0) + 44, sy + h / 2 + 9); x.textAlign = 'left';
-    x.fillStyle = INK; x.font = `800 32px ${UI_F}`; x.fillText(fitOneLine(x, stageName(s, i), w - tip - 100), sx + (i ? tip * 0.7 : 0) + 80, sy + h / 2 + 11);
+    if (notch) x.lineTo(sx + notch, sy + h / 2); x.closePath();
+  };
+  const ch = headH - 24, cy0 = y + 12, TIP = 40;
+  chevPath(M, cy0, labW - 4, ch, 0, TIP);
+  x.fillStyle = '#2A2440'; x.fill();
+  x.fillStyle = '#FFFFFF'; x.font = `800 36px ${UI_F}`; x.textAlign = 'center'; x.fillText('Stage', M + (labW - 4 - TIP) / 2, cy0 + ch / 2 + 13); x.textAlign = 'left';
+  st.forEach((s, i) => {
+    const sx = M + labW + i * colW - 18, w = colW + 10, sc = printStage(i, n);
+    chevPath(sx, cy0, w, ch, TIP, TIP);
+    x.save(); x.shadowColor = sc; x.shadowBlur = 18; x.fillStyle = sc; x.fill(); x.restore();
+    // hexagon badge with the icon (or the stage number)
+    const hx = sx + TIP + 46, hy = cy0 + ch / 2, hr = 32;
+    x.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 3 * k; x[k ? 'lineTo' : 'moveTo'](hx + hr * Math.cos(a), hy + hr * Math.sin(a)); } x.closePath();
+    x.fillStyle = '#FFFFFF'; x.fill();
+    const icon = iconFor(s.name);
+    if (icon) { x.save(); x.translate(hx - 19, hy - 19); x.scale(38 / 24, 38 / 24); x.strokeStyle = sc; x.lineWidth = 2.2; x.lineCap = 'round'; x.lineJoin = 'round'; x.stroke(new Path2D(icon)); x.restore(); }
+    else { x.fillStyle = sc; x.font = `800 28px ${UI_F}`; x.textAlign = 'center'; x.fillText(String(i + 1), hx, hy + 10); x.textAlign = 'left'; }
+    x.fillStyle = '#FFFFFF'; x.font = `800 32px ${UI_F}`; x.fillText(fitOneLine(x, stageName(s, i), w - TIP * 2 - 110), hx + 46, hy + 11);
   });
-  x.fillStyle = printStage(0, n); x.font = `800 26px ${UI_F}`; x.fillText('STAGES', M + 20, y + headH / 2 + 10);
   y += headH + 12;
 
   // Rows
