@@ -115,6 +115,19 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-grid .ax{position:absolute;font:500 9px var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .tool-grid .ay{left:-22px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
 .tool-grid .axx{bottom:-18px;left:50%;transform:translateX(-50%)}
+/* User Journey Map card: five stage chevrons light up in turn, then the emotion curve draws itself */
+.tool-jrn{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.tool-jrn::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
+.tool-jrn .jrn-row{position:relative;display:flex}
+.tool-jrn .jrn-row b{width:34px;height:18px;margin-left:-4px;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 50%,calc(100% - 7px) 100%,0 100%,7px 50%);background:color-mix(in srgb,var(--c) 30%,#0B0D14);animation:jrn-lit 6s ease-in-out infinite;animation-delay:calc(var(--i) * .45s)}
+.tool-jrn .jrn-row b:first-child{margin-left:0}
+.tool-jrn svg{width:150px;height:60px;overflow:visible}
+.tool-jrn .jrn-line{fill:none;stroke:url(#jg);stroke-width:3;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;filter:drop-shadow(0 0 4px rgba(255,212,59,.6));animation:jrn-draw 6s ease-in-out infinite}
+.tool-jrn .jrn-low{fill:#0B0D14;stroke:#FF3B6B;stroke-width:2;opacity:0;animation:jrn-low 6s ease-in-out infinite}
+.tool-jrn .hub{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+@keyframes jrn-lit{0%,8%{background:color-mix(in srgb,var(--c) 30%,#0B0D14);box-shadow:none}18%,88%{background:var(--c)}100%{background:color-mix(in srgb,var(--c) 30%,#0B0D14)}}
+@keyframes jrn-draw{0%,30%{stroke-dashoffset:100}65%,90%{stroke-dashoffset:0}100%{stroke-dashoffset:100}}
+@keyframes jrn-low{0%,62%{opacity:0}70%,90%{opacity:1}100%{opacity:0}}
 /* Empathy Map card: four neon boxes around a person, lighting up Says, Thinks, Does, Feels in turn */
 .tool-emp{position:relative;width:200px;height:200px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 .tool-emp::before{content:"";position:absolute;inset:24px;border-radius:50%;background:radial-gradient(circle,rgba(165,139,255,.16),transparent 70%);pointer-events:none}
@@ -193,7 +206,8 @@ h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.03em}
 .tool-madlib b{min-width:var(--w);padding:7px 10px;border-radius:8px;font:700 13px var(--sans);letter-spacing:0;text-transform:none;color:var(--c);
   background:color-mix(in srgb,var(--c) 14%,#0B0D14);border:1px dashed color-mix(in srgb,var(--c) 55%,transparent);
   animation:id-lit 3s ease-in-out infinite,id-ink 3s step-end infinite;animation-delay:calc(var(--i) * 1s),calc(var(--i) * 1s)}
-@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube,.tool-bmc b,.tool-aff i,.tool-aff em,.tool-emp b{animation:none}}
+@media (prefers-reduced-motion:reduce){.tool-wheel .ring,.tool-wheel b,.tool-tiles b,.tool-funnel b,.tool-madlib b,.tool-grid i,.tool-cube .cube,.tool-bmc b,.tool-aff i,.tool-aff em,.tool-emp b,.tool-jrn .jrn-row b,.tool-jrn .jrn-line,.tool-jrn .jrn-low{animation:none}}
+@media (prefers-reduced-motion:reduce){.tool-jrn .jrn-row b{background:var(--c)}.tool-jrn .jrn-line{stroke-dashoffset:0}.tool-jrn .jrn-low{opacity:1}}
 @media (prefers-reduced-motion:reduce){.tool-aff i{left:var(--x1);top:var(--y1);transform:none}.tool-aff em{opacity:1}}
 @media (max-width:760px){.tool-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:20px;padding:26px 22px}.tool-cta{width:100%}.btn-grad{width:100%;justify-content:center}}
 .actions{display:flex;gap:8px;align-items:center}
