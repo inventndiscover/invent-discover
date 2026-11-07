@@ -100,17 +100,22 @@
      A 3-column grid: Value Map | spine | Customer Profile. Every row runs
      across all three, so a fix always sits beside what it answers.
      The frames (square edge left, round edge right) are drawn behind the rows. */
-  .board { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); margin-top: 8px; }
+  .board { margin-top: 8px; }
+  .board.grid { display: grid; grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); }
   .frame { pointer-events: none; z-index: 0; border: 2px solid #fff; }
-  .frame.L { border-right: none; border-radius: 10px 0 0 10px; background: linear-gradient(90deg, rgba(46,196,255,0.08), rgba(11,13,20,0.55));
-    box-shadow: 0 0 16px rgba(46,196,255,0.6), inset 0 0 40px rgba(46,196,255,0.06); clip-path: inset(-30px 0 -30px -30px); }
+  .frame.L { border-radius: 12px; background: linear-gradient(90deg, rgba(46,196,255,0.08), rgba(11,13,20,0.55));
+    box-shadow: 0 0 16px rgba(46,196,255,0.6), inset 0 0 40px rgba(46,196,255,0.06); }
   .frame.M { border-left: none; border-right: none; background: linear-gradient(180deg, rgba(255,212,59,0.08), rgba(25,227,160,0.10) 40%, rgba(255,59,107,0.12));
     box-shadow: 0 0 14px rgba(255,255,255,0.25); clip-path: inset(-30px 0); }
-  .frame.R { border-left: none; border-radius: 0 34% 34% 0 / 0 50% 50% 0; background: linear-gradient(270deg, rgba(25,227,160,0.08), rgba(11,13,20,0.55));
-    box-shadow: 0 0 16px rgba(25,227,160,0.6), inset 0 0 40px rgba(25,227,160,0.06); clip-path: inset(-30px -30px -30px 0); }
+  .frame.R { border-radius: 12px 46% 46% 12px / 12px 50% 50% 12px; background: linear-gradient(270deg, rgba(25,227,160,0.08), rgba(11,13,20,0.55));
+    box-shadow: 0 0 16px rgba(25,227,160,0.6), inset 0 0 40px rgba(25,227,160,0.06); }
   .c { position: relative; z-index: 1; min-width: 0; display: flex; align-items: center; }
-  .c.L { justify-content: flex-end; padding: 5px 18px 5px 24px; }
-  .c.R { justify-content: flex-start; padding: 5px 16% 5px 18px; }
+  .c.L { justify-content: flex-end; padding: 6px 30px 6px 30px; }
+  .c.R { justify-content: flex-start; padding: 6px 30% 6px 30px; }
+  /* the bridge across the gap when a fix fits */
+  .c.M.on::before { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 2px; margin-top: -1px; background: var(--c); box-shadow: 0 0 8px var(--c), 0 0 16px var(--c); opacity: .75; }
+  .c.M .spark { position: relative; }
+  .c.M.on .spark { background: var(--bg); padding: 0 4px; border-radius: 50%; }
   .c.M { justify-content: center; }
   .c.title { padding-top: 22px; padding-bottom: 6px; }
   .c.head { padding-top: 24px; padding-bottom: 4px; }
@@ -144,19 +149,29 @@
   select.pick { max-width: 100%; font: inherit; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1.5px dashed var(--warn); color: #FFD9A0; background: rgba(0,0,0,0.35); color-scheme: dark; cursor: pointer; }
   input.addin { width: min(100%, 260px); padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.45); color: var(--text); border: 1px solid var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); outline: none; }
   .empty { font-size: 13px; color: var(--muted); font-style: italic; }
-  .c.pair + .c.pair, .c.pair { border-top: 1px dashed rgba(255,255,255,0.05); }
-  @media (max-width: 700px) {
-    .board { grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); }
-    .c.L { padding: 4px 8px 4px 10px; } .c.R { padding: 4px 9% 4px 8px; }
-    .frame.R { border-radius: 0 22% 22% 0 / 0 50% 50% 0; }
-    .note { font-size: 13px; max-width: 100%; padding: 5px 7px; }
-    .zhead b, .ttl { font-size: 10.5px; } .ttl i { display: none; } .zhead svg { display: none; }
-    .slot, select.pick { font-size: 12px; padding: 6px 8px; } .spark { font-size: 18px; }
-    .meet { width: 26px; }
-  }
+  .c.L.pair, .c.R.pair { border-top: 1px dashed rgba(255,255,255,0.05); }
+  /* phones: a vertical stack of cards, need on top (D edge), fix below (square edge) */
+  .board.stack { display: flex; flex-direction: column; gap: 14px; }
+  .key { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12.5px; color: var(--muted); }
+  .key span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border: 1.5px solid rgba(255,255,255,.5); }
+  .key .kneed { border-radius: 6px 999px 999px 6px; } .key .kfix { border-radius: 4px; }
+  .key svg { width: 15px; height: 15px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sect { border: 1px solid var(--line-2); border-radius: 16px; padding: 14px 12px; background: rgba(11,13,20,0.78); }
+  .sect .heads { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 12px; margin-bottom: 4px; }
+  .pcard { margin-top: 22px; } .heads + .pcard { margin-top: 12px; }
+  .pcard .need { border: 2px solid var(--c); border-radius: 10px 48px 48px 10px; padding: 10px 44px 10px 10px; background: color-mix(in srgb, var(--c) 7%, transparent); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 45%, transparent); }
+  .pcard .fix { border: 2px solid var(--b, #2EC4FF); border-color: var(--c); border-radius: 4px; padding: 10px; background: color-mix(in srgb, var(--c) 6%, transparent); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 35%, transparent); }
+  .pcard .bridge { display: flex; align-items: center; gap: 10px; margin-left: 22px; padding: 6px 0 6px 14px; border-left: 2px dashed rgba(255,255,255,0.2); font-size: 12.5px; color: var(--muted); }
+  .pcard .bridge.on { border-left: 2px solid var(--c); box-shadow: -6px 0 10px -6px var(--c); color: var(--text); }
+  .pcard .bridge .spark { margin-left: -26px; background: #0B0D14; padding: 2px; }
+  .pcard .bridge.orphan .spark { margin-left: -27px; }
+  .pcard.lit .note { box-shadow: 0 0 0 2px var(--c), 0 0 16px var(--c); }
+  .bridge.plain { border-left-style: dotted; }
+  .stack .note { max-width: 100%; font-size: 15px; }
+  .stackadd { margin-top: 12px; } .stackadd input.addin { width: 100%; }
+  .sect > .empty { margin: 10px 2px 2px; }
 
-  
-/* the editor for one note, under the canvas */
+  /* the editor for one note, under the canvas */
   .inspector { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; margin-top: 14px; border-color: var(--c, var(--line)); box-shadow: 0 0 18px color-mix(in srgb, var(--c, transparent) 25%, transparent); }
   @media (max-width: 760px) { .inspector { grid-template-columns: minmax(0, 1fr); } }
   .inspector .acts { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -451,8 +466,36 @@ function linkSelect(n, R) {
   return sel;
 }
 
-function render() {
-  const board = $('#board'); board.innerHTML = '';
+function slotBtn(band, r) {
+  const b = el('button', 'slot', band.L === 'relievers' ? '+ How do you ease this?' : '+ How do you create this?'); b.type = 'button'; b.style.setProperty('--c', COL[S[band.L].c]);
+  b.onclick = () => { state.addingFor = r.id; state.adding = null; state.sel = null; render(); const i = $('#add-for-' + r.id); if (i) i.focus(); };
+  return b;
+}
+function fixNode(band, r, ls) {
+  const w = el('div', 'flow');
+  if (ls.length) ls.forEach(n => w.append(noteBtn(n)));
+  else if (state.addingFor === r.id) w.append(addInput('for-' + r.id, S[band.L].ph, v => { const ok = addNote(band.L, v, r.id); state.addingFor = null; return ok; }));
+  else w.append(slotBtn(band, r));
+  return w;
+}
+const kindOf = (r, ls) => r && ls.length ? 'on' : r ? 'open' : 'orphan';
+function sparkEl(kind, band) {
+  const m = el('span', 'spark ' + kind, kind === 'on' ? '✦' : kind === 'open' ? '●' : '?'); m.style.setProperty('--c', COL[S[band.R].c]);
+  m.title = kind === 'on' ? 'It fits' : kind === 'open' ? 'Nothing answers this yet' : `This doesn’t answer a listed ${band.R === 'pains' ? 'pain' : 'gain'}`;
+  return m;
+}
+function sideFlow(id) {
+  const w = el('div', 'flow'); inS(id).forEach(n => w.append(noteBtn(n)));
+  if (state.adding === id) w.append(addInput(id, S[id].ph, v => addNote(id, v)));
+  if (!w.childNodes.length) w.append(el('span', 'empty', S[id].hint));
+  return w;
+}
+
+// Wide screens: a neon square (Value Map) and a big D (Customer Profile)
+// side by side. A 3-column grid keeps every fix on the same row as what
+// it answers; a glowing bridge crosses the gap when they fit.
+function renderGrid(board) {
+  board.className = 'board grid';
   let row = 0;
   const put = (node, col, cls) => { const c = el('div', 'c ' + cls); c.style.gridRow = row; c.style.gridColumn = col; if (node) c.append(node); board.append(c); return c; };
   const line = (l, m, r, cls = '') => { row++; return [put(l, 1, 'L ' + cls), put(m, 2, 'M ' + cls), put(r, 3, 'R ' + cls)]; };
@@ -461,33 +504,13 @@ function render() {
   line(titleNode('VALUE MAP', ICON.gift), meet, titleNode('CUSTOMER PROFILE', ICON.face), 'title');
   for (const band of BANDS) {
     line(headNode(S[band.L]), null, headNode(S[band.R]), 'head');
-    if (!band.match) {
-      const side = id => {
-        const w = el('div', 'flow'); inS(id).forEach(n => w.append(noteBtn(n)));
-        if (state.adding === id) w.append(addInput(id, S[id].ph, v => addNote(id, v)));
-        if (!w.childNodes.length) w.append(el('span', 'empty', S[id].hint));
-        return w;
-      };
-      line(side(band.L), null, side(band.R), 'free');
-      continue;
-    }
+    if (!band.match) { line(sideFlow(band.L), null, sideFlow(band.R), 'free'); continue; }
     for (const { r, ls } of pairRows(band.L, band.R)) {
-      const left = el('div', 'flow'), cL = COL[S[band.L].c];
-      if (ls.length) ls.forEach(n => left.append(noteBtn(n)));
-      else if (state.addingFor === r.id) left.append(addInput('for-' + r.id, S[band.L].ph, v => { const ok = addNote(band.L, v, r.id); state.addingFor = null; return ok; }));
-      else {
-        const b = el('button', 'slot', band.L === 'relievers' ? '+ How do you ease this?' : '+ How do you create this?'); b.type = 'button'; b.style.setProperty('--c', cL);
-        b.onclick = () => { state.addingFor = r.id; state.adding = null; state.sel = null; render(); const i = $('#add-for-' + r.id); if (i) i.focus(); };
-        left.append(b);
-      }
-      const kind = r && ls.length ? 'on' : r ? 'open' : 'orphan';
-      const mid = el('span', 'spark ' + kind, kind === 'on' ? '✦' : kind === 'open' ? '●' : '?');
-      mid.style.setProperty('--c', COL[S[band.R].c]);
-      mid.title = kind === 'on' ? 'It fits' : kind === 'open' ? 'Nothing answers this yet' : `This doesn’t answer a listed ${band.R === 'pains' ? 'pain' : 'gain'}`;
+      const kind = kindOf(r, ls);
       let right; if (r) { right = el('div', 'flow'); right.append(noteBtn(r)); } else right = linkSelect(ls[0], band.R);
-      const cells = line(left, mid, right, 'pair');
-      const ids = [...ls.map(n => n.id), r && r.id];
-      if (state.sel && ids.includes(state.sel)) cells.forEach(c => { c.classList.add('lit'); c.style.setProperty('--c', COL[S[band.R].c]); });
+      const cells = line(r ? fixNode(band, r, ls) : (() => { const w = el('div', 'flow'); w.append(noteBtn(ls[0])); return w; })(), sparkEl(kind, band), right, 'pair');
+      cells[1].classList.add(kind); cells[1].style.setProperty('--c', COL[S[band.R].c]);
+      if (state.sel && [...ls.map(n => n.id), r && r.id].includes(state.sel)) cells.forEach(c => { c.classList.add('lit'); c.style.setProperty('--c', COL[S[band.R].c]); });
     }
     if (state.adding === band.L || state.adding === band.R) {
       const id = state.adding, inp = addInput(id, S[id].ph, v => addNote(id, v));
@@ -496,9 +519,48 @@ function render() {
   }
   line(null, null, null, 'end');
   board.style.gridTemplateRows = `repeat(${row}, auto)`;
-  // the frames go behind the rows: square edge left, spine, round edge right
-  [['frame R', 3], ['frame M', 2], ['frame L', 1]].forEach(([cls, col]) => { const f = el('div', cls); f.style.gridColumn = col; f.style.gridRow = `1 / ${row + 1}`; board.prepend(f); });
+  [['frame R', 3], ['frame L', 1]].forEach(([cls, col]) => { const f = el('div', cls); f.style.gridColumn = col; f.style.gridRow = `1 / ${row + 1}`; board.prepend(f); });
+}
 
+// Phones: one column you scroll down. Each card puts the customer's need
+// on top (round D edge), a spark connector, then your fix below (square edge).
+function renderStack(board) {
+  board.className = 'board stack'; board.style.gridTemplateRows = '';
+  const key = el('div', 'key');
+  key.innerHTML = `<span class="kneed">${svgIcon(ICON.face)} Customer needs</span><span class="kfix">${svgIcon(ICON.gift)} What you offer</span>`;
+  board.append(key);
+  for (const band of BANDS) {
+    const sec = el('section', 'sect'); sec.style.setProperty('--c', COL[S[band.R].c]);
+    const heads = el('div', 'heads'); heads.append(headNode(S[band.R]), headNode(S[band.L])); sec.append(heads);
+    if (!band.match) {
+      const need = el('div', 'need'); need.style.setProperty('--c', COL[S[band.R].c]); need.append(sideFlow(band.R));
+      const fix = el('div', 'fix'); fix.style.setProperty('--c', COL[S[band.L].c]); fix.append(sideFlow(band.L));
+      const br = el('div', 'bridge plain'); br.append(el('span', null, 'served by'));
+      const card = el('div', 'pcard'); card.append(need, br, fix); sec.append(card);
+      board.append(sec); continue;
+    }
+    for (const { r, ls } of pairRows(band.L, band.R)) {
+      const kind = kindOf(r, ls), card = el('div', 'pcard ' + kind); card.style.setProperty('--c', COL[S[band.R].c]);
+      if (state.sel && [...ls.map(n => n.id), r && r.id].includes(state.sel)) card.classList.add('lit');
+      const need = el('div', 'need'); need.style.setProperty('--c', COL[S[band.R].c]);
+      if (r) { const w = el('div', 'flow'); w.append(noteBtn(r)); need.append(w); } else need.append(linkSelect(ls[0], band.R));
+      const br = el('div', 'bridge ' + kind); br.append(sparkEl(kind, band), el('span', null,
+        kind === 'on' ? (band.L === 'relievers' ? 'eased by' : 'created by') : kind === 'open' ? 'no fix yet' : `answers no listed ${band.R === 'pains' ? 'pain' : 'gain'}`));
+      const fix = el('div', 'fix'); fix.style.setProperty('--c', COL[S[band.L].c]);
+      fix.append(r ? fixNode(band, r, ls) : (() => { const w = el('div', 'flow'); w.append(noteBtn(ls[0])); return w; })());
+      card.append(need, br, fix); sec.append(card);
+    }
+    if (state.adding === band.L || state.adding === band.R) { const id = state.adding; const a = el('div', 'stackadd'); a.append(addInput(id, S[id].ph, v => addNote(id, v))); sec.append(a); }
+    else if (!inS(band.L).length && !inS(band.R).length) sec.append(el('p', 'empty', `${S[band.R].hint}. Then: ${S[band.L].hint.toLowerCase()}.`));
+    board.append(sec);
+  }
+}
+const NARROW = matchMedia('(max-width: 760px)');
+NARROW.addEventListener('change', () => render());
+
+function render() {
+  const board = $('#board'); board.innerHTML = '';
+  (NARROW.matches ? renderStack : renderGrid)(board);
   inspector();
   for (const k of ['vp', 'seg']) if (document.activeElement !== $('#' + k)) $('#' + k).value = state[k];
   const ban = $('#banner'); ban.hidden = !state.isExample; ban.innerHTML = '';
@@ -653,9 +715,9 @@ async function drawSheet() {
   });
 
   // Geometry: left half (square edge), spine, right half (round edge)
-  const top = M + 250, bottom = H - M - 70, spineW = 150, halfW = (W - 2 * M - spineW) / 2;
-  const lx0 = M, lx1 = M + halfW, rx0 = lx1 + spineW, rx1 = W - M, cap = halfW * 0.3, sx = lx1 + spineW / 2;
-  const Lc = { x: lx0 + 50, w: halfW - 50 - 40 }, Rc = { x: rx0 + 40, w: halfW - 40 - cap * 0.6 };
+  const top = M + 250, bottom = H - M - 70, spineW = 220, halfW = (W - 2 * M - spineW) / 2;
+  const lx0 = M, lx1 = M + halfW, rx0 = lx1 + spineW, rx1 = W - M, cap = halfW * 0.42, sx = lx1 + spineW / 2;
+  const Lc = { x: lx0 + 70, w: halfW - 140 }, Rc = { x: rx0 + 70, w: halfW - 70 - cap * 0.75 };
 
   // The same rows as on screen
   const plan = [{ kind: 'title' }];
@@ -679,14 +741,11 @@ async function drawSheet() {
   const midY = (top + bottom) / 2;
   // frames: tints first, then the neon outlines
   const tint = (c, a, path) => { x.save(); x.globalAlpha = a; x.fillStyle = c; path(); x.fill(); x.restore(); };
-  const rightPath = () => { x.beginPath(); x.moveTo(rx0, top); x.lineTo(rx1 - cap, top); x.ellipse(rx1 - cap, midY, cap, (bottom - top) / 2, 0, -Math.PI / 2, Math.PI / 2); x.lineTo(rx0, bottom); };
+  const rightPath = () => { x.beginPath(); x.moveTo(rx0, top); x.lineTo(rx1 - cap, top); x.ellipse(rx1 - cap, midY, cap, (bottom - top) / 2, 0, -Math.PI / 2, Math.PI / 2); x.lineTo(rx0, bottom); x.closePath(); };
   tint(PRINT.products, 0.06, () => { x.beginPath(); x.rect(lx0, top, halfW, bottom - top); });
-  tint(PRINT.gain, 0.06, () => { rightPath(); x.closePath(); });
-  const g = x.createLinearGradient(0, top, 0, bottom); g.addColorStop(0, 'rgba(224,168,0,.10)'); g.addColorStop(0.45, 'rgba(0,184,125,.10)'); g.addColorStop(1, 'rgba(255,45,94,.12)');
-  x.fillStyle = g; x.fillRect(lx1, top, spineW, bottom - top);
-  glowStroke(x, '#00A8F0', 7, 22, () => { x.beginPath(); x.moveTo(lx1, top); x.lineTo(lx0 + 12, top); x.arcTo(lx0, top, lx0, top + 12, 12); x.lineTo(lx0, bottom - 12); x.arcTo(lx0, bottom, lx0 + 12, bottom, 12); x.lineTo(lx1, bottom); });
+  tint(PRINT.gain, 0.06, rightPath);
+  glowStroke(x, '#00A8F0', 7, 22, () => { x.beginPath(); x.roundRect(lx0, top, halfW, bottom - top, 14); });
   glowStroke(x, '#00B87D', 7, 22, rightPath);
-  glowStroke(x, '#888888', 7, 10, () => { x.beginPath(); x.moveTo(lx1, top); x.lineTo(rx0, top); x.moveTo(lx1, bottom); x.lineTo(rx0, bottom); });
 
   const icon = (d, cx, cy, size, color) => { x.save(); x.translate(cx - size / 2, cy - size / 2); x.scale(size / 24, size / 24); x.strokeStyle = color; x.lineWidth = 1.8; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(d)); x.restore(); };
   const sparkle = (cx, cy, r, c) => { x.save(); x.shadowColor = c; x.shadowBlur = 18; x.fillStyle = c; x.beginPath(); x.moveTo(cx, cy - r);
@@ -719,8 +778,8 @@ async function drawSheet() {
       sticky(Lc, p.L, 0, cy - p.L.h / 2, S[p.band.L].c);
       sticky(Rc, p.R, 0, cy - p.R.h / 2, S[p.band.R].c);
       if (p.kind === 'pair') {
-        x.setLineDash([]); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.beginPath(); x.moveTo(lx0 + 30, y); x.lineTo(rx1 - cap, y); x.stroke();
-        if (p.st === 'on') sparkle(sx, cy, 26, PRINT[S[p.band.R].c]);
+        x.setLineDash([]); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.beginPath(); x.moveTo(lx0 + 30, y); x.lineTo(lx1 - 30, y); x.moveTo(rx0 + 30, y); x.lineTo(rx1 - cap, y); x.stroke();
+        if (p.st === 'on') { const c = PRINT[S[p.band.R].c]; glowStroke(x, c, 4, 12, () => { x.beginPath(); x.moveTo(lx1, cy); x.lineTo(sx - 34, cy); x.moveTo(sx + 34, cy); x.lineTo(rx0, cy); }); sparkle(sx, cy, 26, c); }
         else if (p.st === 'open') {
           x.fillStyle = '#BBBBBB'; x.beginPath(); x.arc(sx, cy, 9, 0, Math.PI * 2); x.fill();
           // an empty dashed slot where the missing fix would go
