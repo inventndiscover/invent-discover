@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-11-06T21:51:26+05:30",
+ "REFRESHED": "2026-11-07T21:51:44+05:30",
  "SIGNALS": [
+  {
+   "id": "2118572536300699764",
+   "handle": "AravSrinivas",
+   "name": "Aravind Srinivas",
+   "url": "https://x.com/AravSrinivas/status/2118572536300699764",
+   "posted": "2026-11-06T10:43:48+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Perplexity's CEO argues agents will increasingly be used by other agents, with git as a shared record, so that version-controlled traces make a measurable recursive improvement loop possible."
+  },
   {
    "id": "2118390406316728555",
    "handle": "Google",
@@ -22,6 +32,16 @@
    "summary": "OpenAI introduced GPT-6 Cyber, a model for security research. It says the model powered its Linux kernel research and is being used by teams at Mozilla, Palo Alto Networks and Cisco."
   },
   {
+   "id": "2118389326459670825",
+   "handle": "perplexity_ai",
+   "name": "Perplexity",
+   "url": "https://x.com/perplexity_ai/status/2118389326459670825",
+   "posted": "2026-11-05T22:35:47+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "Perplexity introduced Teammates, agents that take on ongoing jobs using Computer tasks, skills, memory and tools, and can message coworkers in Slack. Available to Max subscribers on the web."
+  },
+  {
    "id": "2118124966055223755",
    "handle": "OpenAI",
    "name": "OpenAI",
@@ -32,54 +52,14 @@
    "summary": "OpenAI says Images 2.6 is now in ChatGPT and Codex on all tiers, with GPT-Image-2.6 Flare and Sunburst also available in the API."
   },
   {
-   "id": "2117921571364847904",
-   "handle": "Trecopo1",
-   "name": "Trecopo",
-   "url": "https://x.com/Trecopo1/status/2117921571364847904",
-   "posted": "2026-11-04T15:37:06+05:30",
-   "topic": "Open models",
-   "kind": "Report",
-   "summary": "A post says Mistral released the weights of Mistral Large 4, a 1T-parameter model with 52B active, on Hugging Face on October 29, after a public preview on October 6."
-  },
-  {
-   "id": "2117874543893074141",
-   "handle": "appleinsider",
-   "name": "AppleInsider",
-   "url": "https://x.com/appleinsider/status/2117874543893074141",
-   "posted": "2026-11-04T12:30:14+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "AppleInsider shares a hands-on look at the iOS 27.3 beta, covering Safari, Siri AI and vertical tabs."
-  },
-  {
-   "id": "2117807808338923772",
-   "handle": "heyshrutimishra",
-   "name": "Shruti",
-   "url": "https://x.com/heyshrutimishra/status/2117807808338923772",
-   "posted": "2026-11-04T08:05:03+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Sarvam released an open model called Prism, built on its 105B model, that answers fixed-option questions such as approve or reject in about 44 milliseconds."
-  },
-  {
-   "id": "2117710942826123294",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2117710942826123294",
-   "posted": "2026-11-04T01:40:08+05:30",
+   "id": "2118119451401048497",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2118119451401048497",
+   "posted": "2026-11-05T04:43:24+05:30",
    "topic": "Research",
    "kind": "Official",
-   "summary": "Anthropic introduces FlashProve, research on provable inference that lets developers check whether a response really came from a given AI model."
-  },
-  {
-   "id": "2117680635561312732",
-   "handle": "ClaudeDevs",
-   "name": "ClaudeDevs",
-   "url": "https://x.com/ClaudeDevs/status/2117680635561312732",
-   "posted": "2026-11-03T23:39:42+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Users can now auto-connect plugins when they log in to Claude, for MCP servers that accept Claude as a trusted issuer, so no re-authorizing is needed."
+   "summary": "OpenAI says its security researchers built an automated pipeline that, in one run with an upcoming cyber model, validated and patched 948 local privilege escalation bugs in the Linux kernel."
   }
  ]
 }
