@@ -5,11 +5,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Value Proposition Canvas tool · Invent + Discover</title>
-<meta name="description" content="Map your customer's jobs, pains and gains, then the products, pain relievers and gain creators that answer them. Link them to see the fit. Free, in your browser, with a printable A4 sheet.">
+<meta name="description" content="Map your customer's jobs, pains and gains, then the products, pain relievers and gain creators that answer them. Match them row by row to see the fit. Free, in your browser, with a printable A4 sheet.">
 <link rel="canonical" href="https://inventndiscover.com/toolkit/value-proposition-canvas/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
 <meta property="og:title" content="Value Proposition Canvas tool · Invent + Discover">
-<meta property="og:description" content="Customer jobs, pains and gains on one side; products, pain relievers and gain creators on the other. Link them to see the fit.">
+<meta property="og:description" content="Customer jobs, pains and gains on one side; products, pain relievers and gain creators on the other. Match them row by row to see the fit.">
 <meta property="og:url" content="https://inventndiscover.com/toolkit/value-proposition-canvas/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Value Proposition Canvas tool","url":"https://inventndiscover.com/toolkit/value-proposition-canvas/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"isPartOf":{"@id":"https://inventndiscover.com/#site"},"creator":{"@type":"Person","name":"Mohit Bhardwaj"}}</script>
@@ -96,55 +96,67 @@
   .sheetfor input[type=date] { width: 150px; }
   @media (max-width: 560px) { .sheetfor { width: 100%; } .sheetfor input[type=text], .sheetfor input[type=date] { flex: 1 1 140px; width: auto; } }
 
-  /* ---------- The canvas: Value Map (square) ↔ Customer Profile (circle) ---------- */
-  .board { position: relative; height: 700px; margin-top: 8px; }
-  .shape { position: absolute; top: 64px; }
-  .shape.sq { left: 0; width: 560px; height: 560px; }
-  .shape.ci { right: 0; width: 560px; height: 560px; }
-  .shape > svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .shape-title { position: absolute; top: -26px; font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--muted); }
-  .shape.sq .shape-title { left: 0; } .shape.ci .shape-title { right: 0; }
-  /* the badge in the middle of each shape */
-  .badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 58px; height: 58px; border-radius: 50%; z-index: 2;
-    display: grid; place-items: center; background: #07080D; border: 2px solid rgba(255,255,255,0.8); box-shadow: 0 0 0 6px var(--bg), 0 0 22px rgba(255,255,255,0.3); }
-  .badge svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  /* zones: where each section's notes sit inside its region */
-  .zone { position: absolute; display: flex; flex-direction: column; gap: 6px; min-width: 0; z-index: 1; }
-  .zhead { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  /* ---------- The canvas: two halves that meet in the middle ----------
+     A 3-column grid: Value Map | spine | Customer Profile. Every row runs
+     across all three, so a fix always sits beside what it answers.
+     The frames (square edge left, round edge right) are drawn behind the rows. */
+  .board { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); margin-top: 8px; }
+  .frame { pointer-events: none; z-index: 0; border: 2px solid #fff; }
+  .frame.L { border-right: none; border-radius: 10px 0 0 10px; background: linear-gradient(90deg, rgba(46,196,255,0.08), rgba(11,13,20,0.55));
+    box-shadow: 0 0 16px rgba(46,196,255,0.6), inset 0 0 40px rgba(46,196,255,0.06); clip-path: inset(-30px 0 -30px -30px); }
+  .frame.M { border-left: none; border-right: none; background: linear-gradient(180deg, rgba(255,212,59,0.08), rgba(25,227,160,0.10) 40%, rgba(255,59,107,0.12));
+    box-shadow: 0 0 14px rgba(255,255,255,0.25); clip-path: inset(-30px 0); }
+  .frame.R { border-left: none; border-radius: 0 34% 34% 0 / 0 50% 50% 0; background: linear-gradient(270deg, rgba(25,227,160,0.08), rgba(11,13,20,0.55));
+    box-shadow: 0 0 16px rgba(25,227,160,0.6), inset 0 0 40px rgba(25,227,160,0.06); clip-path: inset(-30px -30px -30px 0); }
+  .c { position: relative; z-index: 1; min-width: 0; display: flex; align-items: center; }
+  .c.L { justify-content: flex-end; padding: 5px 18px 5px 24px; }
+  .c.R { justify-content: flex-start; padding: 5px 16% 5px 18px; }
+  .c.M { justify-content: center; }
+  .c.title { padding-top: 22px; padding-bottom: 6px; }
+  .c.head { padding-top: 24px; padding-bottom: 4px; }
+  .c.end { height: 28px; }
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .c.L .flow { justify-content: flex-end; }
+  .ttl { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--muted); }
+  .c.L .ttl { flex-direction: row-reverse; }
+  .ttl i { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 2px solid rgba(255,255,255,.85); box-shadow: 0 0 14px rgba(255,255,255,.3); }
+  .ttl svg { width: 19px; height: 19px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .meet { width: 40px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 4px rgba(255,255,255,.6)); }
+  .zhead { display: flex; align-items: center; gap: 7px; }
+  .c.L .zhead { flex-direction: row-reverse; }
   .zhead svg { width: 18px; height: 18px; fill: none; stroke: var(--c); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 4px var(--c)); flex: none; }
   .zhead b { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--c); text-shadow: 0 0 10px color-mix(in srgb, var(--c) 60%, transparent); }
-  .zhead .plus { margin-left: auto; padding: 1px 9px; border-radius: 999px; font-size: 14px; font-weight: 800; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: rgba(0,0,0,0.4); }
+  .zhead .plus { padding: 1px 9px; border-radius: 999px; font-size: 14px; font-weight: 800; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: rgba(0,0,0,0.4); }
   .zhead .plus:hover { background: color-mix(in srgb, var(--c) 18%, #07080D); }
-  .znotes { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; overflow: auto; min-height: 0; }
-  .zone.right .zhead { flex-direction: row-reverse; } .zone.right .zhead .plus { margin-left: 0; margin-right: auto; }
-  .zone.right .znotes { justify-content: flex-end; }
-  .note { position: relative; max-width: 126px; padding: 6px 8px; border-radius: 2px; color: var(--note-ink); background: var(--n); cursor: pointer; text-align: left;
-    font-family: var(--hand); font-size: 13.5px; line-height: 1.15; border: none; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 6px 14px -4px rgba(0,0,0,.6);
+  .note { position: relative; max-width: 240px; padding: 6px 9px; border-radius: 2px; color: var(--note-ink); background: var(--n); cursor: pointer; text-align: left;
+    font-family: var(--hand); font-size: 14.5px; line-height: 1.15; border: none; box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 6px 14px -4px rgba(0,0,0,.6);
     transform: rotate(var(--tilt, 0deg)); transition: transform .12s, box-shadow .12s; }
   .note:hover { transform: rotate(0) translateY(-1px); }
   .note.sel { box-shadow: 0 0 0 2px #fff, 0 0 18px var(--c); transform: none; }
-  .note.lit { box-shadow: 0 0 0 2px var(--c), 0 0 16px var(--c); }
-  .note .lk { display: none; }
-  .addin { display: flex; gap: 4px; }
-  .addin input { flex: 1; min-width: 0; padding: 6px 8px; font-size: 13px; border-radius: 8px; }
-  /* the link lines, drawn over everything */
-  svg.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
-  svg.links path.l { fill: none; stroke-width: 2.4; stroke-linecap: round; }
-  svg.links path.g { fill: none; stroke-width: 7; opacity: .25; filter: blur(3px); }
-
-  /* Narrow screens: the two shapes become two stacked lists of sections */
-  @media (max-width: 1060px) {
-    .board { height: auto; display: grid; gap: 14px; }
-    .shape { position: relative; top: 0; width: auto !important; height: auto !important; left: auto; right: auto;
-      display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(11,13,20,0.78); }
-    .shape > svg.bg, .badge, svg.links, .arrows { display: none; }
-    .shape-title { position: static; transform: none; }
-    .zone { position: static; width: auto !important; height: auto !important; padding: 10px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
-    .zone.right .zhead { flex-direction: row; } .zone.right .zhead .plus { margin-left: auto; margin-right: 0; } .zone.right .znotes { justify-content: flex-start; }
-    .note .lk { display: block; font-family: "Geist", sans-serif; font-size: 11px; margin-top: 4px; opacity: .75; }
+  .pair.lit .note { box-shadow: 0 0 0 2px var(--c), 0 0 16px var(--c); }
+  /* the middle of each row: ✦ a fit, ● a pain or gain nothing answers, ? a fix that answers nothing listed */
+  .spark { font-size: 22px; line-height: 1; color: var(--c); text-shadow: 0 0 10px var(--c), 0 0 22px var(--c); animation: twinkle 2.6s ease-in-out infinite; }
+  .spark.open { font-size: 11px; color: #3B3F4E; text-shadow: none; animation: none; }
+  .spark.orphan { font-size: 13px; font-weight: 800; color: var(--warn); text-shadow: 0 0 8px var(--warn); animation: none; width: 22px; height: 22px; display: grid; place-items: center; border: 1px dashed var(--warn); border-radius: 50%; }
+  @keyframes twinkle { 50% { opacity: .55; transform: scale(.85); } }
+  .slot { font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1.5px dashed color-mix(in srgb, var(--c) 60%, transparent); color: var(--c); background: rgba(0,0,0,0.25); }
+  .slot:hover { background: color-mix(in srgb, var(--c) 14%, #07080D); border-style: solid; }
+  select.pick { max-width: 100%; font: inherit; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1.5px dashed var(--warn); color: #FFD9A0; background: rgba(0,0,0,0.35); color-scheme: dark; cursor: pointer; }
+  input.addin { width: min(100%, 260px); padding: 7px 10px; font: inherit; font-size: 14px; border-radius: 8px; background: rgba(0,0,0,0.45); color: var(--text); border: 1px solid var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.25); outline: none; }
+  .empty { font-size: 13px; color: var(--muted); font-style: italic; }
+  .c.pair + .c.pair, .c.pair { border-top: 1px dashed rgba(255,255,255,0.05); }
+  @media (max-width: 700px) {
+    .board { grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); }
+    .c.L { padding: 4px 8px 4px 10px; } .c.R { padding: 4px 9% 4px 8px; }
+    .frame.R { border-radius: 0 22% 22% 0 / 0 50% 50% 0; }
+    .note { font-size: 13px; max-width: 100%; padding: 5px 7px; }
+    .zhead b, .ttl { font-size: 10.5px; } .ttl i { display: none; } .zhead svg { display: none; }
+    .slot, select.pick { font-size: 12px; padding: 6px 8px; } .spark { font-size: 18px; }
+    .meet { width: 26px; }
   }
 
-  /* the editor for one note, under the canvas */
+  
+/* the editor for one note, under the canvas */
   .inspector { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; margin-top: 14px; border-color: var(--c, var(--line)); box-shadow: 0 0 18px color-mix(in srgb, var(--c, transparent) 25%, transparent); }
   @media (max-width: 760px) { .inspector { grid-template-columns: minmax(0, 1fr); } }
   .inspector .acts { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -271,7 +283,7 @@
   <section class="how">
     <div class="card"><div class="step">STEP 1 · 10 MIN</div><h3>Start with the customer</h3><p>Fill the circle first. <b>Customer jobs</b>: what are they trying to get done? <b>Pains</b>: what annoys them or gets in the way? <b>Gains</b>: what outcomes or benefits do they want?</p></div>
     <div class="card"><div class="step">STEP 2 · 10 MIN</div><h3>Map your value</h3><p>Fill the square. <b>Products &amp; services</b>: what you offer. <b>Pain relievers</b>: how it removes specific pains. <b>Gain creators</b>: how it produces specific gains.</p></div>
-    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Link for fit</h3><p>Click a pain reliever or gain creator and pick the pain or gain it answers. A glowing line connects them. Pains with no line are gaps; relievers with no line may be features nobody asked for.</p></div>
+    <div class="card"><div class="step">STEP 3 · 10 MIN</div><h3>Match for fit</h3><p>Each fix sits on the <b>same row</b> as the pain or gain it answers, with a spark ✦ in the middle. A dark dot ● is a gap: use its dashed slot to add a fix. A <b>?</b> is a fix that answers nothing listed: pick what it answers, or ask if it's needed.</p></div>
   </section>
 
   <section class="card about" id="where">
@@ -279,14 +291,14 @@
       <h2>Where it comes from</h2>
       <p>The Value Proposition Canvas was created by <b>Alexander Osterwalder</b> and is published by <b>Strategyzer</b>. It is set out in the book <b><i>Value Proposition Design: How to Create Products and Services Customers Want</i></b> (Wiley, 2014) by Alexander Osterwalder, Yves Pigneur, Gregory Bernarda, Alan Smith and Trish Papadakos.</p>
       <p>The <b>Customer Profile</b> describes one customer segment through their jobs, pains and gains. The <b>Value Map</b> lists what you offer and how it relieves those pains and creates those gains. You have <b>fit</b> when your value map answers what matters most in the profile.</p>
-      <p>The square-and-circle layout follows Strategyzer's canvas. The link lines between relievers and pains, and creators and gains, follow the worked example by the <b>Interaction Design Foundation</b> (interaction-design.org).</p>
+      <p>Strategyzer's canvas draws the Value Map as a square and the Customer Profile as a circle. Here the two halves meet in the middle like an open book, keeping the square edge and the round edge, so each fix sits on the same row as what it answers. Showing which reliever answers which pain follows the worked example by the <b>Interaction Design Foundation</b> (interaction-design.org).</p>
     </div>
     <div>
       <div class="panel">
         <h3>Where your canvas is kept</h3>
         <p>Your canvas stays in this browser and is never uploaded. Use Save A4 sheet or Copy as text to keep a copy.</p>
       </div>
-      <p class="sources">Sources: <a href="https://www.strategyzer.com/library/the-value-proposition-canvas" target="_blank" rel="noopener">Strategyzer, The Value Proposition Canvas</a> · <a href="https://www.oreilly.com/library/view/value-proposition-design/9781118968062/" target="_blank" rel="noopener">Value Proposition Design (Wiley, 2014)</a> · <a href="https://www.b2binternational.com/experience/methods/faq/what-is-the-value-proposition-canvas/" target="_blank" rel="noopener">B2B International, What is the Value Proposition Canvas?</a> · <a href="https://www.canva.com/docs/value-propositions/" target="_blank" rel="noopener">Canva, Value propositions</a>. The Value Proposition Canvas is © Strategyzer AG. This interactive version, its link lines, fit score and A4 sheet are made by Invent + Discover.</p>
+      <p class="sources">Sources: <a href="https://www.strategyzer.com/library/the-value-proposition-canvas" target="_blank" rel="noopener">Strategyzer, The Value Proposition Canvas</a> · <a href="https://www.oreilly.com/library/view/value-proposition-design/9781118968062/" target="_blank" rel="noopener">Value Proposition Design (Wiley, 2014)</a> · <a href="https://www.b2binternational.com/experience/methods/faq/what-is-the-value-proposition-canvas/" target="_blank" rel="noopener">B2B International, What is the Value Proposition Canvas?</a> · <a href="https://www.canva.com/docs/value-propositions/" target="_blank" rel="noopener">Canva, Value propositions</a>. The Value Proposition Canvas is © Strategyzer AG. This interactive version, its mirror-row layout, fit score and A4 sheet are made by Invent + Discover.</p>
     </div>
   </section>
 
@@ -346,7 +358,7 @@ const EXAMPLE = {
 
 // ---------- 3c. State ----------
 //   notes: [{ id: 'n1abc', s: 'relievers', text: 'Fixed locker at the gate', link: 'n9xyz' (a pain's id) or '' , at: … }]
-const state = { vp: '', seg: '', notes: [], isExample: false, sel: null, adding: null, confirmDel: false, confirmClear: false, drafts: {} };
+const state = { vp: '', seg: '', notes: [], isExample: false, sel: null, adding: null, addingFor: null, confirmDel: false, confirmClear: false, drafts: {} };
 
 // ---------- 3d. Helpers ----------
 const $ = q => document.querySelector(q);
@@ -371,10 +383,10 @@ function reset() { Object.assign(state, { vp: '', seg: '', notes: [], isExample:
 function changed() { if (state.isExample) { state.isExample = false; $('#banner').hidden = true; } save(); }
 
 // ---------- 3f. Changing the canvas ----------
-function addNote(s, text) {
+function addNote(s, text, link = '') {
   text = text.trim().slice(0, MAX_TEXT); if (!text) return false;
   if (inS(s).length >= MAX_PER) { toast(`${S[s].name} holds up to ${MAX_PER} notes. Keep the strongest ones.`); return false; }
-  state.notes.push({ id: newId(), s, text, link: '', at: Date.now() }); changed(); render(); return true;
+  state.notes.push({ id: newId(), s, text, link, at: Date.now() }); changed(); render(); return true;
 }
 function deleteNote(id) {
   state.notes = state.notes.filter(n => n.id !== id);
@@ -382,68 +394,111 @@ function deleteNote(id) {
   state.sel = null; changed(); render();
 }
 
-// ---------- 3g. Drawing the canvas ----------
-// The square: three regions meeting at the gift in the middle. The circle:
-// three wedges meeting at the face. Drawn in a 0–100 box that stretches.
-function squareSVG() {
-  return `<svg class="bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-    <polygon points="0,0 50,50 0,100" fill="${COL.products}" fill-opacity=".10"/>
-    <polygon points="0,0 100,0 100,50 50,50" fill="${COL.gain}" fill-opacity=".09"/>
-    <polygon points="0,100 100,100 100,50 50,50" fill="${COL.pain}" fill-opacity=".09"/>
-    <g fill="none" stroke-width="2" vector-effect="non-scaling-stroke">
-      <path d="M0,0 L50,50 L0,100 M50,50 L100,50" stroke="rgba(255,255,255,.35)" vector-effect="non-scaling-stroke"/>
-      <rect x="0" y="0" width="100" height="100" rx="2" stroke="#fff" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px rgba(46,196,255,.8))"/>
-    </g></svg>`;
+// ---------- 3g. Drawing the canvas: two halves that meet in the middle ----------
+// The board is a 3-column grid: Value Map | spine | Customer Profile.
+// Rows run across all three, so each fix sits on the same row as what it answers.
+const BANDS = [
+  { L: 'products', R: 'jobs' },                   // what you offer ↔ what they are trying to do
+  { L: 'creators', R: 'gains', match: true },     // gain creators ↔ gains
+  { L: 'relievers', R: 'pains', match: true },    // pain relievers ↔ pains
+];
+// The rows of a matching band: answered ones first, then pains/gains nothing
+// answers yet, then fixes that answer nothing listed.
+//   e.g. [{ r: <pain "Coupons fail">, ls: [<reliever "One fair price">] }, { r: <pain "Too many offers">, ls: [] }, { r: null, ls: [<reliever …>] }]
+function pairRows(L, R) {
+  const lefts = inS(L), rows = inS(R).map(r => ({ r, ls: lefts.filter(l => linkOf(l) === r) }));
+  return [...rows.filter(x => x.ls.length), ...rows.filter(x => !x.ls.length), ...lefts.filter(l => !linkOf(l)).map(l => ({ r: null, ls: [l] }))];
 }
-function circleSVG() {
-  const p = a => [50 + 49 * Math.cos(a * Math.PI / 180), 50 + 49 * Math.sin(a * Math.PI / 180)].map(v => v.toFixed(2)).join(',');
-  const wedge = (a1, a2, c) => `<path d="M50,50 L${p(a1)} A49,49 0 0 1 ${p(a2)} Z" fill="${c}" fill-opacity=".09"/>`;
-  return `<svg class="bg" viewBox="0 0 100 100" aria-hidden="true">
-    ${wedge(180, 315, COL.gain)}${wedge(315, 405, COL.jobs)}${wedge(45, 180, COL.pain)}
-    <path d="M50,50 L1,50 M50,50 L${p(315)} M50,50 L${p(45)}" stroke="rgba(255,255,255,.35)" stroke-width="2" vector-effect="non-scaling-stroke"/>
-    <circle cx="50" cy="50" r="49" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px rgba(25,227,160,.8))"/></svg>`;
+function noteBtn(n) {
+  const s = S[n.s], b = el('button', 'note' + (state.sel === n.id ? ' sel' : ''));
+  b.type = 'button'; b.dataset.id = n.id; b.style.setProperty('--n', NOTE[s.c]); b.style.setProperty('--c', COL[s.c]); b.style.setProperty('--tilt', tilt(n.id));
+  b.append(n.text); b.title = 'Click to edit';
+  b.onclick = () => { state.sel = state.sel === n.id ? null : n.id; state.adding = null; state.addingFor = null; state.confirmDel = false; render(); };
+  return b;
 }
-function zone(s) {
-  const z = el('div', 'zone' + (s.right ? ' right' : '')); z.style.setProperty('--c', COL[s.c]);
-  const [l, t, w, h] = s.zone; Object.assign(z.style, { left: l + '%', top: t + '%', width: w + '%', height: h + '%' });
-  const head = el('div', 'zhead'); head.innerHTML = svgIcon(ICON[s.id]);
-  head.append(el('b', null, s.name));
-  const plus = el('button', 'plus', '+'); plus.type = 'button'; plus.title = `Add to ${s.name}: ${s.hint.toLowerCase()}`; plus.setAttribute('aria-label', `Add to ${s.name}`);
-  plus.onclick = () => { state.adding = s.id; state.sel = null; render(); const i = $('#add-' + s.id); if (i) i.focus(); };
-  head.append(plus); z.append(head);
-  const ns = el('div', 'znotes');
-  const list = inS(s.id);
-  list.forEach(n => {
-    const b = el('button', 'note' + (state.sel === n.id ? ' sel' : ''));
-    b.type = 'button'; b.dataset.id = n.id; b.style.setProperty('--n', NOTE[s.c]); b.style.setProperty('--c', COL[s.c]); b.style.setProperty('--tilt', tilt(n.id));
-    b.append(n.text);
-    const t = linkOf(n); if (t) { b.append(el('span', 'lk', (s.id === 'relievers' ? '↔ relieves: ' : '↔ creates: ') + t.text)); b.title = `${s.id === 'relievers' ? 'Relieves' : 'Creates'}: ${t.text}`; }
-    b.onclick = () => { state.sel = state.sel === n.id ? null : n.id; state.adding = null; state.confirmDel = false; render(); };
-    ns.append(b);
+// A text box for a new note. Enter adds it and keeps the box open for the next one.
+function addInput(key, ph, commit) {
+  const i = document.createElement('input'); i.type = 'text'; i.className = 'addin'; i.id = 'add-' + key; i.maxLength = MAX_TEXT; i.placeholder = ph;
+  i.value = state.drafts[key] || ''; i.addEventListener('input', () => { state.drafts[key] = i.value; });
+  const close = () => { state.adding = null; state.addingFor = null; state.drafts[key] = ''; render(); };
+  i.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); if (commit(i.value)) { state.drafts[key] = ''; render(); const j = $('#add-' + key); if (j) j.focus(); } }
+    if (e.key === 'Escape') close();
   });
-  if (state.adding === s.id) {
-    const f = el('div', 'addin'); const i = document.createElement('input'); i.type = 'text'; i.id = 'add-' + s.id; i.maxLength = MAX_TEXT; i.placeholder = s.ph;
-    i.value = state.drafts[s.id] || ''; i.addEventListener('input', () => { state.drafts[s.id] = i.value; });
-    i.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); if (addNote(s.id, i.value)) { state.drafts[s.id] = ''; const j = $('#add-' + s.id); if (j) j.focus(); } }
-      if (e.key === 'Escape') { state.adding = null; render(); }
-    });
-    i.addEventListener('blur', () => setTimeout(() => { if (state.adding === s.id && document.activeElement !== $('#add-' + s.id)) { if (i.value.trim()) addNote(s.id, i.value); state.drafts[s.id] = ''; state.adding = null; render(); } }, 120));
-    f.append(i); ns.append(f);
-  } else if (!list.length) ns.append(el('span', null, ''));
-  z.append(ns);
-  return z;
+  i.addEventListener('blur', () => setTimeout(() => {
+    const now = $('#add-' + key); if (!now || document.activeElement === now) return;
+    if (now.value.trim()) commit(now.value); close();
+  }, 120));
+  return i;
+}
+function openAdd(id) { state.adding = id; state.addingFor = null; state.sel = null; render(); const i = $('#add-' + id); if (i) i.focus(); }
+function headNode(s) {
+  const h = el('div', 'zhead'); h.style.setProperty('--c', COL[s.c]); h.innerHTML = svgIcon(ICON[s.id]);
+  h.append(el('b', null, s.name));
+  const plus = el('button', 'plus', '+'); plus.type = 'button'; plus.title = `Add to ${s.name}: ${s.hint.toLowerCase()}`; plus.setAttribute('aria-label', `Add to ${s.name}`);
+  plus.onclick = () => openAdd(s.id); h.append(plus); return h;
+}
+function titleNode(text, icon) { const t = el('div', 'ttl'); t.innerHTML = `<i>${svgIcon(icon)}</i>`; t.append(el('span', null, text)); return t; }
+// a fix that answers nothing listed: pick what it answers right in its row
+function linkSelect(n, R) {
+  const sel = document.createElement('select'); sel.className = 'pick';
+  const word = R === 'pains' ? 'pain' : 'gain';
+  sel.setAttribute('aria-label', `Which ${word} does “${n.text}” answer?`);
+  const o0 = el('option', null, R === 'pains' ? 'Which pain does it ease?' : 'Which gain does it create?'); o0.value = ''; sel.append(o0);
+  inS(R).forEach(t => { const o = el('option', null, t.text); o.value = t.id; sel.append(o); });
+  if (!inS(R).length) { o0.textContent = `Add a ${word} first`; sel.disabled = true; }
+  sel.onchange = () => { n.link = sel.value; changed(); render(); };
+  return sel;
 }
 
 function render() {
   const board = $('#board'); board.innerHTML = '';
-  const sq = el('div', 'shape sq'), ci = el('div', 'shape ci');
-  sq.innerHTML = squareSVG() + `<div class="shape-title">VALUE MAP</div><div class="badge" title="Your value proposition">${svgIcon(ICON.gift)}</div>`;
-  ci.innerHTML = circleSVG() + `<div class="shape-title">CUSTOMER PROFILE</div><div class="badge" title="Your customer">${svgIcon(ICON.face)}</div>`;
-  SECTIONS.forEach(s => (s.shape === 'sq' ? sq : ci).append(zone(s)));
-  board.append(sq, ci);
-  const links = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); links.setAttribute('class', 'links'); board.append(links);
-  requestAnimationFrame(drawLinks);
+  let row = 0;
+  const put = (node, col, cls) => { const c = el('div', 'c ' + cls); c.style.gridRow = row; c.style.gridColumn = col; if (node) c.append(node); board.append(c); return c; };
+  const line = (l, m, r, cls = '') => { row++; return [put(l, 1, 'L ' + cls), put(m, 2, 'M ' + cls), put(r, 3, 'R ' + cls)]; };
+  const meet = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); meet.setAttribute('viewBox', '0 0 40 16'); meet.setAttribute('class', 'meet');
+  meet.innerHTML = '<path d="M2 8h14M10 2l6 6-6 6M38 8H24M30 2l-6 6 6 6"/>';
+  line(titleNode('VALUE MAP', ICON.gift), meet, titleNode('CUSTOMER PROFILE', ICON.face), 'title');
+  for (const band of BANDS) {
+    line(headNode(S[band.L]), null, headNode(S[band.R]), 'head');
+    if (!band.match) {
+      const side = id => {
+        const w = el('div', 'flow'); inS(id).forEach(n => w.append(noteBtn(n)));
+        if (state.adding === id) w.append(addInput(id, S[id].ph, v => addNote(id, v)));
+        if (!w.childNodes.length) w.append(el('span', 'empty', S[id].hint));
+        return w;
+      };
+      line(side(band.L), null, side(band.R), 'free');
+      continue;
+    }
+    for (const { r, ls } of pairRows(band.L, band.R)) {
+      const left = el('div', 'flow'), cL = COL[S[band.L].c];
+      if (ls.length) ls.forEach(n => left.append(noteBtn(n)));
+      else if (state.addingFor === r.id) left.append(addInput('for-' + r.id, S[band.L].ph, v => { const ok = addNote(band.L, v, r.id); state.addingFor = null; return ok; }));
+      else {
+        const b = el('button', 'slot', band.L === 'relievers' ? '+ How do you ease this?' : '+ How do you create this?'); b.type = 'button'; b.style.setProperty('--c', cL);
+        b.onclick = () => { state.addingFor = r.id; state.adding = null; state.sel = null; render(); const i = $('#add-for-' + r.id); if (i) i.focus(); };
+        left.append(b);
+      }
+      const kind = r && ls.length ? 'on' : r ? 'open' : 'orphan';
+      const mid = el('span', 'spark ' + kind, kind === 'on' ? '✦' : kind === 'open' ? '●' : '?');
+      mid.style.setProperty('--c', COL[S[band.R].c]);
+      mid.title = kind === 'on' ? 'It fits' : kind === 'open' ? 'Nothing answers this yet' : `This doesn’t answer a listed ${band.R === 'pains' ? 'pain' : 'gain'}`;
+      let right; if (r) { right = el('div', 'flow'); right.append(noteBtn(r)); } else right = linkSelect(ls[0], band.R);
+      const cells = line(left, mid, right, 'pair');
+      const ids = [...ls.map(n => n.id), r && r.id];
+      if (state.sel && ids.includes(state.sel)) cells.forEach(c => { c.classList.add('lit'); c.style.setProperty('--c', COL[S[band.R].c]); });
+    }
+    if (state.adding === band.L || state.adding === band.R) {
+      const id = state.adding, inp = addInput(id, S[id].ph, v => addNote(id, v));
+      line(id === band.L ? inp : null, null, id === band.R ? inp : null, 'adding');
+    } else if (!inS(band.L).length && !inS(band.R).length) line(el('span', 'empty', S[band.L].hint), null, el('span', 'empty', S[band.R].hint), 'free');
+  }
+  line(null, null, null, 'end');
+  board.style.gridTemplateRows = `repeat(${row}, auto)`;
+  // the frames go behind the rows: square edge left, spine, round edge right
+  [['frame R', 3], ['frame M', 2], ['frame L', 1]].forEach(([cls, col]) => { const f = el('div', cls); f.style.gridColumn = col; f.style.gridRow = `1 / ${row + 1}`; board.prepend(f); });
+
   inspector();
   for (const k of ['vp', 'seg']) if (document.activeElement !== $('#' + k)) $('#' + k).value = state[k];
   const ban = $('#banner'); ban.hidden = !state.isExample; ban.innerHTML = '';
@@ -457,43 +512,6 @@ function render() {
   coach();
 }
 
-// Link lines: a glowing curve from each reliever to its pain (pink, below)
-// and from each creator to its gain (green, above), plus the >—< arrows.
-function drawLinks() {
-  const board = $('#board'), svg = board.querySelector('svg.links'); if (!svg) return;
-  if (getComputedStyle(svg).display === 'none') return;
-  const B = board.getBoundingClientRect(), mid = el => { const r = el.getBoundingClientRect(); return [r.left - B.left + r.width / 2, r.top - B.top + r.height / 2, r]; };
-  let out = '';
-  // arrows between the two shapes
-  const sq = board.querySelector('.shape.sq').getBoundingClientRect(), ci = board.querySelector('.shape.ci').getBoundingClientRect();
-  const ay = sq.top - B.top + sq.height / 2, ax1 = sq.right - B.left + 6, ax2 = ci.left - B.left - 6;
-  out += `<path d="M${ax1},${ay} L${ax2},${ay}" stroke="rgba(255,255,255,.7)" stroke-width="2" fill="none"/>
-    <path d="M${ax1 + 16},${ay - 8} L${ax1 + 26},${ay} L${ax1 + 16},${ay + 8} M${ax2 - 16},${ay - 8} L${ax2 - 26},${ay} L${ax2 - 16},${ay + 8}" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  const top = sq.top - B.top, bot = sq.bottom - B.top, k = { up: 0, down: 0 };
-  for (const n of state.notes) {
-    const t = linkOf(n); if (!t) continue;
-    const a = board.querySelector(`.note[data-id="${n.id}"]`), b = board.querySelector(`.note[data-id="${t.id}"]`); if (!a || !b) continue;
-    const [x1, , r1] = mid(a), [x2, , r2] = mid(b), up = n.s === 'creators';
-    // gain lines leave the top of the note and arch above the shapes; pain lines arch below
-    const y1 = up ? r1.top - B.top : r1.bottom - B.top, y2 = up ? r2.top - B.top : r2.bottom - B.top;
-    // a curve only reaches 3/4 of the way to its control points, so aim past the target
-    const want = up ? top - 16 - 9 * k.up++ : bot + 16 + 9 * k.down++, yc = (want - 0.125 * (y1 + y2)) / 0.75;
-    const c = COL[S[n.s].c], hi = state.sel && (state.sel === n.id || state.sel === t.id);
-    const d = `M${x1},${y1} C${x1},${yc} ${x2},${yc} ${x2},${y2}`;
-    out += `<path class="g" d="${d}" stroke="${c}"/><path class="l" d="${d}" stroke="${c}" stroke-opacity="${state.sel && !hi ? .3 : .95}"${hi ? ' stroke-width="3.5"' : ''}/>
-      <circle cx="${x1}" cy="${y1}" r="3.5" fill="${c}"/><circle cx="${x2}" cy="${y2}" r="3.5" fill="${c}"/>`;
-  }
-  svg.setAttribute('viewBox', `0 0 ${B.width} ${B.height}`);
-  svg.innerHTML = out;
-  // light up the partner of the selected note
-  board.querySelectorAll('.note.lit').forEach(e => e.classList.remove('lit'));
-  const sel = state.sel && byId(state.sel);
-  if (sel) {
-    const partners = linkOf(sel) ? [linkOf(sel).id] : state.notes.filter(x => x.link === sel.id && linkOf(x)).map(x => x.id);
-    partners.forEach(id => { const e = board.querySelector(`.note[data-id="${id}"]`); if (e) e.classList.add('lit'); });
-  }
-}
-
 // The editor for the selected note: text, which section, what it links to
 function inspector() {
   const box = $('#inspector'), n = state.sel && byId(state.sel);
@@ -501,7 +519,7 @@ function inspector() {
   const s = S[n.s]; box.style.setProperty('--c', COL[s.c]);
   const a = el('div'); const la = el('label', null, `Edit · ${s.name}`); la.htmlFor = 'edText';
   const ta = document.createElement('textarea'); ta.className = 'field'; ta.id = 'edText'; ta.maxLength = MAX_TEXT; ta.rows = 2; ta.value = n.text;
-  ta.addEventListener('input', () => { n.text = ta.value; changed(); const b = $(`.note[data-id="${n.id}"]`); if (b) b.firstChild.textContent = ta.value; coach(); requestAnimationFrame(drawLinks); });
+  ta.addEventListener('input', () => { n.text = ta.value; changed(); const b = $(`.note[data-id="${n.id}"]`); if (b) b.firstChild.textContent = ta.value; coach(); });
   ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); state.sel = null; render(); } if (e.key === 'Escape') { state.sel = null; render(); } });
   a.append(la, ta); box.append(a);
   const b = el('div');
@@ -554,7 +572,7 @@ function coach() {
   const nx = $('#next'); nx.innerHTML = '';
   if (!state.seg.trim()) nx.append('Next: ', el('b', null, 'Customer segment'), ' · who is this for?');
   else if (empty) nx.append('Next: ', el('b', null, S[empty].name), ' · ' + S[empty].hint.toLowerCase() + '.');
-  else if (unlinked.length) nx.append('Next: ', el('b', null, 'Link'), ` · click “${unlinked[0].text}” and pick what it answers.`);
+  else if (unlinked.length) nx.append('Next: ', el('b', null, 'Match'), ` · in the row of “${unlinked[0].text}”, pick what it answers.`);
   else nx.append(el('b', null, 'Done. '), 'Save the A4 sheet.');
 
   const out = [];
@@ -595,28 +613,25 @@ function wrapText(x, text, maxW) {
   out.push(line); return out;
 }
 function fitOneLine(x, text, maxW) { if (x.measureText(text).width <= maxW) return text; while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
-// Lay notes out in rows inside a box (right-aligned rows for the jobs zone),
-// shrinking the text until they all fit. Returns each note's box.
-function layoutNotes(x, list, box, right) {
-  for (let fs = 30; fs >= 16; fs -= 2) {
-    x.font = `400 ${fs}px ${HAND_F}`;
-    const pad = fs * 0.4, maxW = Math.min(box.w, fs * 11), gap = fs * 0.45, placed = [];
-    let rowY = box.y, rowH = 0, rowItems = [], ok = true;
-    const flush = () => {
-      const used = rowItems.reduce((s, r) => s + r.w, 0) + gap * (rowItems.length - 1);
-      let cx = right ? box.x + box.w - used : box.x;
-      rowItems.forEach(r => { r.x = cx; r.y = rowY; cx += r.w + gap; placed.push(r); });
-      rowY += rowH + gap; rowH = 0; rowItems = [];
-    };
-    for (const n of list) {
-      const lines = wrapText(x, n.text, maxW - pad * 2), w = Math.max(...lines.map(l => x.measureText(l).width)) + pad * 2, h = lines.length * fs * 1.15 + pad * 2;
-      const rowW = rowItems.reduce((s, r) => s + r.w + gap, 0);
-      if (rowItems.length && rowW + w > box.w) flush();
-      rowItems.push({ n, lines, w, h }); rowH = Math.max(rowH, h);
-    }
-    if (rowItems.length) flush();
-    if (rowY - gap <= box.y + box.h || fs === 16) return { fs, pad, placed: placed.filter(p => p.y + p.h <= box.y + box.h + 2) };
+// Lay a cell's notes out in a line (right-aligned on the Value Map side),
+// wrapping onto new lines when they don't fit. Returns each note's spot.
+function flow(x, list, w, fs, right) {
+  x.font = `400 ${fs}px ${HAND_F}`;
+  const pad = fs * 0.4, gap = fs * 0.45, maxW = Math.min(w, fs * 13), lines = [];
+  const items = list.map(n => {
+    let ls = wrapText(x, n.text, maxW - pad * 2);
+    if (ls.length > 3) { ls = ls.slice(0, 3); ls[2] = fitOneLine(x, ls[2] + '…', maxW - pad * 2); }
+    return { n, ls, w: Math.max(...ls.map(l => x.measureText(l).width)) + pad * 2, h: ls.length * fs * 1.15 + pad * 2 };
+  });
+  let cur = [], cw = 0;
+  for (const it of items) { if (cur.length && cw + gap + it.w > w) { lines.push(cur); cur = []; cw = 0; } cw += (cur.length ? gap : 0) + it.w; cur.push(it); }
+  if (cur.length) lines.push(cur);
+  let y = 0;
+  for (const ln of lines) {
+    const used = ln.reduce((s, i) => s + i.w, 0) + gap * (ln.length - 1), lh = Math.max(...ln.map(i => i.h));
+    let cx = right ? w - used : 0; ln.forEach(i => { i.x = cx; i.y = y + (lh - i.h) / 2; cx += i.w + gap; }); y += lh + gap;
   }
+  return { items, h: lines.length ? y - gap : 0, fs, pad };
 }
 function glowStroke(x, color, width, blur, draw) { x.save(); x.shadowColor = color; x.shadowBlur = blur; x.strokeStyle = color; x.lineWidth = width; draw(); x.stroke(); x.restore(); }
 async function drawSheet() {
@@ -637,62 +652,90 @@ async function drawSheet() {
     if (filled[l]) { x.font = `500 36px ${UI_F}`; x.fillText(fitOneLine(x, filled[l], W - M - rx - 130), rx + 124, y - 6); }
   });
 
-  // Geometry: square on the left, circle on the right, same height
-  const top = M + 330, size = 1500;
-  const sq = { x: M, y: top, w: size, h: size }, ci = { x: W - M - size, y: top, w: size, h: size };
-  const cx = sq.x + sq.w / 2, cy = sq.y + sq.h / 2, ccx = ci.x + size / 2, ccy = ci.y + size / 2, R = size / 2;
-  const tint = (c, a, path) => { x.save(); x.globalAlpha = a; x.fillStyle = c; path(); x.fill(); x.restore(); };
-  // square regions
-  tint(PRINT.products, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(cx, cy); x.lineTo(sq.x, sq.y + sq.h); x.closePath(); });
-  tint(PRINT.gain, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(sq.x + sq.w, sq.y); x.lineTo(sq.x + sq.w, cy); x.lineTo(cx, cy); x.closePath(); });
-  tint(PRINT.pain, .07, () => { x.beginPath(); x.moveTo(sq.x, sq.y + sq.h); x.lineTo(sq.x + sq.w, sq.y + sq.h); x.lineTo(sq.x + sq.w, cy); x.lineTo(cx, cy); x.closePath(); });
-  x.strokeStyle = '#BBBBBB'; x.lineWidth = 3; x.beginPath(); x.moveTo(sq.x, sq.y); x.lineTo(cx, cy); x.lineTo(sq.x, sq.y + sq.h); x.moveTo(cx, cy); x.lineTo(sq.x + sq.w, cy); x.stroke();
-  glowStroke(x, '#00A8F0', 7, 22, () => { x.beginPath(); x.roundRect(sq.x, sq.y, sq.w, sq.h, 10); });
-  // circle wedges
-  const wedge = (a1, a2, c) => tint(c, .07, () => { x.beginPath(); x.moveTo(ccx, ccy); x.arc(ccx, ccy, R, a1 * Math.PI / 180, a2 * Math.PI / 180); x.closePath(); });
-  wedge(180, 315, PRINT.gain); wedge(315, 405, PRINT.jobs); wedge(45, 180, PRINT.pain);
-  x.strokeStyle = '#BBBBBB'; x.lineWidth = 3; x.beginPath();
-  x.moveTo(ccx, ccy); x.lineTo(ccx - R, ccy); x.moveTo(ccx, ccy); x.lineTo(ccx + R * Math.cos(-Math.PI / 4), ccy + R * Math.sin(-Math.PI / 4)); x.moveTo(ccx, ccy); x.lineTo(ccx + R * Math.cos(Math.PI / 4), ccy + R * Math.sin(Math.PI / 4)); x.stroke();
-  glowStroke(x, '#00B87D', 7, 22, () => { x.beginPath(); x.arc(ccx, ccy, R, 0, Math.PI * 2); });
-  // titles over the shapes, and the arrows between them
-  x.fillStyle = GREY; x.font = `800 30px ${UI_F}`; x.fillText('VALUE MAP', sq.x, sq.y - 26); x.textAlign = 'right'; x.fillText('CUSTOMER PROFILE', ci.x + size, ci.y - 26); x.textAlign = 'left';
-  x.strokeStyle = INK; x.lineWidth = 4; x.lineCap = 'round'; x.beginPath(); x.moveTo(sq.x + sq.w + 20, cy); x.lineTo(ci.x - 20, cy);
-  x.moveTo(sq.x + sq.w + 44, cy - 18); x.lineTo(sq.x + sq.w + 64, cy); x.lineTo(sq.x + sq.w + 44, cy + 18);
-  x.moveTo(ci.x - 44, cy - 18); x.lineTo(ci.x - 64, cy); x.lineTo(ci.x - 44, cy + 18); x.stroke();
-  // badges: gift and face
-  const badge = (bx, by, icon) => {
-    x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(bx, by, 62, 0, Math.PI * 2); x.fill(); x.strokeStyle = INK; x.lineWidth = 5; x.stroke();
-    x.save(); x.translate(bx - 36, by - 36); x.scale(3, 3); x.strokeStyle = INK; x.lineWidth = 1.6; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(icon)); x.restore();
-  };
-  badge(cx, cy, ICON.gift); badge(ccx, ccy, ICON.face);
+  // Geometry: left half (square edge), spine, right half (round edge)
+  const top = M + 250, bottom = H - M - 70, spineW = 150, halfW = (W - 2 * M - spineW) / 2;
+  const lx0 = M, lx1 = M + halfW, rx0 = lx1 + spineW, rx1 = W - M, cap = halfW * 0.3, sx = lx1 + spineW / 2;
+  const Lc = { x: lx0 + 50, w: halfW - 50 - 40 }, Rc = { x: rx0 + 40, w: halfW - 40 - cap * 0.6 };
 
-  // notes in their zones, remembering where each one landed (for the links)
-  const pos = {};
-  for (const s of SECTIONS) {
-    const shp = s.shape === 'sq' ? sq : ci, [l, t, w, h] = s.zone;
-    const zx = shp.x + shp.w * l / 100, zy = shp.y + shp.h * t / 100, zw = shp.w * w / 100, zh = shp.h * h / 100, c = PRINT[s.c];
-    // section label with icon
-    x.save(); x.translate(s.right ? zx + zw - 40 : zx, zy); x.scale(40 / 24, 40 / 24); x.strokeStyle = c; x.lineWidth = 1.8; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(ICON[s.id])); x.restore();
-    x.fillStyle = c; x.font = `800 30px ${UI_F}`; x.textAlign = s.right ? 'right' : 'left';
-    x.fillText(s.name.toUpperCase(), s.right ? zx + zw - 52 : zx + 52, zy + 31); x.textAlign = 'left';
-    const L = layoutNotes(x, inS(s.id), { x: zx, y: zy + 56, w: zw, h: zh - 60 }, s.right);
-    for (const p of L.placed) {
-      x.fillStyle = NOTE[s.c]; x.fillRect(p.x, p.y, p.w, p.h); x.strokeStyle = '#444'; x.lineWidth = 2; x.strokeRect(p.x, p.y, p.w, p.h);
-      x.fillStyle = INK; x.font = `400 ${L.fs}px ${HAND_F}`; p.lines.forEach((ln, k) => x.fillText(ln, p.x + L.pad, p.y + L.pad + L.fs * 0.9 + k * L.fs * 1.15));
-      pos[p.n.id] = p;
-    }
+  // The same rows as on screen
+  const plan = [{ kind: 'title' }];
+  for (const band of BANDS) {
+    plan.push({ kind: 'head', band });
+    if (!band.match) plan.push({ kind: 'free', l: inS(band.L), r: inS(band.R), band });
+    else pairRows(band.L, band.R).forEach(p => plan.push({ kind: 'pair', l: p.ls, r: p.r ? [p.r] : [], band, st: p.r && p.ls.length ? 'on' : p.r ? 'open' : 'orphan' }));
   }
-  // link lines: gains arch above the shapes, pains below
-  const k = { up: 0, down: 0 };
-  for (const n of state.notes) {
-    const t = linkOf(n), a = pos[n.id], b = t && pos[t.id]; if (!a || !b) continue;
-    const c = PRINT[S[n.s].c], up = n.s === 'creators', sx = a.x + a.w / 2, ex = b.x + b.w / 2;
-    const sy = up ? a.y : a.y + a.h, ey = up ? b.y : b.y + b.h, want = up ? top - 50 - 26 * k.up++ : top + size + 50 + 26 * k.down++, yc = (want - 0.125 * (sy + ey)) / 0.75;
-    x.save(); x.shadowColor = c; x.shadowBlur = 14; x.strokeStyle = c; x.lineWidth = 5; x.beginPath(); x.moveTo(sx, sy); x.bezierCurveTo(sx, yc, ex, yc, ex, ey); x.stroke(); x.restore();
-    x.fillStyle = c; x.beginPath(); x.arc(sx, sy, 9, 0, Math.PI * 2); x.arc(ex, ey, 9, 0, Math.PI * 2); x.fill();
+  // the biggest handwriting size at which every row fits on the page
+  let laid, rowPad;
+  for (let fs = 48; fs >= 16; fs -= 2) {
+    rowPad = fs * 0.32;
+    laid = plan.map(p => {
+      if (p.kind === 'title') return { ...p, h: 96 };
+      if (p.kind === 'head') return { ...p, h: 84 };
+      const L = flow(x, p.l, Lc.w, fs, true), R = flow(x, p.r, Rc.w, fs, false);
+      return { ...p, L, R, fs, h: Math.max(L.h, R.h, fs * 1.7) + rowPad * 2 };
+    });
+    if (laid.reduce((s, p) => s + p.h, 0) + 40 <= bottom - top) break;
+  }
+  const midY = (top + bottom) / 2;
+  // frames: tints first, then the neon outlines
+  const tint = (c, a, path) => { x.save(); x.globalAlpha = a; x.fillStyle = c; path(); x.fill(); x.restore(); };
+  const rightPath = () => { x.beginPath(); x.moveTo(rx0, top); x.lineTo(rx1 - cap, top); x.ellipse(rx1 - cap, midY, cap, (bottom - top) / 2, 0, -Math.PI / 2, Math.PI / 2); x.lineTo(rx0, bottom); };
+  tint(PRINT.products, 0.06, () => { x.beginPath(); x.rect(lx0, top, halfW, bottom - top); });
+  tint(PRINT.gain, 0.06, () => { rightPath(); x.closePath(); });
+  const g = x.createLinearGradient(0, top, 0, bottom); g.addColorStop(0, 'rgba(224,168,0,.10)'); g.addColorStop(0.45, 'rgba(0,184,125,.10)'); g.addColorStop(1, 'rgba(255,45,94,.12)');
+  x.fillStyle = g; x.fillRect(lx1, top, spineW, bottom - top);
+  glowStroke(x, '#00A8F0', 7, 22, () => { x.beginPath(); x.moveTo(lx1, top); x.lineTo(lx0 + 12, top); x.arcTo(lx0, top, lx0, top + 12, 12); x.lineTo(lx0, bottom - 12); x.arcTo(lx0, bottom, lx0 + 12, bottom, 12); x.lineTo(lx1, bottom); });
+  glowStroke(x, '#00B87D', 7, 22, rightPath);
+  glowStroke(x, '#888888', 7, 10, () => { x.beginPath(); x.moveTo(lx1, top); x.lineTo(rx0, top); x.moveTo(lx1, bottom); x.lineTo(rx0, bottom); });
+
+  const icon = (d, cx, cy, size, color) => { x.save(); x.translate(cx - size / 2, cy - size / 2); x.scale(size / 24, size / 24); x.strokeStyle = color; x.lineWidth = 1.8; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke(new Path2D(d)); x.restore(); };
+  const sparkle = (cx, cy, r, c) => { x.save(); x.shadowColor = c; x.shadowBlur = 18; x.fillStyle = c; x.beginPath(); x.moveTo(cx, cy - r);
+    x.quadraticCurveTo(cx, cy, cx + r, cy); x.quadraticCurveTo(cx, cy, cx, cy + r); x.quadraticCurveTo(cx, cy, cx - r, cy); x.quadraticCurveTo(cx, cy, cx, cy - r); x.fill(); x.restore(); };
+  const sticky = (cell, L, ox, oy, c) => {
+    for (const it of L.items) {
+      const px = cell.x + it.x, py = oy + it.y;
+      x.fillStyle = NOTE[c]; x.fillRect(px, py, it.w, it.h); x.strokeStyle = '#444'; x.lineWidth = 2; x.strokeRect(px, py, it.w, it.h);
+      x.fillStyle = INK; x.font = `400 ${L.fs}px ${HAND_F}`; it.ls.forEach((ln, k) => x.fillText(ln, px + L.pad, py + L.pad + L.fs * 0.9 + k * L.fs * 1.15));
+    }
+  };
+  let y = top + 20;
+  for (const p of laid) {
+    const cy = y + p.h / 2;
+    if (p.kind === 'title') {
+      x.font = `800 32px ${UI_F}`; x.fillStyle = GREY;
+      x.textAlign = 'right'; x.fillText('VALUE MAP', Lc.x + Lc.w - 80, cy + 11); x.textAlign = 'left'; x.fillText('CUSTOMER PROFILE', Rc.x + 80, cy + 11);
+      for (const [bx, ic] of [[Lc.x + Lc.w - 30, ICON.gift], [Rc.x + 30, ICON.face]]) { x.fillStyle = '#fff'; x.beginPath(); x.arc(bx, cy, 30, 0, Math.PI * 2); x.fill(); x.strokeStyle = INK; x.lineWidth = 4; x.stroke(); icon(ic, bx, cy, 34, INK); }
+      x.strokeStyle = INK; x.lineWidth = 4; x.lineCap = 'round'; x.lineJoin = 'round'; x.beginPath();
+      x.moveTo(sx - 52, cy); x.lineTo(sx - 12, cy); x.moveTo(sx - 26, cy - 14); x.lineTo(sx - 12, cy); x.lineTo(sx - 26, cy + 14);
+      x.moveTo(sx + 52, cy); x.lineTo(sx + 12, cy); x.moveTo(sx + 26, cy - 14); x.lineTo(sx + 12, cy); x.lineTo(sx + 26, cy + 14); x.stroke();
+    } else if (p.kind === 'head') {
+      for (const [id, right] of [[p.band.L, true], [p.band.R, false]]) {
+        const s = S[id], c = PRINT[s.c]; x.fillStyle = c; x.font = `800 32px ${UI_F}`;
+        if (right) { x.textAlign = 'right'; x.fillText(s.name.toUpperCase(), Lc.x + Lc.w - 56, cy + 11); icon(ICON[id], Lc.x + Lc.w - 20, cy, 40, c); }
+        else { x.textAlign = 'left'; x.fillText(s.name.toUpperCase(), Rc.x + 56, cy + 11); icon(ICON[id], Rc.x + 20, cy, 40, c); }
+        x.textAlign = 'left';
+      }
+    } else {
+      sticky(Lc, p.L, 0, cy - p.L.h / 2, S[p.band.L].c);
+      sticky(Rc, p.R, 0, cy - p.R.h / 2, S[p.band.R].c);
+      if (p.kind === 'pair') {
+        x.setLineDash([]); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.beginPath(); x.moveTo(lx0 + 30, y); x.lineTo(rx1 - cap, y); x.stroke();
+        if (p.st === 'on') sparkle(sx, cy, 26, PRINT[S[p.band.R].c]);
+        else if (p.st === 'open') {
+          x.fillStyle = '#BBBBBB'; x.beginPath(); x.arc(sx, cy, 9, 0, Math.PI * 2); x.fill();
+          // an empty dashed slot where the missing fix would go
+          const sw = 420, sh = p.fs * 1.7; x.setLineDash([12, 10]); x.strokeStyle = PRINT[S[p.band.L].c]; x.lineWidth = 3; x.strokeRect(Lc.x + Lc.w - sw, cy - sh / 2, sw, sh); x.setLineDash([]);
+          x.fillStyle = GREY; x.font = `italic 400 ${Math.round(p.fs * 0.8)}px ${UI_F}`; x.textAlign = 'center'; x.fillText('no fix yet', Lc.x + Lc.w - sw / 2, cy + p.fs * 0.28); x.textAlign = 'left';
+        } else {
+          x.fillStyle = '#C07800'; x.font = `800 34px ${UI_F}`; x.textAlign = 'center'; x.fillText('?', sx, cy + 12);
+          x.font = `italic 400 ${Math.round(p.fs * 0.8)}px ${UI_F}`; x.textAlign = 'left'; x.fillStyle = GREY; x.fillText(`answers no listed ${p.band.R === 'pains' ? 'pain' : 'gain'}`, Rc.x, cy + p.fs * 0.28);
+        }
+      }
+    }
+    y += p.h;
   }
   x.fillStyle = GREY; x.font = `400 24px ${UI_F}`; x.textAlign = 'right';
-  x.fillText('Value Proposition Canvas: Alexander Osterwalder, Strategyzer (© Strategyzer AG) · Link lines after the Interaction Design Foundation · Sheet: Invent + Discover', W - M, H - M + 30); x.textAlign = 'left';
+  x.fillText('Value Proposition Canvas: Alexander Osterwalder, Strategyzer (© Strategyzer AG) · Mirror-row layout and sheet: Invent + Discover', W - M, H - M + 30); x.textAlign = 'left';
   return cv;
 }
 async function exportSheet() {
@@ -725,13 +768,11 @@ $('#clearBtn').onclick = () => {
 };
 $('#copyBtn').onclick = () => navigator.clipboard.writeText(asText()).then(() => toast('Copied. Paste it into your doc.'), () => toast('Copy was blocked by the browser. Try Save A4 sheet instead.'));
 $('#exportBtn').onclick = exportSheet;
-window.addEventListener('resize', () => requestAnimationFrame(drawLinks));
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.sel) { state.sel = null; render(); } });
 
 // ---------- 3m. Start ----------
 if (!load()) loadExample();
 render();
-document.fonts && document.fonts.ready.then(() => requestAnimationFrame(drawLinks));
 </script>
 </body>
 </html>
