@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AR Portal</title>
+<meta name="description" content="A shimmering portal tears open on your floor. Through it, a real 360° world. On Android you can walk through it; on iPhone you step in with a tap; on a laptop you can preview it in 3D.">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Neon theme colours (same family as the site) ---------- */
+  :root{
+    --bg:#05060A; --violet:#9b6bff; --blue:#4cc9ff; --pink:#ff4fd8;
+    --text:#ecebff; --muted:#8d8aab; --ok:#5dffb0; --no:#ff6b8a;
+    --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+    --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font-family:Geist,system-ui,-apple-system,sans-serif;overflow:hidden}
+
+  /* Layers, bottom to top: camera video → 3D canvas → HUD → home panel */
+  #cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}
+  #stage{position:fixed;inset:0;z-index:1}
+  #stage canvas{display:block;touch-action:none}
+
+  /* ---------- Home panel (two steps: choose a world → notice) ---------- */
+  #home{position:fixed;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;
+    padding:16px max(16px,var(--sar)) 16px max(16px,var(--sal));overflow-y:auto;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 15%,rgba(155,107,255,.18),transparent 45%),
+      radial-gradient(circle at 85% 85%,rgba(255,79,216,.12),transparent 45%),
+      linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px);
+    background-size:auto,auto,32px 32px,32px 32px}
+  .card{width:100%;max-width:440px;margin:auto;border:1px solid rgba(155,107,255,.35);border-radius:18px;padding:22px 18px;
+    background:rgba(10,11,20,.88);box-shadow:0 0 40px rgba(155,107,255,.18)}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+  h1{margin:6px 0 4px;font-size:30px;font-weight:700;text-shadow:0 0 18px rgba(155,107,255,.6)}
+  h2{margin:0 0 10px;font-size:18px;font-weight:700}
+  .sub{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5}
+  .worlds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+  .tile{position:relative;padding:0;border:1px solid rgba(155,107,255,.3);border-radius:12px;overflow:hidden;
+    background:#0c0d18;color:var(--text);text-align:left;cursor:pointer;font:inherit}
+  .tile img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;background:linear-gradient(135deg,#1b1640,#2a0f33)}
+  .tile span{display:block;padding:7px 9px 8px}
+  .tile b{display:block;font-size:13px;font-weight:500}
+  .tile small{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+  .tile.on{border-color:var(--pink);box-shadow:0 0 0 1px var(--pink),0 0 18px rgba(255,79,216,.45)}
+  .tile:focus-visible,.btn:focus-visible,.pill:focus-visible,.link:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  #credit{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0 0 16px;min-height:2.6em}
+  #credit a{color:#c9b8ff}
+  .btn{display:block;width:100%;margin:0 0 10px;padding:14px;border-radius:12px;font:500 16px Geist,system-ui,sans-serif;
+    color:var(--text);background:rgba(155,107,255,.10);border:1px solid rgba(155,107,255,.55);cursor:pointer}
+  .btn.main{background:linear-gradient(90deg,rgba(155,107,255,.55),rgba(255,79,216,.45));border-color:var(--pink);
+    box-shadow:0 0 22px rgba(255,79,216,.35)}
+  .btn[hidden]{display:none}
+  .link{background:none;border:0;color:var(--muted);font:inherit;font-size:13px;padding:6px 0;cursor:pointer;text-decoration:underline}
+  .notice{border:1px solid rgba(255,79,216,.45);border-radius:12px;padding:12px 14px;margin:0 0 14px;background:rgba(255,79,216,.06)}
+  .notice ul{margin:0;padding:0 0 0 18px;font-size:13.5px;line-height:1.55}
+  .notice li{margin:0 0 4px}
+  .load{height:6px;border-radius:3px;background:rgba(155,107,255,.15);overflow:hidden;margin:4px 0 6px}
+  .load i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--pink));transition:width .2s}
+  #loadTxt{font-size:12px;color:var(--muted);margin:0 0 12px;font-family:var(--mono)}
+  #err{color:var(--no);font-size:13px;line-height:1.45;margin:0 0 10px}
+  #err:empty{display:none}
+  #retryRow{display:flex;gap:8px;margin:0 0 12px}
+  #retryRow[hidden]{display:none}
+  #retryRow .btn{margin:0}
+  .stampHome{display:block;margin-top:10px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+  #qrbox{display:flex;gap:14px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(155,107,255,.2)}
+  #qrbox[hidden]{display:none}
+  #qr{width:104px;height:104px;border-radius:10px;border:2px solid var(--violet);image-rendering:pixelated;flex-shrink:0}
+  #qrbox p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+  #s2[hidden],#s1[hidden]{display:none}
+
+  /* ---------- FUI HUD (film-interface overlay) ----------
+     Rules: everything hugs the edges; the centre stays empty;
+     one big word (status) + small supporting numbers. */
+  #hud{position:fixed;inset:0;z-index:2;pointer-events:none;display:none;color:var(--text);
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+  /* soft dark bands at the top and bottom keep the HUD readable over bright skies or snow */
+  #hud::before,#hud::after{content:"";position:absolute;left:0;right:0;pointer-events:none}
+  #hud::before{top:0;height:calc(90px + var(--sat));background:linear-gradient(rgba(5,6,10,.55),rgba(5,6,10,0))}
+  #hud::after{bottom:0;height:calc(150px + var(--sab));background:linear-gradient(rgba(5,6,10,0),rgba(5,6,10,.5))}
+  #hud > *{z-index:1}
+  .br{position:absolute;width:24px;height:24px;border:1.5px solid var(--violet);opacity:.9;
+    filter:drop-shadow(0 0 4px rgba(155,107,255,.9))}
+  .br.tl{top:calc(8px + var(--sat));left:calc(8px + var(--sal));border-right:0;border-bottom:0}
+  .br.tr{top:calc(8px + var(--sat));right:calc(8px + var(--sar));border-left:0;border-bottom:0}
+  .br.bl{bottom:calc(8px + var(--sab));left:calc(8px + var(--sal));border-right:0;border-top:0}
+  .br.bc{display:none}
+  .br.brr{bottom:calc(8px + var(--sab));right:calc(8px + var(--sar));border-left:0;border-top:0}
+  .glow{text-shadow:0 0 8px currentColor}
+  #hTL{position:absolute;top:calc(16px + var(--sat));left:calc(22px + var(--sal))}
+  #hTL .ttl{font-family:Geist,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;color:var(--pink)}
+  #hTL .ln{color:var(--muted);margin-top:3px}
+  #hTR{position:absolute;top:calc(16px + var(--sat));right:calc(22px + var(--sar));text-align:right}
+  #status{font-family:Geist,sans-serif;font-weight:700;font-size:16px;letter-spacing:.16em;color:var(--blue)}
+  #status.chg{animation:glitch .45s steps(2) 1}
+  @keyframes glitch{0%{opacity:.2;transform:translateX(-3px)}40%{opacity:1;transform:translateX(2px)}70%{opacity:.5}100%{opacity:1;transform:none}}
+  #pips{display:flex;gap:5px;justify-content:flex-end;margin-top:6px}
+  #pips i{width:16px;height:4px;border:1px solid var(--violet);border-radius:1px}
+  #pips i.on{background:var(--violet);box-shadow:0 0 6px var(--violet)}
+  /* signal meter, left edge */
+  #meter{position:absolute;left:calc(14px + var(--sal));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+  #segs{display:flex;flex-direction:column-reverse;gap:3px}
+  #segs i{width:12px;height:9px;border:1px solid rgba(155,107,255,.55);border-radius:1px}
+  #segs i.on{background:var(--violet);border-color:var(--violet);box-shadow:0 0 6px var(--violet)}
+  #segs i.on.hi{background:var(--pink);border-color:var(--pink);box-shadow:0 0 6px var(--pink)}
+  #meter .lab{color:var(--muted);font-size:10px;writing-mode:vertical-rl;transform:rotate(180deg)}
+  #db{font-size:10px;color:var(--text)}
+  /* distance ruler, right edge */
+  #ruler{position:absolute;right:calc(14px + var(--sar));top:50%;transform:translateY(-50%);height:170px;width:36px}
+  #ruler .rail{position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(155,107,255,.6)}
+  #ruler .tk{position:absolute;right:0;height:1px;background:rgba(155,107,255,.6)}
+  #ruler .tkl{position:absolute;right:12px;font-size:9px;color:var(--muted);transform:translateY(-50%)}
+  #mark{position:absolute;right:2px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;
+    border-right:8px solid var(--pink);transform:translateY(-50%);filter:drop-shadow(0 0 4px var(--pink));transition:top .15s linear}
+  #dist{position:absolute;right:0;bottom:-20px;font-size:12px;color:var(--text);white-space:nowrap}
+  /* bottom block */
+  #bottom{position:absolute;left:0;right:0;bottom:calc(14px + var(--sab));display:flex;flex-direction:column;align-items:center;gap:8px;
+    padding:0 max(44px,calc(var(--sal) + 40px)) 0 max(44px,calc(var(--sar) + 40px))}
+  #coords{color:var(--muted);font-size:10.5px}
+  #hint{font-family:Geist,sans-serif;letter-spacing:0;text-align:center;font-size:14px;line-height:1.4;padding:9px 14px;border-radius:12px;
+    background:rgba(5,6,10,.62);border:1px solid rgba(155,107,255,.3);max-width:440px}
+  #hint:empty{display:none}
+  #row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .pill{pointer-events:auto;padding:9px 15px;border-radius:999px;font:500 13.5px Geist,system-ui,sans-serif;color:var(--text);
+    background:rgba(5,6,10,.7);border:1px solid var(--violet);box-shadow:0 0 12px rgba(155,107,255,.4);cursor:pointer}
+  .pill.hot{border-color:var(--pink);box-shadow:0 0 16px rgba(255,79,216,.7);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 4px rgba(255,79,216,.3)}}
+  .pill[hidden]{display:none}
+  #stamp{position:absolute;top:calc(66px + var(--sat));left:calc(22px + var(--sal));font-size:9px;color:rgba(201,198,230,.55);display:none}
+  #toast{position:absolute;top:calc(86px + var(--sat));left:50%;transform:translateX(-50%);padding:8px 12px;border-radius:10px;
+    font-family:Geist,sans-serif;font-size:12.5px;letter-spacing:0;background:rgba(5,6,10,.85);border:1px solid var(--pink);max-width:80%;text-align:center}
+  #toast[hidden]{display:none}
+  /* small phones: shorter ruler */
+  @media (max-height:640px){#ruler{height:120px}#segs i{height:7px}}
+  @media (prefers-reduced-motion:reduce){#status.chg,.pill.hot{animation:none}}
+</style>
+</head>
+<body>
+
+<video id="cam" playsinline muted></video>
+<div id="stage"></div>
+
+<!-- ======================= HUD ======================= -->
+<div id="hud">
+  <div class="br tl"></div><div class="br tr"></div><div class="br bl"></div><div class="br brr"></div>
+  <div id="hTL">
+    <div class="ttl glow">DIMENSION SCAN</div>
+    <div class="ln" id="hWorld">WORLD —</div>
+    <div class="ln" id="hClock">T+00:00</div>
+  </div>
+  <div id="hTR">
+    <div id="status" class="glow">SCANNING</div>
+    <div id="pips"><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div id="meter">
+    <div id="segs"></div>
+    <div id="db">−90</div>
+    <div class="lab">SIGNAL dB</div>
+  </div>
+  <div id="ruler"><div class="rail"></div><div id="mark"></div><div id="dist">— m</div></div>
+  <div id="toast" hidden></div>
+  <div id="bottom">
+    <div id="coords">X +0.00 · Z +0.00 · HDG 000°</div>
+    <div id="hint"></div>
+    <div id="row">
+      <button id="bStep" class="pill" hidden>Step in</button>
+      <button id="bMove" class="pill" hidden>Move portal</button>
+      <button id="bWorld" class="pill" hidden>World ▸</button>
+      <button id="bFallback" class="pill" hidden>Use camera view instead</button>
+      <button id="bSound" class="pill">Sound on</button>
+      <button id="bExit" class="pill">Exit</button>
+    </div>
+  </div>
+  <div id="stamp"></div>
+</div>
+
+<!-- ======================= HOME ======================= -->
+<div id="home">
+  <div class="card">
+    <section id="s1">
+      <div class="eyebrow">Invent · AR</div>
+      <h1>AR Portal</h1>
+      <p class="sub">A portal tears open on your floor. Through it, a real place photographed in 360°. Walk through it, then look back at your own room.</p>
+      <div class="worlds" id="worlds"></div>
+      <p id="credit"></p>
+      <button class="btn main" id="bNext">Continue</button>
+      <span class="stampHome"></span>
+      <div id="qrbox" hidden>
+        <canvas id="qr"></canvas>
+        <p><b>On a computer?</b><br>Scan with your phone to open the portal in your room. Or continue for a 3D preview here.</p>
+      </div>
+    </section>
+
+    <section id="s2" hidden>
+      <h2>Notice before you begin</h2>
+      <div class="notice">
+        <ul>
+          <li>This is a virtual experience. The portal and the world you see are digital, not real.</li>
+          <li>Clear about 2 m of floor. Watch your real surroundings while you walk, not only the screen.</li>
+          <li>It has bright, flickering light effects.</li>
+          <li>It has sound. Turn it on (on iPhone, turn the silent switch off).</li>
+        </ul>
+      </div>
+      <div class="load"><i id="loadBar"></i></div>
+      <p id="loadTxt">World photo: waiting…</p>
+      <p id="err"></p>
+      <div id="retryRow" hidden>
+        <button class="btn" id="bRetry">Retry</button>
+        <button class="btn" id="bLight">Try lighter photo</button>
+      </div>
+      <button class="btn" id="bAR" hidden>Open portal in your room</button>
+      <button class="btn" id="bCam" hidden>Open camera view</button>
+      <button class="btn" id="b3D">View in 3D</button>
+      <button class="link" id="bBack">← Choose another world</button>
+      <span class="stampHome"></span>
+    </section>
+  </div>
+</div>
+
+<!-- tiny QR-code maker (draws the "scan with your phone" code on computers) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const BUILD = 'AR Portal · 12 Nov 2026';
+const ASSET_V = '1';                       // bump to make phones re-download the world photos
+const $ = (id) => document.getElementById(id);
+$('stamp').textContent = BUILD;
+document.querySelectorAll('.stampHome').forEach((s) => (s.textContent = BUILD));
+const params = new URLSearchParams(location.search);
+const DEBUG = params.has('debug');
+
+/* =====================================================================
+   PART 1 — The worlds
+   Each world is ONE 360° photo (an "equirectangular" image: the whole
+   sphere around the camera unrolled into a 2:1 rectangle, like a world map).
+   The small numbers tune the "light touches" in front of the photo.
+   face = which part of the photo you see through the portal, as a fraction
+          of the photo's width (0.5 = the middle, 0.75 = three-quarters across).
+   mist = how strong the fog at the edge is (bright worlds need less).
+   ===================================================================== */
+const WORLDS = [
+  { id: 'night-desert', name: 'Night desert', place: 'Namaqualand, South Africa',
+    photo: 'Rogland Clear Night', by: 'Greg Zaal', url: 'https://polyhaven.com/a/rogland_clear_night',
+    face: 0.50, mist: 0.55, dust: 0xbcc8ff, dustSize: 0.016, fall: 0.0,  sway: 0.25, dustGlow: 0.9,
+    rays: 0x8fa6ff, rayStr: 0.04, haze: 0x6a5cff, hum: 55 },
+  { id: 'frozen-lake', name: 'Frozen lake', place: 'Italian Alps',
+    photo: "Lago d'Isola", by: 'Andreas Mischok', url: 'https://polyhaven.com/a/lago_disola',
+    face: 0.62, mist: 0.22, dust: 0xffffff, dustSize: 0.028, fall: 0.32, sway: 0.35, dustGlow: 0.8,
+    rays: 0xfff1dc, rayStr: 0.08, haze: 0xbfe3ff, hum: 62 },
+  { id: 'rainforest', name: 'Rainforest trail', place: 'South Africa',
+    photo: 'Rainforest Trail', by: 'Dimitrios Savva & Jarod Guest', url: 'https://polyhaven.com/a/rainforest_trail',
+    face: 0.74, mist: 0.30, dust: 0xffe7a3, dustSize: 0.018, fall: -0.03, sway: 0.4, dustGlow: 1.0,
+    rays: 0xffe2a0, rayStr: 0.20, haze: 0x9be3a0, hum: 49 },
+  { id: 'zen-garden', name: 'Japanese garden', place: 'Japan',
+    photo: 'Ninomaru Teien', by: 'Greg Zaal', url: 'https://polyhaven.com/a/ninomaru_teien',
+    face: 0.27, mist: 0.25, dust: 0xffc2dc, dustSize: 0.022, fall: 0.08, sway: 0.5, dustGlow: 0.85,
+    rays: 0xffd2a8, rayStr: 0.15, haze: 0xffb8d0, hum: 65 },
+];
+let worldIdx = 0;
+
+/* =====================================================================
+   PART 2 — What can this device do?
+   ===================================================================== */
+const UA = navigator.userAgent;
+const QUEST = /OculusBrowser|Quest/i.test(UA);
+const QUEST2 = /Quest 2/i.test(UA);
+async function detect() {
+  const secure = window.isSecureContext;
+  let ar = false;
+  if ('xr' in navigator) {
+    try { ar = await navigator.xr.isSessionSupported('immersive-ar'); } catch (e) { ar = false; }
+  }
+  const cam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && secure && !QUEST;
+  return { secure, ar, cam };
+}
+const caps = await detect();
+if (caps.ar) { $('bAR').hidden = false; $('bAR').classList.add('main'); }
+if (caps.cam) { $('bCam').hidden = false; if (!caps.ar) $('bCam').classList.add('main'); }
+if (!caps.ar && !caps.cam) $('b3D').classList.add('main');
+if (QUEST) $('bAR').textContent = 'Open portal in your room (headset)';
+
+/* Lighter photos (2048 px) for phones with little memory, or if asked: ?q=2k */
+let LIGHT = params.get('q') === '2k' ||
+  (navigator.deviceMemory && navigator.deviceMemory <= 3) ||
+  (Math.min(screen.width, screen.height) < 360);
+
+/* =====================================================================
+   PART 3 — Home screen: the world picker
+   ===================================================================== */
+function renderTiles() {
+  $('worlds').innerHTML = WORLDS.map((w, i) => `
+    <button class="tile${i === worldIdx ? ' on' : ''}" data-i="${i}" aria-pressed="${i === worldIdx}">
+      <img src="worlds/${w.id}-thumb.jpg?v=${ASSET_V}" alt="" loading="lazy" onerror="this.style.opacity=0">
+      <span><b>${w.name}</b><small>${w.place}</small></span>
+    </button>`).join('');
+  const w = WORLDS[worldIdx];
+  $('credit').innerHTML = `Photo: <a href="${w.url}" target="_blank" rel="noopener">${w.photo}</a> by ${w.by}, Poly Haven, CC0 (free to use).`;
+}
+$('worlds').addEventListener('click', (e) => {
+  const t = e.target.closest('.tile'); if (!t) return;
+  worldIdx = +t.dataset.i; renderTiles();
+  preload();                                   // start downloading straight away
+});
+renderTiles();
+$('bNext').addEventListener('click', () => { $('s1').hidden = true; $('s2').hidden = false; preload(); });
+$('bBack').addEventListener('click', () => { $('s2').hidden = true; $('s1').hidden = false; });
+
+/* ---------- loading a world photo, with progress and retry ----------
+   We fetch the file ourselves (instead of letting three.js do it) so we
+   can show a progress bar and catch failures. */
+const texCache = new Map();                  // world id → THREE.Texture
+let loading = null, loadingFor = '';         // the download in progress, and for which world
+function photoURL(w) { return `worlds/${w.id}${LIGHT ? '-2k' : ''}.jpg?v=${ASSET_V}`; }
+async function loadWorldTexture(w, onProg) {
+  const key = w.id + (LIGHT ? '-2k' : '');
+  if (texCache.has(key)) { const t = texCache.get(key); texCache.delete(key); texCache.set(key, t); return t; }  // most recent goes last
+  const res = await fetch(photoURL(w));
+  if (!res.ok) { const e = new Error('server said ' + res.status); e.missing = res.status === 404; throw e; }
+  const total = +res.headers.get('content-length') || 0;
+  const reader = res.body ? res.body.getReader() : null;
+  let blob;
+  if (reader) {
+    const parts = []; let got = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      parts.push(value); got += value.length;
+      onProg && onProg(total ? got / total : 0.5, got);
+    }
+    blob = new Blob(parts, { type: 'image/jpeg' });
+  } else blob = await res.blob();
+  const img = new Image();
+  img.src = URL.createObjectURL(blob);
+  await img.decode();
+  const tex = new THREE.Texture(img);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  tex.needsUpdate = true;
+  // keep at most two worlds in memory (each 4K photo uses ~40 MB of graphics memory)
+  if (texCache.size >= 2) { const [k, t] = texCache.entries().next().value; t.dispose(); texCache.delete(k); }
+  texCache.set(key, tex);
+  return tex;
+}
+function setLoadUI(p, txt) {
+  $('loadBar').style.width = Math.round(p * 100) + '%';
+  $('loadTxt').textContent = txt;
+}
+function preload() {
+  const w = WORLDS[worldIdx];
+  $('err').textContent = ''; $('retryRow').hidden = true;
+  setLoadUI(0, `World photo (${w.name}): starting…`);
+  const mine = loadWorldTexture(w, (p, got) =>
+    setLoadUI(p, `World photo (${w.name}): ${Math.round(p * 100)}% · ${(got / 1048576).toFixed(1)} MB`));
+  loading = mine; loadingFor = w.id + (LIGHT ? '-2k' : '');
+  mine.then(() => { if (loading === mine) setLoadUI(1, `World photo (${w.name}): ready${LIGHT ? ' (lighter version)' : ''}`); })
+      .catch((e) => {
+        if (loading !== mine) return;
+        setLoadUI(0, `World photo (${w.name}): not loaded`);
+        $('err').textContent = e.missing
+          ? `The world photo is missing from the server (worlds/${w.id}${LIGHT ? '-2k' : ''}.jpg). Check that the worlds folder was uploaded next to index.html.`
+          : `The world photo didn't load (${e.message}). Check your connection and tap Retry.`;
+        $('retryRow').hidden = false;
+      });
+  return mine;
+}
+$('bRetry').addEventListener('click', preload);
+$('bLight').addEventListener('click', () => { LIGHT = true; preload(); });
+
+/* =====================================================================
+   PART 4 — The 3D scene
+   ===================================================================== */
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+renderer.xr.enabled = true;
+$('stage').appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(65, innerWidth / innerHeight, 0.05, 60);
+scene.add(camera);
+const clock = new THREE.Clock();
+
+/* ---------- the portal: its size in metres ---------- */
+const PW = 1.1, PH = 2.1;                    // an oval doorway 1.1 m wide, 2.1 m tall
+const portal = new THREE.Group();            // everything that belongs to the portal moves with this
+portal.visible = false;
+scene.add(portal);
+
+/* Shared numbers every portal shader reads.
+   uR  = the oval's half-width and half-height right now (they grow while it opens)
+   uCy = the height of the oval's centre                                         */
+const U = {
+  uTime: { value: 0 }, uOpen: { value: 0 }, uFlash: { value: 0 }, uNear: { value: 0 },
+  uR: { value: new THREE.Vector2(0.01, 0.01) }, uCy: { value: 0.01 },
+  uOutside: { value: 1 }, uHaze: { value: new THREE.Color(0x6a5cff) }, uMist: { value: 0.55 },
+};
+
+/* ---- STENCIL, step 1: the invisible "hole" ----
+   Draws the oval into the stencil buffer only (colorWrite:false = no colour).
+   Every pixel it covers gets the mark "1".                                   */
+const ovalShape = new THREE.Shape();
+ovalShape.absellipse(0, PH / 2, PW / 2, PH / 2, 0, Math.PI * 2, false, 0);
+const mask = new THREE.Mesh(new THREE.ShapeGeometry(ovalShape, 72), new THREE.MeshBasicMaterial({
+  colorWrite: false, depthWrite: false, depthTest: false, side: THREE.DoubleSide,
+  stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc,
+  stencilZPass: THREE.ReplaceStencilOp, stencilFail: THREE.ReplaceStencilOp, stencilZFail: THREE.ReplaceStencilOp,
+}));
+mask.renderOrder = 1;
+portal.add(mask);
+
+/* ---- STENCIL, step 2: everything of the other world tests the mark ----
+   Outside: draw only where mark == 1 (inside the hole).
+   Inside:  draw only where mark != 1 (everywhere except the hole).          */
+const stencilMats = [];
+function stencilTested(mat) {
+  Object.assign(mat, {
+    stencilWrite: true, stencilRef: 1, stencilFunc: THREE.EqualStencilFunc,
+    stencilFail: THREE.KeepStencilOp, stencilZFail: THREE.KeepStencilOp, stencilZPass: THREE.KeepStencilOp,
+  });
+  stencilMats.push(mat);
+  return mat;
+}
+
+/* Glow blending: ADD light to the colour, but leave the see-through layer
+   (alpha) untouched. Plain additive blending also made the glow's rectangle
+   "solid", which painted a black box over the camera (build b bug). */
+function glow(mat) {
+  Object.assign(mat, {
+    blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
+    blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
+    blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
+  });
+  return mat;
+}
+
+/* ---------- the other world: the 360° photo on the inside of a big ball ---------- */
+const sphereGeo = new THREE.SphereGeometry(20, 64, 32);
+sphereGeo.scale(-1, 1, 1);                   // flip it so the photo isn't mirrored from inside
+const worldMat = stencilTested(new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false, depthWrite: false, toneMapped: false }));
+const worldBall = new THREE.Mesh(sphereGeo, worldMat);
+worldBall.position.set(0, 1.45, 0);          // centre of the ball ≈ eye height above the portal's floor
+worldBall.renderOrder = 2;
+portal.add(worldBall);
+
+/* ---------- light touch 1: drifting dust / snow / pollen ----------
+   500 points, each with a random "seed". The GPU moves them (no work for the
+   phone's processor): position = seed + speed × time, wrapped inside a box. */
+const N_DUST = QUEST2 ? 350 : 500;
+const seeds = new Float32Array(N_DUST * 3);
+for (let i = 0; i < seeds.length; i++) seeds[i] = Math.random();
+const dustGeo = new THREE.BufferGeometry();
+dustGeo.setAttribute('position', new THREE.BufferAttribute(seeds, 3));
+const dustU = { uSize: { value: 0.02 }, uFall: { value: 0 }, uSway: { value: 0.3 }, uColor: { value: new THREE.Color() },
+                uGlow: { value: 1 }, uViewH: { value: 800 } };
+const dustMat = stencilTested(glow(new THREE.ShaderMaterial({
+  uniforms: { ...dustU, uTime: U.uTime, uOutside: U.uOutside, uOpen: U.uOpen },
+  transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending /* replaced by glow() */,
+  vertexShader: /* glsl */`
+    uniform float uTime, uSize, uFall, uSway, uOutside, uViewH;
+    varying float vA;
+    void main(){
+      vec3 s = position;
+      vec3 p = vec3(s.x * 8.0 - 4.0, 0.0, s.z * 8.0 - 6.0);       // a box 8 m × 8 m behind/around the portal
+      p.y = mod(s.y * 2.8 - uFall * uTime, 2.8);                    // falling (snow) or rising (pollen), wrapped
+      p.x += sin(uTime * 0.35 + s.y * 23.0) * uSway;                // gentle sideways drift
+      p.z += cos(uTime * 0.27 + s.x * 19.0) * uSway * 0.6;
+      vA = 0.55 + 0.45 * sin(uTime * 1.3 + s.x * 40.0);             // slow twinkle
+      vA *= smoothstep(0.0, 0.3, p.y) * smoothstep(2.8, 2.3, p.y);  // fade at the top and bottom of the box
+      if (uOutside > 0.5 && p.z > -0.05) vA = 0.0;                  // from outside, only the far side of the portal
+      vec4 mv = modelViewMatrix * vec4(p, 1.0);
+      gl_PointSize = clamp(uSize * projectionMatrix[1][1] * uViewH * 0.5 / -mv.z, 1.0, 48.0);
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: /* glsl */`
+    uniform vec3 uColor; uniform float uGlow, uOpen;
+    varying float vA;
+    void main(){
+      float r = length(gl_PointCoord - 0.5);
+      float a = smoothstep(0.5, 0.0, r);
+      gl_FragColor = vec4(uColor * a * a * vA * uGlow * uOpen, 1.0);
+    }`,
+})));
+const dust = new THREE.Points(dustGeo, dustMat);
+dust.frustumCulled = false;
+dust.renderOrder = 3;
+portal.add(dust);
+
+/* ---------- light touch 2: soft light rays (god rays) ----------
+   Each ray = two crossed see-through planes with a fading gradient,
+   so it looks like a shaft of light from any angle. */
+const rayU = { uColor: { value: new THREE.Color() }, uStr: { value: 0.2 } };
+const rayMat = stencilTested(glow(new THREE.ShaderMaterial({
+  uniforms: { ...rayU, uTime: U.uTime, uOpen: U.uOpen },
+  transparent: true, depthWrite: false, depthTest: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending /* replaced by glow() */,
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: /* glsl */`
+    uniform vec3 uColor; uniform float uStr, uTime, uOpen;
+    varying vec2 vUv;
+    void main(){
+      float across = sin(vUv.x * 3.14159);                         // soft left and right edges
+      float along  = smoothstep(0.0, 0.6, vUv.y) * (1.0 - smoothstep(0.9, 1.0, vUv.y));
+      float flick  = 0.75 + 0.25 * sin(uTime * 0.4 + vUv.y * 3.0);
+      float a = across * across * along * flick * uStr * uOpen;
+      gl_FragColor = vec4(uColor * a, 1.0);
+    }`,
+})));
+const rays = new THREE.Group();
+[[-1.6, -2.6, 0.30], [0.4, -3.4, 0.22], [1.9, -2.2, 0.26], [-0.6, -4.6, 0.36]].forEach(([x, z, w]) => {
+  const g = new THREE.Group();
+  for (let k = 0; k < 2; k++) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 5.5), rayMat);
+    m.rotation.y = k * Math.PI / 2; m.renderOrder = 3; g.add(m);
+  }
+  g.position.set(x, 2.2, z);
+  g.rotation.z = 0.32; g.rotation.x = -0.12;
+  rays.add(g);
+});
+portal.add(rays);
+
+/* ---------- shared shader helpers: smooth noise ---------- */
+const NOISE = /* glsl */`
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+    return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+  float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ v += a * vnoise(p); p *= 2.03; a *= 0.5; } return v; }
+`;
+const portalVert = `uniform vec2 uOff; varying vec2 vP;
+  void main(){ vP = position.xy + uOff; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+
+/* ---------- light touch 3: fog at the boundary ----------
+   A soft swirling haze just behind the opening, thickest near the edge. */
+const mistMat = stencilTested(glow(new THREE.ShaderMaterial({
+  uniforms: { ...U, uOff: { value: new THREE.Vector2(0, PH / 2) } },
+  transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending /* replaced by glow() */,
+  vertexShader: portalVert,
+  fragmentShader: /* glsl */`
+    uniform float uTime, uOpen, uMist; uniform vec2 uR; uniform float uCy; uniform vec3 uHaze;
+    varying vec2 vP;
+    ${NOISE}
+    void main(){
+      vec2 q = vec2(vP.x / uR.x, (vP.y - uCy) / uR.y);
+      float d = length(q);
+      float swirl = fbm(vec2(atan(q.y, q.x) * 2.0 + uTime * 0.25, d * 3.0 - uTime * 0.4));
+      float a = smoothstep(0.45, 1.0, d) * (1.0 - smoothstep(0.98, 1.02, d)) * (0.35 + 0.65 * swirl);
+      gl_FragColor = vec4(uHaze * a * uMist * uOpen, 1.0);
+    }`,
+})));
+const mist = new THREE.Mesh(new THREE.PlaneGeometry(PW * 1.2, PH * 1.1), mistMat);
+mist.position.set(0, PH / 2, -0.03);
+mist.renderOrder = 4;
+portal.add(mist);
+
+/* ---------- the energy "tear": the glowing ragged edge ----------
+   For each pixel we measure how far it is from the oval's edge (d = 1 on the
+   edge). Noise wobbles that edge so it looks torn, and the colour flows
+   between violet, blue and pink. Additive blending = light adds up, like real glow. */
+const rimMat = glow(new THREE.ShaderMaterial({
+  uniforms: { ...U, uOff: { value: new THREE.Vector2(0, PH / 2) } },
+  transparent: true, depthWrite: false, depthTest: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending /* replaced by glow() */,
+  vertexShader: portalVert,
+  fragmentShader: /* glsl */`
+    uniform float uTime, uOpen, uFlash, uNear; uniform vec2 uR; uniform float uCy;
+    varying vec2 vP;
+    ${NOISE}
+    void main(){
+      vec2 q = vec2(vP.x / uR.x, (vP.y - uCy) / uR.y);
+      float d = length(q);
+      float ang = atan(q.y, q.x);
+      float n1 = fbm(vec2(ang * 3.0 + 10.0, uTime * 0.55));
+      float n2 = fbm(vec2(ang * 11.0 - uTime * 1.9, d * 5.0 + uTime * 0.5));
+      float edge = 1.0 + (n1 - 0.5) * 0.12 + (n2 - 0.5) * 0.06;      // the torn, wobbling edge
+      float x = d - edge;                                            // < 0 inside, > 0 outside
+      float scale = min(uR.x, uR.y) * 2.0;                           // keep the line thin in metres
+      float core  = exp(-abs(x) * 70.0 * scale);                     // the white-hot line
+      float outer = exp(-max(x, 0.0) * 11.0) * step(0.0, x);         // glow spilling into the room (a tight halo)
+      float inner = exp(-max(-x, 0.0) * 12.0) * step(x, 0.0);        // shimmer just inside the opening
+      float haze  = inner * (0.5 + 0.5 * sin(ang * 14.0 + d * 30.0 - uTime * 5.0));   // rippling "heat haze"
+      float spark = smoothstep(0.86, 0.97, vnoise(vec2(ang * 38.0, uTime * 7.0 + d * 18.0))) * exp(-abs(x) * 16.0);
+      vec3 cV = vec3(0.61, 0.42, 1.0), cB = vec3(0.30, 0.79, 1.0), cP = vec3(1.0, 0.31, 0.85);
+      vec3 col = mix(cV, cB, 0.5 + 0.5 * sin(ang * 2.0 + uTime * 0.8 + n1 * 5.0));
+      col = mix(col, cP, smoothstep(0.55, 0.9, n2));
+      float boost = 1.0 + uNear * 0.6;                               // brighter as you come close
+      vec3 c = col * (outer * 0.5 + inner * 0.55 + haze * 0.25) * boost
+             + vec3(1.0, 0.94, 1.0) * core * 1.3 + cP * spark * 1.6;
+      c += uFlash * col * 2.0 * exp(-max(d - 0.2, 0.0) * 1.5);       // the flash when it tears open
+      c *= smoothstep(0.0, 0.15, uOpen);
+      gl_FragColor = vec4(c, 1.0);
+    }`,
+}));
+const rim = new THREE.Mesh(new THREE.PlaneGeometry(PW + 1.4, PH + 1.4), rimMat);
+rim.position.set(0, PH / 2, 0.004);
+rim.renderOrder = 10;
+portal.add(rim);
+
+/* ---------- a glow on the floor where the portal stands ---------- */
+const floorMat = glow(new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending /* replaced by glow() */,
+  vertexShader: `varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: /* glsl */`
+    uniform float uOpen, uTime, uFlash; uniform vec2 uR;
+    varying vec2 vP;
+    void main(){
+      vec2 q = vec2(vP.x / (uR.x * 1.5 + 0.05), vP.y / 0.32);
+      float g = exp(-dot(q, q) * 2.5) * (0.8 + 0.2 * sin(uTime * 3.0));
+      vec3 col = mix(vec3(0.61, 0.42, 1.0), vec3(1.0, 0.31, 0.85), 0.5 + 0.5 * vP.x);
+      gl_FragColor = vec4(col * g * (0.32 * min(uOpen * 3.0, 1.0) + uFlash), 1.0);
+    }`,
+}));
+const floorGlow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.2), floorMat);
+floorGlow.rotation.x = -Math.PI / 2;
+floorGlow.position.y = 0.004;
+floorGlow.renderOrder = 9;
+portal.add(floorGlow);
+
+/* ---------- placement marker (a ring on the floor) ---------- */
+const reticle = new THREE.Group();
+const ringMat = new THREE.MeshBasicMaterial({ color: 0xff4fd8, transparent: true, opacity: 0.9, depthTest: false });
+const ring1 = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.19, 48).rotateX(-Math.PI / 2), ringMat);
+const ring2 = new THREE.Mesh(new THREE.RingGeometry(0.03, 0.045, 24).rotateX(-Math.PI / 2), ringMat);
+const ring3 = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.29, 64, 1, 0, Math.PI * 1.4).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ color: 0x4cc9ff, transparent: true, opacity: 0.8, depthTest: false }));
+reticle.add(ring1, ring2, ring3);
+reticle.children.forEach((m) => (m.renderOrder = 20));
+reticle.visible = false;
+scene.add(reticle);
+
+/* ---------- a neon grid floor for the laptop 3D preview ---------- */
+const grid = new THREE.GridHelper(14, 28, 0x6a4bb8, 0x221d42);   // solid (not see-through), so it is drawn
+                                                                // BEFORE the world and the world can cover it
+grid.visible = false;
+scene.add(grid);
+
+/* ---------- apply a world's photo and light touches ---------- */
+function applyWorld(w, tex) {
+  worldMat.map = tex; worldMat.needsUpdate = true;
+  // turn the ball so the chosen part of the photo ("face") sits straight through the opening
+  worldBall.rotation.y = 2 * Math.PI * w.face + Math.PI / 2;
+  U.uMist.value = w.mist;
+  dustU.uColor.value.set(w.dust); dustU.uSize.value = w.dustSize; dustU.uFall.value = w.fall;
+  dustU.uSway.value = w.sway; dustU.uGlow.value = w.dustGlow;
+  rayU.uColor.value.set(w.rays); rayU.uStr.value = w.rayStr;
+  U.uHaze.value.set(w.haze);
+  $('hWorld').textContent = 'WORLD · ' + w.name.toUpperCase();
+  setHum(w.hum);
+}
+
+/* =====================================================================
+   PART 5 — Sound, made live with the Web Audio API (no sound files)
+   ===================================================================== */
+let ac = null, master = null, hum = null, muted = false;
+function audioInit() {
+  if (ac) { ac.resume(); return; }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  ac = new AC();
+  master = ac.createGain(); master.gain.value = 0.9;
+  const comp = ac.createDynamicsCompressor();
+  master.connect(comp); comp.connect(ac.destination);
+}
+function noiseBuffer(sec = 2) {
+  const b = ac.createBuffer(1, ac.sampleRate * sec, ac.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return b;
+}
+function env(g, t, a, peak, hold, r) {            // a simple "rise, hold, fade" volume shape
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + a);
+  g.gain.setValueAtTime(peak, t + a + hold);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + a + hold + r);
+}
+/* Opening: a deep rumble (filtered noise + a low sine sliding up) and crackles */
+function sfxOpen() {
+  if (!ac || muted) return;
+  const t = ac.currentTime;
+  const n = ac.createBufferSource(); n.buffer = noiseBuffer(3);
+  const lp = ac.createBiquadFilter(); lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(90, t); lp.frequency.exponentialRampToValueAtTime(700, t + 1.1);
+  lp.frequency.exponentialRampToValueAtTime(120, t + 2.6);
+  const g = ac.createGain(); env(g, t, 0.35, 0.9, 0.6, 1.6);
+  n.connect(lp); lp.connect(g); g.connect(master); n.start(t); n.stop(t + 3);
+  const o = ac.createOscillator(); o.type = 'sine';
+  o.frequency.setValueAtTime(32, t); o.frequency.exponentialRampToValueAtTime(70, t + 1.4);
+  const og = ac.createGain(); env(og, t, 0.2, 0.7, 0.8, 1.2);
+  o.connect(og); og.connect(master); o.start(t); o.stop(t + 2.5);
+  for (let i = 0; i < 9; i++) {                  // electric crackles as the edge tears
+    const ct = t + 0.25 + Math.random() * 1.3;
+    const c = ac.createBufferSource(); c.buffer = noiseBuffer(0.1);
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2000 + Math.random() * 4000; bp.Q.value = 6;
+    const cg = ac.createGain(); env(cg, ct, 0.004, 0.25 + Math.random() * 0.3, 0.01, 0.06);
+    c.connect(bp); bp.connect(cg); cg.connect(master); c.start(ct); c.stop(ct + 0.1);
+  }
+}
+/* The hum: two slightly out-of-tune buzzes (that beating = "energy") through a
+   filter that slowly opens and closes. Louder as you get closer. */
+function humStart(f) {
+  if (!ac || hum) return;
+  const t = ac.currentTime;
+  const o1 = ac.createOscillator(), o2 = ac.createOscillator(), o3 = ac.createOscillator();
+  o1.type = o2.type = 'sawtooth'; o3.type = 'sine';
+  const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 380; lp.Q.value = 4;
+  const lfo = ac.createOscillator(); lfo.frequency.value = 0.23;
+  const lfoG = ac.createGain(); lfoG.gain.value = 160;
+  lfo.connect(lfoG); lfoG.connect(lp.frequency);
+  const g = ac.createGain(); g.gain.value = 0.0001;
+  const o3g = ac.createGain(); o3g.gain.value = 0.4;
+  o1.connect(lp); o2.connect(lp); o3.connect(o3g); o3g.connect(lp); lp.connect(g); g.connect(master);
+  [o1, o2, o3, lfo].forEach((o) => o.start(t));
+  hum = { o1, o2, o3, lp, g, lfo };
+  setHum(f);
+}
+function setHum(f) {
+  if (!hum) return;
+  const t = ac.currentTime;
+  hum.o1.frequency.setTargetAtTime(f, t, 0.3);
+  hum.o2.frequency.setTargetAtTime(f * 1.007, t, 0.3);
+  hum.o3.frequency.setTargetAtTime(f * 2, t, 0.3);
+}
+function humLevel(near, inside) {                // called every frame
+  if (!hum) return;
+  const t = ac.currentTime;
+  const v = muted ? 0.0001 : inside ? 0.05 : 0.03 + 0.17 * near;
+  hum.g.gain.setTargetAtTime(v, t, 0.15);
+  hum.lp.frequency.setTargetAtTime(inside ? 220 : 300 + 500 * near, t, 0.2);
+}
+function humStop() {
+  if (!hum) return;
+  const t = ac.currentTime;
+  hum.g.gain.setTargetAtTime(0.0001, t, 0.2);
+  const h = hum; hum = null;
+  setTimeout(() => [h.o1, h.o2, h.o3, h.lfo].forEach((o) => { try { o.stop(); } catch (e) {} }), 800);
+}
+/* Crossing: a whoosh — noise through a filter that sweeps up and back down,
+   moving from one ear to the other. */
+function sfxWhoosh(entering) {
+  if (!ac || muted) return;
+  const t = ac.currentTime;
+  const n = ac.createBufferSource(); n.buffer = noiseBuffer(1.5);
+  const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.1;
+  bp.frequency.setValueAtTime(entering ? 250 : 2500, t);
+  bp.frequency.exponentialRampToValueAtTime(entering ? 2800 : 300, t + 0.45);
+  bp.frequency.exponentialRampToValueAtTime(entering ? 400 : 200, t + 1.1);
+  const g = ac.createGain(); env(g, t, 0.18, 0.95, 0.1, 0.8);
+  const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
+  n.connect(bp); bp.connect(g);
+  if (pan) { pan.pan.setValueAtTime(-0.8, t); pan.pan.linearRampToValueAtTime(0.8, t + 1.0); g.connect(pan); pan.connect(master); }
+  else g.connect(master);
+  n.start(t); n.stop(t + 1.5);
+}
+function sfxBlip(f = 880) {                      // little "lock-on" beep
+  if (!ac || muted) return;
+  const t = ac.currentTime;
+  const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+  const g = ac.createGain(); env(g, t, 0.005, 0.18, 0.04, 0.12);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.25);
+}
+$('bSound').addEventListener('click', () => {
+  muted = !muted;
+  $('bSound').textContent = muted ? 'Sound off' : 'Sound on';
+});
+
+/* =====================================================================
+   PART 6 — The story: placing → opening → open, and outside ↔ inside
+   ===================================================================== */
+let mode = 'home';            // 'ar' | 'quest' | 'camera' | '3d'
+let stage = 'scan';           // 'scan' (looking for floor) | 'locked' (floor found) | 'opening' | 'open'
+let inside = false, doorway = false;
+let openStart = 0, breachTime = 0;
+let prevSide = 0;             // which side of the portal the viewer was on last frame (+1 / −1)
+let charge = 0;               // iPhone: signal charges while you hold the portal in view
+const camPos = new THREE.Vector3(), local = new THREE.Vector3();
+
+function hint(t) { $('hint').textContent = t; }
+function toast(t, ms = 2600) {
+  $('toast').textContent = t; $('toast').hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => ($('toast').hidden = true), ms);
+}
+function openPortalAt(pos, faceTowards) {
+  portal.position.copy(pos);
+  portal.rotation.set(0, Math.atan2(faceTowards.x - pos.x, faceTowards.z - pos.z), 0);   // front (+z) faces you
+  portal.visible = true;
+  stage = 'opening'; openStart = clock.getElapsedTime();
+  inside = false; doorway = false; prevSide = 0; applyStencil();
+  sfxOpen();
+  setTimeout(() => humStart(WORLDS[worldIdx].hum), 600);
+}
+/* The stencil "rule" depends on where you are:
+     outside  → world shows only THROUGH the hole       (Equal 1)
+     inside   → world shows everywhere EXCEPT the hole  (NotEqual 1)
+     doorway  → you're standing in the opening: world everywhere (Always) */
+function applyStencil() {
+  const f = doorway ? THREE.AlwaysStencilFunc : inside ? THREE.NotEqualStencilFunc : THREE.EqualStencilFunc;
+  stencilMats.forEach((m) => (m.stencilFunc = f));
+  U.uOutside.value = inside || doorway ? 0 : 1;
+  mist.visible = !inside && !doorway;
+}
+const sm = (a, b, x) => { const k = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1); return k * k * (3 - 2 * k); };
+function animateOpening(t) {
+  // the tear: first a bright slit on the floor that shoots up, then it widens
+  const e = stage === 'opening' ? t - openStart : 99;
+  const sy = 0.03 + 0.97 * sm(0.15, 1.1, e);
+  const sx = 0.06 + 0.94 * sm(0.55, 1.7, e);
+  U.uR.value.set(PW / 2 * sx, PH / 2 * sy);
+  U.uCy.value = PH / 2 * sy;
+  mask.scale.set(sx, sy, 1);
+  U.uOpen.value = sm(0.0, 0.5, e);
+  U.uFlash.value = sm(0.35, 0.6, e) * (1 - sm(0.6, 1.4, e));
+  if (stage === 'opening' && e > 1.8) { stage = 'open'; breachTime = t; sfxBlip(1320); onOpen(); }
+}
+function onOpen() {
+  if (mode === 'ar') { hint('Walk slowly towards the portal and step through it.'); }
+  if (mode === 'camera') { hint('Hold the portal in view to charge the signal, then tap Step in.'); $('bStep').hidden = false; }
+  if (mode === '3d') { hint('Drag to look around. Scroll or pinch to move closer, or tap Step in.'); $('bStep').hidden = false; }
+  $('bWorld').hidden = false;
+  if (mode === 'ar') $('bMove').hidden = false;
+}
+/* Crossing check: in the portal's own coordinates, the opening is the plane
+   z = 0. If your z changes sign between two frames while you're within the
+   oval, you went THROUGH it. (If you walk around the side, you don't.) */
+function checkCrossing(viewer) {
+  if (stage !== 'open' && stage !== 'opening') return;
+  local.copy(viewer); portal.worldToLocal(local);
+  const q = (local.x / (PW / 2)) ** 2 + ((local.y - PH / 2) / (PH / 2)) ** 2;
+  const within = q < 1.25;                          // a little forgiving at the edge
+  const side = local.z >= 0 ? 1 : -1;
+  if (prevSide !== 0 && side !== prevSide && within) {
+    inside = !inside;
+    sfxWhoosh(inside);
+    pulse();
+    if (inside) toast('You are inside. Turn around to see your room.');
+  }
+  prevSide = side;
+  doorway = within && Math.abs(local.z) < 0.22 && stage === 'open';
+  applyStencil();
+}
+
+/* ---------- HUD ---------- */
+const STAGES = ['SCANNING', 'LOCKED', 'BREACH OPEN', 'INSIDE'];
+const STAGE_COL = ['var(--blue)', 'var(--violet)', 'var(--pink)', '#ffffff'];
+let shownStatus = -1;
+$('segs').innerHTML = '<i></i>'.repeat(12);
+const segEls = [...$('segs').children];
+(() => {                                            // ruler ticks: 0 … 5 m
+  let h = '';
+  for (let m = 0; m <= 5; m++) {
+    const top = (m / 5) * 100;
+    h += `<div class="tk" style="top:${top}%;width:${m % 5 === 0 ? 12 : 8}px"></div><div class="tkl" style="top:${top}%">${m}</div>`;
+    if (m < 5) h += `<div class="tk" style="top:${top + 10}%;width:4px"></div>`;
+  }
+  $('ruler').insertAdjacentHTML('beforeend', h);
+})();
+let hudT = 0;
+const hud = { status: 0, signal: 0, dist: null, x: 0, z: 0, hdg: 0 };
+function statusIndex() {
+  if (inside) return 3;
+  if (stage === 'open') return 2;
+  if (stage === 'opening' || stage === 'locked') return 1;
+  return 0;
+}
+function updateHUD(t) {
+  hud.status = statusIndex();
+  if (hud.status !== shownStatus) {
+    shownStatus = hud.status;
+    const s = $('status');
+    s.textContent = STAGES[hud.status];
+    s.style.color = STAGE_COL[hud.status];
+    s.classList.remove('chg'); void s.offsetWidth; s.classList.add('chg');
+    [...$('pips').children].forEach((p, i) => p.classList.toggle('on', i <= hud.status));
+  }
+  if (t - hudT < 1 / 15) return;                    // update the numbers 15× a second (easy on the phone)
+  hudT = t;
+  // signal: 12 bars; a small, smooth wobble so it feels "live"
+  const wob = 0.03 * Math.sin(t * 7.1) + 0.02 * Math.sin(t * 13.7);
+  const sig = THREE.MathUtils.clamp(hud.signal + wob, 0, 1);
+  const lit = Math.round(sig * 12);
+  segEls.forEach((el, i) => { el.classList.toggle('on', i < lit); el.classList.toggle('hi', i >= 9); });
+  $('db').textContent = (-90 + 70 * sig).toFixed(0);
+  if (hud.dist == null) { $('dist').textContent = '— m'; $('mark').style.top = '100%'; }
+  else {
+    $('dist').textContent = (inside ? 'IN · ' : '') + hud.dist.toFixed(2) + ' m';
+    $('mark').style.top = (Math.min(hud.dist, 5) / 5 * 100) + '%';
+  }
+  const f = (v) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2);
+  $('coords').textContent = `X ${f(hud.x)} · Z ${f(hud.z)} · HDG ${String(Math.round(hud.hdg)).padStart(3, '0')}°`;
+  const el = breachTime ? Math.max(0, t - breachTime) : 0;
+  $('hClock').textContent = 'T+' + String(Math.floor(el / 60)).padStart(2, '0') + ':' + String(Math.floor(el % 60)).padStart(2, '0');
+  if (mode === 'camera') $('bStep').classList.toggle('hot', charge >= 1 && !inside);
+}
+function measure(viewer, viewDir) {
+  if (!portal.visible) { hud.dist = null; hud.signal = stage === 'locked' ? 0.15 : 0.04; return 0; }
+  local.copy(viewer); portal.worldToLocal(local);
+  const d = Math.hypot(local.x, local.z);
+  hud.dist = d; hud.x = local.x; hud.z = local.z;
+  hud.hdg = (THREE.MathUtils.radToDeg(Math.atan2(-viewDir.x, -viewDir.z)) + 360) % 360;
+  const near = THREE.MathUtils.clamp(1 - (d - 0.6) / 3.4, 0, 1);
+  hud.signal = mode === 'camera' ? charge : inside ? 1 : near;
+  return near;
+}
+
+/* =====================================================================
+   PART 7 — The four ways in
+   ===================================================================== */
+function enterViewing() {
+  $('home').style.display = 'none';
+  $('hud').style.display = 'block';
+  $('stamp').style.display = 'block';
+  $('bStep').hidden = true; $('bMove').hidden = true; $('bWorld').hidden = true; $('bFallback').hidden = true;
+  $('bStep').textContent = 'Step in';
+  stage = 'scan'; inside = false; doorway = false; charge = 0; breachTime = 0; shownStatus = -1;
+  portal.visible = false; applyStencil();
+}
+async function begin(fn) {
+  audioInit();                                   // sound can only start from a tap
+  $('err').textContent = '';
+  let tex;
+  const w = WORLDS[worldIdx];
+  try { tex = await (loading && loadingFor === w.id + (LIGHT ? '-2k' : '') ? loading : preload()); }
+  catch (e) { return; }                          // the error + Retry are already on screen
+  applyWorld(WORLDS[worldIdx], tex);
+  fn();
+}
+$('bAR').addEventListener('click', () => begin(QUEST ? startQuest : startAR));
+$('bCam').addEventListener('click', () => begin(startCamera));
+$('b3D').addEventListener('click', () => begin(start3D));
+
+/* ---------- Mode A: real AR on Android (Chrome) ---------- */
+let hitSource = null, tipTimer = null, switchToCamera = false;
+async function startAR() {
+  try {
+    $('hud').style.display = 'block';            // the HUD must be visible when it becomes the AR overlay
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test'],
+      optionalFeatures: ['dom-overlay'],
+      domOverlay: { root: $('hud') },
+    });
+    camera.near = 0.05;
+    renderer.xr.setReferenceSpaceType('local');
+    await renderer.xr.setSession(session);
+    mode = 'ar';
+    enterViewing();
+    startPlacing();
+    const viewerSpace = await session.requestReferenceSpace('viewer');
+    hitSource = await session.requestHitTestSource({ space: viewerSpace });
+    session.addEventListener('select', () => {
+      if (stage !== 'locked' || !reticle.visible) return;
+      const p = new THREE.Vector3().setFromMatrixPosition(reticle.matrix);
+      const me = new THREE.Vector3().setFromMatrixPosition(renderer.xr.getCamera().matrixWorld);
+      reticle.visible = false; stopTips();
+      openPortalAt(p, me);
+      hint('');
+    });
+    session.addEventListener('end', () => {
+      hitSource = null; backHome();
+      if (switchToCamera) { switchToCamera = false; setTimeout(() => begin(startCamera), 300); }
+    });
+  } catch (e) {
+    $('hud').style.display = 'none';
+    $('err').textContent = 'Could not start AR: ' + e.message;
+  }
+}
+function startPlacing() {
+  stage = 'scan'; portal.visible = false; inside = false; humStop(); applyStencil();
+  $('bMove').hidden = true; $('bWorld').hidden = true;
+  hint('Point your phone at the floor about 2 m away and move it slowly. Tap when the ring appears.');
+  stopTips(); tipTimer = setTimeout(showTips, 9000);
+}
+function showTips() {
+  tipTimer = null;
+  if (stage !== 'scan') return;
+  hint("Can't find the floor yet. Turn on a light, point at a rug or a textured floor (shiny floors are tricky), and move slowly side to side.");
+  $('bFallback').hidden = false;
+}
+function stopTips() { clearTimeout(tipTimer); tipTimer = null; $('bFallback').hidden = true; }
+$('bMove').addEventListener('click', () => { if (mode === 'ar') startPlacing(); });
+$('bFallback').addEventListener('click', () => { switchToCamera = true; renderer.xr.getSession()?.end(); });
+['bStep', 'bMove', 'bWorld', 'bFallback', 'bSound', 'bExit'].forEach((id) =>
+  $(id).addEventListener('beforexrselect', (e) => e.preventDefault()));   // tapping a button must not place the portal
+
+/* ---------- Mode B: Meta Quest (headset AR with passthrough) ----------
+   No screen to tap and no page overlay in a headset, so: a controller beam
+   to place the portal on the floor, and the HUD on a floating panel. */
+const qCanvas = document.createElement('canvas'); qCanvas.width = 1024; qCanvas.height = 384;
+const qCtx = qCanvas.getContext('2d');
+const qTex = new THREE.CanvasTexture(qCanvas); qTex.colorSpace = THREE.SRGBColorSpace;
+const qPanel = new THREE.Mesh(new THREE.PlaneGeometry(0.84, 0.315),
+  new THREE.MeshBasicMaterial({ map: qTex, transparent: true, depthTest: false, depthWrite: false }));
+qPanel.renderOrder = 30; qPanel.visible = false; scene.add(qPanel);
+let qReadout = false, qPanelT = 0, qFps = 0, qFrames = 0, qFpsT = 0, qMsg = '';
+const controllers = [];
+for (let i = 0; i < 2; i++) {
+  const c = renderer.xr.getController(i);
+  const beamGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1)]);
+  beamGeo.setAttribute('color', new THREE.Float32BufferAttribute([0.61, 0.42, 1, 1, 0.61, 0.42, 1, 0], 4));
+  const beam = new THREE.Line(beamGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthTest: false }));
+  beam.scale.z = 1.5; beam.renderOrder = 25;
+  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.11), new THREE.MeshBasicMaterial({ color: 0x15131f }));
+  handle.position.z = 0.05;
+  c.add(beam, handle); c.visible = false;
+  c.userData = { beam, hand: null, prev: [] };
+  c.addEventListener('connected', (e) => { c.userData.hand = e.data.handedness; c.userData.src = e.data; });
+  c.addEventListener('disconnected', () => { c.userData.src = null; });
+  c.addEventListener('select', () => onQuestSelect(c));
+  scene.add(c); controllers.push(c);
+}
+const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const ray = new THREE.Ray(), qHit = new THREE.Vector3();
+function controllerFloorHit(c) {
+  c.updateMatrixWorld();
+  ray.origin.setFromMatrixPosition(c.matrixWorld);
+  ray.direction.set(0, 0, -1).transformDirection(c.matrixWorld);
+  const hit = ray.intersectPlane(floorPlane, qHit);
+  return hit && ray.origin.distanceTo(hit) < 8 ? hit : null;
+}
+function onQuestSelect(c) {
+  if (mode !== 'quest' || (stage !== 'scan' && stage !== 'locked')) return;
+  const hit = controllerFloorHit(c);
+  if (!hit) return;
+  const me = new THREE.Vector3().setFromMatrixPosition(renderer.xr.getCamera().matrixWorld);
+  reticle.visible = false;
+  openPortalAt(hit.clone(), me);
+  vibrate(c, 0.6, 120);
+}
+function vibrate(c, v, ms) {
+  const h = c.userData.src?.gamepad?.hapticActuators?.[0];
+  try { h && h.pulse && h.pulse(v, ms); } catch (e) {}
+}
+function pulse() { controllers.forEach((c) => vibrate(c, 0.8, 160)); if (navigator.vibrate && mode !== 'quest') navigator.vibrate(40); }
+async function startQuest() {
+  try {
+    renderer.xr.setFramebufferScaleFactor(QUEST2 ? 0.8 : 0.9);
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      optionalFeatures: ['local-floor', 'hand-tracking'],
+    });
+    camera.near = 0.1;
+    renderer.xr.setReferenceSpaceType('local-floor');
+    await renderer.xr.setSession(session);
+    try { session.updateTargetFrameRate && await session.updateTargetFrameRate(72); } catch (e) {}
+    mode = 'quest';
+    enterViewing();
+    $('hud').style.display = 'none';
+    qPanel.visible = true; controllers.forEach((c) => (c.visible = true));
+    qMsg = 'Point the beam at the floor · Pull the trigger to open the portal';
+    renderer.xr.getReferenceSpace()?.addEventListener?.('reset', () => {
+      if (stage !== 'scan') { qMsg = 'View re-centred · Pull the trigger to place the portal again'; stage = 'scan'; portal.visible = false; humStop(); }
+    });
+    session.addEventListener('end', () => { qPanel.visible = false; controllers.forEach((c) => (c.visible = false)); backHome(); });
+  } catch (e) {
+    $('err').textContent = 'Could not start the headset view: ' + e.message;
+  }
+}
+/* Quest buttons: A = move portal, B or Y = next world, X = performance readout */
+function questButtons() {
+  controllers.forEach((c) => {
+    const gp = c.userData.src?.gamepad; if (!gp) return;
+    const b = gp.buttons.map((x) => x.pressed);
+    const was = c.userData.prev;
+    const down = (i) => b[i] && !was[i];
+    const right = c.userData.hand === 'right';
+    if (down(4)) {
+      if (right) { stage = 'scan'; portal.visible = false; inside = false; humStop(); applyStencil(); qMsg = 'Point the beam at the floor · Pull the trigger to open the portal'; }
+      else qReadout = !qReadout;
+    }
+    if (down(5)) nextWorld();
+    c.userData.prev = b;
+  });
+}
+function drawQuestPanel() {
+  const g = qCtx, W = 1024, Hh = 384;
+  g.clearRect(0, 0, W, Hh);
+  g.fillStyle = 'rgba(5,6,10,0.78)'; g.strokeStyle = '#9b6bff'; g.lineWidth = 4;
+  g.beginPath(); g.roundRect ? g.roundRect(6, 6, W - 12, Hh - 12, 28) : g.rect(6, 6, W - 12, Hh - 12); g.fill(); g.stroke();
+  // corner brackets
+  g.strokeStyle = '#ff4fd8'; g.lineWidth = 5;
+  [[22, 22, 1, 1], [W - 22, 22, -1, 1], [22, Hh - 22, 1, -1], [W - 22, Hh - 22, -1, -1]].forEach(([x, y, sx, sy]) => {
+    g.beginPath(); g.moveTo(x, y + 36 * sy); g.lineTo(x, y); g.lineTo(x + 36 * sx, y); g.stroke();
+  });
+  g.textBaseline = 'top';
+  g.fillStyle = '#ff4fd8'; g.font = '700 26px Geist, sans-serif'; g.fillText('DIMENSION SCAN', 56, 44);
+  g.fillStyle = ['#4cc9ff', '#9b6bff', '#ff4fd8', '#ffffff'][hud.status];
+  g.font = '700 58px Geist, sans-serif'; g.fillText(STAGES[hud.status], 56, 80);
+  // signal bars
+  const lit = Math.round(hud.signal * 12);
+  for (let i = 0; i < 12; i++) {
+    g.fillStyle = i < lit ? (i >= 9 ? '#ff4fd8' : '#9b6bff') : 'rgba(155,107,255,0.22)';
+    g.fillRect(56 + i * 30, 170, 22, 34);
+  }
+  g.fillStyle = '#8d8aab'; g.font = '500 22px Geist Mono, monospace';
+  g.fillText('SIGNAL ' + (-90 + 70 * hud.signal).toFixed(0) + ' dB', 56, 214);
+  g.fillStyle = '#ecebff'; g.font = '700 46px Geist Mono, monospace';
+  g.textAlign = 'right';
+  g.fillText(hud.dist == null ? '— m' : hud.dist.toFixed(2) + ' m', W - 56, 80);
+  g.fillStyle = '#8d8aab'; g.font = '500 22px Geist Mono, monospace';
+  g.fillText(WORLDS[worldIdx].name.toUpperCase(), W - 56, 140);
+  g.textAlign = 'left';
+  // message or readout, split at ' · ' onto its own lines
+  g.fillStyle = '#ecebff'; g.font = '500 28px Geist, sans-serif';
+  const lines = qReadout
+    ? [`${QUEST2 ? 'Quest 2' : /Quest 3/i.test(UA) ? 'Quest 3' : 'Headset'} · ${qFps} fps of 72 Hz`, BUILD]
+    : (qMsg || '').split(' · ');
+  lines.slice(0, 2).forEach((l, i) => g.fillText(l.charAt(0).toUpperCase() + l.slice(1), 56, 262 + i * 40));
+  qTex.needsUpdate = true;
+}
+const headPos = new THREE.Vector3(), headDir = new THREE.Vector3(), panelTarget = new THREE.Vector3();
+function placeQuestPanel(xrCam, snap) {
+  xrCam.getWorldPosition(headPos);
+  xrCam.getWorldDirection(headDir); headDir.y = 0; headDir.normalize();
+  panelTarget.copy(headPos).addScaledVector(headDir, 1.6); panelTarget.y = headPos.y - 0.78;    // 1.6 m away, ~25° below eye level
+  if (snap) qPanel.position.copy(panelTarget); else qPanel.position.lerp(panelTarget, 0.04);     // lazy follow
+  qPanel.lookAt(headPos);
+}
+
+/* ---------- Mode C: camera view (iPhone and others) ----------
+   The phone camera fills the screen; the phone's tilt sensors turn our 3D
+   camera. iPhone can't measure walking in the browser, so "Step in" glides
+   you through the portal instead. */
+let stream = null, orient = null, alpha0 = null, dragYaw = 0, dragPitch = 0, gotOrient = false;
+let glide = null;             // { from, to, start, dur }
+const targetQ = new THREE.Quaternion();
+const _e = new THREE.Euler(), _q0 = new THREE.Quaternion(), _q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
+const _z = new THREE.Vector3(0, 0, 1);
+function onOrient(e) {
+  if (e.alpha == null) return;
+  gotOrient = true;
+  if (alpha0 == null) alpha0 = e.alpha;
+  orient = e;
+}
+function orientToQuat(e, q) {               // the standard "phone tilt → 3D camera" maths
+  const a = THREE.MathUtils.degToRad(e.alpha - alpha0), b = THREE.MathUtils.degToRad(e.beta), g = THREE.MathUtils.degToRad(e.gamma);
+  const so = THREE.MathUtils.degToRad((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+  _e.set(b, a, -g, 'YXZ');
+  q.setFromEuler(_e);
+  q.multiply(_q1);                             // camera looks out of the back of the phone
+  q.multiply(_q0.setFromAxisAngle(_z, -so));   // adjust for portrait / landscape
+}
+async function startCamera() {
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      try { await DeviceOrientationEvent.requestPermission(); } catch (e) {}
+    }
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    const v = $('cam'); v.srcObject = stream; v.style.display = 'block'; await v.play();
+  } catch (e) {
+    $('err').textContent = 'Camera not available: ' + e.message + '. Try View in 3D.';
+    stopCamera(); return;
+  }
+  mode = 'camera';
+  enterViewing();
+  renderer.setClearColor(0x000000, 0);
+  camera.near = 0.05; camera.fov = 65; camera.updateProjectionMatrix();
+  camera.position.set(0, 0, 0); camera.quaternion.identity();
+  alpha0 = null; gotOrient = false; dragYaw = 0; dragPitch = -0.35;
+  window.addEventListener('deviceorientation', onOrient);
+  stage = 'locked';
+  hint('Opening the portal ahead of you…');
+  setTimeout(() => {
+    // the portal stands 3 m ahead on a floor ~1.4 m below the phone
+    if (mode === 'camera') openPortalAt(new THREE.Vector3(0, -1.4, -3.0), new THREE.Vector3(0, -1.4, 0));
+  }, 700);
+  setTimeout(() => { if (mode === 'camera' && !gotOrient) toast('Motion sensor off: drag the screen to look around.', 4000); }, 2000);
+}
+function stopCamera() {
+  window.removeEventListener('deviceorientation', onOrient);
+  if (stream) stream.getTracks().forEach((t) => t.stop());
+  stream = null; $('cam').style.display = 'none';
+}
+/* drag to look (camera view without motion sensor, and 3D view uses OrbitControls) */
+let dragging = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { if (mode === 'camera') dragging = { x: e.clientX, y: e.clientY }; });
+addEventListener('pointerup', () => (dragging = null));
+addEventListener('pointermove', (e) => {
+  if (!dragging || mode !== 'camera') return;
+  dragYaw += (e.clientX - dragging.x) * 0.005; dragPitch += (e.clientY - dragging.y) * 0.005;
+  dragPitch = THREE.MathUtils.clamp(dragPitch, -1.2, 1.2);
+  dragging = { x: e.clientX, y: e.clientY };
+});
+
+/* ---------- Mode D: 3D preview on a laptop ---------- */
+let controls = null;
+function start3D() {
+  mode = '3d';
+  enterViewing();
+  renderer.setClearColor(0x05060a, 1);
+  grid.visible = true;
+  camera.near = 0.05; camera.fov = 60; camera.updateProjectionMatrix();
+  camera.position.set(1.6, 1.6, 4.4);
+  if (!controls) {
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.minDistance = 0.3; controls.maxDistance = 12;
+    controls.maxPolarAngle = Math.PI * 0.62;
+  }
+  controls.enabled = true;
+  controls.target.set(0, 1.15, 0); controls.update();
+  stage = 'locked';
+  hint('');
+  setTimeout(() => { if (mode === '3d') openPortalAt(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 5)); }, 600);
+}
+
+/* ---------- Step in / Step out (camera view and 3D view) ---------- */
+const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+$('bStep').addEventListener('click', () => {
+  if (glide) return;
+  const goingIn = !inside;
+  // a path straight through the middle of the opening, out to 1.3 m beyond it
+  const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(portal.quaternion);
+  const mid = new THREE.Vector3(0, mode === 'camera' ? 1.4 : 1.55, 0).applyMatrix4(portal.matrixWorld);
+  const from = camera.position.clone();
+  const to = goingIn ? mid.clone().addScaledVector(fwd, 1.3) : mid.clone().addScaledVector(fwd, -2.4);
+  if (mode === 'camera') { to.y = 0; }
+  glide = { from, to, start: clock.getElapsedTime(), dur: 1.8,
+            tFrom: controls ? controls.target.clone() : null,
+            tTo: goingIn ? to.clone().addScaledVector(fwd, 0.6) : mid.clone().addScaledVector(fwd, 0.4) };
+  if (controls) controls.enabled = false;
+  $('bStep').textContent = goingIn ? 'Step out' : 'Step in';
+});
+
+/* ---------- next world (button on phones, B/Y on Quest) ---------- */
+async function nextWorld() {
+  const i = (worldIdx + 1) % WORLDS.length;
+  const w = WORLDS[i];
+  qMsg = 'Loading ' + w.name + '…'; toast('Loading ' + w.name + '…', 8000);
+  try {
+    const tex = await loadWorldTexture(w);
+    worldIdx = i; applyWorld(w, tex);
+    toast(w.name + ' · photo by ' + w.by + ' (Poly Haven, CC0)');
+    qMsg = w.name + ' · B or Y: next world · A: move portal';
+    if (stage === 'open') { U.uFlash.value = 1; sfxBlip(660); }
+  } catch (e) {
+    toast("That world didn't load. Check your connection and tap World ▸ again.", 4000);
+    qMsg = "That world didn't load · Press B or Y to try again";
+  }
+}
+$('bWorld').addEventListener('click', nextWorld);
+
+/* ---------- leaving ---------- */
+function backHome() {
+  mode = 'home';
+  humStop(); stopCamera();
+  portal.visible = false; reticle.visible = false; grid.visible = false; glide = null;
+  if (controls) controls.enabled = false;
+  renderer.setClearColor(0x000000, 0);
+  $('hud').style.display = 'none'; $('stamp').style.display = 'none';
+  $('home').style.display = 'flex';
+  renderTiles();
+  hint('');
+}
+$('bExit').addEventListener('click', () => {
+  const s = renderer.xr.getSession();
+  if (s) s.end(); else backHome();
+});
+
+/* ---------- QR code for computers ---------- */
+function makeQR() {
+  if (typeof qrcode === 'undefined') return;
+  const url = new URL(location.href);
+  ['debug', 'v'].forEach((k) => url.searchParams.delete(k));
+  const qr = qrcode(0, 'M'); qr.addData(url.toString()); qr.make();
+  const n = qr.getModuleCount(), cell = 6, quiet = 4;
+  const c = $('qr'); c.width = c.height = (n + quiet * 2) * cell;
+  const g = c.getContext('2d');
+  g.fillStyle = '#ecebff'; g.fillRect(0, 0, c.width, c.height);
+  g.fillStyle = '#05060A';
+  for (let r = 0; r < n; r++) for (let q = 0; q < n; q++) if (qr.isDark(r, q)) g.fillRect((q + quiet) * cell, (r + quiet) * cell, cell, cell);
+  $('qrbox').hidden = false;
+}
+if (matchMedia('(pointer: fine)').matches && !('ontouchstart' in window) && !QUEST) makeQR();
+
+/* =====================================================================
+   PART 8 — The animation loop (runs every frame, ~60–72 times a second)
+   ===================================================================== */
+const viewDir = new THREE.Vector3();
+const dragQ = new THREE.Quaternion(), dragE = new THREE.Euler(0, 0, 0, 'YXZ');
+function frame(_, xrFrame) {
+  const t = clock.getElapsedTime();
+  U.uTime.value = t;
+
+  // --- Android AR: find the floor under the centre of the screen ---
+  if (xrFrame && hitSource && (stage === 'scan' || stage === 'locked') && mode === 'ar') {
+    const hits = xrFrame.getHitTestResults(hitSource);
+    if (hits.length) {
+      const pose = hits[0].getPose(renderer.xr.getReferenceSpace());
+      reticle.visible = true; reticle.matrixAutoUpdate = false;
+      reticle.matrix.fromArray(pose.transform.matrix);
+      if (stage === 'scan') { stage = 'locked'; sfxBlip(); stopTips(); hint('Floor found. Tap to open the portal here.'); }
+    } else if (stage === 'locked') { reticle.visible = false; stage = 'scan'; }
+  }
+
+  // --- Quest: beams, floor marker, buttons, panel ---
+  if (mode === 'quest' && renderer.xr.isPresenting) {
+    questButtons();
+    let any = null;
+    controllers.forEach((c) => {
+      const hit = (stage === 'scan' || stage === 'locked') ? controllerFloorHit(c) : null;
+      c.userData.beam.scale.z = hit ? Math.max(0.2, ray.origin.distanceTo(hit)) : 1.2;
+      if (hit && c.userData.src && !any) any = hit.clone();
+    });
+    if (any) {
+      reticle.visible = true; reticle.matrixAutoUpdate = true; reticle.position.copy(any); reticle.rotation.set(0, 0, 0);
+      if (stage === 'scan') { stage = 'locked'; sfxBlip(); }
+    } else if (stage === 'locked') { reticle.visible = false; stage = 'scan'; }
+    qFrames++;
+    if (t - qFpsT > 1.2) { qFps = Math.round(qFrames / (t - qFpsT)); qFrames = 0; qFpsT = t; }
+    const xrCam = renderer.xr.getCamera();
+    placeQuestPanel(xrCam, qPanelT === 0);
+    if (t - qPanelT > 0.2) { qPanelT = t; drawQuestPanel(); }
+    if (stage === 'open' && !qMsg.startsWith('Walk') && !inside && !qMsg.includes('World')) qMsg = 'Walk through the portal · B or Y: next world · A: move portal';
+  }
+  if (reticle.visible) { ring3.rotation.y = t * 1.5; }
+
+  // --- iPhone camera view: tilt sensor (or drag) turns the camera ---
+  if (mode === 'camera') {
+    if (orient) orientToQuat(orient, targetQ);
+    else { dragE.set(dragPitch, dragYaw, 0); targetQ.setFromEuler(dragE); }
+    camera.quaternion.slerp(targetQ, 0.3);
+  }
+
+  // --- the Step in / Step out glide ---
+  if (glide) {
+    const k = Math.min(1, (t - glide.start) / glide.dur), e = eio(k);
+    camera.position.lerpVectors(glide.from, glide.to, e);
+    if (controls && glide.tFrom) controls.target.lerpVectors(glide.tFrom, glide.tTo, e);
+    if (k >= 1) { glide = null; if (controls) controls.enabled = true; }
+  }
+  if (controls && controls.enabled) controls.update();
+  else if (controls && mode === '3d') camera.lookAt(controls.target);
+
+  // --- portal opening, crossing, HUD, sound ---
+  if (portal.visible) animateOpening(t);
+  const viewer = renderer.xr.isPresenting ? renderer.xr.getCamera() : camera;
+  viewer.getWorldPosition(camPos);
+  viewer.getWorldDirection(viewDir);
+  if (portal.visible) checkCrossing(camPos);
+  const near = measure(camPos, viewDir);
+  U.uNear.value = near;
+  if (mode === 'camera' && portal.visible) {     // iPhone: charge while the portal is in the middle of the view
+    local.set(0, PH / 2, 0).applyMatrix4(portal.matrixWorld).sub(camPos).normalize();
+    const aimed = local.dot(viewDir) > 0.9;
+    charge = THREE.MathUtils.clamp(charge + (aimed ? 0.45 : -0.2) * (1 / 60), 0, 1);
+    if (inside) charge = 1;
+  }
+  humLevel(near, inside);
+  if (mode !== 'home' && mode !== 'quest') updateHUD(t);
+  else if (mode === 'quest') hud.status = statusIndex();
+
+  // point size needs the real drawing height (different in a headset)
+  const xrc = renderer.xr.isPresenting ? renderer.xr.getCamera().cameras[0] : null;
+  dustU.uViewH.value = xrc && xrc.viewport ? xrc.viewport.w : renderer.domElement.height;
+
+  renderer.render(scene, camera);
+}
+renderer.setAnimationLoop(frame);
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* for testing only */
+if (DEBUG) window.__ap = { THREE, scene, camera, portal, renderer, get state() { return { mode, stage, inside, doorway, hud }; },
+  begin, start3D, startCamera, U, clock, controls: () => controls };
+</script>
+</body>
+</html>
