@@ -398,11 +398,12 @@ function commCard(c){
 const NEW_DAYS=30;
 // Interviews live on the blog. For now they are listed here; later the 3-hourly refresh can read the blog's feed.
 const INTERVIEWS=[
+ {id:"iv-namit",name:"Namit Kapoor",board:"NAMIT KAPOOR",added:"2026-11-07",url:"https://blog.inventndiscover.com/2026/11/07/namit-kapoor-chekout-ai-closing-the-intent-gap/"},
  {id:"iv-carlo",name:"Carlo Edoardo Ferraris",board:"CARLO FERRARIS",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/02/23/ai-agents-in-design-part-3-carlo-edoardo-ferraris-on-ai-that-fits-human-nature/"},
  {id:"iv-patrick",name:"Patrick Henz",board:"PATRICK HENZ",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/02/05/ai-agents-in-design-part-2-patrick-henz-on-ethics-governance-and-keeping-humans-in-charge/"},
  {id:"iv-kumar",name:"Kumar Gaurav",board:"KUMAR GAURAV",added:"2026-10-07",url:"https://blog.inventndiscover.com/2026/01/31/ai-agents-in-design-part-1-kumar-gaurav-on-designing-for-intent/"}
 ];
-const ARR_TYPES=[["ar","AR","#2EE6C8"],["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["story","DISCOVER","#FF7BB8"],["interview","INTERVIEW","#FF7BB8"]];
+const ARR_TYPES=[["ar","AR","#2EE6C8"],["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["story","DISCOVER","#FF7BB8"],["interview","INTERVIEW","#FFB547"]];
 function arrivals(){
   const now=Date.now(), fresh=x=>x.added&&(now-Date.parse(x.added))/864e5<=NEW_DAYS;
   const pool=[
@@ -412,9 +413,9 @@ function arrivals(){
     ...DEMOS.filter(d=>d.kind!=="tutorial"&&(d.cat==="AR"||(d.also||[]).includes("AR"))&&fresh(d)).map(d=>({type:"ar",title:d.board||d.name,added:d.added,open:d.id})),
     ...DEMOS.filter(d=>d.kind!=="tutorial"&&!(d.cat==="AR"||(d.also||[]).includes("AR"))&&(d.cat==="XR"||(d.also||[]).includes("XR"))&&fresh(d)).map(d=>({type:"vr",title:d.board||d.name,added:d.added,open:d.id})),   // board: short name (15 chars max) for long demo titles
     // Discover stories took the fourth row (26 Oct 2026). Only stories already live (go-live time passed).
-    ...STORIES.filter(x=>Date.parse(x.added)<=now&&fresh(x)).map(x=>({type:"story",title:x.board||x.title,added:x.added,href:x.url}))
-    // Interviews are off the board for now. To bring them back, add this line again:
-    // ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
+    ...STORIES.filter(x=>Date.parse(x.added)<=now&&fresh(x)).map(x=>({type:"story",title:x.board||x.title,added:x.added,href:x.url})),
+    // Interviews are back (7 Nov 2026) as their own row next to Discover; they show for 30 days like everything else
+    ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
   ];
   // newest of each type, then the rows newest first
   const best={}; for(const it of pool){ if(!best[it.type]||Date.parse(it.added)>Date.parse(best[it.type].added)) best[it.type]=it; }
