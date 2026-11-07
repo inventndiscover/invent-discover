@@ -60,8 +60,14 @@
   :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
 
   /* ---------- Header: intro on the left, the definition on the right ---------- */
-  header { padding: 40px 0 20px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px 40px; align-items: end; }
-  @media (max-width: 960px) { header { grid-template-columns: minmax(0, 1fr); } }
+  header { padding: 40px 0 16px; }
+  .tag { margin: 12px 0 0; color: var(--muted); font-size: 16px; }
+  .tag a { color: #C4B5FD; }
+  /* Below the tool: what it is, how to use it, where it comes from */
+  .intro { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+  @media (max-width: 960px) { .intro { grid-template-columns: minmax(0, 1fr); } }
+  .intro h2 { margin: 0 0 10px; font-size: 22px; }
+  .intro p.lede { margin: 0 0 12px; }
   .back { color: var(--muted); text-decoration: none; font-size: 14px; }
   .back:hover { color: var(--text); }
   .pill { display: inline-block; margin: 18px 0 10px; padding: 5px 12px; border: 1px solid rgba(139,92,246,0.5); border-radius: 999px;
@@ -217,17 +223,10 @@
 -->
 <div class="wrap">
   <header>
-    <div>
-      <a class="back" href="/#tools">← All tools</a><br>
-      <span class="pill">TOOL · USER JOURNEY MAP</span>
-      <h1>User Journey Map</h1>
-      <p class="lede">Follow one person through a task, stage by stage. Note where they meet you, what they do and think, how they feel along the way, and where it hurts. The lowest point on the curve is usually where to design first.</p>
-      <p class="credit">Definition from <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">UX Design Institute</a>. Layout after the classic customer journey map template. <a href="#where">Credits</a></p>
-    </div>
-    <blockquote>
-      <p>“A customer journey map (otherwise known as a user journey map) is a visual representation of how a user or customer interacts with your product. It maps out the steps they go through to complete a specific task or to achieve a particular goal, for example, purchasing a product from an e-commerce website or creating a profile on a dating app.”</p>
-      <footer>Emily Stevens, <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">How to design a customer journey map</a>, UX Design Institute</footer>
-    </blockquote>
+    <a class="back" href="/#tools">← All tools</a><br>
+    <span class="pill">TOOL · USER JOURNEY MAP</span>
+    <h1>User Journey Map</h1>
+    <p class="tag">Follow one person through a task, stage by stage. <a href="#what">What is this?</a></p>
   </header>
 
   <div class="card setup">
@@ -272,6 +271,18 @@
       <div class="moment" id="moment"></div>
     </div>
   </div>
+
+  <section class="intro" id="what">
+    <div>
+      <h2>What is a user journey map?</h2>
+      <p class="lede">Follow one person through a task, stage by stage. Note where they meet you, what they do and think, how they feel along the way, and where it hurts. The lowest point on the curve is usually where to design first.</p>
+      <p class="credit">Layout after the classic customer journey map template. <a href="#where">Credits</a></p>
+    </div>
+    <blockquote>
+      <p>“A customer journey map (otherwise known as a user journey map) is a visual representation of how a user or customer interacts with your product. It maps out the steps they go through to complete a specific task or to achieve a particular goal, for example, purchasing a product from an e-commerce website or creating a profile on a dating app.”</p>
+      <footer>Emily Stevens, <a href="https://www.uxdesigninstitute.com/blog/design-a-customer-journey-map/" target="_blank" rel="noopener">How to design a customer journey map</a>, UX Design Institute</footer>
+    </blockquote>
+  </section>
 
   <section class="how">
     <div class="card"><div class="step">STEP 1 · 5 MIN</div><h3>Set the scene</h3><p>Pick one person and one task, and say what they expect. Name the stages they go through, from first noticing the need to the end. Use 3 to 7 stages.</p></div>
