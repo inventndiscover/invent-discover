@@ -630,6 +630,11 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
    and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
+{id:"the-hand-you-cant-see",added:"2026-11-16T12:30:00+05:30",title:"The Hand You Can't See",board:"THE UNSEEN HAND",
+  line:"How zardozi karigars stitch gold onto silk with one hand hidden under the fabric, and how circuit boards are still bonded the same way today, from below, by a wave of molten solder.",
+  url:"discover/the-hand-you-cant-see/", img:"media/stories/the-hand-you-cant-see.jpg",
+  alt:"Line drawing of a zardozi adda frame with a gold motif and a hidden needle below, beside a circuit board with a dashed solder wave underneath",
+  read:"5 min read"},
 {id:"tie-dye-silicon",added:"2026-11-09T12:30:00+05:30",title:"Tie, Dye, Silicon",board:"TIE DYE SILICON",
   line:"How bandhani tie-dye protects a cloth thread by thread — and how the same idea, protect some spots and etch the rest, makes a microchip today.",
   url:"discover/tie-dye-silicon/", img:"media/stories/tie-dye-silicon.jpg",
