@@ -199,7 +199,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const BUILD = 'Green Diwali · v1.4 test (पॉप पॉप)';
+const BUILD = 'Green Diwali · v1.5 test (पॉप पॉप ×5)';
 const $ = (id) => document.getElementById(id);
 $('stamp').textContent = BUILD;
 $('stamp-home').textContent = BUILD;
@@ -1149,7 +1149,7 @@ function snapSound(p, power) {
 }
 let snapCount = 0;
 const HAND = new THREE.Vector3(0.05, -0.12, -0.2);   // where your hand is, measured from the phone
-function throwSnap(target, power = 0.7) {
+function throwSnap(target, power = 0.7, delay = 0, spread = 0.06) {
   const from = HAND.clone().applyMatrix4(camM);
   let to;
   if (target) to = target.clone();
@@ -1157,17 +1157,18 @@ function throwSnap(target, power = 0.7) {
     const f = viewerForward(), c = viewerPos(), d = 0.8 + 0.7 * power;
     to = new THREE.Vector3(c.x + f.x * d, floorY, c.z + f.z * d);
   }
-  to.x += rand(-0.06, 0.06); to.z += rand(-0.06, 0.06); to.y = floorY;
+  to.x += rand(-spread, spread); to.z += rand(-spread, spread); to.y = floorY;
   const group = new THREE.Group(), ball = new THREE.Mesh(snapGeo, snapMat); group.add(ball);
   const flash = glowSprite(0xeef4ff, 0.18, 0); group.add(flash);
   const dur = 0.25 + 0.15 * Math.min(1, from.distanceTo(to) / 1.5);   // flight time in seconds
-  let t0 = 0, popped = false, flashT = 0;
+  let t0 = -delay, popped = false, flashT = 0;   // a negative start time = it leaves your hand a moment later
   const it = {
     type: 'pop', group, glow: 0, flamePos: () => flash.getWorldPosition(_v2),
     update(dt) {
       t0 += dt;
       if (!popped) {   // flying: a straight line from hand to floor, lifted into an arc (4·f·(1−f) is 0 at both ends, 1 in the middle)
-        const f = Math.min(1, t0 / dur);
+        ball.visible = t0 >= 0;
+        const f = Math.max(0, Math.min(1, t0 / dur));
         ball.position.lerpVectors(from, to, f); ball.position.y += 0.12 * 4 * f * (1 - f);
         ball.rotation.x += dt * 25; ball.rotation.z += dt * 17;
         if (f >= 1) { popped = true; ball.visible = false; flash.position.copy(to); flash.position.y += 0.01; flashT = 0.07; snap(to); }
@@ -1205,15 +1206,21 @@ function onMotion(e) {
   else if (ag && ag.x != null) acc = Math.abs(Math.hypot(ag.x, ag.y, ag.z) - 9.81);   // older phones: take gravity away ourselves
   const rot = r && r.alpha != null ? Math.hypot(r.alpha, r.beta, r.gamma) : 0;
   const power = Math.max(acc / SWING_ACC, rot / SWING_ROT);   // 1 = just a swing, 2+ = a hard one
-  if (power >= 1) swing(Math.min(1, 0.4 + (power - 1) / 1.5));
+  if (power >= 1) swing(power);
 }
-function swing(power) {
+/* How many in one throw (like a fistful):
+   power 1.0–1.6 → 1 · 1.6–2.4 → 2 or 3 · 2.4 and up → 4 or 5
+   e.g. a normal flick ≈ 15 m/s² → power 1.15 → one pop;
+        a big swing ≈ 35 m/s² → power 2.7 → four or five, scattered, popping a few hundredths of a second apart */
+function swing(raw) {
   const now = performance.now() / 1000;
   if (now - lastSwing < SWING_GAP) return;
   lastSwing = now;
   let target = null;   // aim at the floor ring if it's showing
   if (reticle.visible) target = mode === 'ar' ? new THREE.Vector3().setFromMatrixPosition(reticle.matrix) : reticle.position.clone();
-  throwSnap(target, power);
+  const power = Math.min(1, 0.4 + (raw - 1) / 1.5);   // 0.4 … 1: sets loudness and how far it flies
+  const n = raw < 1.6 ? 1 : raw < 2.4 ? 2 + (Math.random() * 2 | 0) : 4 + (Math.random() * 2 | 0);
+  for (let k = 0; k < n; k++) throwSnap(target, power * rand(0.85, 1), k === 0 ? 0 : rand(0.02, 0.09) * k, n === 1 ? 0.06 : 0.16);
 }
 // iPhone asks the person first; this must run straight from a tap
 let listening = false;
@@ -1237,7 +1244,7 @@ function poseSwing(dt) {
   if (poseReady && mode === 'ar' && tool === 'pop' && performance.now() - motionSeen > 1500 && dt > 0) {
     const speed = _lp.distanceTo(camPosV) / dt, turn = 2 * Math.acos(Math.min(1, Math.abs(_q.dot(_lq)))) / dt;
     const power = Math.max(speed / 1.4, turn / 6.5);
-    if (power >= 1) swing(Math.min(1, 0.4 + (power - 1) / 1.5));
+    if (power >= 1) swing(power);
   }
   _lp.copy(camPosV); _lq.copy(_q); poseReady = true;
 }
@@ -1957,7 +1964,7 @@ const TOOLS = [
   { id: 'standing', dv: 'फुलझड़ियाँ', en: 'Sparklers', hint: 'Tap the floor to plant a sparkler in a little pot of sand. Then pick फुलझड़ी and light yours from it!' },
   { id: 'anar', dv: 'अनार', en: 'Cone', hint: 'Tap the floor to light a cone, then step back a little.' },
   { id: 'chakri', dv: 'चकरी', en: 'Spinner', hint: 'Tap the floor to light a spinner.' },
-  { id: 'pop', dv: 'पॉप पॉप', en: 'Bang snaps', hint: 'Hold your phone tight and flick it down quickly, as if throwing one at the floor: पॉप! Or just tap the floor.' },
+  { id: 'pop', dv: 'पॉप पॉप', en: 'Bang snaps', hint: 'Hold your phone tight and flick it down quickly, as if throwing one at the floor: पॉप! Swing harder to throw a fistful. Or just tap the floor.' },
   { id: 'ladi', dv: 'लड़ी', en: 'String Crackers', hint: 'Tap the floor to lay a string of crackers and light it.' },
   { id: 'rocket', dv: 'रॉकेट', en: 'Rocket', hint: 'Tap the floor to set a rocket in a bottle. Look up when it goes!' },
   { id: 'samai', dv: 'समई', en: 'Samai', hint: 'Tap the floor to place a brass samai with eight wicks.' },
@@ -2277,7 +2284,7 @@ window.addEventListener('resize', () => {
 
 // For testing on a computer: window.GD.place('anar', 0, 0) etc.
 window.GD = { get controls() { return controls; }, P, place: (id, x, z) => { tool = id; return placeAt(new THREE.Vector3(x, floorY, z)); }, selectTool, start3D, items, camera,
-  sky: () => startSkyShow(simT), snap: (power) => throwSnap(null, power), swing: (power) => swing(power ?? 0.7),
+  sky: () => startSkyShow(simT), snap: (power) => throwSnap(null, power), swing: (raw) => swing(raw ?? 1.2),
   advance(sec) { for (let k = 0; k < sec * 30; k++) { simT += 1 / 30; simulate(1 / 30, simT); } }, get sparks() { return liveSparks; } };
 </script>
 </body>
