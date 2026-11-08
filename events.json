@@ -1,195 +1,6 @@
 {
- "REFRESHED": "2026-11-06T21:40:00+05:30",
+ "REFRESHED": "2026-11-08T19:35:00+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "media-accelerator-cohort",
-   "title": "Media Accelerator & Startup Cohort",
-   "cat": "Startup",
-   "tags": [
-    "Web3",
-    "Investors",
-    "Devcon week"
-   ],
-   "area": "BKC",
-   "venue": "Jio World Centre, G Block",
-   "start": "2026-11-03",
-   "endDate": "2026-11-06",
-   "end": null,
-   "timeNote": "Times on the event page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown · approval required",
-   "aud": [
-    "Founder"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/mh0xmqg0",
-   "org": "Meta Blockchain",
-   "access": "approval",
-   "desc": "A Devcon-week side event that connects blockchain and AI startups with investors and media, with mentoring and a pool of funding and grants for selected teams."
-  },
-  {
-   "id": "devcon-8",
-   "title": "Devcon 8 India",
-   "cat": "Tech",
-   "tags": [
-    "Ethereum",
-    "Conference",
-    "4 days"
-   ],
-   "area": "BKC",
-   "venue": "Jio World Centre, Bandra East",
-   "start": "2026-11-03T09:30",
-   "endDate": "2026-11-06",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Indian students $25 by application · India residents $149 · general $499",
-   "aud": [
-    "Developer",
-    "Student",
-    "Founder"
-   ],
-   "src": "Devcon",
-   "url": "https://tickets.devcon.org/",
-   "org": "Ethereum Foundation",
-   "access": "open",
-   "desc": "The Ethereum Foundation's global developer conference, held in Mumbai this year across four days. It is open to engineers, designers, researchers, educators and artists, not only developers."
-  },
-  {
-   "tags": [
-    "Hackathon",
-    "Ethereum"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "access": "open",
-   "id": "ethglobal-mumbai-2026",
-   "title": "ETHGlobal Mumbai",
-   "cat": "Tech",
-   "area": "Mumbai",
-   "venue": "Venue not shown on listing",
-   "start": "2026-11-05",
-   "end": null,
-   "endDate": "2026-11-07",
-   "timeNote": "Time not shown",
-   "price": null,
-   "priceNote": "Check organiser page",
-   "src": "foundercal (listing)",
-   "url": "https://ethglobal.com/events/mumbai",
-   "org": "ETHGlobal",
-   "desc": "A multi-day Ethereum hackathon in Mumbai during the Devcon week."
-  },
-  {
-   "tags": [
-    "Hackathon",
-    "AI agents",
-    "Web3"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Developer",
-    "Founder",
-    "Student"
-   ],
-   "access": "approval",
-   "id": "frontier-intelligence-hackathon",
-   "title": "Frontier of Intelligence Hackathon",
-   "cat": "AI",
-   "area": "Mumbai",
-   "venue": "Venue not shown on listing",
-   "start": "2026-11-05T09:00",
-   "end": null,
-   "endDate": "2026-11-06",
-   "price": 0,
-   "priceNote": "Free; application-based",
-   "src": "foundercal (listing)",
-   "url": "https://foundercal.com/events/frontier-of-intelligence-hackathon-TuoJYVkPdsFFXSj",
-   "org": "Lakshmi",
-   "desc": "A hackathon on autonomous AI agents and decentralised AI infrastructure with mentors and a cash prize pool."
-  },
-  {
-   "id": "unchained-summit-india",
-   "title": "Unchained Summit India",
-   "cat": "Tech",
-   "tags": [
-    "Web3",
-    "Conference",
-    "AI"
-   ],
-   "area": "Mumbai",
-   "venue": "Not stated on the listing",
-   "start": "2026-11-05T10:00",
-   "end": "17:00",
-   "endDate": "2026-11-06",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "No ticket price shown on the listing",
-   "aud": [
-    "Professional",
-    "Founder"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/unchained-summit-india/80003460442107",
-   "org": "Aeternum",
-   "access": "open",
-   "desc": "A two-day Web3 conference covering institutional crypto adoption, tokenised assets, DeFi and the role of AI in Web3."
-  },
-  {
-   "id": "ship-safe-devcon-mumbai",
-   "title": "Ship Safe: Devcon Mumbai Security Sessions by QuillAudits",
-   "cat": "Tech",
-   "tags": [
-    "Security",
-    "Web3",
-    "Devcon week"
-   ],
-   "area": "BKC",
-   "venue": "BKC, Mumbai (exact venue shared with confirmed guests)",
-   "start": "2026-11-06T16:00",
-   "end": "20:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free · registrations are reviewed",
-   "aud": [
-    "Developer"
-   ],
-   "src": "StartupGrants India",
-   "url": "https://www.startupgrantsindia.com/events/ship-safe-devcon-mumbai-security-sessions-by-quillaudits",
-   "org": "QuillAudits Events",
-   "access": "approval",
-   "desc": "An evening of security-focused sessions for builders during Devcon week, run by a smart-contract audit firm. Seats are limited and each registration is reviewed."
-  },
-  {
-   "tags": [
-    "Co-working",
-    "Community",
-    "AI agents"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Developer",
-    "Founder",
-    "Student"
-   ],
-   "access": "open",
-   "id": "mumbai-ai-saturdays",
-   "title": "MumbAI AI Saturdays: Co-working at BHIVE BKC",
-   "cat": "AI",
-   "area": "BKC",
-   "venue": "BHIVE Adani Inspire BKC",
-   "start": "2026-11-07T18:00",
-   "end": "20:00",
-   "price": 75,
-   "priceNote": "Session is free; attendees buy a ₹75 BHIVE day pass. Repeats every Saturday",
-   "src": "foundercal (listing)",
-   "url": "https://foundercal.com/events/mumbai-ai-saturdays-get-funded-to-co-work-adani-inspire-bkc-bhive-317217993",
-   "org": "MumbAI AI",
-   "desc": "A relaxed Saturday evening co-working session where AI builders and beginners work on their laptops and swap ideas."
-  },
   {
    "id": "cloud-community-days-mumbai-26",
    "title": "Cloud Community Days Mumbai 2026",
@@ -414,7 +225,8 @@
    "url": "https://www.startupgrantsindia.com/events/devfest-mumbai-2026",
    "org": "GDG Mumbai",
    "access": "open",
-   "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies."
+   "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies.",
+   "also": "dev.events"
   },
   {
    "tags": [
@@ -443,6 +255,168 @@
    "url": "https://foundercal.com/events/e-summit-2026-iit-bombay",
    "org": "E-Cell IIT Bombay",
    "desc": "The 22nd edition of IIT Bombay's student-run entrepreneurship conference, with a pitch competition, a startup expo, the I-Hack hackathon and workshops."
+  },
+  {
+   "id": "aicd-mumbai-2026",
+   "title": "AICD Mumbai (AI Community Days)",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Microsoft 365",
+    "Azure"
+   ],
+   "area": "Mumbai",
+   "venue": "Microsoft India office, Central Salsette Tramway Road",
+   "start": "2026-11-21T08:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free; tickets via the listing",
+   "aud": [
+    "Developer",
+    "Student",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "also": "HappeningNext",
+   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+   "org": "AI Community Days Mumbai",
+   "access": "open",
+   "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office."
+  },
+  {
+   "id": "stackconnect-mumbai-2026",
+   "title": "StackConnect World Tour: Mumbai",
+   "cat": "Tech",
+   "tags": [
+    "AI",
+    "Developers"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated on the listing",
+   "start": "2026-12-02",
+   "end": null,
+   "timeNote": "Time not shown",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Pricing not shown on the listing",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "dev.events",
+   "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
+   "org": "StackConnect",
+   "access": "open",
+   "desc": "A Mumbai stop of the StackConnect world tour, listed on dev.events under artificial intelligence."
+  },
+  {
+   "id": "devsparks-mumbai-2026",
+   "title": "DevSparks 2026: Mumbai Edition",
+   "cat": "Tech",
+   "tags": [
+    "Agentic AI",
+    "GenAI",
+    "Developers"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Time not shown",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticketing not shown on the page",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Professional"
+   ],
+   "src": "The Peoples Board",
+   "url": "https://www.thepeoplesboard.com/event/devsparks-2026-mumbai-edition/",
+   "org": "YourStory",
+   "access": "open",
+   "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools."
+  },
+  {
+   "id": "techfest-iot-workshop-2026",
+   "title": "Techfest IoT using Arduino or Raspberry Pi Workshop",
+   "cat": "Education",
+   "tags": [
+    "IoT",
+    "Workshop",
+    "Students"
+   ],
+   "area": "Powai",
+   "venue": "Indian Institute of Technology Bombay",
+   "start": "2026-12-15T09:00",
+   "end": "17:00",
+   "endDate": "2026-12-16",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown on the listing",
+   "aud": [
+    "Student",
+    "Developer"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/techfest-iot-using-arduino-or-raspberry-pi-workshop/80005819955772",
+   "org": "Techfest, IIT Bombay",
+   "access": "open",
+   "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay."
+  },
+  {
+   "id": "overclock-2026-finale",
+   "title": "Overclock 2026: bits&bytes × Techfest IIT Bombay Hackathon (finale)",
+   "cat": "Education",
+   "tags": [
+    "Hackathon",
+    "High school",
+    "Students"
+   ],
+   "area": "Powai",
+   "venue": "Indian Institute of Technology Bombay (finale); city qualifiers elsewhere",
+   "start": "2026-12-17",
+   "end": null,
+   "endDate": "2026-12-18",
+   "timeNote": "Times not shown",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free; registration status not stated on the page",
+   "aud": [
+    "Student"
+   ],
+   "src": "Internshala",
+   "url": "https://internshala.com/competitions/overclock-2026-bitsbytes-x-techfest-iit-bombay-hackathon/",
+   "org": "bits&bytes with Techfest, IIT Bombay",
+   "access": "open",
+   "desc": "A 12-hour in-person hackathon for Indian high-school students, with city winners going to the finale at IIT Bombay."
+  },
+  {
+   "id": "founders-x-investors-pitch-15nov",
+   "title": "The Founders X Investors Pitch (15 Nov, NMIMS)",
+   "cat": "Startup",
+   "tags": [
+    "Pitch",
+    "Investors",
+    "Founders"
+   ],
+   "area": "Mumbai",
+   "venue": "NMIMS, Mumbai",
+   "start": "2026-11-15T16:00",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 699,
+   "priceNote": "Tickets from ₹699 up to ₹14,999",
+   "aud": [
+    "Founder",
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/the-founders-x-investors-pitch-15th-nov-mumbai-tickets/80004289568418",
+   "org": "Founders X Investors",
+   "access": "open",
+   "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai."
   }
  ],
  "QUEUE_RAW": [
@@ -564,21 +538,6 @@
     "date": 0,
     "place": 97,
     "category": 90
-   }
-  },
-  {
-   "qid": "q-ready-run",
-   "title": "Ready for the Run @ Mumbai",
-   "cat": "Startup",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/08ogvz1i",
-   "access": "approval",
-   "why": "No date or venue on the page. AI and Web3 builders meeting investors.",
-   "conf": {
-    "date": 0,
-    "place": 20,
-    "category": 80
    }
   },
   {
@@ -807,22 +766,6 @@
    }
   },
   {
-   "qid": "q-stackconnect-mumbai",
-   "title": "StackConnect World Tour: Mumbai",
-   "cat": "Tech",
-   "area": "Mumbai",
-   "src": "dev.events",
-   "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
-   "access": "open",
-   "why": "Date appears only in the listing image text (2 Dec); no time, venue or organiser page could be opened.",
-   "conf": {
-    "date": 60,
-    "place": 20,
-    "category": 75
-   },
-   "hint": "2026-12-02"
-  },
-  {
    "qid": "q-mev-sangam",
    "title": "MeV Sangam: Mumbai",
    "cat": "Tech",
@@ -884,22 +827,6 @@
    "hint": "2026-11-28"
   },
   {
-   "qid": "q-aicd",
-   "title": "AICD Mumbai",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
-   "access": "open",
-   "why": "AllEvents lists 21 Nov but another listing shows 7 Nov; dates conflict, so it is held until the organiser page confirms.",
-   "conf": {
-    "date": 40,
-    "place": 40,
-    "category": 70
-   },
-   "hint": "2026-11-07"
-  },
-  {
    "qid": "q-mumbai-builds-2027",
    "title": "Mumbai Builds 2027 Hackathon (Internshala)",
    "cat": "Education",
@@ -914,58 +841,119 @@
     "category": 90
    },
    "hint": "2027-02-07"
+  },
+  {
+   "qid": "q-tcg-climate-mixer",
+   "title": "TCG's Climate Ecosystem Mixer, BKC",
+   "cat": "Climate",
+   "area": "BKC",
+   "src": "Luma (search result)",
+   "url": "https://luma.com/spvbez6v",
+   "access": "open",
+   "why": "Found in search results only; no date confirmed.",
+   "conf": {
+    "date": 0,
+    "place": 70,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-mumbai-climate-week-2026",
+   "title": "Mumbai Climate Week 2026",
+   "cat": "Climate",
+   "area": "Mumbai",
+   "src": "Web search",
+   "url": "https://www.freepressjournal.in/mumbai/mumbai-climate-week-2026-launches-first-ever-climate-innovation-challenge-to-accelerate-scalable-solutions-across-india-and-global-south",
+   "access": "open",
+   "why": "Found in search results only; no date confirmed.",
+   "conf": {
+    "date": 0,
+    "place": 70,
+    "category": 85
+   }
+  },
+  {
+   "qid": "q-vllm-meetup",
+   "title": "vLLM Inference Meetup Mumbai",
+   "cat": "AI",
+   "area": "Powai",
+   "src": "Luma",
+   "url": "https://luma.com/cz4qxb9t",
+   "access": "approval",
+   "why": "IIT Bombay meetup on LLM inference, 1 PM to 6:15 PM; the page shows no calendar date.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 92
+   }
+  },
+  {
+   "qid": "q-claude-pm-doctors",
+   "title": "Mumbai | Claude for Product Managers & Doctors",
+   "cat": "AI",
+   "area": "Mumbai",
+   "src": "vibecoding.app (aggregator)",
+   "url": "https://vibecoding.app/ai-events/mumbai-claude-for-product-managers-doctors-2026-11",
+   "access": "open",
+   "why": "Aggregator lists Sat 14 Nov, free, venue TBA; the Luma event page was not opened.",
+   "conf": {
+    "date": 60,
+    "place": 20,
+    "category": 80
+   },
+   "hint": "2026-11-14"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "mumbai, discover/ai, tech, arts listings",
-   "found": 0,
+   "what": "search 'luma Mumbai design' plus Sprint to Imagine Cup page",
+   "found": 1,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Listing and event pages not on the fetch allowlist this run; existing queue items could not be re-checked."
+   "skip": 1,
+   "note": "Search surfaced no Luma design events; the one Luma page opened loaded but was a past event (Dec 2025)."
   },
   {
    "src": "AllEvents",
-   "what": "technology and startup categories",
-   "found": 0,
-   "pub": 0,
+   "what": "artificial-intelligence, data-science, entrepreneurship, navi-mumbai/startup, business",
+   "found": 43,
+   "pub": 1,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Not fetchable this run."
+   "dup": 9,
+   "skip": 33,
+   "note": "All 5 pages loaded. In-range counts: AI 17, data-science 7, entrepreneurship 15, navi-mumbai/startup 1, business 5. Most are paid trainings, trade expos or finance summits and were skipped."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai meetups and conferences",
-   "found": 0,
+   "what": "Mumbai, Mumbai/tech, meetups/Mumbai",
+   "found": 13,
    "pub": 0,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Not fetchable this run."
+   "dup": 3,
+   "skip": 10,
+   "note": "All 3 pages loaded. In-range counts: 5, 5, 13. Only Swift Bharat, StackConnect and DevFest are in-person Mumbai events (already published); the rest are online or masterclasses."
   },
   {
    "src": "hiddenevents",
-   "what": "Mumbai mirror",
+   "what": "Luma mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not fetchable this run."
+   "note": "Not searched this run."
   },
   {
    "src": "web search",
-   "what": "AI, design/UX, XR searches",
-   "found": 0,
-   "pub": 0,
+   "what": "6 searches; StartupGrantsIndia Mumbai p2, eChai, Internshala hackathons, Devfolio",
+   "found": 30,
+   "pub": 1,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Searches surfaced only past events (Mumbai Meets AI editions, Design Samvaad in Gurugram, AI Tinkerers with no upcoming date). Removed OpenTechSummit India 2026 (ended)."
+   "dup": 5,
+   "skip": 24,
+   "note": "All pages loaded (StartupGrantsIndia lists 25 in range, mostly networking mixers and expos). eChai dates look like 2025 so were not used. Perceptron and Sustainability hackathons skipped (registration closed)."
   }
  ],
  "COMMUNITIES": [

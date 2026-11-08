@@ -80,6 +80,35 @@
   "desc": "A free full-day community conference on Microsoft 365, Power Platform, Azure and AI, with keynotes and workshops.",
   "firstSeen": "2026-09-28"
  },
+ "aicd-mumbai-2026": {
+  "id": "aicd-mumbai-2026",
+  "title": "AICD Mumbai (AI Community Days)",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Microsoft 365",
+   "Azure"
+  ],
+  "area": "Mumbai",
+  "venue": "Microsoft India office, Central Salsette Tramway Road",
+  "start": "2026-11-21T08:00",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free; tickets via the listing",
+  "aud": [
+   "Developer",
+   "Student",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "also": "HappeningNext",
+  "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+  "org": "AI Community Days Mumbai",
+  "access": "open",
+  "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office.",
+  "firstSeen": "2026-11-08"
+ },
  "bharat-ai-innovation-2026": {
   "tags": [
    "AI",
@@ -328,7 +357,37 @@
   "org": "GDG Mumbai",
   "access": "open",
   "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies.",
+  "also": "dev.events",
   "firstSeen": "2026-10-28"
+ },
+ "devsparks-mumbai-2026": {
+  "id": "devsparks-mumbai-2026",
+  "title": "DevSparks 2026: Mumbai Edition",
+  "cat": "Tech",
+  "tags": [
+   "Agentic AI",
+   "GenAI",
+   "Developers"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated",
+  "start": "2026-11-28",
+  "end": null,
+  "timeNote": "Time not shown",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticketing not shown on the page",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Professional"
+  ],
+  "src": "The Peoples Board",
+  "url": "https://www.thepeoplesboard.com/event/devsparks-2026-mumbai-edition/",
+  "org": "YourStory",
+  "access": "open",
+  "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools.",
+  "firstSeen": "2026-11-08"
  },
  "e-summit-iitb-2026": {
   "tags": [
@@ -584,6 +643,33 @@
   "access": "open",
   "desc": "A small, curated networking morning where Mumbai startup founders meet investors, accelerators and mentors face to face. It is part of a two-city October series with Pune.",
   "firstSeen": "2026-10-20"
+ },
+ "founders-x-investors-pitch-15nov": {
+  "id": "founders-x-investors-pitch-15nov",
+  "title": "The Founders X Investors Pitch (15 Nov, NMIMS)",
+  "cat": "Startup",
+  "tags": [
+   "Pitch",
+   "Investors",
+   "Founders"
+  ],
+  "area": "Mumbai",
+  "venue": "NMIMS, Mumbai",
+  "start": "2026-11-15T16:00",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 699,
+  "priceNote": "Tickets from ₹699 up to ₹14,999",
+  "aud": [
+   "Founder",
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/the-founders-x-investors-pitch-15th-nov-mumbai-tickets/80004289568418",
+  "org": "Founders X Investors",
+  "access": "open",
+  "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai.",
+  "firstSeen": "2026-11-08"
  },
  "frontier-d2c-ai-summit": {
   "id": "frontier-d2c-ai-summit",
@@ -1168,6 +1254,34 @@
   "desc": "A one-day open-source and community gathering held alongside Devcon 8, with talks, workshops and project showcases for contributors, developers, researchers and startups.",
   "firstSeen": "2026-10-30"
  },
+ "overclock-2026-finale": {
+  "id": "overclock-2026-finale",
+  "title": "Overclock 2026: bits&bytes × Techfest IIT Bombay Hackathon (finale)",
+  "cat": "Education",
+  "tags": [
+   "Hackathon",
+   "High school",
+   "Students"
+  ],
+  "area": "Powai",
+  "venue": "Indian Institute of Technology Bombay (finale); city qualifiers elsewhere",
+  "start": "2026-12-17",
+  "end": null,
+  "endDate": "2026-12-18",
+  "timeNote": "Times not shown",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free; registration status not stated on the page",
+  "aud": [
+   "Student"
+  ],
+  "src": "Internshala",
+  "url": "https://internshala.com/competitions/overclock-2026-bitsbytes-x-techfest-iit-bombay-hackathon/",
+  "org": "bits&bytes with Techfest, IIT Bombay",
+  "access": "open",
+  "desc": "A 12-hour in-person hackathon for Indian high-school students, with city winners going to the finale at IIT Bombay.",
+  "firstSeen": "2026-11-08"
+ },
  "servicenow-world-forum-mumbai": {
   "id": "servicenow-world-forum-mumbai",
   "title": "ServiceNow World Forum Mumbai 2026",
@@ -1272,6 +1386,33 @@
   "org": "KC College of Engineering and Management Studies and Research",
   "desc": "An in-person college hackathon in Thane with registration handled through Unstop.",
   "firstSeen": "2026-11-05"
+ },
+ "stackconnect-mumbai-2026": {
+  "id": "stackconnect-mumbai-2026",
+  "title": "StackConnect World Tour: Mumbai",
+  "cat": "Tech",
+  "tags": [
+   "AI",
+   "Developers"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated on the listing",
+  "start": "2026-12-02",
+  "end": null,
+  "timeNote": "Time not shown",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Pricing not shown on the listing",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "dev.events",
+  "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
+  "org": "StackConnect",
+  "access": "open",
+  "desc": "A Mumbai stop of the StackConnect world tour, listed on dev.events under artificial intelligence.",
+  "firstSeen": "2026-11-08"
  },
  "startuplive-mumbai-26": {
   "id": "startuplive-mumbai-26",
@@ -1385,6 +1526,34 @@
   "access": "approval",
   "desc": "A community meetup for Swift and Apple-platform developers at ATLAS SkillTech University. Registration closes once venue capacity is reached.",
   "firstSeen": "2026-10-16"
+ },
+ "techfest-iot-workshop-2026": {
+  "id": "techfest-iot-workshop-2026",
+  "title": "Techfest IoT using Arduino or Raspberry Pi Workshop",
+  "cat": "Education",
+  "tags": [
+   "IoT",
+   "Workshop",
+   "Students"
+  ],
+  "area": "Powai",
+  "venue": "Indian Institute of Technology Bombay",
+  "start": "2026-12-15T09:00",
+  "end": "17:00",
+  "endDate": "2026-12-16",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Price not shown on the listing",
+  "aud": [
+   "Student",
+   "Developer"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/techfest-iot-using-arduino-or-raspberry-pi-workshop/80005819955772",
+  "org": "Techfest, IIT Bombay",
+  "access": "open",
+  "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay.",
+  "firstSeen": "2026-11-08"
  },
  "titan-consumer-mixer": {
   "id": "titan-consumer-mixer",
