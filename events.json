@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-08T19:35:00+05:30",
+ "REFRESHED": "2026-11-08T22:29:03+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -366,33 +366,6 @@
    "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay."
   },
   {
-   "id": "overclock-2026-finale",
-   "title": "Overclock 2026: bits&bytes × Techfest IIT Bombay Hackathon (finale)",
-   "cat": "Education",
-   "tags": [
-    "Hackathon",
-    "High school",
-    "Students"
-   ],
-   "area": "Powai",
-   "venue": "Indian Institute of Technology Bombay (finale); city qualifiers elsewhere",
-   "start": "2026-12-17",
-   "end": null,
-   "endDate": "2026-12-18",
-   "timeNote": "Times not shown",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free; registration status not stated on the page",
-   "aud": [
-    "Student"
-   ],
-   "src": "Internshala",
-   "url": "https://internshala.com/competitions/overclock-2026-bitsbytes-x-techfest-iit-bombay-hackathon/",
-   "org": "bits&bytes with Techfest, IIT Bombay",
-   "access": "open",
-   "desc": "A 12-hour in-person hackathon for Indian high-school students, with city winners going to the finale at IIT Bombay."
-  },
-  {
    "id": "founders-x-investors-pitch-15nov",
    "title": "The Founders X Investors Pitch (15 Nov, NMIMS)",
    "cat": "Startup",
@@ -417,6 +390,58 @@
    "org": "Founders X Investors",
    "access": "open",
    "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai."
+  },
+  {
+   "id": "ad-design-show-mumbai-2026",
+   "title": "AD Design Show 2026 - Mumbai",
+   "cat": "Design",
+   "tags": [
+    "Design",
+    "Architecture",
+    "Interiors"
+   ],
+   "area": "Mumbai",
+   "venue": "Jio World Convention Centre, BKC",
+   "start": "2026-11-13T10:00",
+   "end": null,
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticket price not shown on the listing",
+   "aud": [
+    "Designer",
+    "Student",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ad-design-show-2026-mumbai/3900030024917405",
+   "org": "AD Design Show",
+   "access": "open",
+   "desc": "A design show in Mumbai bringing together architecture, interiors and product design work; the listing states the date and venue."
+  },
+  {
+   "id": "ai-and-beyond-layer-beneath-ai",
+   "title": "AI & Beyond | The Layer Beneath AI",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Business"
+   ],
+   "area": "Mumbai",
+   "venue": "1-C, Vulcan Insurance Building, Veer Nariman Road",
+   "start": "2026-11-18T11:35",
+   "end": "13:30",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown on the listing",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ai-and-beyond-the-layer-beneath-ai/200030976155332",
+   "org": "IACC Karnataka Chapter with US-India Business Council",
+   "access": "open",
+   "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter."
   }
  ],
  "QUEUE_RAW": [
@@ -907,33 +932,33 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "search 'luma Mumbai design' plus Sprint to Imagine Cup page",
-   "found": 1,
+   "what": "search 'site:luma.com Mumbai AI meetup'",
+   "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 1,
-   "note": "Search surfaced no Luma design events; the one Luma page opened loaded but was a past event (Dec 2025)."
+   "skip": 0,
+   "note": "Search returned mostly past Mumbai Meets AI pages; Luma pages were not opened this run, so queue items stay unchanged."
   },
   {
    "src": "AllEvents",
-   "what": "artificial-intelligence, data-science, entrepreneurship, navi-mumbai/startup, business",
-   "found": 43,
-   "pub": 1,
+   "what": "artificial-intelligence, data-science, navi-mumbai/startup, entrepreneurship, conferences",
+   "found": 34,
+   "pub": 2,
    "review": 0,
-   "dup": 9,
-   "skip": 33,
-   "note": "All 5 pages loaded. In-range counts: AI 17, data-science 7, entrepreneurship 15, navi-mumbai/startup 1, business 5. Most are paid trainings, trade expos or finance summits and were skipped."
+   "dup": 3,
+   "skip": 22,
+   "note": "All pages loaded. Added AD Design Show and AI & Beyond; removed Overclock 2026 (high-school students only); skipped trade expos, finance summits, paid USD trainings, school/kids and fairs. eChai demo days look like stale 2025 schedules and were not used."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai, Mumbai/tech, meetups/Mumbai",
-   "found": 13,
+   "what": "Mumbai, Mumbai/tech, meetups Mumbai, tech, startup, data",
+   "found": 3,
    "pub": 0,
    "review": 0,
    "dup": 3,
    "skip": 10,
-   "note": "All 3 pages loaded. In-range counts: 5, 5, 13. Only Swift Bharat, StackConnect and DevFest are in-person Mumbai events (already published); the rest are online or masterclasses."
+   "note": "All 6 pages loaded. Only Swift Bharat, StackConnect and DevFest are in-person Mumbai events (already published); the rest are online."
   },
   {
    "src": "hiddenevents",
@@ -947,13 +972,13 @@
   },
   {
    "src": "web search",
-   "what": "6 searches; StartupGrantsIndia Mumbai p2, eChai, Internshala hackathons, Devfolio",
-   "found": 30,
-   "pub": 1,
+   "what": "AI meetup Nov 2026; StartupGrantsIndia Mumbai listing",
+   "found": 14,
+   "pub": 0,
    "review": 0,
-   "dup": 5,
-   "skip": 24,
-   "note": "All pages loaded (StartupGrantsIndia lists 25 in range, mostly networking mixers and expos). eChai dates look like 2025 so were not used. Perceptron and Sustainability hackathons skipped (registration closed)."
+   "dup": 3,
+   "skip": 11,
+   "note": "StartupGrantsIndia loaded; its cards show dates only and mostly networking mixers, so none were added. Meetup pages not opened."
   }
  ],
  "COMMUNITIES": [

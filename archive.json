@@ -1,4 +1,58 @@
 {
+ "ad-design-show-mumbai-2026": {
+  "id": "ad-design-show-mumbai-2026",
+  "title": "AD Design Show 2026 - Mumbai",
+  "cat": "Design",
+  "tags": [
+   "Design",
+   "Architecture",
+   "Interiors"
+  ],
+  "area": "Mumbai",
+  "venue": "Jio World Convention Centre, BKC",
+  "start": "2026-11-13T10:00",
+  "end": null,
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticket price not shown on the listing",
+  "aud": [
+   "Designer",
+   "Student",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/ad-design-show-2026-mumbai/3900030024917405",
+  "org": "AD Design Show",
+  "access": "open",
+  "desc": "A design show in Mumbai bringing together architecture, interiors and product design work; the listing states the date and venue.",
+  "firstSeen": "2026-11-09"
+ },
+ "ai-and-beyond-layer-beneath-ai": {
+  "id": "ai-and-beyond-layer-beneath-ai",
+  "title": "AI & Beyond | The Layer Beneath AI",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Business"
+  ],
+  "area": "Mumbai",
+  "venue": "1-C, Vulcan Insurance Building, Veer Nariman Road",
+  "start": "2026-11-18T11:35",
+  "end": "13:30",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Price not shown on the listing",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/ai-and-beyond-the-layer-beneath-ai/200030976155332",
+  "org": "IACC Karnataka Chapter with US-India Business Council",
+  "access": "open",
+  "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter.",
+  "firstSeen": "2026-11-09"
+ },
  "ai-for-non-techies": {
   "id": "ai-for-non-techies",
   "title": "AI for Non-Techies: live workshop",
