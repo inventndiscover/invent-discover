@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-08T22:29:03+05:30",
+ "REFRESHED": "2026-11-09T22:29:26+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -927,58 +927,90 @@
     "category": 80
    },
    "hint": "2026-11-14"
+  },
+  {
+   "qid": "q-principal-dev",
+   "title": "The Principal Dev – Masterclass for Tech Leads",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "dev.events",
+   "url": "https://principal.dev",
+   "access": "open",
+   "why": "dev.events lists Dec 3-4, 2026 under Mumbai but the city and venue are not stated on the page.",
+   "conf": {
+    "date": 70,
+    "place": 40,
+    "category": 80
+   },
+   "hint": "2026-12-03"
+  },
+  {
+   "qid": "q-clean-arch",
+   "title": "Clean Architecture Masterclass",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "dev.events",
+   "url": "https://clean.re",
+   "access": "open",
+   "why": "dev.events lists Dec 10-11, 2026 under Mumbai but the city and venue are not stated on the page.",
+   "conf": {
+    "date": 70,
+    "place": 40,
+    "category": 75
+   },
+   "hint": "2026-12-10"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "search 'site:luma.com Mumbai AI meetup'",
-   "found": 0,
+   "what": "search 'site:luma.com Mumbai AI meetup'; luma.com/mumbai listing",
+   "found": 20,
    "pub": 0,
    "review": 0,
-   "dup": 0,
+   "dup": 2,
    "skip": 0,
-   "note": "Search returned mostly past Mumbai Meets AI pages; Luma pages were not opened this run, so queue items stay unchanged."
+   "note": "Search and the Mumbai listing page loaded, but the listing shows no dates, so queue items stay unchanged; one event page not opened this run."
   },
   {
    "src": "AllEvents",
-   "what": "artificial-intelligence, data-science, navi-mumbai/startup, entrepreneurship, conferences",
-   "found": 34,
-   "pub": 2,
+   "what": "artificial-intelligence, data-science",
+   "found": 26,
+   "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 22,
-   "note": "All pages loaded. Added AD Design Show and AI & Beyond; removed Overclock 2026 (high-school students only); skipped trade expos, finance summits, paid USD trainings, school/kids and fairs. eChai demo days look like stale 2025 schedules and were not used."
+   "dup": 6,
+   "skip": 20,
+   "note": "Both pages loaded. Published events still match their dates; skipped finance/economic summits, paid USD trainings, past events, STEM expo and unclear listings."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai, Mumbai/tech, meetups Mumbai, tech, startup, data",
-   "found": 3,
+   "what": "Mumbai, meetups Mumbai",
+   "found": 5,
    "pub": 0,
-   "review": 0,
+   "review": 2,
    "dup": 3,
-   "skip": 10,
-   "note": "All 6 pages loaded. Only Swift Bharat, StackConnect and DevFest are in-person Mumbai events (already published); the rest are online."
+   "skip": 14,
+   "note": "Both pages loaded (with a server-error notice). Swift Bharat, StackConnect and DevFest confirmed; Principal Dev and Clean Architecture sent to the queue because the city is not stated; meetups are online-only."
   },
   {
    "src": "hiddenevents",
-   "what": "Luma mirror",
+   "what": "site:hiddenevents.online Mumbai",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not searched this run."
+   "note": "Search returned no hiddenevents pages, so it was skipped."
   },
   {
    "src": "web search",
-   "what": "AI meetup Nov 2026; StartupGrantsIndia Mumbai listing",
-   "found": 14,
+   "what": "Mumbai AI meetup November 2026",
+   "found": 20,
    "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 11,
-   "note": "StartupGrantsIndia loaded; its cards show dates only and mostly networking mixers, so none were added. Meetup pages not opened."
+   "dup": 4,
+   "skip": 16,
+   "note": "Search worked; no new dated Mumbai events beyond those already listed. Meetup pages not opened."
   }
  ],
  "COMMUNITIES": [

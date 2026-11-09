@@ -1,6 +1,16 @@
 {
- "REFRESHED": "2026-11-07T21:51:44+05:30",
+ "REFRESHED": "2026-11-09T21:52:38+05:30",
  "SIGNALS": [
+  {
+   "id": "2119388634327503233",
+   "handle": "aGim_asf",
+   "name": "agim",
+   "url": "https://x.com/aGim_asf/status/2119388634327503233",
+   "posted": "2026-11-08T16:46:41+05:30",
+   "topic": "Models",
+   "kind": "Leak",
+   "summary": "Unconfirmed: a report said OpenAI's 6.2 Sol and Astra models might launch Friday. That passed without a launch, though Sol appeared on a Google Cloud quotas page and two hidden OpenAI models showed up in Devin."
+  },
   {
    "id": "2118572536300699764",
    "handle": "AravSrinivas",
