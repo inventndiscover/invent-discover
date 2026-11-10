@@ -682,8 +682,19 @@ function storyCard(s){
 }
 // Only stories whose go-live time has passed, newest first (same rule as the banner).
 const liveStories=()=>{ const now=Date.now(); return STORIES.filter(x=>Date.parse(x.added)<=now).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added)); };
+// Home: every story the same size, three across; only the newest gets a "New" tag (fix, 10 Nov 2026)
+function storyTile(s,isNewest){
+  const day=s.added.slice(0,10), isNew=isNewest && dayDiff(day,TODAY)>-31 && dayDiff(day,TODAY)<=0;
+  return `<a class="story-card story-tile" href="${s.url}"><div class="story-img"><img src="${s.img}" alt="${esc(s.alt||"")}" loading="lazy" width="1280" height="720"></div>
+    <div class="story-body"><div class="story-kick"><span class="label">Discover · Story</span>${isNew?`<span class="story-new">New</span>`:""}</div>
+      <h3>${esc(s.title)}</h3><p>${esc(s.line)}</p>
+      <div class="story-meta label">${esc(s.read||"")}${s.read?" · ":""}${fmtDay(day)}</div></div></a>`;
+}
 function storiesBlock(where){
   const L=liveStories(); if(!L.length) return "";
+  if(where==="home") return `<section class="block stories home"><div class="wrap">
+    <div class="sec-head"><div><h2 class="sec-title">Stories</h2><p class="sec-sub">Today's tech, explained through an older Indian craft or system.</p></div>${L.length>3?`<a class="more" href="#discover" data-go="discover">All stories</a>`:""}</div>
+    <div class="grid story-grid">${L.slice(0,3).map((s,i)=>storyTile(s,i===0)).join("")}</div></div></section>`;
   const [first,...rest]=L;
   const head= where==="home"
     ? `<div class="sec-head"><div><h2 class="sec-title">Stories</h2><p class="sec-sub">Today's tech, explained through an older Indian craft or system.</p></div>${L.length>1?`<a class="more" href="#discover" data-go="discover">All stories</a>`:""}</div>`
