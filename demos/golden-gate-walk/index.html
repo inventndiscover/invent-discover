@@ -161,7 +161,7 @@ button[aria-pressed=true]{color:#fff;background:linear-gradient(90deg,#6a3ee0,#2
 <p id="noticeAsk" class="note" hidden><b>Walk with people</b> includes digital characters walking near you. Characters: Microsoft Rocketbox Avatar Library (MIT License). You can change this later in the controls, or with A in the headset.</p>
 <div id="noticeBtns" class="nBtns" hidden><button id="noticeAlone" class="nBtn alt" type="button">Walk alone</button><button id="noticeWith" class="nBtn" type="button">Walk with people</button></div>
 <div id="noticeOne" class="nBtns"><button id="noticeGo" class="nBtn" type="button">I understand, begin</button><button id="noticeChange" class="nBtn alt" type="button">Switch to walking with people</button></div>
-<p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.7">Build 10 Nov 2026 (e) · in the headset, press A for scene, time, weather and people, X for a performance readout, Y to cross to the other sidewalk</p></div></div>
+<p style="margin:12px 0 0;font-size:10px;letter-spacing:.08em;opacity:.7">Build 10 Nov 2026 (f) · in the headset, press A for scene, time, weather and people, X for a performance readout, Y to cross to the other sidewalk</p></div></div>
 <script>
 /* Holds the opening tour until the notice is accepted; the rest of the page is inert while it is open.
    People mode: if no choice is saved yet the card offers "Walk alone" / "Walk with people"; if one is saved, it is used and
@@ -1679,7 +1679,9 @@ function landH(x, zE, noIsl){
   // the road to the bridge: level ground out of the plaza, then falling away to the shore under the viaduct
   { const m=(1-smooth(26,70,Math.abs(x)))*(1-smooth(-110,10,z)); if(m>0) h = mix(h, 61.4 + .5*LN.fbm(x/40,z/40,2), m); }
   // the Marin end: the road runs in a cut
-  { const m=(1-smooth(30,80,Math.abs(x)))*smooth(2020,2120,z); if(m>0 && h>60) h = mix(h, 65, m); }
+  // (fix, 10 Nov 2026) starts before the north pylon and is wide enough that the 32 m far-terrain mesh cannot blur it onto the road;
+  // the ground sits 4 m under the deck beside the road, then climbs back up as a cut slope from 40 m out
+  { const m=(1-smooth(40,130,Math.abs(x)))*smooth(1960,2030,z); if(m>0 && h>DECK_Y(z)-4) h = mix(h, DECK_Y(z)-4, m); }
   // far away the land sinks into haze
   h -= 70*smooth(7000, 8300, Math.hypot(x,z));
   return h;
@@ -3320,7 +3322,7 @@ const XRL=[
 ];
 // Which headset is this? The Quest browser names it in its user-agent string, e.g. "... Quest 2) ..." or "... Quest 3) ...".
 // A Quest 2 has roughly half the graphics power of a Quest 3, so it starts lower down the ladder above.
-const BUILD='10 Nov 2026 (e)';
+const BUILD='10 Nov 2026 (f)';
 const HEADSET = (()=>{ const u=navigator.userAgent||''; const m=u.match(/Quest\s?(3S|3|2|Pro)/i); return m ? 'Quest '+m[1] : /OculusBrowser/i.test(u) ? 'Quest' : 'Headset'; })();
 const XR_START = HEADSET==='Quest 2' ? 3 : HEADSET==='Quest' ? 3 : 2;
 let Q=QD;
@@ -4019,7 +4021,7 @@ async function pplLoadAnims(){
 // ask for the faces needed for the current level; people appear as their files arrive
 async function pplEnsure(){
   if(PPL.level<=0) return;
-  pplInitGL(); const need=PPL_CAST.slice(0,PPL.level===1?4:7);
+  pplInitGL(); const need=PPL_CAST.slice();   // all seven faces in both modes, so faces rarely repeat
   const rest=Promise.all(need.map(c=>pplLoadSkin(c.id)));                 // all faces download side by side...
   await Promise.all([pplLoadAnims(), pplLoadSkin(need[0].id)]);            // ...but people can start as soon as the first one is ready
   if(PPL.anims && PPL.skins[need[0].id].A){ PPL.state='ready'; PPL.err=''; }
@@ -4072,8 +4074,8 @@ function pplHidden(x,z,y,me){
   const dx=x-me.x, dz=z-me.z, d=Math.hypot(dx,dz); if(d<PPL_MIN_SPAWN) return false; if(d>=PPL_FAR) return true;
   const f=fwdOf(cam.yaw,0); const ang=Math.acos(clamp((dx*f[0]+dz*f[2])/d,-1,1)); return ang>1.45;     // 83 degrees either side of the gaze
 }
-function pplSpawn(skinIdx, force){
-  const me=pplMe(); const C=PPL_CAST[skinIdx], rec=PPL.skins[C.id]; if(!rec||!rec.A||!PPL.anims) return null;
+function pplSpawn(skinIdx, force, pool){
+  const me=pplMe(); let C=PPL_CAST[skinIdx], rec=PPL.skins[C.id]; if(!rec||!rec.A||!PPL.anims) return null;
   for(let tries=0;tries<18;tries++){
     const sLo=Math.max(2,me.s-60), sHi=Math.min(PATH_LEN-5,me.s+170); const s=sLo+PPL.rnd()*Math.max(5,sHi-sLo); const p=pathAt(s); const dir=PPL.rnd()<.62 ? (s>me.s?-1:1) : (PPL.rnd()<.5?1:-1);
     if(dir>0 && s>PATH_LEN-9) continue; if(dir<0 && s<8) continue;
@@ -4082,6 +4084,12 @@ function pplSpawn(skinIdx, force){
     if(!force && !pplHidden(x,z,p.y,me)) continue;
     if(force && Math.hypot(x-me.x,z-me.z)<9) continue;
     if(PPL.people.some(o=>Math.hypot(o.x-x,o.z-z)<4)) continue;
+    if(pool && pool.length){   // choose the face now that we know where they stand: not one already walking within 80 m
+      const near=new Set(PPL.people.filter(o=>!o.leaving && Math.abs(o.s-s)<80).map(o=>o.k));
+      const count=k=>PPL.people.filter(o=>!o.leaving && o.k===k).length;
+      const ok=pool.filter(k=>!near.has(k)); if(!ok.length) continue;          // everyone nearby already uses every face: try another spot
+      const least=Math.min(...ok.map(count)), best=ok.filter(k=>count(k)===least);
+      skinIdx=best[Math.floor(PPL.rnd()*best.length)]; C=PPL_CAST[skinIdx]; rec=PPL.skins[C.id]; }
     const morning=(typeof SC!=='undefined' && SC.id==='fog');
     let role=C.role, clip=C.clip, vr=C.v, tint=[1,1,1,0];
     if(morning ? PPL.rnd()<.75 : PPL.rnd()<.10){ role='jog'; clip=C.g+'_jog'; vr=C.g==='m'?[2.3,2.65]:[2.05,2.4]; }
@@ -4112,9 +4120,9 @@ function pplStep(dt){
   // bring people in, one at a time, only where nobody can see them appear
   const burst=(PPL.burst||0)<want*2;
   if(stay<want && (burst || simT-PPL.lastSpawn>(PPL.level===2?.45:.9))){
-    const used=new Set(people.filter(p=>!p.leaving).map(p=>p.k)); const pool=PPL_CAST.map((c,i)=>i).filter(i=>PPL.skins[PPL_CAST[i].id]&&PPL.skins[PPL_CAST[i].id].A&&(PPL.level===2||i<4));
+    const used=new Set(people.filter(p=>!p.leaving).map(p=>p.k)); const pool=PPL_CAST.map((c,i)=>i).filter(i=>PPL.skins[PPL_CAST[i].id]&&PPL.skins[PPL_CAST[i].id].A);
     const free=pool.filter(i=>!used.has(i)); const pick=(free.length?free:pool)[Math.floor(PPL.rnd()*(free.length?free.length:pool.length))];
-    if(pick!==undefined){ PPL.lastSpawn=simT; PPL.burst=(PPL.burst||0)+1; pplSpawn(pick,burst); }
+    if(pick!==undefined){ PPL.lastSpawn=simT; PPL.burst=(PPL.burst||0)+1; pplSpawn(pick,burst,pool); }
   }
   for(const P of people){ if(!P.leaving && Math.abs(P.s-me.s)>300 && Math.hypot(P.x-me.x,P.z-me.z)>PPL_FAR) pplRetire(P); }
   const tour=cam.mode==='tour';
