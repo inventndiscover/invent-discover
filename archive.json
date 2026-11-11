@@ -812,6 +812,34 @@
   "desc": "A two-day gaming festival with esports tournaments, play zones, an indie studio showcase and a board-game section. It also hosts an industry conference with investors and policymakers.",
   "firstSeen": "2026-10-12"
  },
+ "genai-unleashed-iitb-26": {
+  "id": "genai-unleashed-iitb-26",
+  "title": "Generative AI Unleashed by Google Cloud @IIT B",
+  "cat": "AI",
+  "tags": [
+   "GenAI",
+   "Workshop",
+   "Students"
+  ],
+  "area": "Powai",
+  "venue": "CSRE Building, IIT Bombay",
+  "start": "2026-12-12T11:00",
+  "end": "13:00",
+  "fmt": "In person",
+  "price": null,
+  "priceNote": "Price not stated on the page",
+  "aud": [
+   "Student",
+   "Developer",
+   "Founder"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/generative-ai-unleashed-by-google-cloud-iit-b/3900031011921736",
+  "org": "Google Cloud (presenter) at IIT Bombay",
+  "access": "open",
+  "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups.",
+  "firstSeen": "2026-11-11"
+ },
  "global-startups-club-oct10": {
   "id": "global-startups-club-oct10",
   "title": "Global Startups Club: Startup Networking Mumbai",

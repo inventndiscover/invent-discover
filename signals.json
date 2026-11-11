@@ -1,6 +1,66 @@
 {
- "REFRESHED": "2026-11-09T21:52:38+05:30",
+ "REFRESHED": "2026-11-11T21:51:13+05:30",
  "SIGNALS": [
+  {
+   "id": "2120233516525064449",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2120233516525064449",
+   "posted": "2026-11-11T00:43:57+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "A report says OpenAI launched Businesses in ChatGPT in beta, letting eligible businesses claim a profile, manage their information and see how people engage with them."
+  },
+  {
+   "id": "2120219371473617099",
+   "handle": "GoogleDeepMind",
+   "name": "Google DeepMind",
+   "url": "https://x.com/GoogleDeepMind/status/2120219371473617099",
+   "posted": "2026-11-10T23:47:44+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google DeepMind opened Gemini 4 Carbon to developers, describing it as its strongest model for long-horizon tasks, with extended verification loops across coding, cybersecurity and science."
+  },
+  {
+   "id": "2120210297948696997",
+   "handle": "demishassabis",
+   "name": "Demis Hassabis",
+   "url": "https://x.com/demishassabis/status/2120210297948696997",
+   "posted": "2026-11-10T23:11:41+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Demis Hassabis says Gemini 4 Carbon is rolling out today, and shows it reverse engineering his original Theme Park game binaries and porting the game to the web in one shot."
+  },
+  {
+   "id": "2120186185423159331",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2120186185423159331",
+   "posted": "2026-11-10T21:35:52+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google says Gemini 4 Carbon is now available, positioned for the hardest problems, while Gemini 4 Argon remains the choice for complex tasks."
+  },
+  {
+   "id": "2119867138987176141",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2119867138987176141",
+   "posted": "2026-11-10T00:28:05+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Anthropic says Claude Fable 5.2 is available on all paid plans, the Claude Platform and major clouds, priced at $8 per million input tokens and $40 per million output, down from $10 and $50."
+  },
+  {
+   "id": "2119867114450268322",
+   "handle": "claudeai",
+   "name": "Claude",
+   "url": "https://x.com/claudeai/status/2119867114450268322",
+   "posted": "2026-11-10T00:27:59+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Anthropic introduced Claude Fable 5.2 and Claude Mythos 5.2 for demanding technical work, with improvements in coding, reasoning and vision."
+  },
   {
    "id": "2119388634327503233",
    "handle": "aGim_asf",
@@ -50,26 +110,6 @@
    "topic": "AI",
    "kind": "Official",
    "summary": "Perplexity introduced Teammates, agents that take on ongoing jobs using Computer tasks, skills, memory and tools, and can message coworkers in Slack. Available to Max subscribers on the web."
-  },
-  {
-   "id": "2118124966055223755",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2118124966055223755",
-   "posted": "2026-11-05T05:05:19+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "OpenAI says Images 2.6 is now in ChatGPT and Codex on all tiers, with GPT-Image-2.6 Flare and Sunburst also available in the API."
-  },
-  {
-   "id": "2118119451401048497",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2118119451401048497",
-   "posted": "2026-11-05T04:43:24+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "OpenAI says its security researchers built an automated pipeline that, in one run with an upcoming cyber model, validated and patched 948 local privilege escalation bugs in the Linux kernel."
   }
  ]
 }

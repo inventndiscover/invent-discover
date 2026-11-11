@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-09T22:29:26+05:30",
+ "REFRESHED": "2026-11-11T22:28:56+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -442,6 +442,33 @@
    "org": "IACC Karnataka Chapter with US-India Business Council",
    "access": "open",
    "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter."
+  },
+  {
+   "id": "genai-unleashed-iitb-26",
+   "title": "Generative AI Unleashed by Google Cloud @IIT B",
+   "cat": "AI",
+   "tags": [
+    "GenAI",
+    "Workshop",
+    "Students"
+   ],
+   "area": "Powai",
+   "venue": "CSRE Building, IIT Bombay",
+   "start": "2026-12-12T11:00",
+   "end": "13:00",
+   "fmt": "In person",
+   "price": null,
+   "priceNote": "Price not stated on the page",
+   "aud": [
+    "Student",
+    "Developer",
+    "Founder"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/generative-ai-unleashed-by-google-cloud-iit-b/3900031011921736",
+   "org": "Google Cloud (presenter) at IIT Bombay",
+   "access": "open",
+   "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups."
   }
  ],
  "QUEUE_RAW": [
@@ -963,54 +990,54 @@
  ],
  "RUNS": [
   {
-   "src": "Luma",
-   "what": "search 'site:luma.com Mumbai AI meetup'; luma.com/mumbai listing",
-   "found": 20,
-   "pub": 0,
-   "review": 0,
-   "dup": 2,
-   "skip": 0,
-   "note": "Search and the Mumbai listing page loaded, but the listing shows no dates, so queue items stay unchanged; one event page not opened this run."
-  },
-  {
-   "src": "AllEvents",
-   "what": "artificial-intelligence, data-science",
-   "found": 26,
-   "pub": 0,
-   "review": 0,
-   "dup": 6,
-   "skip": 20,
-   "note": "Both pages loaded. Published events still match their dates; skipped finance/economic summits, paid USD trainings, past events, STEM expo and unclear listings."
-  },
-  {
    "src": "dev.events",
-   "what": "Mumbai, meetups Mumbai",
+   "what": "Mumbai conference and meetup listings",
    "found": 5,
    "pub": 0,
    "review": 2,
    "dup": 3,
-   "skip": 14,
-   "note": "Both pages loaded (with a server-error notice). Swift Bharat, StackConnect and DevFest confirmed; Principal Dev and Clean Architecture sent to the queue because the city is not stated; meetups are online-only."
+   "skip": 9,
+   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest already published; Principal Dev and Clean Architecture list no city so stay queued. Meetups page held only online events."
+  },
+  {
+   "src": "AllEvents",
+   "what": "AI and data-science category pages",
+   "found": 15,
+   "pub": 1,
+   "review": 0,
+   "dup": 3,
+   "skip": 11,
+   "note": "Pages loaded. Added Google Cloud GenAI session at IIT Bombay. Skipped finance/trade summits, recurring NP Venue course listings and a non-AI well event."
+  },
+  {
+   "src": "Luma",
+   "what": "Mumbai listing and event pages",
+   "found": 20,
+   "pub": 0,
+   "review": 2,
+   "dup": 0,
+   "skip": 0,
+   "note": "Listing loaded but shows no dates. Event pages for vLLM and Touch Grass loaded without dates; kept queued. AllEvents-sourced event pages for AD Design Show and AI & Beyond could not be re-fetched this run (refused), kept as before."
   },
   {
    "src": "hiddenevents",
-   "what": "site:hiddenevents.online Mumbai",
+   "what": "hiddenevents.online search",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search returned no hiddenevents pages, so it was skipped."
+   "note": "Search returned no hiddenevents pages, so the source was not used."
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup November 2026",
-   "found": 20,
+   "what": "Site-restricted searches",
+   "found": 0,
    "pub": 0,
    "review": 0,
-   "dup": 4,
-   "skip": 16,
-   "note": "Search worked; no new dated Mumbai events beyond those already listed. Meetup pages not opened."
+   "dup": 0,
+   "skip": 0,
+   "note": "Used only to surface listing pages. Meetup not opened."
   }
  ],
  "COMMUNITIES": [
