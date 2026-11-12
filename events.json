@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-11T22:28:56+05:30",
+ "REFRESHED": "2026-11-12T22:28:43+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -795,7 +795,7 @@
    "src": "Luma",
    "url": "https://luma.com/h3hq02qb",
    "access": "approval",
-   "why": "Invite-only launch evening for the Google Mumbai Data Challenge (online challenge 26 Oct-9 Nov); calendar date of the evening is not shown on the page.",
+   "why": "Winners ceremony page shows no date; venue is hidden until approved registration.",
    "conf": {
     "date": 0,
     "place": 30,
@@ -947,7 +947,7 @@
    "src": "vibecoding.app (aggregator)",
    "url": "https://vibecoding.app/ai-events/mumbai-claude-for-product-managers-doctors-2026-11",
    "access": "open",
-   "why": "Aggregator lists Sat 14 Nov, free, venue TBA; the Luma event page was not opened.",
+   "why": "Aggregator lists 14 Nov 2026 but venue and start time are TBA and the organiser page was not reachable.",
    "conf": {
     "date": 60,
     "place": 20,
@@ -991,53 +991,53 @@
  "RUNS": [
   {
    "src": "dev.events",
-   "what": "Mumbai conference and meetup listings",
+   "what": "Mumbai conference and meetup listing pages",
    "found": 5,
-   "pub": 0,
+   "pub": 3,
    "review": 2,
    "dup": 3,
-   "skip": 9,
-   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest already published; Principal Dev and Clean Architecture list no city so stay queued. Meetups page held only online events."
+   "skip": 0,
+   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest re-confirmed; Principal Dev and Clean Architecture stay queued (venue unverified). Meetup list was online-only events elsewhere."
   },
   {
    "src": "AllEvents",
    "what": "AI and data-science category pages",
-   "found": 15,
-   "pub": 1,
+   "found": 22,
+   "pub": 6,
    "review": 0,
    "dup": 3,
-   "skip": 11,
-   "note": "Pages loaded. Added Google Cloud GenAI session at IIT Bombay. Skipped finance/trade summits, recurring NP Venue course listings and a non-AI well event."
+   "skip": 13,
+   "note": "Pages loaded. Re-confirmed AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed, Techfest IoT. Skipped paid foreign-priced seminars, finance/trade summits, oil-and-gas lecture and a STEM education expo."
   },
   {
    "src": "Luma",
-   "what": "Mumbai listing and event pages",
+   "what": "Mumbai city page plus search-surfaced event pages",
    "found": 20,
    "pub": 0,
-   "review": 2,
-   "dup": 0,
+   "review": 1,
+   "dup": 1,
    "skip": 0,
-   "note": "Listing loaded but shows no dates. Event pages for vLLM and Touch Grass loaded without dates; kept queued. AllEvents-sourced event pages for AD Design Show and AI & Beyond could not be re-fetched this run (refused), kept as before."
+   "note": "Listing loaded but shows no dates; the Google Data Challenge ceremony page has no date, so it stays queued. Individual pages for most items not re-opened this run."
   },
   {
    "src": "hiddenevents",
-   "what": "hiddenevents.online search",
+   "what": "Search for Luma mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search returned no hiddenevents pages, so the source was not used."
+   "note": "Search did not surface the site, so it was not fetched."
   },
   {
    "src": "web search",
-   "what": "Site-restricted searches",
-   "found": 0,
+   "what": "Mumbai AI meetup November 2026, AI Tinkerers, vibecoding.app",
+   "found": 3,
    "pub": 0,
-   "review": 0,
+   "review": 1,
    "dup": 0,
    "skip": 0,
-   "note": "Used only to surface listing pages. Meetup not opened."
+   "note": "AI Tinkerers Mumbai page loaded with no upcoming events. Claude for PMs & Doctors (14 Nov) loaded but venue TBA, kept in queue. Meetup, principal.dev and clean.re could not be fetched."
   }
  ],
  "COMMUNITIES": [

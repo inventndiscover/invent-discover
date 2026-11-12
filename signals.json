@@ -1,6 +1,46 @@
 {
- "REFRESHED": "2026-11-11T21:51:13+05:30",
+ "REFRESHED": "2026-11-12T21:52:43+05:30",
  "SIGNALS": [
+  {
+   "id": "2120770917873648100",
+   "handle": "anshulkundaje",
+   "name": "Anshul Kundaje",
+   "url": "https://x.com/anshulkundaje/status/2120770917873648100",
+   "posted": "2026-11-12T12:19:23+05:30",
+   "topic": "Research",
+   "kind": "Report",
+   "summary": "Researcher Anshul Kundaje welcomes cell-state-conditioned sequence-to-omics models going mainstream, crediting the DeepMind genomics team for the work."
+  },
+  {
+   "id": "2120611756598833520",
+   "handle": "xinfolive",
+   "name": "X⚡️INFOLIVE",
+   "url": "https://x.com/xinfolive/status/2120611756598833520",
+   "posted": "2026-11-12T01:46:56+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "A French-language post reports that xAI, now under SpaceX, officially released Grok Bot 1.0 on November 11, 2026, pitched as AI teammates that work alongside a team."
+  },
+  {
+   "id": "2120508948847767555",
+   "handle": "DivyanshT91162",
+   "name": "divyansh tiwari",
+   "url": "https://x.com/DivyanshT91162/status/2120508948847767555",
+   "posted": "2026-11-11T18:58:25+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "A post says OpenAI models leave Cursor on Nov 12 after SpaceX acquired it, with OpenAI saying it cannot trust SpaceX to use its models within its terms."
+  },
+  {
+   "id": "2120283296550547618",
+   "handle": "PawelHuryn",
+   "name": "Paweł Huryn",
+   "url": "https://x.com/PawelHuryn/status/2120283296550547618",
+   "posted": "2026-11-11T04:01:45+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "Paweł Huryn tested Gemini 4 Carbon on two repos with 105 planted bugs: it scored 57.3 for $31.32, just behind Fable 5.2 at 58 for $139.65."
+  },
   {
    "id": "2120233516525064449",
    "handle": "AGTPinsights",
@@ -32,14 +72,14 @@
    "summary": "Demis Hassabis says Gemini 4 Carbon is rolling out today, and shows it reverse engineering his original Theme Park game binaries and porting the game to the web in one shot."
   },
   {
-   "id": "2120186185423159331",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2120186185423159331",
-   "posted": "2026-11-10T21:35:52+05:30",
-   "topic": "Models",
+   "id": "2120202353907486826",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2120202353907486826",
+   "posted": "2026-11-10T22:40:07+05:30",
+   "topic": "AI",
    "kind": "Official",
-   "summary": "Google says Gemini 4 Carbon is now available, positioned for the hardest problems, while Gemini 4 Argon remains the choice for complex tasks."
+   "summary": "OpenAI says it is turning lessons from defending its own systems into tools for customers, and will present its latest cyber announcements at a live keynote on Thursday."
   },
   {
    "id": "2119867138987176141",
@@ -50,66 +90,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Anthropic says Claude Fable 5.2 is available on all paid plans, the Claude Platform and major clouds, priced at $8 per million input tokens and $40 per million output, down from $10 and $50."
-  },
-  {
-   "id": "2119867114450268322",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2119867114450268322",
-   "posted": "2026-11-10T00:27:59+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Anthropic introduced Claude Fable 5.2 and Claude Mythos 5.2 for demanding technical work, with improvements in coding, reasoning and vision."
-  },
-  {
-   "id": "2119388634327503233",
-   "handle": "aGim_asf",
-   "name": "agim",
-   "url": "https://x.com/aGim_asf/status/2119388634327503233",
-   "posted": "2026-11-08T16:46:41+05:30",
-   "topic": "Models",
-   "kind": "Leak",
-   "summary": "Unconfirmed: a report said OpenAI's 6.2 Sol and Astra models might launch Friday. That passed without a launch, though Sol appeared on a Google Cloud quotas page and two hidden OpenAI models showed up in Devin."
-  },
-  {
-   "id": "2118572536300699764",
-   "handle": "AravSrinivas",
-   "name": "Aravind Srinivas",
-   "url": "https://x.com/AravSrinivas/status/2118572536300699764",
-   "posted": "2026-11-06T10:43:48+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Perplexity's CEO argues agents will increasingly be used by other agents, with git as a shared record, so that version-controlled traces make a measurable recursive improvement loop possible."
-  },
-  {
-   "id": "2118390406316728555",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2118390406316728555",
-   "posted": "2026-11-05T22:40:05+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google announced Gemini Omni 1.2 Flash, an updated video generation model from DeepMind with better consistency, more creative control, and 30% lower cost."
-  },
-  {
-   "id": "2118390190246879554",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2118390190246879554",
-   "posted": "2026-11-05T22:39:13+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "OpenAI introduced GPT-6 Cyber, a model for security research. It says the model powered its Linux kernel research and is being used by teams at Mozilla, Palo Alto Networks and Cisco."
-  },
-  {
-   "id": "2118389326459670825",
-   "handle": "perplexity_ai",
-   "name": "Perplexity",
-   "url": "https://x.com/perplexity_ai/status/2118389326459670825",
-   "posted": "2026-11-05T22:35:47+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Perplexity introduced Teammates, agents that take on ongoing jobs using Computer tasks, skills, memory and tools, and can message coworkers in Slack. Available to Max subscribers on the web."
   }
  ]
 }
