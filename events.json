@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-12T22:28:43+05:30",
+ "REFRESHED": "2026-11-13T22:28:45+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -986,38 +986,83 @@
     "category": 75
    },
    "hint": "2026-12-10"
+  },
+  {
+   "qid": "q-indie-builders-dinner",
+   "title": "Indie Builders Dinner w/ Harkirat Singh",
+   "cat": "Startup",
+   "area": "BKC",
+   "src": "Luma",
+   "url": "https://luma.com/indie-builders-dinner-2026",
+   "access": "approval",
+   "why": "Luma city listing shows no date; a builders dinner in G Block, BKC.",
+   "conf": {
+    "date": 0,
+    "place": 80,
+    "category": 75
+   }
+  },
+  {
+   "qid": "q-predevfest-tech-trivia",
+   "title": "[Pre-DevFest] Tech Trivia Night",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/sdvi6bs6",
+   "access": "open",
+   "why": "Luma city listing shows no date; a pre-DevFest social at 3 Wise Monkeys.",
+   "conf": {
+    "date": 0,
+    "place": 75,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-kallat-preview",
+   "title": "PREVIEW | Jitish Kallat: Conjectures on a Paper Sky",
+   "cat": "Art",
+   "area": "Byculla",
+   "src": "Luma",
+   "url": "https://luma.com/x5hz6zmz",
+   "access": "approval",
+   "why": "Luma city listing shows no date; an art preview at Dr. Bhau Daji Lad Museum.",
+   "conf": {
+    "date": 0,
+    "place": 85,
+    "category": 85
+   }
   }
  ],
  "RUNS": [
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 5,
-   "pub": 3,
-   "review": 2,
+   "found": 6,
+   "pub": 0,
+   "review": 0,
    "dup": 3,
-   "skip": 0,
-   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest re-confirmed; Principal Dev and Clean Architecture stay queued (venue unverified). Meetup list was online-only events elsewhere."
+   "skip": 3,
+   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed (already published). Principal Dev and Clean Architecture still lack a stated venue, so they stay queued. Meetup page held only online events (Hungarian/Spanish/crypto), skipped."
   },
   {
    "src": "AllEvents",
    "what": "AI and data-science category pages",
    "found": 22,
-   "pub": 6,
+   "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 13,
-   "note": "Pages loaded. Re-confirmed AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed, Techfest IoT. Skipped paid foreign-priced seminars, finance/trade summits, oil-and-gas lecture and a STEM education expo."
+   "dup": 5,
+   "skip": 17,
+   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match the published entries. Skipped foreign-priced paid seminars, finance/trade summits, an AI musical, a STEM education expo and a facade-engineering talk."
   },
   {
    "src": "Luma",
-   "what": "Mumbai city page plus search-surfaced event pages",
+   "what": "Mumbai city page",
    "found": 20,
    "pub": 0,
-   "review": 1,
-   "dup": 1,
-   "skip": 0,
-   "note": "Listing loaded but shows no dates; the Google Data Challenge ceremony page has no date, so it stays queued. Individual pages for most items not re-opened this run."
+   "review": 3,
+   "dup": 3,
+   "skip": 11,
+   "note": "Listing loaded but shows no dates, so nothing could be confirmed. Three new non-crypto items queued; crypto/Devcon side events skipped or already queued. Individual event pages not re-opened this run."
   },
   {
    "src": "hiddenevents",
@@ -1031,13 +1076,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup November 2026, AI Tinkerers, vibecoding.app",
-   "found": 3,
+   "what": "Mumbai AI meetup November 2026",
+   "found": 4,
    "pub": 0,
-   "review": 1,
-   "dup": 0,
-   "skip": 0,
-   "note": "AI Tinkerers Mumbai page loaded with no upcoming events. Claude for PMs & Doctors (14 Nov) loaded but venue TBA, kept in queue. Meetup, principal.dev and clean.re could not be fetched."
+   "review": 0,
+   "dup": 3,
+   "skip": 1,
+   "note": "Searches ran. Results repeated known events; Meetup pages not opened (blocked). No new dated events confirmed."
   }
  ],
  "COMMUNITIES": [
