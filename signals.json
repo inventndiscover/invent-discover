@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-11-12T21:52:43+05:30",
+ "REFRESHED": "2026-11-14T21:51:58+05:30",
  "SIGNALS": [
+  {
+   "id": "2121346126037029183",
+   "handle": "glean",
+   "name": "Glean",
+   "url": "https://x.com/glean/status/2121346126037029183",
+   "posted": "2026-11-14T02:25:03+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "Glean says it was named to the inaugural 2026 AI 100 list and describes its product as a context platform for making AI useful in the enterprise."
+  },
+  {
+   "id": "2121170563263578535",
+   "handle": "gaganghotra_",
+   "name": "Gagan Ghotra",
+   "url": "https://x.com/gaganghotra_/status/2121170563263578535",
+   "posted": "2026-11-13T14:47:26+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "An SEO analyst reports large swings in Google AI Overviews since the November 2026 Core Update began rolling out, based on 10K keywords across 20 niches in US desktop results."
+  },
   {
    "id": "2120770917873648100",
    "handle": "anshulkundaje",
@@ -30,26 +50,6 @@
    "topic": "Tech",
    "kind": "Report",
    "summary": "A post says OpenAI models leave Cursor on Nov 12 after SpaceX acquired it, with OpenAI saying it cannot trust SpaceX to use its models within its terms."
-  },
-  {
-   "id": "2120283296550547618",
-   "handle": "PawelHuryn",
-   "name": "Paweł Huryn",
-   "url": "https://x.com/PawelHuryn/status/2120283296550547618",
-   "posted": "2026-11-11T04:01:45+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "Paweł Huryn tested Gemini 4 Carbon on two repos with 105 planted bugs: it scored 57.3 for $31.32, just behind Fable 5.2 at 58 for $139.65."
-  },
-  {
-   "id": "2120233516525064449",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2120233516525064449",
-   "posted": "2026-11-11T00:43:57+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "A report says OpenAI launched Businesses in ChatGPT in beta, letting eligible businesses claim a profile, manage their information and see how people engage with them."
   },
   {
    "id": "2120219371473617099",

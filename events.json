@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-13T22:28:45+05:30",
+ "REFRESHED": "2026-11-14T22:28:52+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -390,33 +390,6 @@
    "org": "Founders X Investors",
    "access": "open",
    "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai."
-  },
-  {
-   "id": "ad-design-show-mumbai-2026",
-   "title": "AD Design Show 2026 - Mumbai",
-   "cat": "Design",
-   "tags": [
-    "Design",
-    "Architecture",
-    "Interiors"
-   ],
-   "area": "Mumbai",
-   "venue": "Jio World Convention Centre, BKC",
-   "start": "2026-11-13T10:00",
-   "end": null,
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Ticket price not shown on the listing",
-   "aud": [
-    "Designer",
-    "Student",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/ad-design-show-2026-mumbai/3900030024917405",
-   "org": "AD Design Show",
-   "access": "open",
-   "desc": "A design show in Mumbai bringing together architecture, interiors and product design work; the listing states the date and venue."
   },
   {
    "id": "ai-and-beyond-layer-beneath-ai",
@@ -940,22 +913,6 @@
    }
   },
   {
-   "qid": "q-claude-pm-doctors",
-   "title": "Mumbai | Claude for Product Managers & Doctors",
-   "cat": "AI",
-   "area": "Mumbai",
-   "src": "vibecoding.app (aggregator)",
-   "url": "https://vibecoding.app/ai-events/mumbai-claude-for-product-managers-doctors-2026-11",
-   "access": "open",
-   "why": "Aggregator lists 14 Nov 2026 but venue and start time are TBA and the organiser page was not reachable.",
-   "conf": {
-    "date": 60,
-    "place": 20,
-    "category": 80
-   },
-   "hint": "2026-11-14"
-  },
-  {
    "qid": "q-principal-dev",
    "title": "The Principal Dev – Masterclass for Tech Leads",
    "cat": "Tech",
@@ -1037,32 +994,32 @@
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 6,
+   "found": 7,
    "pub": 0,
    "review": 0,
    "dup": 3,
-   "skip": 3,
-   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed (already published). Principal Dev and Clean Architecture still lack a stated venue, so they stay queued. Meetup page held only online events (Hungarian/Spanish/crypto), skipped."
+   "skip": 4,
+   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed (already published). Principal Dev and Clean Architecture dates seen but venue still not stated, so they stay queued. Meetup page held only online events, skipped. WordCamp and Digital Transformation Summit are 2027, outside the window."
   },
   {
    "src": "AllEvents",
    "what": "AI and data-science category pages",
-   "found": 22,
+   "found": 26,
    "pub": 0,
    "review": 0,
    "dup": 5,
-   "skip": 17,
-   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match the published entries. Skipped foreign-priced paid seminars, finance/trade summits, an AI musical, a STEM education expo and a facade-engineering talk."
+   "skip": 21,
+   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match the published entries. Skipped finance/trade summits, an AI musical, a STEM expo, an architecture talk, past events and 14 Nov paid seminars. AD Design Show ended 13 Nov and was removed."
   },
   {
    "src": "Luma",
    "what": "Mumbai city page",
    "found": 20,
    "pub": 0,
-   "review": 3,
-   "dup": 3,
-   "skip": 11,
-   "note": "Listing loaded but shows no dates, so nothing could be confirmed. Three new non-crypto items queued; crypto/Devcon side events skipped or already queued. Individual event pages not re-opened this run."
+   "review": 0,
+   "dup": 4,
+   "skip": 16,
+   "note": "Listing loaded but shows no dates, so nothing new could be confirmed. Event pages not re-opened this run. Crypto and Devcon side events skipped or already queued."
   },
   {
    "src": "hiddenevents",
@@ -1076,13 +1033,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup November 2026",
-   "found": 4,
+   "what": "Mumbai AI meetup and design searches",
+   "found": 0,
    "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 1,
-   "note": "Searches ran. Results repeated known events; Meetup pages not opened (blocked). No new dated events confirmed."
+   "dup": 0,
+   "skip": 0,
+   "note": "Searches ran. Results were old or already known; no new dated events. Meetup pages not opened (blocked). Design search returned only past Design Mumbai coverage."
   }
  ],
  "COMMUNITIES": [
