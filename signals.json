@@ -1,15 +1,65 @@
 {
- "REFRESHED": "2026-11-14T21:51:58+05:30",
+ "REFRESHED": "2026-11-15T21:55:00+05:30",
  "SIGNALS": [
   {
-   "id": "2121346126037029183",
-   "handle": "glean",
-   "name": "Glean",
-   "url": "https://x.com/glean/status/2121346126037029183",
-   "posted": "2026-11-14T02:25:03+05:30",
-   "topic": "Tech",
+   "id": "2121723856813695265",
+   "handle": "amirhusain_tx",
+   "name": "Amir Husain",
+   "url": "https://x.com/amirhusain_tx/status/2121723856813695265",
+   "posted": "2026-11-15T03:26:01+05:30",
+   "topic": "Open models",
+   "kind": "Report",
+   "summary": "Amir Husain says DeepSeek-V4.1-Flash (552B) runs locally at 18.7 tokens/s on a roughly $2,600 desktop built from a 12 GB RTX 3060, a Quadro M4000 and 544 GB of DDR4."
+  },
+  {
+   "id": "2121699841973866686",
+   "handle": "DevAdventur3s",
+   "name": "Developing Adventures",
+   "url": "https://x.com/DevAdventur3s/status/2121699841973866686",
+   "posted": "2026-11-15T01:50:36+05:30",
+   "topic": "AI",
+   "kind": "Leak",
+   "summary": "A developer account says Claude Code 2.1.325 contains four hidden switches, including a weekly limit-reset command and a brief-updates mode. Unconfirmed by Anthropic."
+  },
+  {
+   "id": "2121615431056175153",
+   "handle": "IEA",
+   "name": "International Energy Agency",
+   "url": "https://x.com/IEA/status/2121615431056175153",
+   "posted": "2026-11-14T20:15:11+05:30",
+   "topic": "Policy",
    "kind": "Official",
-   "summary": "Glean says it was named to the inaugural 2026 AI 100 list and describes its product as a context platform for making AI useful in the enterprise."
+   "summary": "The IEA says data centre investment is surging as AI becomes central to economic policy, and points to concerns about the impact on electricity systems and energy affordability."
+  },
+  {
+   "id": "2121592442503753755",
+   "handle": "samboboev",
+   "name": "Sam Boboev",
+   "url": "https://x.com/samboboev/status/2121592442503753755",
+   "posted": "2026-11-14T18:43:50+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Reports that OpenAI launched ChatGPT Wallet, adding Visa, Mastercard, American Express, Stripe and Adyen to its agentic commerce setup for ChatGPT's weekly users."
+  },
+  {
+   "id": "2121409214614478918",
+   "handle": "ftindianews",
+   "name": "FT India News",
+   "url": "https://x.com/ftindianews/status/2121409214614478918",
+   "posted": "2026-11-14T06:35:45+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "FT India News links a Financial Times report that India is pinning hopes on an AI start-up to avoid becoming a 'digital colony'."
+  },
+  {
+   "id": "2121338095664808238",
+   "handle": "sundarpichai",
+   "name": "Sundar Pichai",
+   "url": "https://x.com/sundarpichai/status/2121338095664808238",
+   "posted": "2026-11-14T01:53:09+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Sundar Pichai recaps Google's week: new 8th-gen TPUs, Gemini 4 Carbon, Gemini Robotics 2.5, AlphaGenome 2, the Gemini Decisions API and Gemini 4 Hydrogen."
   },
   {
    "id": "2121170563263578535",
@@ -22,74 +72,24 @@
    "summary": "An SEO analyst reports large swings in Google AI Overviews since the November 2026 Core Update began rolling out, based on 10K keywords across 20 niches in US desktop results."
   },
   {
-   "id": "2120770917873648100",
-   "handle": "anshulkundaje",
-   "name": "Anshul Kundaje",
-   "url": "https://x.com/anshulkundaje/status/2120770917873648100",
-   "posted": "2026-11-12T12:19:23+05:30",
-   "topic": "Research",
-   "kind": "Report",
-   "summary": "Researcher Anshul Kundaje welcomes cell-state-conditioned sequence-to-omics models going mainstream, crediting the DeepMind genomics team for the work."
-  },
-  {
-   "id": "2120611756598833520",
-   "handle": "xinfolive",
-   "name": "X⚡️INFOLIVE",
-   "url": "https://x.com/xinfolive/status/2120611756598833520",
-   "posted": "2026-11-12T01:46:56+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "A French-language post reports that xAI, now under SpaceX, officially released Grok Bot 1.0 on November 11, 2026, pitched as AI teammates that work alongside a team."
-  },
-  {
-   "id": "2120508948847767555",
-   "handle": "DivyanshT91162",
-   "name": "divyansh tiwari",
-   "url": "https://x.com/DivyanshT91162/status/2120508948847767555",
-   "posted": "2026-11-11T18:58:25+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "A post says OpenAI models leave Cursor on Nov 12 after SpaceX acquired it, with OpenAI saying it cannot trust SpaceX to use its models within its terms."
-  },
-  {
-   "id": "2120219371473617099",
-   "handle": "GoogleDeepMind",
-   "name": "Google DeepMind",
-   "url": "https://x.com/GoogleDeepMind/status/2120219371473617099",
-   "posted": "2026-11-10T23:47:44+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google DeepMind opened Gemini 4 Carbon to developers, describing it as its strongest model for long-horizon tasks, with extended verification loops across coding, cybersecurity and science."
-  },
-  {
-   "id": "2120210297948696997",
-   "handle": "demishassabis",
-   "name": "Demis Hassabis",
-   "url": "https://x.com/demishassabis/status/2120210297948696997",
-   "posted": "2026-11-10T23:11:41+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Demis Hassabis says Gemini 4 Carbon is rolling out today, and shows it reverse engineering his original Theme Park game binaries and porting the game to the web in one shot."
-  },
-  {
-   "id": "2120202353907486826",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2120202353907486826",
-   "posted": "2026-11-10T22:40:07+05:30",
+   "id": "2120960715011883148",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2120960715011883148",
+   "posted": "2026-11-13T00:53:34+05:30",
    "topic": "AI",
    "kind": "Official",
-   "summary": "OpenAI says it is turning lessons from defending its own systems into tools for customers, and will present its latest cyber announcements at a live keynote on Thursday."
+   "summary": "Google says Search is getting its biggest model update yet with Gemini 4 Hydrogen, rolling out globally, with better understanding of nuanced multi-part questions."
   },
   {
-   "id": "2119867138987176141",
-   "handle": "claudeai",
-   "name": "Claude",
-   "url": "https://x.com/claudeai/status/2119867138987176141",
-   "posted": "2026-11-10T00:28:05+05:30",
+   "id": "2120940683233984862",
+   "handle": "GoogleAI",
+   "name": "Google AI",
+   "url": "https://x.com/GoogleAI/status/2120940683233984862",
+   "posted": "2026-11-12T23:33:58+05:30",
    "topic": "Models",
    "kind": "Official",
-   "summary": "Anthropic says Claude Fable 5.2 is available on all paid plans, the Claude Platform and major clouds, priced at $8 per million input tokens and $40 per million output, down from $10 and $50."
+   "summary": "Google AI introduces Gemini 4 Hydrogen, positioned beside Carbon as a faster, efficient model for everyday coding and agentic workflows."
   }
  ]
 }
