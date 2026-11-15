@@ -725,6 +725,34 @@
   "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai.",
   "firstSeen": "2026-11-08"
  },
+ "founders-x-investors-pitch-22nov": {
+  "id": "founders-x-investors-pitch-22nov",
+  "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
+  "cat": "Startup",
+  "tags": [
+   "Pitch",
+   "Investors",
+   "Founders"
+  ],
+  "area": "Mumbai",
+  "venue": "NMIMS, Mumbai",
+  "start": "2026-11-22T16:00",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 699,
+  "priceNote": "Tickets from ₹699; sold via AllEvents",
+  "aud": [
+   "Founder",
+   "Student"
+  ],
+  "src": "StartupGrantsIndia",
+  "also": "AllEvents",
+  "url": "https://www.startupgrantsindia.com/events/the-founders-x-investors-pitch-22nd-november-mumbai",
+  "org": "Founders X Investors",
+  "access": "open",
+  "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking.",
+  "firstSeen": "2026-11-16"
+ },
  "frontier-d2c-ai-summit": {
   "id": "frontier-d2c-ai-summit",
   "title": "Frontier D2C AI Summit, 2nd edition",

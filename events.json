@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-14T22:28:52+05:30",
+ "REFRESHED": "2026-11-15T22:29:04+05:30",
  "EVENTS_RAW": [
   {
    "id": "cloud-community-days-mumbai-26",
@@ -442,6 +442,33 @@
    "org": "Google Cloud (presenter) at IIT Bombay",
    "access": "open",
    "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups."
+  },
+  {
+   "id": "founders-x-investors-pitch-22nov",
+   "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
+   "cat": "Startup",
+   "tags": [
+    "Pitch",
+    "Investors",
+    "Founders"
+   ],
+   "area": "Mumbai",
+   "venue": "NMIMS, Mumbai",
+   "start": "2026-11-22T16:00",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 699,
+   "priceNote": "Tickets from ₹699; sold via AllEvents",
+   "aud": [
+    "Founder",
+    "Student"
+   ],
+   "src": "StartupGrantsIndia",
+   "also": "AllEvents",
+   "url": "https://www.startupgrantsindia.com/events/the-founders-x-investors-pitch-22nd-november-mumbai",
+   "org": "Founders X Investors",
+   "access": "open",
+   "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
   }
  ],
  "QUEUE_RAW": [
@@ -994,12 +1021,12 @@
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 7,
+   "found": 15,
    "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 4,
-   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed (already published). Principal Dev and Clean Architecture dates seen but venue still not stated, so they stay queued. Meetup page held only online events, skipped. WordCamp and Digital Transformation Summit are 2027, outside the window."
+   "dup": 5,
+   "skip": 10,
+   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed; Principal Dev and Clean Architecture still lack a venue so stay queued. Meetup page held only online events (skipped). Swift Bharat event page returned a server error; its listing date still shows."
   },
   {
    "src": "AllEvents",
@@ -1007,19 +1034,19 @@
    "found": 26,
    "pub": 0,
    "review": 0,
-   "dup": 5,
-   "skip": 21,
-   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match the published entries. Skipped finance/trade summits, an AI musical, a STEM expo, an architecture talk, past events and 14 Nov paid seminars. AD Design Show ended 13 Nov and was removed."
+   "dup": 6,
+   "skip": 20,
+   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match published entries. Skipped finance and trade summits, an AI musical, STEM expo, robotics/engineering paid courses, past and 2027 events. Individual AllEvents pages were not opened."
   },
   {
    "src": "Luma",
-   "what": "Mumbai city page",
-   "found": 20,
+   "what": "Mumbai city page and AI meetup search",
+   "found": 22,
    "pub": 0,
    "review": 0,
-   "dup": 4,
+   "dup": 5,
    "skip": 16,
-   "note": "Listing loaded but shows no dates, so nothing new could be confirmed. Event pages not re-opened this run. Crypto and Devcon side events skipped or already queued."
+   "note": "Listing loaded but shows no dates, so nothing new could be confirmed. Google Mumbai Data Challenge ceremony page loads but shows no date, so it stays queued. Crypto and Devcon side events skipped or already queued."
   },
   {
    "src": "hiddenevents",
@@ -1033,13 +1060,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup and design searches",
-   "found": 0,
-   "pub": 0,
+   "what": "Founders pitch, Mumbai AI meetup and student hackathon searches",
+   "found": 5,
+   "pub": 1,
    "review": 0,
-   "dup": 0,
-   "skip": 0,
-   "note": "Searches ran. Results were old or already known; no new dated events. Meetup pages not opened (blocked). Design search returned only past Design Mumbai coverage."
+   "dup": 1,
+   "skip": 3,
+   "note": "Searches ran. Added The Founders X Investors Pitch (22 Nov) from StartupGrantsIndia. Bharat AI Innovation organiser page loads and shows no cancellation. Perceptron Hackathon (IIT Bombay, Dec) skipped: abstract round closed 31 Oct. A 6 Dec D2C pitch edition was seen but not opened. Meetup pages not opened (blocked)."
   }
  ],
  "COMMUNITIES": [
