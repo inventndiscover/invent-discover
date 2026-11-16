@@ -1,34 +1,6 @@
 {
- "REFRESHED": "2026-11-15T22:29:04+05:30",
+ "REFRESHED": "2026-11-16T22:28:43+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "cloud-community-days-mumbai-26",
-   "title": "Cloud Community Days Mumbai 2026",
-   "cat": "Tech",
-   "tags": [
-    "Cloud",
-    "AI",
-    "Developers"
-   ],
-   "area": "Mumbai",
-   "venue": "The LaLiT Mumbai",
-   "start": "2026-11-15T09:00",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Ticket price not shown on the sources checked",
-   "aud": [
-    "Developer",
-    "Student",
-    "Professional"
-   ],
-   "src": "Sessionize",
-   "also": "StartupGrantsIndia",
-   "url": "https://sessionize.com/ccd-mumbai-26",
-   "org": "GDG Cloud Mumbai",
-   "access": "open",
-   "desc": "A community-run day of talks on Google Cloud, cloud engineering and AI, organised by the GDG Cloud Mumbai and GDG MAD chapters."
-  },
   {
    "id": "earthshot-prize-mumbai",
    "title": "The Earthshot Prize 2026 Summit and Awards",
@@ -56,6 +28,31 @@
    "org": "The Earthshot Prize",
    "access": "approval",
    "desc": "The sixth Earthshot Prize summit and awards ceremony, held in India for the first time, with finalists competing for climate and nature solutions funding."
+  },
+  {
+   "id": "ai-and-beyond-layer-beneath-ai",
+   "title": "AI & Beyond | The Layer Beneath AI",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Business"
+   ],
+   "area": "Mumbai",
+   "venue": "1-C, Vulcan Insurance Building, Veer Nariman Road",
+   "start": "2026-11-18T11:35",
+   "end": "13:30",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown on the listing",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ai-and-beyond-the-layer-beneath-ai/200030976155332",
+   "org": "IACC Karnataka Chapter with US-India Business Council",
+   "access": "open",
+   "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter."
   },
   {
    "id": "swift-bharat-2026",
@@ -171,6 +168,34 @@
    "desc": "A two-day AI conference and expo at World Trade Center Mumbai bringing together AI companies, startups, researchers, students and government bodies."
   },
   {
+   "id": "aicd-mumbai-2026",
+   "title": "AICD Mumbai (AI Community Days)",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Microsoft 365",
+    "Azure"
+   ],
+   "area": "Mumbai",
+   "venue": "Microsoft India office, Central Salsette Tramway Road",
+   "start": "2026-11-21T08:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free; tickets via the listing",
+   "aud": [
+    "Developer",
+    "Student",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "also": "HappeningNext",
+   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
+   "org": "AI Community Days Mumbai",
+   "access": "open",
+   "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office."
+  },
+  {
    "tags": [
     "Hackathon",
     "Outdoor",
@@ -196,6 +221,87 @@
    "url": "https://foundercal.com/events/pre-devfest-the-touch-grass-buildathon-FRwmEApqD8w6r4m",
    "org": "Devfest Mumbai",
    "desc": "A two-hour outdoor build session where participants prototype and demo a working MVP in a park, ahead of DevFest Mumbai."
+  },
+  {
+   "id": "founders-x-investors-pitch-22nov",
+   "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
+   "cat": "Startup",
+   "tags": [
+    "Pitch",
+    "Investors",
+    "Founders"
+   ],
+   "area": "Mumbai",
+   "venue": "NMIMS, Mumbai",
+   "start": "2026-11-22T16:00",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 699,
+   "priceNote": "Tickets from ₹699; sold via AllEvents",
+   "aud": [
+    "Founder",
+    "Student"
+   ],
+   "src": "StartupGrantsIndia",
+   "also": "AllEvents",
+   "url": "https://www.startupgrantsindia.com/events/the-founders-x-investors-pitch-22nd-november-mumbai",
+   "org": "Founders X Investors",
+   "access": "open",
+   "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
+  },
+  {
+   "id": "devsparks-mumbai-2026",
+   "title": "DevSparks 2026: Mumbai Edition",
+   "cat": "Tech",
+   "tags": [
+    "Agentic AI",
+    "GenAI",
+    "Developers"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Time not shown",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticketing not shown on the page",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Professional"
+   ],
+   "src": "The Peoples Board",
+   "url": "https://www.thepeoplesboard.com/event/devsparks-2026-mumbai-edition/",
+   "org": "YourStory",
+   "access": "open",
+   "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools."
+  },
+  {
+   "id": "stackconnect-mumbai-2026",
+   "title": "StackConnect World Tour: Mumbai",
+   "cat": "Tech",
+   "tags": [
+    "AI",
+    "Developers"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated on the listing",
+   "start": "2026-12-02",
+   "end": null,
+   "timeNote": "Time not shown",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Pricing not shown on the listing",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "dev.events",
+   "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
+   "org": "StackConnect",
+   "access": "open",
+   "desc": "A Mumbai stop of the StackConnect world tour, listed on dev.events under artificial intelligence."
   },
   {
    "id": "devfest-mumbai-2026",
@@ -257,166 +363,6 @@
    "desc": "The 22nd edition of IIT Bombay's student-run entrepreneurship conference, with a pitch competition, a startup expo, the I-Hack hackathon and workshops."
   },
   {
-   "id": "aicd-mumbai-2026",
-   "title": "AICD Mumbai (AI Community Days)",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Microsoft 365",
-    "Azure"
-   ],
-   "area": "Mumbai",
-   "venue": "Microsoft India office, Central Salsette Tramway Road",
-   "start": "2026-11-21T08:00",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free; tickets via the listing",
-   "aud": [
-    "Developer",
-    "Student",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "also": "HappeningNext",
-   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
-   "org": "AI Community Days Mumbai",
-   "access": "open",
-   "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office."
-  },
-  {
-   "id": "stackconnect-mumbai-2026",
-   "title": "StackConnect World Tour: Mumbai",
-   "cat": "Tech",
-   "tags": [
-    "AI",
-    "Developers"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue not stated on the listing",
-   "start": "2026-12-02",
-   "end": null,
-   "timeNote": "Time not shown",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Pricing not shown on the listing",
-   "aud": [
-    "Developer",
-    "Professional"
-   ],
-   "src": "dev.events",
-   "url": "https://dev.events/conferences/stack-connect-world-tour-mumbai-ml6dsfpa",
-   "org": "StackConnect",
-   "access": "open",
-   "desc": "A Mumbai stop of the StackConnect world tour, listed on dev.events under artificial intelligence."
-  },
-  {
-   "id": "devsparks-mumbai-2026",
-   "title": "DevSparks 2026: Mumbai Edition",
-   "cat": "Tech",
-   "tags": [
-    "Agentic AI",
-    "GenAI",
-    "Developers"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue not stated",
-   "start": "2026-11-28",
-   "end": null,
-   "timeNote": "Time not shown",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Ticketing not shown on the page",
-   "aud": [
-    "Developer",
-    "Founder",
-    "Professional"
-   ],
-   "src": "The Peoples Board",
-   "url": "https://www.thepeoplesboard.com/event/devsparks-2026-mumbai-edition/",
-   "org": "YourStory",
-   "access": "open",
-   "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools."
-  },
-  {
-   "id": "techfest-iot-workshop-2026",
-   "title": "Techfest IoT using Arduino or Raspberry Pi Workshop",
-   "cat": "Education",
-   "tags": [
-    "IoT",
-    "Workshop",
-    "Students"
-   ],
-   "area": "Powai",
-   "venue": "Indian Institute of Technology Bombay",
-   "start": "2026-12-15T09:00",
-   "end": "17:00",
-   "endDate": "2026-12-16",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Price not shown on the listing",
-   "aud": [
-    "Student",
-    "Developer"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/techfest-iot-using-arduino-or-raspberry-pi-workshop/80005819955772",
-   "org": "Techfest, IIT Bombay",
-   "access": "open",
-   "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay."
-  },
-  {
-   "id": "founders-x-investors-pitch-15nov",
-   "title": "The Founders X Investors Pitch (15 Nov, NMIMS)",
-   "cat": "Startup",
-   "tags": [
-    "Pitch",
-    "Investors",
-    "Founders"
-   ],
-   "area": "Mumbai",
-   "venue": "NMIMS, Mumbai",
-   "start": "2026-11-15T16:00",
-   "end": "20:00",
-   "fmt": "Offline",
-   "price": 699,
-   "priceNote": "Tickets from ₹699 up to ₹14,999",
-   "aud": [
-    "Founder",
-    "Student"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/the-founders-x-investors-pitch-15th-nov-mumbai-tickets/80004289568418",
-   "org": "Founders X Investors",
-   "access": "open",
-   "desc": "A paid evening where founders pitch to investors, held at the NMIMS campus in Mumbai."
-  },
-  {
-   "id": "ai-and-beyond-layer-beneath-ai",
-   "title": "AI & Beyond | The Layer Beneath AI",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Business"
-   ],
-   "area": "Mumbai",
-   "venue": "1-C, Vulcan Insurance Building, Veer Nariman Road",
-   "start": "2026-11-18T11:35",
-   "end": "13:30",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Price not shown on the listing",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/ai-and-beyond-the-layer-beneath-ai/200030976155332",
-   "org": "IACC Karnataka Chapter with US-India Business Council",
-   "access": "open",
-   "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter."
-  },
-  {
    "id": "genai-unleashed-iitb-26",
    "title": "Generative AI Unleashed by Google Cloud @IIT B",
    "cat": "AI",
@@ -444,31 +390,57 @@
    "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups."
   },
   {
-   "id": "founders-x-investors-pitch-22nov",
-   "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
-   "cat": "Startup",
+   "id": "ai-for-performing-arts-ncpa",
+   "title": "AI for the Performing Arts",
+   "cat": "Art",
    "tags": [
-    "Pitch",
-    "Investors",
-    "Founders"
+    "AI",
+    "Performing arts",
+    "Workshop"
    ],
-   "area": "Mumbai",
-   "venue": "NMIMS, Mumbai",
-   "start": "2026-11-22T16:00",
-   "end": "20:00",
+   "area": "Nariman Point",
+   "venue": "Little Theatre, NCPA, Nariman Point",
+   "start": "2026-12-14T18:00",
+   "end": "19:30",
    "fmt": "Offline",
-   "price": 699,
-   "priceNote": "Tickets from ₹699; sold via AllEvents",
+   "price": null,
+   "priceNote": "Ticket price not shown on the page",
    "aud": [
-    "Founder",
-    "Student"
+    "Creator",
+    "Professional"
    ],
-   "src": "StartupGrantsIndia",
-   "also": "AllEvents",
-   "url": "https://www.startupgrantsindia.com/events/the-founders-x-investors-pitch-22nd-november-mumbai",
-   "org": "Founders X Investors",
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ai-for-the-performing-arts/3900031055193452",
+   "org": "WZCC",
    "access": "open",
-   "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
+   "desc": "A workshop led by a tech trainer on using simple AI tools for writing, research and creative work, with live demos aimed at musicians and performers."
+  },
+  {
+   "id": "techfest-iot-workshop-2026",
+   "title": "Techfest IoT using Arduino or Raspberry Pi Workshop",
+   "cat": "Education",
+   "tags": [
+    "IoT",
+    "Workshop",
+    "Students"
+   ],
+   "area": "Powai",
+   "venue": "Indian Institute of Technology Bombay",
+   "start": "2026-12-15T09:00",
+   "end": "17:00",
+   "endDate": "2026-12-16",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown on the listing",
+   "aud": [
+    "Student",
+    "Developer"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/techfest-iot-using-arduino-or-raspberry-pi-workshop/80005819955772",
+   "org": "Techfest, IIT Bombay",
+   "access": "open",
+   "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay."
   }
  ],
  "QUEUE_RAW": [
@@ -1021,52 +993,52 @@
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 15,
+   "found": 17,
    "pub": 0,
    "review": 0,
    "dup": 5,
-   "skip": 10,
-   "note": "Pages loaded. Swift Bharat, StackConnect and DevFest dates re-confirmed; Principal Dev and Clean Architecture still lack a venue so stay queued. Meetup page held only online events (skipped). Swift Bharat event page returned a server error; its listing date still shows."
+   "skip": 12,
+   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates match; Principal Dev and Clean Architecture still lack a venue so stay queued. Meetup page held only online events (skipped); WordCamp and Digital Transformation Summit are 2027 (skipped)."
   },
   {
    "src": "AllEvents",
-   "what": "AI and data-science category pages",
-   "found": 26,
-   "pub": 0,
+   "what": "AI, data-science and entrepreneurship category pages",
+   "found": 40,
+   "pub": 1,
    "review": 0,
    "dup": 6,
-   "skip": 20,
-   "note": "Pages loaded. AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed and Techfest IoT dates match published entries. Skipped finance and trade summits, an AI musical, STEM expo, robotics/engineering paid courses, past and 2027 events. Individual AllEvents pages were not opened."
+   "skip": 33,
+   "note": "Pages loaded. Added AI for the Performing Arts (NCPA, 14 Dec) after opening its page. Dates match for AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed, Techfest IoT. Skipped finance/trade summits, paid engineering courses, expos and past or 2027 events."
   },
   {
    "src": "Luma",
-   "what": "Mumbai city page and AI meetup search",
-   "found": 22,
+   "what": "AI meetup search and queued event pages",
+   "found": 20,
    "pub": 0,
    "review": 0,
-   "dup": 5,
-   "skip": 16,
-   "note": "Listing loaded but shows no dates, so nothing new could be confirmed. Google Mumbai Data Challenge ceremony page loads but shows no date, so it stays queued. Crypto and Devcon side events skipped or already queued."
+   "dup": 3,
+   "skip": 15,
+   "note": "Search results loaded. vLLM Inference Meetup (IIT Bombay) and Google Data Challenge ceremony pages load but show no date, so both stay queued."
   },
   {
    "src": "hiddenevents",
-   "what": "Search for Luma mirror",
+   "what": "Luma mirror",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search did not surface the site, so it was not fetched."
+   "note": "Not surfaced by search this run, so not fetched."
   },
   {
    "src": "web search",
-   "what": "Founders pitch, Mumbai AI meetup and student hackathon searches",
-   "found": 5,
-   "pub": 1,
+   "what": "Mumbai AI meetup November 2026",
+   "found": 20,
+   "pub": 0,
    "review": 0,
-   "dup": 1,
-   "skip": 3,
-   "note": "Searches ran. Added The Founders X Investors Pitch (22 Nov) from StartupGrantsIndia. Bharat AI Innovation organiser page loads and shows no cancellation. Perceptron Hackathon (IIT Bombay, Dec) skipped: abstract round closed 31 Oct. A 6 Dec D2C pitch edition was seen but not opened. Meetup pages not opened (blocked)."
+   "dup": 4,
+   "skip": 16,
+   "note": "Search ran. Meetup pages not opened (blocked). Ended events removed: cloud-community-days-mumbai-26, founders-x-investors-pitch-15nov."
   }
  ],
  "COMMUNITIES": [

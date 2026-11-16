@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-11-15T21:55:00+05:30",
+ "REFRESHED": "2026-11-16T21:52:05+05:30",
  "SIGNALS": [
+  {
+   "id": "2122123437141553630",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2122123437141553630",
+   "posted": "2026-11-16T05:53:49+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "OpenAI says physicist Nathaniel Craig used GPT-6 Astra to develop a candidate lattice definition of the Standard Model, the first post on its new science blog."
+  },
+  {
+   "id": "2121806737758212173",
+   "handle": "rohanpaul_ai",
+   "name": "Rohan Paul",
+   "url": "https://x.com/rohanpaul_ai/status/2121806737758212173",
+   "posted": "2026-11-15T08:55:22+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "Citing the FT, Rohan Paul says Nvidia's D&O insurance covers leaders' personal assets up to $900M but not company legal costs, amid a proposed investor class action against Nvidia and Huang."
+  },
+  {
+   "id": "2121776096194556229",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2121776096194556229",
+   "posted": "2026-11-15T06:53:36+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "AGTP reports Anthropic added an experimental Code Mode to Claude Code v2.1.323, where Claude writes code to chain tool calls instead of requesting Bash, Read or Edit one at a time."
+  },
   {
    "id": "2121723856813695265",
    "handle": "amirhusain_tx",
@@ -52,6 +82,16 @@
    "summary": "FT India News links a Financial Times report that India is pinning hopes on an AI start-up to avoid becoming a 'digital colony'."
   },
   {
+   "id": "2121375309287301360",
+   "handle": "ClaudeDevs",
+   "name": "ClaudeDevs",
+   "url": "https://x.com/ClaudeDevs/status/2121375309287301360",
+   "posted": "2026-11-14T04:21:01+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "ClaudeDevs says Projects in Claude Code was updated: the coordinator is more proactive, answers questions in the project chat and reports on the status of ongoing threads."
+  },
+  {
    "id": "2121338095664808238",
    "handle": "sundarpichai",
    "name": "Sundar Pichai",
@@ -60,36 +100,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Sundar Pichai recaps Google's week: new 8th-gen TPUs, Gemini 4 Carbon, Gemini Robotics 2.5, AlphaGenome 2, the Gemini Decisions API and Gemini 4 Hydrogen."
-  },
-  {
-   "id": "2121170563263578535",
-   "handle": "gaganghotra_",
-   "name": "Gagan Ghotra",
-   "url": "https://x.com/gaganghotra_/status/2121170563263578535",
-   "posted": "2026-11-13T14:47:26+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "An SEO analyst reports large swings in Google AI Overviews since the November 2026 Core Update began rolling out, based on 10K keywords across 20 niches in US desktop results."
-  },
-  {
-   "id": "2120960715011883148",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2120960715011883148",
-   "posted": "2026-11-13T00:53:34+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "Google says Search is getting its biggest model update yet with Gemini 4 Hydrogen, rolling out globally, with better understanding of nuanced multi-part questions."
-  },
-  {
-   "id": "2120940683233984862",
-   "handle": "GoogleAI",
-   "name": "Google AI",
-   "url": "https://x.com/GoogleAI/status/2120940683233984862",
-   "posted": "2026-11-12T23:33:58+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google AI introduces Gemini 4 Hydrogen, positioned beside Carbon as a faster, efficient model for everyday coding and agentic workflows."
   }
  ]
 }

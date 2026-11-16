@@ -80,6 +80,33 @@
   "desc": "A small four-hour workshop where non-technical professionals bring a real work problem and turn it into a simple AI-powered tool without writing code. Capped at 15 people and run mostly in Hinglish.",
   "firstSeen": "2026-09-30"
  },
+ "ai-for-performing-arts-ncpa": {
+  "id": "ai-for-performing-arts-ncpa",
+  "title": "AI for the Performing Arts",
+  "cat": "Art",
+  "tags": [
+   "AI",
+   "Performing arts",
+   "Workshop"
+  ],
+  "area": "Nariman Point",
+  "venue": "Little Theatre, NCPA, Nariman Point",
+  "start": "2026-12-14T18:00",
+  "end": "19:30",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticket price not shown on the page",
+  "aud": [
+   "Creator",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/ai-for-the-performing-arts/3900031055193452",
+  "org": "WZCC",
+  "access": "open",
+  "desc": "A workshop led by a tech trainer on using simple AI tools for writing, research and creative work, with live demos aimed at musicians and performers.",
+  "firstSeen": "2026-11-17"
+ },
  "ai-leadership-playbook": {
   "id": "ai-leadership-playbook",
   "title": "The AI Leadership Playbook",
