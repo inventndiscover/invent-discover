@@ -1,34 +1,6 @@
 {
- "REFRESHED": "2026-11-17T22:28:41+05:30",
+ "REFRESHED": "2026-11-18T22:29:25+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "earthshot-prize-mumbai",
-   "title": "The Earthshot Prize 2026 Summit and Awards",
-   "cat": "Climate",
-   "tags": [
-    "Summit",
-    "Awards",
-    "Climate"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue not stated on the official page",
-   "start": "2026-11-16",
-   "end": null,
-   "endDate": "2026-11-17",
-   "timeNote": "Times not published",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Access not stated; leaders, investors and philanthropists are invited",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "Official",
-   "url": "https://earthshotprize.org/mumbai2026/",
-   "org": "The Earthshot Prize",
-   "access": "approval",
-   "desc": "The sixth Earthshot Prize summit and awards ceremony, held in India for the first time, with finalists competing for climate and nature solutions funding."
-  },
   {
    "id": "ai-and-beyond-layer-beneath-ai",
    "title": "AI & Beyond | The Layer Beneath AI",
@@ -223,6 +195,33 @@
    "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
   },
   {
+   "cat": "Tech",
+   "area": "Mumbai",
+   "venue": "Venue not stated (Mumbai)",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free (registration required)",
+   "src": "startupgrantsindia (listing)",
+   "access": "open",
+   "org": "DevFest Mumbai",
+   "id": "predevfest-tech-trivia",
+   "title": "[Pre-DevFest] Tech Trivia Night",
+   "tags": [
+    "Developers",
+    "Trivia",
+    "DevFest"
+   ],
+   "start": "2026-11-25T15:30",
+   "aud": [
+    "Developer",
+    "Student"
+   ],
+   "url": "https://www.startupgrantsindia.com/events/pre-devfest-tech-trivia-night",
+   "desc": "A relaxed team trivia evening for Mumbai developers with no phones or AI tools allowed, held as a warm-up to DevFest Mumbai.",
+   "also": "Luma"
+  },
+  {
    "id": "devsparks-mumbai-2026",
    "title": "DevSparks 2026: Mumbai Edition",
    "cat": "Tech",
@@ -249,6 +248,31 @@
    "org": "YourStory",
    "access": "open",
    "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools."
+  },
+  {
+   "cat": "Startup",
+   "area": "Mumbai",
+   "venue": "Venue not stated (Mumbai)",
+   "end": "20:00",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free (registration required)",
+   "src": "startupgrantsindia (listing)",
+   "access": "open",
+   "org": "DevFest Mumbai",
+   "id": "predevfest-founders-mixer",
+   "title": "[Pre-DevFest] Startup Founders' Mixer",
+   "tags": [
+    "Founders",
+    "Networking",
+    "DevFest"
+   ],
+   "start": "2026-11-28T17:00",
+   "aud": [
+    "Founder"
+   ],
+   "url": "https://www.startupgrantsindia.com/events/pre-devfest-startup-founders-mixer",
+   "desc": "An informal roundtable meetup for early-stage founders and builders, with no pitches or investors, ahead of DevFest Mumbai."
   },
   {
    "id": "stackconnect-mumbai-2026",
@@ -834,22 +858,6 @@
    }
   },
   {
-   "qid": "q-predevfest-founders-mixer",
-   "title": "Pre-DevFest: Startup Founders' Mixer",
-   "cat": "Startup",
-   "area": "BKC",
-   "src": "foundercal (listing)",
-   "url": "https://foundercal.com/events/pre-devfest-startup-founders-mixer-nLJdPgvyEE5jYs8",
-   "access": "open",
-   "why": "Listed for 28 Nov at Dextrus BKC but the event page was not opened this run.",
-   "conf": {
-    "date": 70,
-    "place": 70,
-    "category": 70
-   },
-   "hint": "2026-11-28"
-  },
-  {
    "qid": "q-mumbai-builds-2027",
    "title": "Mumbai Builds 2027 Hackathon (Internshala)",
    "cat": "Education",
@@ -958,21 +966,6 @@
    }
   },
   {
-   "qid": "q-predevfest-tech-trivia",
-   "title": "[Pre-DevFest] Tech Trivia Night",
-   "cat": "Tech",
-   "area": "Mumbai",
-   "src": "Luma",
-   "url": "https://luma.com/sdvi6bs6",
-   "access": "open",
-   "why": "Luma city listing shows no date; a pre-DevFest social at 3 Wise Monkeys.",
-   "conf": {
-    "date": 0,
-    "place": 75,
-    "category": 80
-   }
-  },
-  {
    "qid": "q-kallat-preview",
    "title": "PREVIEW | Jitish Kallat: Conjectures on a Paper Sky",
    "cat": "Art",
@@ -995,7 +988,7 @@
    "src": "Luma",
    "url": "https://luma.com/tsbs46dq",
    "access": "approval",
-   "why": "Full-day GDG Cloud event at The LaLiT Mumbai; the page shows no date.",
+   "why": "Page shows venue (The LaLiT, Andheri East) and approval-required registration but no date.",
    "conf": {
     "date": 0,
     "place": 95,
@@ -1022,32 +1015,32 @@
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 10,
+   "found": 17,
    "pub": 0,
-   "review": 2,
+   "review": 0,
    "dup": 3,
-   "skip": 5,
-   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates match. Principal Dev and Clean Architecture have dates but no venue, so they stay queued. Meetup page held only online events (skipped)."
+   "skip": 14,
+   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates still match. Principal Dev and Clean Architecture show dates but no venue and principal.dev was refused by fetch, so they stay queued. Meetup page held only online events."
   },
   {
    "src": "AllEvents",
    "what": "AI and data-science category pages",
-   "found": 17,
-   "pub": 1,
+   "found": 26,
+   "pub": 0,
    "review": 0,
-   "dup": 6,
-   "skip": 10,
-   "note": "Pages loaded. Added BHARAT 2.0 AI Conclave (20 Dec) after opening its page. Skipped finance/trade summits, security and finance workshops, a school-level STEM expo and a musical."
+   "dup": 2,
+   "skip": 24,
+   "note": "Pages loaded. Only AICD Mumbai is relevant and already published; the rest were finance/trade summits, workshops with year-long date ranges, or a school-level STEM expo."
   },
   {
    "src": "Luma",
-   "what": "Mumbai listing and AI meetup search plus event pages",
+   "what": "Mumbai listing plus event pages",
    "found": 22,
    "pub": 0,
-   "review": 2,
-   "dup": 3,
-   "skip": 17,
-   "note": "Listing and search loaded. Cloud Community Days, vLLM Meetup and Touch Grass pages loaded but show no date. Touch Grass shows registration closed, so it was removed. Many Devcon crypto side events skipped."
+   "review": 0,
+   "dup": 4,
+   "skip": 18,
+   "note": "Listing loaded but shows no dates. Cloud Community Days and vLLM Meetup pages loaded with no date, so they stay queued. Touch Grass Buildathon stays removed (registration closed). Devcon crypto side events skipped."
   },
   {
    "src": "hiddenevents",
@@ -1061,13 +1054,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup November 2026",
-   "found": 20,
-   "pub": 0,
+   "what": "Mumbai AI meetup December 2026 plus startupgrantsindia listing",
+   "found": 27,
+   "pub": 2,
    "review": 0,
-   "dup": 4,
-   "skip": 16,
-   "note": "Search ran. Meetup pages not opened (blocked). No new confirmed events. Removed: Pre-DevFest Touch Grass Buildathon (registration closed)."
+   "dup": 2,
+   "skip": 23,
+   "note": "Search and listing page loaded. Two Pre-DevFest events had dates confirmed on their own pages and were published. Meetup pages not opened (blocked)."
   }
  ],
  "COMMUNITIES": [
@@ -1258,6 +1251,18 @@
    ],
    "area": "BKC",
    "url": "https://foundercal.com/events/mumbai-ai-saturdays-get-funded-to-co-work-adani-inspire-bkc-bhive-317217993"
+  },
+  {
+   "id": "devfest-mumbai",
+   "name": "DevFest Mumbai",
+   "org": "DevFest Mumbai",
+   "focus": "Organises the DevFest Mumbai developer conference and its Pre-DevFest community meetups.",
+   "cats": [
+    "Tech",
+    "Startup"
+   ],
+   "area": "Mumbai",
+   "url": "https://www.startupgrantsindia.com/events/devfest-mumbai-2026"
   }
  ]
 }

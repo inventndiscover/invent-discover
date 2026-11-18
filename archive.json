@@ -1446,6 +1446,60 @@
   "desc": "A 12-hour in-person hackathon for Indian high-school students, with city winners going to the finale at IIT Bombay.",
   "firstSeen": "2026-11-08"
  },
+ "predevfest-founders-mixer": {
+  "cat": "Startup",
+  "area": "Mumbai",
+  "venue": "Venue not stated (Mumbai)",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free (registration required)",
+  "src": "startupgrantsindia (listing)",
+  "access": "open",
+  "org": "DevFest Mumbai",
+  "id": "predevfest-founders-mixer",
+  "title": "[Pre-DevFest] Startup Founders' Mixer",
+  "tags": [
+   "Founders",
+   "Networking",
+   "DevFest"
+  ],
+  "start": "2026-11-28T17:00",
+  "aud": [
+   "Founder"
+  ],
+  "url": "https://www.startupgrantsindia.com/events/pre-devfest-startup-founders-mixer",
+  "desc": "An informal roundtable meetup for early-stage founders and builders, with no pitches or investors, ahead of DevFest Mumbai.",
+  "firstSeen": "2026-11-19"
+ },
+ "predevfest-tech-trivia": {
+  "cat": "Tech",
+  "area": "Mumbai",
+  "venue": "Venue not stated (Mumbai)",
+  "end": "20:00",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free (registration required)",
+  "src": "startupgrantsindia (listing)",
+  "access": "open",
+  "org": "DevFest Mumbai",
+  "id": "predevfest-tech-trivia",
+  "title": "[Pre-DevFest] Tech Trivia Night",
+  "tags": [
+   "Developers",
+   "Trivia",
+   "DevFest"
+  ],
+  "start": "2026-11-25T15:30",
+  "aud": [
+   "Developer",
+   "Student"
+  ],
+  "url": "https://www.startupgrantsindia.com/events/pre-devfest-tech-trivia-night",
+  "desc": "A relaxed team trivia evening for Mumbai developers with no phones or AI tools allowed, held as a warm-up to DevFest Mumbai.",
+  "also": "Luma",
+  "firstSeen": "2026-11-19"
+ },
  "servicenow-world-forum-mumbai": {
   "id": "servicenow-world-forum-mumbai",
   "title": "ServiceNow World Forum Mumbai 2026",
