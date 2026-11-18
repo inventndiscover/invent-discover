@@ -190,6 +190,33 @@
   "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office.",
   "firstSeen": "2026-11-08"
  },
+ "bharat-2-conclave-ai-edition": {
+  "id": "bharat-2-conclave-ai-edition",
+  "title": "BHARAT 2.0 Conclave: AI Edition – Bharat and the Age of Intelligence",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Conclave",
+   "Awards"
+  ],
+  "area": "Juhu",
+  "venue": "JW Marriott Mumbai Juhu",
+  "start": "2026-12-20T09:00",
+  "end": "17:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticket price not stated on the listing",
+  "aud": [
+   "Founder",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/bharat-20-conclave-ai-edition-bharat-and-the-age-of-intelligence/200031059303609",
+  "org": "Business Viewpoint Magazine",
+  "access": "open",
+  "desc": "A one-day conclave on AI's role in Indian business, with transformation sessions, an innovation showcase, networking and an awards segment.",
+  "firstSeen": "2026-11-18"
+ },
  "bharat-ai-innovation-2026": {
   "tags": [
    "AI",

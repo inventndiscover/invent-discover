@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-16T22:28:43+05:30",
+ "REFRESHED": "2026-11-17T22:28:41+05:30",
  "EVENTS_RAW": [
   {
    "id": "earthshot-prize-mumbai",
@@ -194,33 +194,6 @@
    "org": "AI Community Days Mumbai",
    "access": "open",
    "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office."
-  },
-  {
-   "tags": [
-    "Hackathon",
-    "Outdoor",
-    "DevFest"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "access": "open",
-   "id": "touch-grass-buildathon",
-   "title": "Pre-DevFest: The \"Touch Grass\" Buildathon",
-   "cat": "Tech",
-   "area": "Mumbai",
-   "venue": "Outdoor park, Mumbai (exact park not named)",
-   "start": "2026-11-21T09:00",
-   "end": null,
-   "price": 0,
-   "priceNote": "Free",
-   "src": "foundercal (listing)",
-   "also": "Luma",
-   "url": "https://foundercal.com/events/pre-devfest-the-touch-grass-buildathon-FRwmEApqD8w6r4m",
-   "org": "Devfest Mumbai",
-   "desc": "A two-hour outdoor build session where participants prototype and demo a working MVP in a park, ahead of DevFest Mumbai."
   },
   {
    "id": "founders-x-investors-pitch-22nov",
@@ -441,6 +414,32 @@
    "org": "Techfest, IIT Bombay",
    "access": "open",
    "desc": "A two-day hands-on workshop on building internet-of-things projects with Arduino or Raspberry Pi at IIT Bombay."
+  },
+  {
+   "id": "bharat-2-conclave-ai-edition",
+   "title": "BHARAT 2.0 Conclave: AI Edition – Bharat and the Age of Intelligence",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Conclave",
+    "Awards"
+   ],
+   "area": "Juhu",
+   "venue": "JW Marriott Mumbai Juhu",
+   "start": "2026-12-20T09:00",
+   "end": "17:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticket price not stated on the listing",
+   "aud": [
+    "Founder",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/bharat-20-conclave-ai-edition-bharat-and-the-age-of-intelligence/200031059303609",
+   "org": "Business Viewpoint Magazine",
+   "access": "open",
+   "desc": "A one-day conclave on AI's role in Indian business, with transformation sessions, an innovation showcase, networking and an awards segment."
   }
  ],
  "QUEUE_RAW": [
@@ -919,7 +918,7 @@
    "src": "dev.events",
    "url": "https://principal.dev",
    "access": "open",
-   "why": "dev.events lists Dec 3-4, 2026 under Mumbai but the city and venue are not stated on the page.",
+   "why": "dev.events lists 3-4 Dec 2026 in Mumbai but gives no venue or format.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -935,7 +934,7 @@
    "src": "dev.events",
    "url": "https://clean.re",
    "access": "open",
-   "why": "dev.events lists Dec 10-11, 2026 under Mumbai but the city and venue are not stated on the page.",
+   "why": "dev.events lists 10-11 Dec 2026 in Mumbai but gives no venue or format.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -987,38 +986,68 @@
     "place": 85,
     "category": 85
    }
+  },
+  {
+   "qid": "q-cloud-community-days",
+   "title": "Cloud Community Days 2026 Mumbai",
+   "cat": "Tech",
+   "area": "Andheri East",
+   "src": "Luma",
+   "url": "https://luma.com/tsbs46dq",
+   "access": "approval",
+   "why": "Full-day GDG Cloud event at The LaLiT Mumbai; the page shows no date.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 90
+   }
+  },
+  {
+   "qid": "q-eva-symposium",
+   "title": "EVA Symposium III",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "Luma",
+   "url": "https://luma.com/ai6owvhz",
+   "access": "open",
+   "why": "Listed on Luma Mumbai; no date seen and page not opened.",
+   "conf": {
+    "date": 0,
+    "place": 60,
+    "category": 40
+   }
   }
  ],
  "RUNS": [
   {
    "src": "dev.events",
    "what": "Mumbai conference and meetup listing pages",
-   "found": 17,
+   "found": 10,
    "pub": 0,
-   "review": 0,
-   "dup": 5,
-   "skip": 12,
-   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates match; Principal Dev and Clean Architecture still lack a venue so stay queued. Meetup page held only online events (skipped); WordCamp and Digital Transformation Summit are 2027 (skipped)."
+   "review": 2,
+   "dup": 3,
+   "skip": 5,
+   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates match. Principal Dev and Clean Architecture have dates but no venue, so they stay queued. Meetup page held only online events (skipped)."
   },
   {
    "src": "AllEvents",
-   "what": "AI, data-science and entrepreneurship category pages",
-   "found": 40,
+   "what": "AI and data-science category pages",
+   "found": 17,
    "pub": 1,
    "review": 0,
    "dup": 6,
-   "skip": 33,
-   "note": "Pages loaded. Added AI for the Performing Arts (NCPA, 14 Dec) after opening its page. Dates match for AICD, AI & Beyond, Bharat AI Innovation, GenAI Unleashed, Techfest IoT. Skipped finance/trade summits, paid engineering courses, expos and past or 2027 events."
+   "skip": 10,
+   "note": "Pages loaded. Added BHARAT 2.0 AI Conclave (20 Dec) after opening its page. Skipped finance/trade summits, security and finance workshops, a school-level STEM expo and a musical."
   },
   {
    "src": "Luma",
-   "what": "AI meetup search and queued event pages",
-   "found": 20,
+   "what": "Mumbai listing and AI meetup search plus event pages",
+   "found": 22,
    "pub": 0,
-   "review": 0,
+   "review": 2,
    "dup": 3,
-   "skip": 15,
-   "note": "Search results loaded. vLLM Inference Meetup (IIT Bombay) and Google Data Challenge ceremony pages load but show no date, so both stay queued."
+   "skip": 17,
+   "note": "Listing and search loaded. Cloud Community Days, vLLM Meetup and Touch Grass pages loaded but show no date. Touch Grass shows registration closed, so it was removed. Many Devcon crypto side events skipped."
   },
   {
    "src": "hiddenevents",
@@ -1028,7 +1057,7 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Not surfaced by search this run, so not fetched."
+   "note": "Search did not surface it, so it was not fetched."
   },
   {
    "src": "web search",
@@ -1038,7 +1067,7 @@
    "review": 0,
    "dup": 4,
    "skip": 16,
-   "note": "Search ran. Meetup pages not opened (blocked). Ended events removed: cloud-community-days-mumbai-26, founders-x-investors-pitch-15nov."
+   "note": "Search ran. Meetup pages not opened (blocked). No new confirmed events. Removed: Pre-DevFest Touch Grass Buildathon (registration closed)."
   }
  ],
  "COMMUNITIES": [

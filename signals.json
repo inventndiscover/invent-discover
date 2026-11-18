@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-11-16T21:52:05+05:30",
+ "REFRESHED": "2026-11-17T21:52:04+05:30",
  "SIGNALS": [
+  {
+   "id": "2122585169064570883",
+   "handle": "TencentGlobal",
+   "name": "Tencent 腾讯",
+   "url": "https://x.com/TencentGlobal/status/2122585169064570883",
+   "posted": "2026-11-17T12:28:34.687000+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Tencent says Hy4 flash is live on its TokenHub, WorkBuddy and Yuanbao. It is natively multimodal, has a 1M-token context window and decodes at over 150 tokens per second."
+  },
+  {
+   "id": "2122390144904773988",
+   "handle": "NVIDIAAIInfra",
+   "name": "NVIDIA AI Infrastructure",
+   "url": "https://x.com/NVIDIAAIInfra/status/2122390144904773988",
+   "posted": "2026-11-16T23:33:37.304000+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "NVIDIA introduced Rubin HPC, a GPU in the Vera Rubin platform aimed at simulation and data processing for science, engineering and analytics work."
+  },
   {
    "id": "2122123437141553630",
    "handle": "OpenAI",
@@ -50,56 +70,6 @@
    "topic": "AI",
    "kind": "Leak",
    "summary": "A developer account says Claude Code 2.1.325 contains four hidden switches, including a weekly limit-reset command and a brief-updates mode. Unconfirmed by Anthropic."
-  },
-  {
-   "id": "2121615431056175153",
-   "handle": "IEA",
-   "name": "International Energy Agency",
-   "url": "https://x.com/IEA/status/2121615431056175153",
-   "posted": "2026-11-14T20:15:11+05:30",
-   "topic": "Policy",
-   "kind": "Official",
-   "summary": "The IEA says data centre investment is surging as AI becomes central to economic policy, and points to concerns about the impact on electricity systems and energy affordability."
-  },
-  {
-   "id": "2121592442503753755",
-   "handle": "samboboev",
-   "name": "Sam Boboev",
-   "url": "https://x.com/samboboev/status/2121592442503753755",
-   "posted": "2026-11-14T18:43:50+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Reports that OpenAI launched ChatGPT Wallet, adding Visa, Mastercard, American Express, Stripe and Adyen to its agentic commerce setup for ChatGPT's weekly users."
-  },
-  {
-   "id": "2121409214614478918",
-   "handle": "ftindianews",
-   "name": "FT India News",
-   "url": "https://x.com/ftindianews/status/2121409214614478918",
-   "posted": "2026-11-14T06:35:45+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "FT India News links a Financial Times report that India is pinning hopes on an AI start-up to avoid becoming a 'digital colony'."
-  },
-  {
-   "id": "2121375309287301360",
-   "handle": "ClaudeDevs",
-   "name": "ClaudeDevs",
-   "url": "https://x.com/ClaudeDevs/status/2121375309287301360",
-   "posted": "2026-11-14T04:21:01+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "ClaudeDevs says Projects in Claude Code was updated: the coordinator is more proactive, answers questions in the project chat and reports on the status of ongoing threads."
-  },
-  {
-   "id": "2121338095664808238",
-   "handle": "sundarpichai",
-   "name": "Sundar Pichai",
-   "url": "https://x.com/sundarpichai/status/2121338095664808238",
-   "posted": "2026-11-14T01:53:09+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Sundar Pichai recaps Google's week: new 8th-gen TPUs, Gemini 4 Carbon, Gemini Robotics 2.5, AlphaGenome 2, the Gemini Decisions API and Gemini 4 Hydrogen."
   }
  ]
 }
