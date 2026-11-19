@@ -1,6 +1,66 @@
 {
- "REFRESHED": "2026-11-17T21:52:04+05:30",
+ "REFRESHED": "2026-11-19T21:51:31+05:30",
  "SIGNALS": [
+  {
+   "id": "2123196808675405860",
+   "handle": "AnthropicAI",
+   "name": "Anthropic",
+   "url": "https://x.com/AnthropicAI/status/2123196808675405860",
+   "posted": "2026-11-19T04:59:00+05:30",
+   "topic": "Tech",
+   "kind": "Official",
+   "summary": "Anthropic says it priced its IPO at $83 per share, with trading on Nasdaq expected to begin on November 19. The SEC declared the registration effective on November 18."
+  },
+  {
+   "id": "2123191365983248653",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2123191365983248653",
+   "posted": "2026-11-19T04:37:23+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "OpenAI shares new data on AI's role in its own research: researchers' AI use keeps rising and agents finish longer tasks, while humans stay central and spend more time on safety work."
+  },
+  {
+   "id": "2123170648772288540",
+   "handle": "ArtificialAnlys",
+   "name": "Artificial Analysis",
+   "url": "https://x.com/ArtificialAnlys/status/2123170648772288540",
+   "posted": "2026-11-19T03:15:03+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "With Antigravity CLI, Gemini 4 Neon (xhigh) scores 59 on the Coding Agent Index, ahead of Carbon (55) and in line with Claude Code on Fable 5.2 and Opus 5.5 (58), at lower cost."
+  },
+  {
+   "id": "2123167884411077030",
+   "handle": "GoogleDeepMind",
+   "name": "Google DeepMind",
+   "url": "https://x.com/GoogleDeepMind/status/2123167884411077030",
+   "posted": "2026-11-19T03:04:04+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google DeepMind begins rolling out Gemini 4 Neon, positioned between Carbon and Hydrogen, for software engineering, knowledge work and science tasks."
+  },
+  {
+   "id": "2123164437288751353",
+   "handle": "Reuters",
+   "name": "Reuters",
+   "url": "https://x.com/Reuters/status/2123164437288751353",
+   "posted": "2026-11-19T02:50:22+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Reuters reports that Anthropic's IPO is expected to make thousands of its employees and holders millionaires."
+  },
+  {
+   "id": "2123117819948638448",
+   "handle": "Google",
+   "name": "Google",
+   "url": "https://x.com/Google/status/2123117819948638448",
+   "posted": "2026-11-18T23:45:08+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google makes Genie 4, a world model from DeepMind, available in Project Genie. It lets users edit environments mid-session with text prompts, with real-time audio and dialogue."
+  },
   {
    "id": "2122585169064570883",
    "handle": "TencentGlobal",
@@ -20,56 +80,6 @@
    "topic": "Tech",
    "kind": "Official",
    "summary": "NVIDIA introduced Rubin HPC, a GPU in the Vera Rubin platform aimed at simulation and data processing for science, engineering and analytics work."
-  },
-  {
-   "id": "2122123437141553630",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2122123437141553630",
-   "posted": "2026-11-16T05:53:49+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "OpenAI says physicist Nathaniel Craig used GPT-6 Astra to develop a candidate lattice definition of the Standard Model, the first post on its new science blog."
-  },
-  {
-   "id": "2121806737758212173",
-   "handle": "rohanpaul_ai",
-   "name": "Rohan Paul",
-   "url": "https://x.com/rohanpaul_ai/status/2121806737758212173",
-   "posted": "2026-11-15T08:55:22+05:30",
-   "topic": "Policy",
-   "kind": "Report",
-   "summary": "Citing the FT, Rohan Paul says Nvidia's D&O insurance covers leaders' personal assets up to $900M but not company legal costs, amid a proposed investor class action against Nvidia and Huang."
-  },
-  {
-   "id": "2121776096194556229",
-   "handle": "AGTPinsights",
-   "name": "AGTP",
-   "url": "https://x.com/AGTPinsights/status/2121776096194556229",
-   "posted": "2026-11-15T06:53:36+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "AGTP reports Anthropic added an experimental Code Mode to Claude Code v2.1.323, where Claude writes code to chain tool calls instead of requesting Bash, Read or Edit one at a time."
-  },
-  {
-   "id": "2121723856813695265",
-   "handle": "amirhusain_tx",
-   "name": "Amir Husain",
-   "url": "https://x.com/amirhusain_tx/status/2121723856813695265",
-   "posted": "2026-11-15T03:26:01+05:30",
-   "topic": "Open models",
-   "kind": "Report",
-   "summary": "Amir Husain says DeepSeek-V4.1-Flash (552B) runs locally at 18.7 tokens/s on a roughly $2,600 desktop built from a 12 GB RTX 3060, a Quadro M4000 and 544 GB of DDR4."
-  },
-  {
-   "id": "2121699841973866686",
-   "handle": "DevAdventur3s",
-   "name": "Developing Adventures",
-   "url": "https://x.com/DevAdventur3s/status/2121699841973866686",
-   "posted": "2026-11-15T01:50:36+05:30",
-   "topic": "AI",
-   "kind": "Leak",
-   "summary": "A developer account says Claude Code 2.1.325 contains four hidden switches, including a weekly limit-reset command and a brief-updates mode. Unconfirmed by Anthropic."
   }
  ]
 }

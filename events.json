@@ -1,31 +1,6 @@
 {
- "REFRESHED": "2026-11-18T22:29:25+05:30",
+ "REFRESHED": "2026-11-19T22:29:06+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "ai-and-beyond-layer-beneath-ai",
-   "title": "AI & Beyond | The Layer Beneath AI",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Business"
-   ],
-   "area": "Mumbai",
-   "venue": "1-C, Vulcan Insurance Building, Veer Nariman Road",
-   "start": "2026-11-18T11:35",
-   "end": "13:30",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Price not shown on the listing",
-   "aud": [
-    "Founder",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/ai-and-beyond-the-layer-beneath-ai/200030976155332",
-   "org": "IACC Karnataka Chapter with US-India Business Council",
-   "access": "open",
-   "desc": "A midday session in South Mumbai on the infrastructure layer underneath AI, hosted by an Indo-American business chamber chapter."
-  },
   {
    "id": "swift-bharat-2026",
    "title": "Swift Bharat 2026",
@@ -1009,58 +984,120 @@
     "place": 60,
     "category": 40
    }
+  },
+  {
+   "qid": "q-semiconductor-hackerfab",
+   "title": "Semiconductor Deep Dive: Lecture by HackerFab",
+   "cat": "Tech",
+   "area": "Kurla (ATLAS SkillTech University)",
+   "src": "Luma",
+   "url": "https://luma.com/qjs01ta3",
+   "access": "approval",
+   "why": "Page shows \"28 November\" with no year or time; needs a second source to confirm.",
+   "conf": {
+    "date": 60,
+    "place": 95,
+    "category": 85
+   },
+   "hint": "2026-11-28"
+  },
+  {
+   "qid": "q-deeptech-builders",
+   "title": "DeepTech Builders of Bombay",
+   "cat": "Startup",
+   "area": "Versova, Andheri West",
+   "src": "Luma",
+   "url": "https://luma.com/46u5sb9w",
+   "access": "approval",
+   "why": "Event page shows no date or time.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 80
+   }
+  },
+  {
+   "qid": "q-product-growth-devx",
+   "title": "Product Growth Meetup in Mumbai (eChai Ventures)",
+   "cat": "Startup",
+   "area": "Andheri East (DevX)",
+   "src": "Luma",
+   "url": "https://luma.com/zd1x4yyw",
+   "access": "open",
+   "why": "Only the link slug hints at 21 Nov 2026; the page text shows no date.",
+   "conf": {
+    "date": 50,
+    "place": 95,
+    "category": 75
+   },
+   "hint": "2026-11-21"
+  },
+  {
+   "qid": "q-year-end-agent-builders",
+   "title": "Mumbai Community Year End Meet-Up (Agent Builders Community)",
+   "cat": "Tech",
+   "area": "Nariman Point (YCC)",
+   "src": "Luma",
+   "url": "https://luma.com/8acb6kin",
+   "access": "open",
+   "why": "Event page shows no date or time.",
+   "conf": {
+    "date": 0,
+    "place": 95,
+    "category": 75
+   }
   }
  ],
  "RUNS": [
   {
-   "src": "dev.events",
-   "what": "Mumbai conference and meetup listing pages",
-   "found": 17,
+   "src": "Luma",
+   "what": "luma.com/mumbai listing plus 4 event pages",
+   "found": 21,
    "pub": 0,
-   "review": 0,
-   "dup": 3,
-   "skip": 14,
-   "note": "Pages loaded. Swift Bharat, StackConnect, DevFest dates still match. Principal Dev and Clean Architecture show dates but no venue and principal.dev was refused by fetch, so they stay queued. Meetup page held only online events."
+   "review": 4,
+   "dup": 0,
+   "skip": 15,
+   "note": "Pages loaded, but listing and event pages show no dates; 4 new candidates queued. Sold-out Pre-DevFest events and non-tech items skipped."
   },
   {
    "src": "AllEvents",
-   "what": "AI and data-science category pages",
-   "found": 26,
+   "what": "/artificial-intelligence category page",
+   "found": 16,
    "pub": 0,
    "review": 0,
-   "dup": 2,
-   "skip": 24,
-   "note": "Pages loaded. Only AICD Mumbai is relevant and already published; the rest were finance/trade summits, workshops with year-long date ranges, or a school-level STEM expo."
+   "dup": 3,
+   "skip": 13,
+   "note": "Page loaded with dates. Most items were paid trainings, finance summits or out-of-city events, so they were skipped; AICD Mumbai was already published."
   },
   {
-   "src": "Luma",
-   "what": "Mumbai listing plus event pages",
-   "found": 22,
+   "src": "dev.events",
+   "what": "/AS/IN/Mumbai and /meetups pages",
+   "found": 12,
    "pub": 0,
    "review": 0,
    "dup": 4,
-   "skip": 18,
-   "note": "Listing loaded but shows no dates. Cloud Community Days and vLLM Meetup pages loaded with no date, so they stay queued. Touch Grass Buildathon stays removed (registration closed). Devcon crypto side events skipped."
+   "skip": 8,
+   "note": "Pages loaded. Conferences were already published; meetups were online-only or outside Mumbai and were skipped."
   },
   {
    "src": "hiddenevents",
-   "what": "Luma mirror",
+   "what": "site search only",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search did not surface it, so it was not fetched."
+   "note": "Search did not return the site, so it could not be opened."
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup December 2026 plus startupgrantsindia listing",
-   "found": 27,
-   "pub": 2,
+   "what": "Mumbai AI meetup Nov 2026 and similar",
+   "found": 0,
+   "pub": 0,
    "review": 0,
-   "dup": 2,
-   "skip": 23,
-   "note": "Search and listing page loaded. Two Pre-DevFest events had dates confirmed on their own pages and were published. Meetup pages not opened (blocked)."
+   "dup": 0,
+   "skip": 0,
+   "note": "Searches ran, but they only returned Meetup pages (not opened) and pages already covered. swiftbharat.org could not be re-checked because it was not surfaced by search, so it stays as published."
   }
  ],
  "COMMUNITIES": [
