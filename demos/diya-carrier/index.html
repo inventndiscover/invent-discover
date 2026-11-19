@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diya Carrier · दीया संभालो</title>
+<meta name="description" content="Carry a lit diya on a brass thali across your own room to the mandir. Keep it level or the oil spills, move gently or the flame goes out, and turn your back to the wind. AR on Android, camera view on iPhone, 3D on a laptop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Neon site colours + festive accents (same as Green Diwali) ---------- */
+  :root{
+    --bg:#05060A; --violet:#9b6bff; --blue:#4cc9ff; --pink:#ff4fd8;
+    --text:#ecebff; --muted:#8d8aab; --ok:#5dffb0; --no:#ff6b8a;
+    --marigold:#ffab1a; --saffron:#ff7a1a; --leaf:#3fbf5f;
+    --deva:'Tiro Devanagari Hindi', Geist, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font-family:Geist,system-ui,-apple-system,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+
+  /* Layers, bottom to top: camera video → 3D canvas → HUD → home panel */
+  #cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}
+  #stage{position:fixed;inset:0;z-index:1}
+  #stage canvas{display:block;touch-action:none}
+
+  .toran{position:relative;height:80px;pointer-events:none}
+  .toran svg{position:absolute;left:0;top:0;display:block;overflow:visible;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(155,107,255,.3))}
+
+  /* ---------- Home panel ---------- */
+  #home{position:fixed;inset:0;z-index:3;display:flex;align-items:flex-start;justify-content:center;padding:16px;
+    overflow-y:auto;background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 12%,rgba(155,107,255,.18),transparent 45%),
+      radial-gradient(circle at 85% 88%,rgba(255,79,216,.12),transparent 45%),
+      radial-gradient(circle at 50% 0%,rgba(255,171,26,.10),transparent 40%),
+      linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px);
+    background-size:auto,auto,auto,32px 32px,32px 32px}
+  .card{width:100%;max-width:440px;margin:auto 0;border:1px solid rgba(155,107,255,.35);border-radius:18px;padding:0 20px 22px;
+    background:rgba(10,11,20,.88);box-shadow:0 0 40px rgba(155,107,255,.18);overflow:hidden}
+  .card .toran{margin:0 -20px 8px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+  h1{margin:6px 0 0;font-size:30px;font-weight:700;text-shadow:0 0 18px rgba(155,107,255,.6)}
+  .deva-title{font-family:var(--deva);font-size:21px;color:var(--marigold);margin:2px 0 8px;text-shadow:0 0 12px rgba(255,171,26,.45)}
+  .sub{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5}
+  .label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .seg{display:flex;gap:6px;margin:0 0 16px}
+  .seg button{flex:1;padding:9px 6px;border-radius:10px;border:1px solid rgba(155,107,255,.4);background:transparent;
+    color:var(--text);font:500 13px Geist,system-ui,sans-serif;cursor:pointer}
+  .seg button .dv{display:block;font-family:var(--deva);font-size:16px;color:#ffe2b0}
+  .seg button small{display:block;font-size:10.5px;color:var(--muted);font-weight:400;margin-top:2px}
+  .seg button.on{border-color:var(--marigold);background:rgba(255,171,26,.12);box-shadow:0 0 14px rgba(255,171,26,.35)}
+  .checks{list-style:none;margin:0 0 16px;padding:0;font-size:13.5px}
+  .checks li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .yes{color:var(--ok)} .noo{color:var(--no)} .wait{color:var(--muted)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:0 0 10px;padding:13px;border-radius:12px;
+    font:500 16px Geist,system-ui,sans-serif;color:var(--text);background:transparent;border:1px solid rgba(155,107,255,.5);cursor:pointer;text-decoration:none}
+  .btn.main{background:linear-gradient(90deg,rgba(155,107,255,.35),rgba(255,79,216,.22));
+    border-color:var(--violet);box-shadow:0 0 22px rgba(155,107,255,.45)}
+  .btn[hidden]{display:none}
+  .btn svg{width:26px;height:22px;flex:none}
+  .note{margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.55}
+  .safety{margin:14px 0 0;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.5;
+    border:1px solid rgba(255,171,26,.5);background:rgba(255,171,26,.07);color:#ffe2b0}
+  #err{color:var(--no);font-size:13px;min-height:1em;margin:6px 0 0}
+  #qrbox{margin:14px 0 0;display:flex;gap:14px;align-items:center}
+  #qrbox[hidden]{display:none}
+  #qr{width:110px;height:110px;border-radius:10px;border:2px solid var(--violet);box-shadow:0 0 18px rgba(155,107,255,.5);image-rendering:pixelated}
+  #qrbox p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+  #qrbox b{color:var(--text)}
+  #stamp-home{margin:12px 0 0;font-size:10.5px;color:var(--muted)}
+
+  /* Result card after a run */
+  #finale{display:none;text-align:center;padding:6px 0 10px}
+  #finale .big{font-family:var(--deva);font-size:34px;color:var(--marigold);text-shadow:0 0 18px rgba(255,171,26,.6)}
+  #finale .latin{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#ffe2b0;margin-top:2px;text-shadow:0 0 12px rgba(255,79,216,.45)}
+  #finale .stars{font-size:34px;letter-spacing:6px;margin:8px 0 2px;color:var(--marigold);text-shadow:0 0 14px rgba(255,171,26,.7)}
+  #finale .stars i{font-style:normal;color:#3a3550;text-shadow:none}
+  #finale .score{font-size:13px;color:var(--muted);margin-bottom:10px}
+  #finale table{width:100%;border-collapse:collapse;font-size:13.5px;margin:0 0 14px;text-align:left}
+  #finale td{padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.06)}
+  #finale td:last-child{text-align:right;color:#ffe2b0}
+  #finale td .dv{font-family:var(--deva);color:var(--muted);margin-left:6px}
+  #finale p.tip{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+  .after #finale{display:block}
+  .after #start{display:none}
+
+  /* ---------- HUD (shown while playing; also the AR overlay) ---------- */
+  #hud{position:fixed;inset:0;z-index:2;display:none;pointer-events:none}
+  #hud .toran{position:absolute;top:env(safe-area-inset-top);left:0;right:0}
+  #hud::before{content:'';position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 70px rgba(155,107,255,.16), inset 0 0 2px rgba(255,79,216,.35)}
+  #topbar{position:absolute;top:calc(74px + env(safe-area-inset-top));left:10px;right:10px;display:flex;gap:6px;align-items:center;justify-content:flex-end}
+  .pill{pointer-events:auto;white-space:nowrap;box-shadow:0 0 10px rgba(155,107,255,.28);padding:8px 12px;border-radius:999px;font:500 13.5px Geist,system-ui,sans-serif;
+    color:var(--text);background:rgba(5,6,10,.75);border:1px solid rgba(155,107,255,.5);cursor:pointer}
+  .pill[hidden]{display:none}
+  #exit{border-color:var(--pink);box-shadow:0 0 12px rgba(255,79,216,.4)}
+  #level{border-color:var(--blue);box-shadow:0 0 12px rgba(76,201,255,.4)}
+
+  /* Gauges: flame (लौ) and oil (तेल) bars, and a round spirit level for the thali */
+  #gauges{position:absolute;top:calc(118px + env(safe-area-inset-top));left:10px;right:10px;display:flex;gap:10px;align-items:center}
+  .bars{flex:1;display:flex;flex-direction:column;gap:7px;padding:9px 12px;border-radius:14px;background:rgba(5,6,10,.72);
+    border:1px solid rgba(155,107,255,.4);box-shadow:0 0 12px rgba(155,107,255,.2)}
+  .bar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+  .bar .dv{font-family:var(--deva);font-size:15px;color:#ffe2b0;width:26px}
+  .bar .en{width:30px}
+  .bar .track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+  .bar .fill{height:100%;width:100%;border-radius:99px;transform-origin:left;transition:background .3s}
+  #f-flame{background:linear-gradient(90deg,#ff5a1a,#ffd23a,#fff4c8)}
+  #f-oil{background:linear-gradient(90deg,#8a5a00,#d9a21b,#f4d36b)}
+  .bar.low .fill{background:#ff4f6a !important}
+  #levelbox{position:relative;width:64px;height:64px;flex:none;border-radius:50%;background:rgba(5,6,10,.72);
+    border:1px solid rgba(155,107,255,.45);box-shadow:0 0 12px rgba(155,107,255,.22)}
+  #levelbox .ring{position:absolute;inset:50% auto auto 50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:1.5px solid rgba(93,255,176,.7)}
+  #levelbox .cross{position:absolute;left:50%;top:8px;bottom:8px;width:1px;background:rgba(255,255,255,.15)}
+  #levelbox .cross.h{left:8px;right:8px;top:50%;bottom:auto;width:auto;height:1px}
+  #bubble{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#fff,#bfffe0 40%,#5dffb0);box-shadow:0 0 10px rgba(93,255,176,.8)}
+  #levelbox.spill{border-color:var(--no);box-shadow:0 0 16px rgba(255,79,106,.6)}
+  #levelbox.spill #bubble{background:radial-gradient(circle at 35% 35%,#fff,#ffc0cc 40%,#ff4f6a);box-shadow:0 0 10px rgba(255,79,106,.8)}
+  #levelbox .lbl{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted)}
+
+  #dist{position:absolute;top:calc(196px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);padding:6px 14px;border-radius:999px;
+    font:500 14px Geist,system-ui,sans-serif;background:rgba(5,6,10,.75);border:1px solid rgba(255,171,26,.55);box-shadow:0 0 12px rgba(255,171,26,.3);white-space:nowrap}
+  #dist:empty{display:none}
+  #dist .dv{font-family:var(--deva);color:var(--marigold)}
+
+  /* Wind warning: an arrow showing where the gust comes from */
+  #wind{position:absolute;top:calc(238px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:none;align-items:center;gap:10px;
+    padding:8px 14px;border-radius:14px;background:rgba(5,6,10,.8);border:1px solid var(--blue);box-shadow:0 0 16px rgba(76,201,255,.45);font-size:13px;white-space:nowrap}
+  #wind.on{display:flex}
+  #wind svg{width:34px;height:34px;flex:none;transition:transform .15s linear}
+  #wind .dv{font-family:var(--deva);font-size:16px;color:#bfe9ff}
+  #wind.safe{border-color:var(--ok);box-shadow:0 0 16px rgba(93,255,176,.45)}
+
+  /* Big centre message: countdowns, "बुझ गया!" */
+  #big{position:absolute;left:0;right:0;top:31%;text-align:center;pointer-events:none;opacity:0;transition:opacity .25s}
+  #big.show{opacity:1}
+  #big .dv{font-family:var(--deva);font-size:42px;color:var(--marigold);text-shadow:0 0 20px rgba(255,171,26,.7),0 2px 4px rgba(0,0,0,.8)}
+  #big .en{font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:#ffe2b0;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+
+  /* Arrow at the screen edge pointing to the mandir when it's out of view */
+  #arrow{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:none;filter:drop-shadow(0 0 8px rgba(255,171,26,.8))}
+
+  #stamp{position:absolute;top:calc(80px + env(safe-area-inset-top));left:12px;font-size:10.5px;color:#c9c6e6;padding:4px 9px;border-radius:999px;background:rgba(5,6,10,.7);
+    border:1px solid rgba(155,107,255,.3);pointer-events:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+  #readout{position:absolute;bottom:calc(150px + env(safe-area-inset-bottom));left:10px;font:11px/1.45 ui-monospace,monospace;color:var(--ok);
+    background:rgba(5,6,10,.75);padding:5px 8px;border-radius:8px;display:none;white-space:pre}
+  #bottom{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 14px}
+  #hint{text-align:center;font-size:14.5px;line-height:1.4;padding:10px 14px;border-radius:12px;
+    background:rgba(5,6,10,.72);border:1px solid rgba(155,107,255,.45);max-width:460px;box-shadow:0 0 16px rgba(155,107,255,.22)}
+  #hint:empty{display:none}
+  #act{pointer-events:auto;min-width:220px;padding:13px 22px;border-radius:14px;font:600 16px Geist,system-ui,sans-serif;color:#fff;cursor:pointer;
+    background:linear-gradient(90deg,rgba(255,122,26,.55),rgba(255,79,216,.35));border:1px solid var(--marigold);box-shadow:0 0 22px rgba(255,171,26,.5)}
+  #act .dv{font-family:var(--deva);font-size:18px;margin-right:8px}
+  #act[hidden]{display:none}
+  #fallback{border-color:var(--blue);box-shadow:0 0 12px rgba(76,201,255,.45)}
+  @media (min-width:700px){ #topbar{top:calc(100px + env(safe-area-inset-top))} #stamp{top:calc(106px + env(safe-area-inset-top))}
+    #gauges{top:calc(146px + env(safe-area-inset-top));max-width:460px;left:50%;right:auto;transform:translateX(-50%);width:440px}
+    #dist{top:calc(226px + env(safe-area-inset-top))} #wind{top:calc(268px + env(safe-area-inset-top))} }
+</style>
+</head>
+<body>
+
+<video id="cam" playsinline muted></video>
+<div id="stage"></div>
+
+<div id="hud">
+  <div class="toran"></div>
+  <div id="stamp" title="Tap to show the sensor readout"></div>
+  <div id="topbar">
+    <button id="sound" class="pill">🔊</button>
+    <button id="level" class="pill">⟲ Level</button>
+    <button id="exit" class="pill">Exit</button>
+  </div>
+  <div id="gauges">
+    <div class="bars">
+      <div class="bar" id="b-flame"><span class="dv">लौ</span><span class="en">Flame</span><div class="track"><div class="fill" id="f-flame"></div></div></div>
+      <div class="bar" id="b-oil"><span class="dv">तेल</span><span class="en">Oil</span><div class="track"><div class="fill" id="f-oil"></div></div></div>
+    </div>
+    <div id="levelbox"><div class="cross"></div><div class="cross h"></div><div class="ring"></div><div id="bubble"></div><div class="lbl">level</div></div>
+  </div>
+  <div id="dist"></div>
+  <div id="wind">
+    <svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="none" stroke="rgba(76,201,255,.4)" stroke-width="1.5"/>
+      <path d="M17 4 L23 14 H19 V28 H15 V14 H11 Z" fill="#4cc9ff"/></svg>
+    <div><span class="dv" id="wind-dv">हवा!</span><br><span id="wind-en">Wind! Turn your back to it</span></div>
+  </div>
+  <svg id="arrow" viewBox="0 0 44 44"><circle cx="22" cy="22" r="19" fill="rgba(5,6,10,.75)" stroke="#ffab1a" stroke-width="2"/>
+    <path d="M22 9 L31 26 H25 V34 H19 V26 H13 Z" fill="#ffab1a"/></svg>
+  <div id="big"><div class="dv" id="big-dv"></div><div class="en" id="big-en"></div></div>
+  <div id="readout"></div>
+  <div id="bottom">
+    <button id="fallback" class="pill" hidden>Use camera view instead</button>
+    <div id="hint"></div>
+    <button id="act" hidden></button>
+  </div>
+</div>
+
+<div id="home">
+  <div class="card">
+    <div class="toran"></div>
+    <div id="finale">
+      <div class="big" id="fin-dv">दीया पहुँचा!</div>
+      <div class="latin" id="fin-en">Diya delivered</div>
+      <div class="stars" id="fin-stars"></div>
+      <div class="score" id="fin-score"></div>
+      <table id="fin-table"></table>
+      <p class="tip" id="fin-tip"></p>
+      <button class="btn main" id="again">Carry another diya</button>
+      <a class="btn" href="../../">Back to Invent &amp; Discover</a>
+    </div>
+    <div id="start">
+      <div class="eyebrow">Invent · AR · Play</div>
+      <h1>Diya Carrier</h1>
+      <div class="deva-title">दीया संभालो</div>
+      <p class="sub">Carry a lit diya on a brass thali across your own room to the mandir. Hold it level or the oil spills. Move gently or the flame goes out. When the wind comes, turn your back to it.</p>
+
+      <div class="label">How hard?</div>
+      <div class="seg" id="diff">
+        <button data-d="easy"><span class="dv">आसान</span>Easy<small>no wind</small></button>
+        <button data-d="medium" class="on"><span class="dv">मध्यम</span>Medium<small>some wind</small></button>
+        <button data-d="hard"><span class="dv">कठिन</span>Hard<small>gusty, full oil</small></button>
+      </div>
+
+      <ul class="checks">
+        <li><span>Secure page (https)</span><span id="c-secure">…</span></li>
+        <li><span>Real AR (walk to a mandir on your floor)</span><span id="c-ar">…</span></li>
+        <li><span>Camera access</span><span id="c-cam">…</span></li>
+        <li><span>Motion sensor</span><span id="c-motion" class="wait">asked when you start</span></li>
+      </ul>
+
+      <button class="btn" id="b-ar" hidden><span class="ico"></span>Carry the diya<span class="ico"></span></button>
+      <button class="btn" id="b-cam" hidden><span class="ico"></span>Open camera view<span class="ico"></span></button>
+      <button class="btn" id="b-3d"><span class="ico"></span>Play in 3D<span class="ico"></span></button>
+      <p id="err"></p>
+    </div>
+    <p class="note"><b>Notice before you begin.</b> You will walk slowly while looking at your phone. Clear a path of 3–6 metres with no stairs, rugs that slip, pets or toys underfoot, and stop if anyone is in the way. Everything here is virtual: no real flame and no hot oil. Best with sound on.</p>
+    <div class="safety">🪔 <b>In real life</b>, carry a lit diya on a plate with a rim, keep your dupatta and sleeves away from the flame, and never walk with one near curtains.</div>
+    <div id="qrbox" hidden>
+      <canvas id="qr"></canvas>
+      <p><b>On a computer?</b><br>Scan with your phone to carry the diya across your own room.</p>
+    </div>
+    <div id="stamp-home"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
+
+const BUILD = 'Diya Carrier · v1 · 19 Nov 2026';
+const $ = (id) => document.getElementById(id);
+$('stamp').textContent = BUILD;
+$('stamp-home').textContent = BUILD;
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp = THREE.MathUtils.clamp;
+
+/* =====================================================================
+   PART 0 — Little festive drawings for the UI (toran + diya icon)
+   ===================================================================== */
+/* The toran is drawn fresh to fit the screen width (like toran b in your
+   reference): a yellow crochet band with green diamonds in a white lattice,
+   two rows of pearl swags, red-and-gold beads, green pom-poms and marigolds
+   with mango leaves — and शुभ hanging on the left end, लाभ on the right.
+   A thin neon cord along the top ties it to the site's theme.              */
+function buildToran(el, id) {
+  const W = Math.round(Math.max(280, el.clientWidth || innerWidth));
+  const big = W >= 700;                                        // laptop: bigger शुभ / लाभ
+  const H = big ? 94 : 80, end = big ? 66 : 48;
+  el.style.height = H + 'px';                                              // room for the शुभ / लाभ hangings
+  const n = Math.max(3, Math.round((W - 2 * end) / 60));       // how many swags fit
+  const sw = (W - 2 * end) / n;
+  const u = (k) => `url(#${id}${k})`;
+  let o = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <pattern id="${id}kn" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#eaa800"/><circle cx="3" cy="3" r="2.3" fill="#ffc21f"/><circle cx="2.3" cy="2.3" r=".9" fill="#ffe17a"/></pattern>
+   <radialGradient id="${id}pom" cx=".38" cy=".33" r=".72"><stop offset="0" stop-color="#4caf5c"/><stop offset=".6" stop-color="#1f6b2e"/><stop offset="1" stop-color="#0d3416"/></radialGradient>
+   <radialGradient id="${id}prl" cx=".35" cy=".32" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#f1e7d2"/><stop offset="1" stop-color="#b9a681"/></radialGradient>
+   <radialGradient id="${id}med" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#e5402f"/><stop offset="1" stop-color="#8a120c"/></radialGradient>
+   <linearGradient id="${id}neon" x1="0" x2="1"><stop offset="0" stop-color="#9b6bff"/><stop offset=".5" stop-color="#ff4fd8"/><stop offset="1" stop-color="#4cc9ff"/></linearGradient>
+  </defs>`;
+  o += `<rect x="0" y="0" width="${W}" height="2" fill="${u('neon')}"/>`;            // neon cord
+  o += `<rect x="0" y="2" width="${W}" height="19" fill="${u('kn')}"/>`;            // crochet band
+  for (let x = 0; x < W + 14; x += 14) o += `<path d="M${x} 5.5L${x + 6} 11.5L${x} 17.5L${x - 6} 11.5Z" fill="#1c6a2b"/>`;
+  let z1 = 'M-7 5.5', z2 = 'M-7 17.5';
+  for (let x = -7; x < W + 14; x += 14) { z1 += `L${x + 7} 17.5L${x + 14} 5.5`; z2 += `L${x + 7} 5.5L${x + 14} 17.5`; }
+  o += `<path d="${z1}" stroke="#fffaf0" stroke-width="1.5" fill="none"/><path d="${z2}" stroke="#fffaf0" stroke-width="1.5" fill="none"/>`;
+  for (let x = 0; x < W; x += 8) o += `<circle cx="${x + 4}" cy="21" r="4" fill="${u('kn')}"/>`;   // scalloped edge
+  const pts = []; for (let i = 0; i <= n; i++) pts.push(end + i * sw);
+  const pearl = (x, y, r) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="${u('prl')}"/>`;
+  for (let i = 0; i < n; i++) {                                 // two rows of pearl swags
+    const a = pts[i], b = pts[i + 1];
+    [[13, 2.0], [24, 2.3]].forEach(([dep, r]) => {
+      const m = Math.round(sw * 1.18 / (r * 2.1));
+      for (let k = 1; k < m; k++) { const t = k / m; o += pearl(a + (b - a) * t, 25 + dep * 4 * t * (1 - t), r); }
+    });
+  }
+  pts.forEach((x, i) => {                                       // beads, leaves and a pom-pom or marigold
+    let y = 25;
+    ['#c8201a', '#f2b400', '#fffaf0', '#c8201a'].forEach((c) => { o += `<circle cx="${x.toFixed(1)}" cy="${y}" r="2.1" fill="${c}"/>`; y += 4.2; });
+    const py = y + 7, X = x.toFixed(1);
+    o += `<path d="M${X} ${py - 3}q-12 -3 -16 7q11 1 16 -7z" fill="#2f8f3e"/><path d="M${X} ${py - 3}q12 -3 16 7q-11 1 -16 -7z" fill="#278035"/>`;
+    if (i % 2 === 0) {
+      o += `<circle cx="${X}" cy="${py}" r="7.6" fill="${u('pom')}"/>`;
+      for (let k = 0; k < 12; k++) { const a = k * 0.5236; o += `<line x1="${(x + Math.cos(a) * 5.5).toFixed(1)}" y1="${(py + Math.sin(a) * 5.5).toFixed(1)}" x2="${(x + Math.cos(a) * 8.4).toFixed(1)}" y2="${(py + Math.sin(a) * 8.4).toFixed(1)}" stroke="#2a8a3a" stroke-width="1.3" stroke-linecap="round"/>`; }
+    } else {
+      o += `<circle cx="${X}" cy="${py}" r="7.4" fill="#ff7410"/>`;
+      for (let k = 0; k < 10; k++) { const a = k * 0.628; o += `<circle cx="${(x + Math.cos(a) * 5).toFixed(1)}" cy="${(py + Math.sin(a) * 5).toFixed(1)}" r="2.7" fill="#ffab1a"/>`; }
+      o += `<circle cx="${X}" cy="${py}" r="2.4" fill="#c25a00"/>`;
+    }
+  });
+  const mx = big ? 30 : 20, mr = big ? 21 : 13.3, cy = big ? 60 : 56, fs = big ? 21 : 13.5;
+  [[mx, 'शुभ'], [W - mx, 'लाभ']].forEach(([x, word]) => {     // शुभ left, लाभ right
+    for (let k = 0; k < 4; k++) o += pearl(x, 27 + k * (big ? 3.6 : 4.6), 2.2);
+    o += `<circle cx="${x}" cy="${cy}" r="${mr + 2.2}" fill="#f2b400"/><circle cx="${x}" cy="${cy}" r="${mr}" fill="${u('med')}"/>`;
+    o += `<text x="${x}" y="${cy + fs * 0.34}" text-anchor="middle" font-family="'Tiro Devanagari Hindi', serif" font-size="${fs}" fill="#ffe08a">${word}</text>`;
+    o += `<circle cx="${x}" cy="${cy + mr + 5}" r="2.4" fill="#c8201a"/><circle cx="${x}" cy="${cy + mr + 9.5}" r="2.2" fill="#1c6a2b"/>`;
+  });
+  el.innerHTML = o + '</svg>';
+}
+function drawTorans() { document.querySelectorAll('.toran').forEach((el, i) => buildToran(el, 't' + i)); }
+drawTorans();
+window.addEventListener('resize', drawTorans);
+if (document.fonts) document.fonts.ready.then(drawTorans);
+const diyaIcon = `<svg viewBox="0 0 26 22"><path d="M13 1.5c2.2 3 2.6 5.2 0 7.6-2.6-2.4-2.2-4.6 0-7.6z" fill="#ffd23a"/>
+<path d="M13 4.5c.9 1.4 1 2.6 0 3.6-1-1-.9-2.2 0-3.6z" fill="#fff6d0"/>
+<path d="M2 11h22c-.6 5.6-5.4 9-11 9S2.6 16.6 2 11z" fill="#d9692b"/><path d="M2 11h22l3-1.6-2.5 3.2" fill="#b8521f"/></svg>`;
+document.querySelectorAll('.btn .ico').forEach((el) => el.innerHTML = diyaIcon);
+
+
+/* =====================================================================
+   PART 1 — What can this device do?
+   ===================================================================== */
+async function detect() {
+  const secure = window.isSecureContext;
+  let ar = false;
+  if ('xr' in navigator) { try { ar = await navigator.xr.isSessionSupported('immersive-ar'); } catch (e) { ar = false; } }
+  const cam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  return { secure, ar, cam };
+}
+function mark(id, ok) { $(id).textContent = ok ? 'Yes' : 'No'; $(id).className = ok ? 'yes' : 'noo'; }
+const caps = await detect();
+mark('c-secure', caps.secure); mark('c-ar', caps.ar); mark('c-cam', caps.cam && caps.secure);
+if (caps.ar) { $('b-ar').hidden = false; $('b-ar').classList.add('main'); }
+if (caps.cam && caps.secure) { $('b-cam').hidden = false; if (!caps.ar) $('b-cam').classList.add('main'); }
+if (!caps.ar && !(caps.cam && caps.secure)) $('b-3d').classList.add('main');
+
+/* =====================================================================
+   PART 2 — The game's rules, in one place (easy to tune after testing)
+   =====================================================================
+   a  = how hard you are moving the phone, in m/s² (sideways counts fully,
+        up-and-down counts half). Walking gently ≈ 1–2.5; a quick step or a
+        turn ≈ 3–5; a jerk ≈ 8+.
+   dmg   → above this the flame starts to suffer (lau goes down)
+   blow  → one movement above this blows the flame out at once
+   spill → tilt (degrees) at which a FULL diya starts to spill. As the oil
+           goes down, the diya can tilt more before it spills (just like real).
+   gust  → seconds between gusts of wind (null = no wind)
+   steps → camera view only (no position tracking there): steps to the mandir  */
+const DIFF = {
+  easy:   { dmg: 4.2, blow: 10.5, spill: 13, oil: 0.80, gust: null,    gustHit: 0,    steps: 12 },
+  medium: { dmg: 3.4, blow: 8.5,  spill: 10, oil: 0.90, gust: [9, 14], gustHit: 0.42, steps: 18 },
+  hard:   { dmg: 2.8, blow: 7.0,  spill: 8,  oil: 1.00, gust: [6, 10], gustHit: 0.6,  steps: 24 },
+};
+let diff = 'medium';
+document.querySelectorAll('#diff button').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('#diff button').forEach((x) => x.classList.toggle('on', x === b));
+  diff = b.dataset.d;
+}));
+
+/* =====================================================================
+   PART 3 — The 3D scene
+   ===================================================================== */
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.xr.enabled = true;
+$('stage').appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.01, 220);
+camera.rotation.order = 'YXZ';
+const roomEnv = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environment = roomEnv;   // a soft room reflection so the brass thali shines
+const hemi = new THREE.HemisphereLight(0xfff0dd, 0x2a1a10, 0.55); scene.add(hemi);
+const key = new THREE.DirectionalLight(0xffe6c8, 0.55); key.position.set(1.5, 3, 1); scene.add(key);
+const world = new THREE.Group(); scene.add(world);
+let floorY = 0;
+
+/* ---------- Small textures drawn with code ---------- */
+function canvasTex(w, h, draw, repeat) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+  return t;
+}
+const glowTex = canvasTex(128, 128, (g, w) => {
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.18, 'rgba(255,255,255,.55)');
+  r.addColorStop(0.45, 'rgba(255,255,255,.14)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, w, w);
+});
+glowTex.colorSpace = THREE.NoColorSpace;
+// light falls off like real light (1 / distance²)
+const poolTex = canvasTex(128, 128, (g, w) => {
+  const img = g.createImageData(w, w);
+  for (let y = 0; y < w; y++) for (let x = 0; x < w; x++) {
+    const d = Math.hypot(x - 64, y - 64) / 64;
+    const v = d >= 1 ? 0 : (1 / (1 + 14 * d * d) - 1 / 15) / (1 - 1 / 15);
+    const i = (y * w + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 255; img.data[i + 3] = 255 * v;
+  }
+  g.putImageData(img, 0, 0);
+});
+poolTex.colorSpace = THREE.NoColorSpace;
+// a soft dark blob: the contact shadow under things
+const blobTex = canvasTex(128, 128, (g, w) => {
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, 'rgba(0,0,0,.85)'); r.addColorStop(0.55, 'rgba(0,0,0,.45)'); r.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = r; g.fillRect(0, 0, w, w);
+});
+function glowSprite(color, size, opacity = 1) {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, fog: false,
+    blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+  s.scale.setScalar(size); return s;
+}
+function lightPool(color, radius) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(radius * 2, radius * 2).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ map: poolTex, color, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+  m.renderOrder = 2; return m;
+}
+function shadowBlob(rx, rz, opacity) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(rx * 2, rz * 2).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, opacity, depthWrite: false }));
+  m.renderOrder = 1; return m;
+}
+
+/* ---------- The 3D view (laptop): a kota-stone terrace at dusk ---------- */
+const HORIZON = 0x0a1328;
+const kotaTex = canvasTex(512, 512, (g, w) => {
+  const T = w / 2;
+  for (let ty = 0; ty < 2; ty++) for (let tx = 0; tx < 2; tx++) {
+    const v = rand(-8, 8);
+    g.fillStyle = `rgb(${56 + v},${61 + v},${54 + v})`; g.fillRect(tx * T, ty * T, T, T);
+    for (let i = 0; i < 2500; i++) { const k = rand(-14, 14);
+      g.fillStyle = `rgba(${70 + k},${76 + k},${68 + k},.5)`; g.fillRect(tx * T + rand(0, T), ty * T + rand(0, T), rand(1, 3), rand(1, 3)); }
+  }
+  g.fillStyle = '#1e201d'; for (let k = 0; k <= 2; k++) { g.fillRect(k * T - 1.5, 0, 3, w); g.fillRect(0, k * T - 1.5, w, 3); }
+});
+kotaTex.repeat.set(233, 233); kotaTex.wrapS = kotaTex.wrapT = THREE.RepeatWrapping; kotaTex.anisotropy = 8;
+const terrace = new THREE.Mesh(new THREE.CircleGeometry(140, 64),
+  new THREE.MeshStandardMaterial({ map: kotaTex, roughness: 0.62, metalness: 0, envMapIntensity: 0.12 }));
+terrace.rotation.x = -Math.PI / 2; terrace.visible = false; scene.add(terrace);
+const skyDome = new THREE.Mesh(new THREE.SphereGeometry(190, 32, 16), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { uHor: { value: new THREE.Color(HORIZON) } },
+  vertexShader: `varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform vec3 uHor; varying vec3 vD;
+    float h(vec3 p){ return fract(sin(dot(p, vec3(12.9898,78.233,37.719))) * 43758.5453); }
+    void main(){ float y = max(vD.y, 0.0);
+      vec3 col = mix(uHor, vec3(0.008,0.01,0.02), smoothstep(0.0, 0.6, y));
+      vec3 c = floor(vD * 260.0); float st = step(0.9975, h(c)) * smoothstep(0.08, 0.35, y) * (0.5 + 0.5 * h(c + 1.0));
+      gl_FragColor = vec4(col + vec3(st * 0.7), 1.0); }`,
+}));
+skyDome.visible = false; skyDome.renderOrder = -1; scene.add(skyDome);
+
+// Floor ring that shows where a tap will place the mandir (AR)
+const reticle = new THREE.Group();
+{
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.11, 0.13, 48).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xffab1a, transparent: true, opacity: 0.9, toneMapped: false }));
+  const dot = new THREE.Mesh(new THREE.CircleGeometry(0.015, 16).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xff4fd8, toneMapped: false }));
+  reticle.add(ring, dot);
+}
+reticle.visible = false; reticle.matrixAutoUpdate = false; scene.add(reticle);
+
+/* =====================================================================
+   PART 4 — The flame
+   =====================================================================
+   A flat card that always turns to face you but stays upright. The shader
+   paints a teardrop: blue at the base, white-hot core, orange edges.
+   NEW for Diya Carrier: uLean pushes the tip sideways (in metres, in the
+   room), so the flame bends when you speed up, stop, turn or meet wind.
+   The bend grows with height (y²), like a real flame.                      */
+const flameMatBase = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uSeed: { value: 0 }, uH: { value: 0.04 }, uW: { value: 0.017 }, uBright: { value: 1 },
+    uLean: { value: new THREE.Vector3() }, uFlick: { value: 1 } },
+  vertexShader: `uniform float uTime, uSeed, uH, uW, uFlick; uniform vec3 uLean; varying vec2 vUv;
+    void main(){ vUv = uv;
+      vec4 c = modelViewMatrix * vec4(0.0,0.0,0.0,1.0);
+      // "up" on screen. Seen from above, a flat card would shrink to a line, so we keep
+      // drawing it along the screen's version of up (a little shorter), and it never vanishes.
+      vec3 upV = (viewMatrix * vec4(0.0,1.0,0.0,0.0)).xyz;
+      float fl = length(upV.xy);
+      vec2 d2 = fl > 0.02 ? upV.xy / fl : vec2(0.0,1.0);
+      d2 = normalize(mix(vec2(0.0,1.0), d2, smoothstep(0.03, 0.3, fl)));
+      vec3 up = vec3(d2, 0.0), side = vec3(d2.y, -d2.x, 0.0);
+      float topK = mix(0.65, 1.0, smoothstep(0.0, 0.8, fl));
+      float y = uv.y;
+      float sway = (sin(uTime*6.3+uSeed)*0.5 + sin(uTime*13.7+uSeed*2.1)*0.3) * y*y * uW * 0.35 * uFlick;
+      float h = topK * uH * (0.92 + 0.10*sin(uTime*10.0+uSeed*3.0)*uFlick + 0.05*sin(uTime*23.0+uSeed));
+      vec3 lean = (viewMatrix * vec4(uLean, 0.0)).xyz;
+      c.xyz += side * ((uv.x-0.5)*uW + sway) + up * (y*h - h*0.12) + lean * (y*y);
+      gl_Position = projectionMatrix * c; }`,
+  fragmentShader: `uniform float uTime, uSeed, uBright; varying vec2 vUv;
+    void main(){ float y = vUv.y; float x = (vUv.x-0.5)*2.0;
+      float w = pow(sin(3.14159*pow(clamp(y,0.0,1.0),0.6)), 1.25) * (1.0 - 0.3*y);
+      float n = sin(y*8.0 - uTime*13.0 + uSeed)*0.07*y;
+      float d = abs(x+n) / max(w, 0.001);
+      float a = smoothstep(1.0, 0.45, d) * smoothstep(0.0, 0.07, y);
+      float core = smoothstep(0.8, 0.0, d) * smoothstep(0.8, 0.15, y);
+      vec3 col = mix(vec3(1.0,0.38,0.06), vec3(1.0,0.74,0.3), smoothstep(0.0,1.0,1.0-d));
+      col = mix(col, vec3(1.0,0.96,0.86), core);
+      col = mix(col, vec3(0.2,0.3,1.0), smoothstep(0.16,0.0,y)*0.55*(1.0-core));
+      gl_FragColor = vec4(col*a*uBright*1.4, a*min(uBright,1.0)); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+});
+const flameGeo = new THREE.PlaneGeometry(1, 1);
+function makeFlame(h, w) {
+  const m = flameMatBase.clone();
+  m.uniforms.uLean.value = new THREE.Vector3();
+  m.uniforms.uH.value = h; m.uniforms.uW.value = w; m.uniforms.uSeed.value = rand(0, 100);
+  const f = new THREE.Mesh(flameGeo, m); f.frustumCulled = false; f.renderOrder = 6;
+  return f;
+}
+const flick = (t, s) => 0.92 + 0.07 * Math.sin(t * 9.1 + s) + 0.05 * Math.sin(t * 23.3 + s * 2) + 0.03 * Math.sin(t * 41 + s * 3);
+
+/* =====================================================================
+   PART 5 — The brass thali and the clay diya you carry
+   ===================================================================== */
+// Brass: a warm metal with fine engraved rings and a hammered surface.
+const brassTex = canvasTex(1024, 256, (g, w, h) => {
+  g.fillStyle = '#c99a3c'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 6000; i++) { const v = rand(-25, 25);   // tiny polishing streaks around the plate
+    g.fillStyle = `rgba(${210 + v},${165 + v * 0.8},${80 + v * 0.5},.25)`; g.fillRect(rand(0, w), rand(0, h), rand(6, 30), 1); }
+  g.strokeStyle = 'rgba(95,60,15,.75)'; g.lineWidth = 2;
+  [26, 34, 96, 104, 150, 156].forEach((y) => { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); });
+  for (let x = 0; x < w; x += 32) {   // a band of engraved paisleys / petals between the rings
+    g.beginPath(); g.ellipse(x + 16, 65, 9, 20, 0.5, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(x + 16, 65, 3, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(x, 128, 2.2, 0, Math.PI * 2); g.fillStyle = 'rgba(95,60,15,.6)'; g.fill();
+  }
+});
+const hammerTex = canvasTex(512, 256, (g, w, h) => {
+  g.fillStyle = '#808080'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 1600; i++) { const x = rand(0, w), y = rand(0, h), r = rand(4, 11);
+    const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(40,40,40,.35)'); gr.addColorStop(1, 'rgba(128,128,128,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
+});
+hammerTex.colorSpace = THREE.NoColorSpace;
+const brassMat = new THREE.MeshStandardMaterial({ map: brassTex, color: 0xffe0a0, metalness: 1, roughness: 0.3,
+  bumpMap: hammerTex, bumpScale: 0.35, envMapIntensity: 1.1 });
+const thaliGeo = (() => {   // half-outline, spun round: flat base, raised rim (metres)
+  const pts = [[0, 0.0012], [0.06, 0.0012], [0.088, 0.002], [0.1, 0.005], [0.109, 0.011], [0.113, 0.0135], [0.1155, 0.0128],
+    [0.1155, 0.0112], [0.111, 0.0098], [0.104, 0.0046], [0.093, 0.0006], [0.06, -0.0006], [0, -0.0006]].map(([r, y]) => new THREE.Vector2(r, y));
+  return new THREE.LatheGeometry(pts, 96);
+})();
+
+// Clay diya, made on a "potter's wheel" (same shape as Green Diwali's diyas)
+const clayTex = canvasTex(512, 256, (g, w, h) => {
+  g.fillStyle = '#a2492a'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 9000; i++) {
+    const v = rand(-28, 28); g.fillStyle = `rgba(${150 + v},${70 + v * 0.6},${40 + v * 0.4},.35)`;
+    g.fillRect(rand(0, w), rand(0, h), rand(1, 3), rand(1, 3));
+  }
+  g.strokeStyle = 'rgba(70,25,10,.55)'; g.lineWidth = 3;
+  [64, 112].forEach((y) => { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); });
+  for (let x = 8; x < w; x += 21.3) {
+    g.beginPath(); g.ellipse(x, 88, 5, 13, 0, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = 'rgba(60,20,8,.5)'; g.beginPath(); g.arc(x + 10.6, 88, 2.4, 0, Math.PI * 2); g.fill();
+  }
+  const gr = g.createLinearGradient(0, 150, 0, 256); gr.addColorStop(0, 'rgba(30,10,4,0)'); gr.addColorStop(1, 'rgba(30,10,4,.65)');
+  g.fillStyle = gr; g.fillRect(0, 150, w, 106);
+});
+const diyaGeo = (() => {
+  const pts = [[0, 0], [0.022, 0], [0.026, 0.003], [0.034, 0.009], [0.040, 0.017], [0.0435, 0.025], [0.0438, 0.028],
+    [0.041, 0.0295], [0.037, 0.024], [0.03, 0.017], [0.018, 0.011], [0, 0.009]].map(([r, y]) => new THREE.Vector2(r, y));
+  const geo = new THREE.LatheGeometry(pts, 56);
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) {   // pinch the spout towards +x
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i), r = Math.hypot(x, z);
+    if (r < 0.02) continue;
+    const a = Math.atan2(z, x), k = Math.max(0, 1 - Math.abs(a) / 0.75);
+    const pull = k * k * 0.017 * (y / 0.028);
+    p.setX(i, x + pull * Math.cos(a) * 1.4); p.setZ(i, z * (1 - 0.45 * k * (y / 0.028))); p.setY(i, y + k * k * 0.004);
+  }
+  geo.computeVertexNormals(); return geo;
+})();
+const diyaMat = new THREE.MeshStandardMaterial({ map: clayTex, roughness: 0.88, metalness: 0 });
+const oilMat = new THREE.MeshStandardMaterial({ color: 0x6a4206, roughness: 0.12, metalness: 0, emissive: 0x2a1400, envMapIntensity: 0.9,
+  transparent: true, opacity: 0.84 });
+// A twisted cotton wick: it lies in the oil, curls through the spout and turns up at the tip
+// (S-shaped, like a hand-rolled baati). The last few millimetres are charred.
+const WICK_TIP = new THREE.Vector3(0.059, 0.0415, 0);
+const wickGeo = (() => {
+  const curve = new THREE.CatmullRomCurve3([[-0.014, 0.0252, 0.013], [-0.001, 0.0258, -0.005], [0.016, 0.0263, -0.006], [0.031, 0.0272, 0.001],
+    [0.044, 0.0295, 0.0005], [0.0535, 0.033, 0], [0.0575, 0.0375, 0], [WICK_TIP.x, WICK_TIP.y, 0]].map((p) => new THREE.Vector3(...p)));
+  const TS = 64, RS = 10, geo = new THREE.TubeGeometry(curve, TS, 0.0024, RS, false);
+  const p = geo.attributes.position, col = new Float32Array(p.count * 3), c = new THREE.Vector3(), v = new THREE.Vector3();
+  for (let i = 0; i <= TS; i++) {
+    const u = i / TS; curve.getPointAt(u, c);
+    const sIn = clamp(u / 0.22, 0, 1), ease = sIn * sIn * (3 - 2 * sIn);
+    const r = u < 0.75 ? 0.04 + 0.96 * ease : 1 - (u - 0.75) / 0.25 * 0.6;   // thin, pointy end in the oil; slimmer at the burning tip
+    const burnt = clamp((u - 0.86) / 0.1, 0, 1), soaked = u < 0.55 ? 0.25 : 0;   // the part in the oil is golden
+    for (let j = 0; j <= RS; j++) { const k = i * (RS + 1) + j;
+      v.fromBufferAttribute(p, k).sub(c).multiplyScalar(r).add(c); p.setXYZ(k, v.x, v.y, v.z);
+      const w = 1 - burnt * 0.92; col.set([w * (1 - soaked * 0.1), w * (1 - soaked * 0.3), w * (1 - soaked * 0.75)], k * 3); }
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3)); geo.computeVertexNormals(); return geo;
+})();
+const cottonTex = canvasTex(64, 256, (g, w, h) => {   // spiral twist of the cotton
+  g.fillStyle = '#f3ede0'; g.fillRect(0, 0, w, h);
+  g.strokeStyle = 'rgba(150,135,110,.55)'; g.lineWidth = 3;
+  for (let y = -w; y < h + w; y += 9) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y + w * 0.9); g.stroke(); }
+  for (let i = 0; i < 500; i++) { g.fillStyle = 'rgba(255,255,255,.4)'; g.fillRect(rand(0, w), rand(0, h), 1, rand(1, 4)); }
+}, [8, 1]);
+const wickMat = new THREE.MeshStandardMaterial({ map: cottonTex, vertexColors: true, roughness: 0.95 });
+
+const holder = new THREE.Group(); holder.matrixAutoUpdate = false; holder.visible = false; scene.add(holder);
+const thali = new THREE.Mesh(thaliGeo, brassMat); holder.add(thali);
+{ // rice (akshat), a heap of kumkum and haldi, marigolds and loose petals
+  const riceMat = new THREE.MeshStandardMaterial({ color: 0xf2ecdc, roughness: 0.55 });
+  const rice = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 6, 4), riceMat, 140);
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
+  for (let i = 0; i < 140; i++) {
+    const a = rand(0, Math.PI * 2), r = Math.sqrt(Math.random()) * 0.03;
+    const x = -0.058 + Math.cos(a) * r, z = -0.035 + Math.sin(a) * r * 0.8;
+    const y = 0.0014 + (1 - r / 0.03) * 0.007 + rand(0, 0.0012);
+    q.setFromEuler(e.set(rand(0, 3), rand(0, 6.28), rand(0, 3)));
+    m.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(0.0036, 0.0014, 0.0014)); rice.setMatrixAt(i, m);
+  }
+  holder.add(rice);
+  const powder = (col, x, z, r, h) => { const c = new THREE.Mesh(new THREE.ConeGeometry(r, h, 28, 1), new THREE.MeshStandardMaterial({ color: col, roughness: 1 }));
+    c.position.set(x, 0.0012 + h / 2, z); c.scale.set(1, 1, 0.92); holder.add(c); return c; };
+  powder(0xa80d1c, 0.052, -0.05, 0.015, 0.011);   // kumkum
+  powder(0xe8a90c, 0.077, -0.022, 0.012, 0.009);  // haldi
+  const goldMat = new THREE.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.8, emissive: 0x1a0800 });
+  const makeMarigold = (s) => {   // a ball of ruffled petals
+    const geo = new THREE.SphereGeometry(1, 72, 48); const p = geo.attributes.position, v = new THREE.Vector3();
+    const col = new Float32Array(p.count * 3);
+    for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i);
+      const lat = Math.acos(clamp(v.y, -1, 1)), lon = Math.atan2(v.z, v.x);
+      const ruffle = Math.abs(Math.sin(lat * 11 + Math.sin(lon * 5) * 0.8) * Math.sin(lon * 14 + lat * 3));   // rows of frilly petals
+      const k = 1 + 0.16 * ruffle + 0.03 * Math.sin(lon * 37 + lat * 23);
+      v.multiplyScalar(k); p.setXYZ(i, v.x, v.y * 0.72, v.z);
+      const sh = 0.55 + 0.45 * ruffle; col.set([1, 0.14 + 0.1 * sh, 0.0], i * 3); }
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    geo.computeVertexNormals();
+    const fl = new THREE.Mesh(geo, goldMat); fl.scale.setScalar(s); return fl;
+  };
+  [[0.062, 0.045, 0.016], [-0.072, 0.036, 0.015], [-0.03, 0.072, 0.012]].forEach(([x, z, s]) => {
+    const f = makeMarigold(s); f.position.set(x, 0.0012 + s * 0.6, z); f.rotation.y = rand(0, 6); holder.add(f); });
+  const petals = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 8).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xffa21a, roughness: 0.7, side: THREE.DoubleSide }), 22);
+  for (let i = 0; i < 22; i++) {
+    const a = rand(0, 6.28), r = rand(0.05, 0.095);
+    q.setFromEuler(e.set(rand(-0.3, 0.3), rand(0, 6.28), rand(-0.3, 0.3)));
+    m.compose(new THREE.Vector3(Math.cos(a) * r, 0.0018, Math.sin(a) * r), q, new THREE.Vector3(0.006, 1, 0.0035)); petals.setMatrixAt(i, m);
+  }
+  holder.add(petals);
+}
+// the diya on the thali
+const DIYA_HOME = new THREE.Vector3(0.006, 0.0012, 0.008);
+const diya = new THREE.Group(); diya.position.copy(DIYA_HOME); diya.scale.setScalar(1.15); diya.rotation.y = -0.45; holder.add(diya);
+diya.add(new THREE.Mesh(diyaGeo, diyaMat));
+const oil = new THREE.Mesh(new THREE.CircleGeometry(1, 40).rotateX(-Math.PI / 2), oilMat); diya.add(oil);
+const wick = new THREE.Mesh(wickGeo, wickMat); diya.add(wick);
+const emberMat = new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 1, emissive: 0xff5a10, emissiveIntensity: 0 });
+const ember = new THREE.Mesh(new THREE.SphereGeometry(0.0028, 10, 8), emberMat); ember.position.copy(WICK_TIP); diya.add(ember);
+const flame = makeFlame(0.04, 0.017); flame.position.copy(WICK_TIP).y += 0.001; diya.add(flame);
+// two glows: a wide warm halo and a small hot core. Both follow the flame's strength,
+// so the light steadies when you're calm and wavers/dims in wind and sudden moves.
+const halo = glowSprite(0xffa040, 0.22, 0); halo.position.copy(WICK_TIP).y += 0.012; diya.add(halo);
+const core = glowSprite(0xfff1c8, 0.05, 0); core.position.copy(WICK_TIP).y += 0.008; diya.add(core);
+const thaliPool = lightPool(0xff8a2a, 0.17); thaliPool.position.y = 0.0016; holder.add(thaliPool);
+const diyaShadow = shadowBlob(0.05, 0.045, 0.45); diyaShadow.position.set(DIYA_HOME.x, 0.0014, DIYA_HOME.z); holder.add(diyaShadow);
+const flameLight = new THREE.PointLight(0xff9a3c, 0, 1.5, 2); holder.add(flameLight);
+const DIYA_HOME_Q = diya.quaternion.clone();
+
+/* ---------- The matchstick (for lighting and re-lighting) ---------- */
+const match = new THREE.Group(); match.visible = false; holder.add(match);
+{
+  const stick = new THREE.Mesh(new THREE.BoxGeometry(0.048, 0.0024, 0.0024), new THREE.MeshStandardMaterial({ color: 0xe3c58e, roughness: 0.9 }));
+  stick.position.x = 0.024; match.add(stick);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.0032, 12, 8), new THREE.MeshStandardMaterial({ color: 0x8a1410, roughness: 0.8 }));
+  head.scale.set(1.3, 1, 1); match.add(head);
+}
+const matchFlame = makeFlame(0.022, 0.0095); matchFlame.position.set(-0.002, 0.001, 0); match.add(matchFlame);
+const matchGlow = glowSprite(0xffc070, 0.08, 0); match.add(matchGlow);
+
+/* =====================================================================
+   PART 6 — The finish: a little mandir on a wooden chowki
+   ===================================================================== */
+const woodTex = canvasTex(256, 256, (g, w, h) => {
+  g.fillStyle = '#5c3216'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 70; i++) { g.strokeStyle = `rgba(${rand(25, 50)},${rand(10, 22)},4,${rand(0.25, 0.6)})`; g.lineWidth = rand(0.6, 2.2);
+    g.beginPath(); const y0 = rand(0, h); g.moveTo(0, y0);
+    for (let x = 0; x <= w; x += 16) g.lineTo(x, y0 + Math.sin(x * 0.03 + i) * 4 + rand(-1, 1)); g.stroke(); }
+});
+const woodMat = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55, metalness: 0, envMapIntensity: 0.6 });
+const clothTex = canvasTex(512, 128, (g, w, h) => {
+  g.fillStyle = '#a3121c'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(${rand(120, 190)},10,20,.3)`; g.fillRect(rand(0, w), rand(0, h), 2, 1); }
+  const zari = (y) => { g.fillStyle = '#d9a53a'; g.fillRect(0, y, w, 10); g.fillStyle = '#8a5a12';
+    for (let x = 0; x < w; x += 10) { g.beginPath(); g.moveTo(x, y + 5); g.lineTo(x + 5, y); g.lineTo(x + 10, y + 5); g.lineTo(x + 5, y + 10); g.fill(); } };
+  zari(6); zari(h - 16);
+  g.fillStyle = '#e8b84a'; for (let x = 20; x < w; x += 28) for (let y = 34; y < h - 30; y += 24) { g.beginPath(); g.arc(x + (y % 48 ? 14 : 0), y, 2.2, 0, 7); g.fill(); }
+});
+const clothMat = new THREE.MeshStandardMaterial({ map: clothTex, roughness: 0.95 });
+const rangoliTex = canvasTex(512, 512, (g, w) => {   // powder rangoli: dots of colour, so it looks like powder
+  const c = w / 2, cols = ['#ff4fa0', '#ffab1a', '#2fb7ff', '#ffffff', '#3fbf5f', '#ff5a1a'];
+  const dot = (x, y, col, r) => { for (let k = 0; k < r * 7; k++) { const a = rand(0, 6.28), d = Math.sqrt(Math.random()) * r;
+      g.fillStyle = col; g.globalAlpha = rand(0.5, 1); g.fillRect(x + Math.cos(a) * d, y + Math.sin(a) * d, 1.6, 1.6); } g.globalAlpha = 1; };
+  const ringOf = (rad, n, col, r, shape) => { for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2;
+      if (shape) { for (let s = 0; s < 1; s += 0.04) { const rr = rad + Math.sin(s * Math.PI) * 36, aa = a + (s - 0.5) * (Math.PI * 2 / n) * 0.9;
+        dot(c + Math.cos(aa) * (rad + s * 40), c + Math.sin(aa) * (rad + s * 40), col, 3.4); } }
+      else dot(c + Math.cos(a) * rad, c + Math.sin(a) * rad, col, r); } };
+  dot(c, c, '#ffab1a', 26); ringOf(48, 12, '#ff4fa0', 9); ringOf(84, 16, '#ffffff', 5);
+  for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2;   // 8 petals
+    for (let s = 0; s <= 1; s += 0.02) { const r = 110 + s * 90, wdt = Math.sin(s * Math.PI) * 0.22;
+      dot(c + Math.cos(a - wdt) * r, c + Math.sin(a - wdt) * r, '#2fb7ff', 4); dot(c + Math.cos(a + wdt) * r, c + Math.sin(a + wdt) * r, '#2fb7ff', 4);
+      if (s > 0.15 && s < 0.85) dot(c + Math.cos(a) * r, c + Math.sin(a) * r, '#ffab1a', 3.2); } }
+  ringOf(226, 48, '#3fbf5f', 4.5); ringOf(240, 64, '#ffffff', 3);
+});
+const mandir = new THREE.Group(); mandir.visible = false; scene.add(mandir);
+const SLOT = new THREE.Vector3(0, 0, 0);   // where your diya goes (set below)
+const rowLamps = [];
+const mandirLight = new THREE.PointLight(0xff9a3c, 0, 3, 2);
+let guideBeam, guideRing, slotRing;
+{
+  const top = 0.22, W = 0.62, D = 0.34;
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(W, 0.028, D), woodMat); slab.position.y = top - 0.014; mandir.add(slab);
+  const apron = new THREE.Mesh(new THREE.BoxGeometry(W - 0.04, 0.05, D - 0.04), woodMat); apron.position.y = top - 0.05; mandir.add(apron);
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.014, top - 0.03, 12), woodMat);
+    leg.position.set(sx * (W / 2 - 0.035), (top - 0.03) / 2, sz * (D / 2 - 0.035)); mandir.add(leg); });
+  const cloth = new THREE.Mesh(new THREE.BoxGeometry(W + 0.01, 0.003, 0.2), clothMat); cloth.position.set(0, top + 0.0015, 0.04); mandir.add(cloth);
+  const drape = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.01, 0.07), clothMat); drape.position.set(0, top - 0.034, 0.141); mandir.add(drape);
+  // brass kalash with mango leaves and a coconut, at the back
+  const kal = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.03, 0], [0.045, 0.02], [0.05, 0.05], [0.042, 0.08], [0.026, 0.095], [0.024, 0.105], [0.032, 0.112], [0.03, 0.116], [0, 0.116]]
+    .map(([r, y]) => new THREE.Vector2(r, y)), 48), brassMat);
+  kal.position.set(0, top + 0.003, -0.09); mandir.add(kal);
+  const coco = new THREE.Mesh(new THREE.SphereGeometry(0.034, 24, 16), new THREE.MeshStandardMaterial({ color: 0x5a3a1c, roughness: 1,
+    map: canvasTex(128, 64, (g, w, h) => { g.fillStyle = '#5a3a1c'; g.fillRect(0, 0, w, h); for (let i = 0; i < 900; i++) { g.fillStyle = `rgba(${rand(90, 140)},${rand(60, 90)},30,.5)`; g.fillRect(rand(0, w), rand(0, h), 1, rand(3, 9)); } }) }));
+  coco.scale.set(0.85, 1.15, 0.85); coco.position.set(0, top + 0.15, -0.09); mandir.add(coco);
+  const leafTex = canvasTex(64, 128, (g, w, h) => { g.fillStyle = '#2f7a2c'; g.beginPath(); g.moveTo(w / 2, 0);
+    g.quadraticCurveTo(w, h * 0.4, w / 2, h); g.quadraticCurveTo(0, h * 0.4, w / 2, 0); g.fill();
+    g.strokeStyle = '#8fc76a'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(w / 2, 4); g.lineTo(w / 2, h - 4); g.stroke(); });
+  const leafMat = new THREE.MeshStandardMaterial({ map: leafTex, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.6 });
+  for (let i = 0; i < 5; i++) { const lf = new THREE.Mesh(new THREE.PlaneGeometry(0.035, 0.08), leafMat); const a = i / 5 * Math.PI * 2;
+    lf.position.set(Math.cos(a) * 0.03, top + 0.13, -0.09 + Math.sin(a) * 0.03); lf.rotation.set(0, -a + Math.PI / 2, 0); lf.rotateX(0.75); mandir.add(lf); }
+  // four clay diyas waiting to be lit; your diya goes in the middle
+  [-0.22, -0.12, 0.12, 0.22].forEach((x) => {
+    const g = new THREE.Group(); g.position.set(x, top + 0.003, 0.05); g.rotation.y = x < 0 ? 0.3 : Math.PI - 0.3;
+    g.add(new THREE.Mesh(diyaGeo, diyaMat));
+    const o = new THREE.Mesh(new THREE.CircleGeometry(0.03, 24).rotateX(-Math.PI / 2), oilMat); o.position.y = 0.019; g.add(o);
+    const wk = new THREE.Mesh(wickGeo, wickMat); g.add(wk);
+    const fl = makeFlame(0.036, 0.015); fl.position.copy(WICK_TIP).y += 0.001; g.add(fl);
+    const hl = glowSprite(0xffa040, 0.18, 0); hl.position.copy(WICK_TIP).y += 0.01; g.add(hl);
+    const pl = lightPool(0xff8a2a, 0.22); pl.position.y = 0.001; g.add(pl);
+    mandir.add(g); rowLamps.push({ g, fl, hl, pl, on: 0, lit: false, seed: rand(0, 50) });
+  });
+  SLOT.set(0, top + 0.003, 0.05);
+  slotRing = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.058, 40).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xffab1a, transparent: true, opacity: 0.8, toneMapped: false, depthWrite: false }));
+  slotRing.position.copy(SLOT).y += 0.004; mandir.add(slotRing);
+  mandirLight.position.set(0, top + 0.12, 0.05); mandir.add(mandirLight);
+  const rg = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.62).rotateX(-Math.PI / 2),
+    new THREE.MeshStandardMaterial({ map: rangoliTex, transparent: true, roughness: 1, depthWrite: false }));
+  rg.position.set(0, 0.002, 0.48); rg.renderOrder = 1; mandir.add(rg);
+  const sh = shadowBlob(0.42, 0.26, 0.65); sh.position.y = 0.001; mandir.add(sh);
+  // a soft column of light so you can find the mandir from across the room
+  guideBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.3, 2.4, 32, 1, true), new THREE.ShaderMaterial({
+    uniforms: { uA: { value: 0.5 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    vertexShader: `varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: `uniform float uA; varying float vY; void main(){ float a = (1.0 - vY) * (1.0 - vY) * uA * 0.35; gl_FragColor = vec4(vec3(1.0,0.62,0.18) * a, a); }` }));
+  guideBeam.position.y = 1.2; mandir.add(guideBeam);
+  guideRing = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.46, 64).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xffab1a, transparent: true, opacity: 0.6, toneMapped: false, depthWrite: false }));
+  guideRing.position.y = 0.004; mandir.add(guideRing);
+}
+const slotWorld = () => mandir.localToWorld(SLOT.clone());
+
+/* =====================================================================
+   PART 7 — Particles: smoke wisp, oil drips, wind-blown petals
+   ===================================================================== */
+const smokeTex = canvasTex(64, 64, (g, w) => {
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  r.addColorStop(0, 'rgba(255,255,255,.7)'); r.addColorStop(0.5, 'rgba(255,255,255,.3)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, w, w); });
+smokeTex.colorSpace = THREE.NoColorSpace;
+const uH = { value: 800 };   // drawing-buffer height, so point sizes are in real metres
+function pointCloud(max, frag, extra = {}) {
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(max * 3), size = new Float32Array(max), alpha = new Float32Array(max);
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('size', new THREE.BufferAttribute(size, 1).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('alpha', new THREE.BufferAttribute(alpha, 1).setUsage(THREE.DynamicDrawUsage));
+  const pts = new THREE.Points(geo, new THREE.ShaderMaterial({
+    uniforms: { uMap: { value: smokeTex }, uH }, transparent: true, depthWrite: false, ...extra,
+    vertexShader: `attribute float size; attribute float alpha; varying float vA; uniform float uH;
+      void main(){ vA = alpha; vec4 mv = modelViewMatrix * vec4(position,1.0);
+        gl_PointSize = size * projectionMatrix[1][1] * uH * 0.5 / max(-mv.z, 0.02); gl_Position = projectionMatrix * mv;
+        if (alpha <= 0.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }`,
+    fragmentShader: frag }));
+  pts.frustumCulled = false; scene.add(pts);
+  return { geo, pos, size, alpha, vel: new Float32Array(max * 3), age: new Float32Array(max), life: new Float32Array(max), max, cur: 0 };
+}
+// smoke: thin grey wisps that curl up from a wick that has just gone out
+const SM = pointCloud(220, `uniform sampler2D uMap; varying float vA;
+  void main(){ float a = texture2D(uMap, gl_PointCoord).r * vA; gl_FragColor = vec4(vec3(0.78,0.77,0.76), a); }`);
+SM.geo.attributes.position.array;
+function wisp(p) {
+  const i = SM.cur; SM.cur = (SM.cur + 1) % SM.max;
+  SM.pos.set([p.x, p.y, p.z], i * 3); SM.vel.set([rand(-0.004, 0.004), rand(0.05, 0.08), rand(-0.004, 0.004)], i * 3);
+  SM.age[i] = 0; SM.life[i] = rand(1.6, 2.6); SM.size[i] = 0.004; SM.alpha[i] = 0.001;
+}
+function updateSmoke(dt, t) {
+  for (let i = 0; i < SM.max; i++) {
+    if (SM.life[i] <= 0) { SM.alpha[i] = 0; continue; }
+    SM.age[i] += dt; const k = SM.age[i] / SM.life[i];
+    if (k >= 1) { SM.life[i] = 0; SM.alpha[i] = 0; continue; }
+    const j = i * 3, y = SM.pos[j + 1];
+    SM.vel[j] += Math.sin(y * 38 + t * 2.1 + i) * 0.03 * dt; SM.vel[j + 2] += Math.cos(y * 33 + t * 1.7 + i * 0.7) * 0.03 * dt;   // curl
+    if (gust.env > 0) { SM.vel[j] += gust.flow.x * gust.env * 0.6 * dt; SM.vel[j + 2] += gust.flow.z * gust.env * 0.6 * dt; }
+    for (let q = 0; q < 3; q++) SM.pos[j + q] += SM.vel[j + q] * dt;
+    SM.size[i] = 0.004 + k * 0.03;
+    SM.alpha[i] = 0.16 * Math.sin(Math.PI * Math.min(1, k * 1.4)) * (1 - k);
+  }
+  SM.geo.attributes.position.needsUpdate = SM.geo.attributes.size.needsUpdate = SM.geo.attributes.alpha.needsUpdate = true;
+}
+// oil drips: golden drops that fall to the floor when the diya tilts too far
+const DR = pointCloud(160, `varying float vA; void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d);
+  float a = smoothstep(0.5, 0.3, r) * vA; vec3 c = mix(vec3(0.95,0.7,0.2), vec3(1.0,0.95,0.7), smoothstep(0.25, 0.0, length(d - vec2(-0.12,-0.12))));
+  gl_FragColor = vec4(c, a); }`);
+function drip(p, v) {
+  const i = DR.cur; DR.cur = (DR.cur + 1) % DR.max;
+  DR.pos.set([p.x, p.y, p.z], i * 3); DR.vel.set([v.x + rand(-0.05, 0.05), v.y + rand(-0.05, 0.02), v.z + rand(-0.05, 0.05)], i * 3);
+  DR.age[i] = 0; DR.life[i] = 2; DR.size[i] = rand(0.003, 0.0055); DR.alpha[i] = 1;
+}
+function updateDrips(dt) {
+  for (let i = 0; i < DR.max; i++) {
+    if (DR.life[i] <= 0) { DR.alpha[i] = 0; continue; }
+    DR.age[i] += dt; const j = i * 3;
+    DR.vel[j + 1] -= 9.81 * dt;
+    for (let q = 0; q < 3; q++) DR.pos[j + q] += DR.vel[j + q] * dt;
+    if (DR.pos[j + 1] < floorY + 0.003 || DR.age[i] > DR.life[i]) { DR.life[i] = 0; DR.alpha[i] = 0; }
+  }
+  DR.geo.attributes.position.needsUpdate = DR.geo.attributes.size.needsUpdate = DR.geo.attributes.alpha.needsUpdate = true;
+}
+// marigold petals that fly past in a gust, so you can SEE where the wind comes from
+const NPET = 46;
+const petalMesh = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 7), new THREE.MeshStandardMaterial({ color: 0xff9a14, roughness: 0.7,
+  side: THREE.DoubleSide, emissive: 0x3a1400 }), NPET);
+petalMesh.frustumCulled = false; petalMesh.visible = false; scene.add(petalMesh);
+const PET = Array.from({ length: NPET }, () => ({ p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(rand(0, 6), rand(0, 6), rand(0, 6)), s: rand(0.006, 0.011), spin: rand(2, 7), live: false }));
+
+/* =====================================================================
+   PART 8 — SOUND (all made live in the browser, no recordings)
+   ===================================================================== */
+const A = { ctx: null, on: true };
+function ensureAudio() {
+  try {
+    if (!A.ctx) {
+      const ctx = A.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      A.master = ctx.createGain(); A.master.gain.value = A.on ? 1 : 0;
+      const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 5;
+      A.master.connect(comp); comp.connect(ctx.destination);
+      A.noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      const d = A.noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const loop = (type, freq, q) => { const s = ctx.createBufferSource(); s.buffer = A.noise; s.loop = true;
+        const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+        const g = ctx.createGain(); g.gain.value = 0; s.connect(f); f.connect(g); s.start(); return { f, g }; };
+      // 1) the flame's soft breath   2) the wind
+      A.flame = loop('bandpass', 520, 0.7); A.flame.g.connect(A.master);
+      A.wind = loop('bandpass', 600, 0.9);
+      A.wind.p = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (A.wind.p) { A.wind.g.connect(A.wind.p); A.wind.p.connect(A.master); } else A.wind.g.connect(A.master);
+      A.spill = loop('lowpass', 420, 0.5); A.spill.g.connect(A.master);
+      A.nextChirp = 0;
+    }
+    A.ctx.resume();
+  } catch (e) {}
+}
+function burst({ type = 'lowpass', freq = 900, q = 0.7, gain = 0.3, attack = 0.005, dur = 0.4, delay = 0, sweep = 0 }) {
+  if (!A.ctx) return;
+  const ctx = A.ctx, t = ctx.currentTime + delay;
+  const s = ctx.createBufferSource(); s.buffer = A.noise; s.loopStart = Math.random();
+  const f = ctx.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, t); f.Q.value = q;
+  if (sweep) f.frequency.exponentialRampToValueAtTime(Math.max(60, freq * sweep), t + dur);
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  s.connect(f); f.connect(g); g.connect(A.master); s.start(t, Math.random()); s.stop(t + dur + 0.05);
+}
+const sndBlowOut = () => { burst({ freq: 1400, gain: 0.35, attack: 0.02, dur: 0.45, sweep: 0.3 }); };
+function sndStrike() {   // scratch, crackle, then the match catching
+  burst({ type: 'highpass', freq: 2600, gain: 0.35, attack: 0.004, dur: 0.12 });
+  for (let k = 0; k < 6; k++) burst({ type: 'bandpass', freq: rand(2000, 5000), q: 3, gain: 0.25, attack: 0.002, dur: 0.03, delay: 0.1 + k * rand(0.02, 0.05) });
+  burst({ type: 'bandpass', freq: 900, q: 0.6, gain: 0.3, attack: 0.06, dur: 0.6, delay: 0.12, sweep: 0.5 });
+}
+const sndCatch = () => burst({ type: 'bandpass', freq: 700, q: 0.5, gain: 0.22, attack: 0.05, dur: 0.5, sweep: 0.6 });
+function bell(delay = 0, gain = 0.32, base = 620) {   // a small temple ghanti: a few bright, slightly out-of-tune partials
+  if (!A.ctx) return;
+  const ctx = A.ctx, t = ctx.currentTime + delay;
+  [[1, 1, 3.2], [1.004, 0.6, 3.0], [2.76, 0.45, 1.6], [5.4, 0.25, 0.9], [8.93, 0.12, 0.5], [0.5, 0.18, 2.4]].forEach(([r, a, d]) => {
+    const o = ctx.createOscillator(); o.frequency.value = base * r;
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain * a, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g); g.connect(A.master); o.start(t); o.stop(t + d + 0.1);
+  });
+  burst({ type: 'highpass', freq: 5000, gain: 0.12, attack: 0.001, dur: 0.05, delay });
+}
+function tick(delay = 0) {
+  if (!A.ctx) return; const ctx = A.ctx, t = ctx.currentTime + delay;
+  const o = ctx.createOscillator(); o.frequency.value = 1150; const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+  o.connect(g); g.connect(A.master); o.start(t); o.stop(t + 0.12);
+}
+function crickets() {   // a few soft chirps in the evening, now and then
+  if (!A.ctx || A.ctx.currentTime < A.nextChirp) return;
+  const ctx = A.ctx, t = ctx.currentTime + 0.05, f = rand(4200, 4800), n = 3 + (Math.random() * 3 | 0);
+  for (let k = 0; k < n; k++) {
+    const o = ctx.createOscillator(); o.frequency.value = f; const g = ctx.createGain(), s = t + k * 0.055;
+    g.gain.setValueAtTime(0.0001, s); g.gain.exponentialRampToValueAtTime(0.012, s + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, s + 0.04);
+    o.connect(g); g.connect(A.master); o.start(s); o.stop(s + 0.05);
+  }
+  A.nextChirp = ctx.currentTime + rand(0.7, 2.2);
+}
+function audioUpdate() {
+  if (!A.ctx) return;
+  try { audioUpdateInner(); } catch (e) {}
+}
+function audioUpdateInner() {
+  const t = A.ctx.currentTime, k = 0.06;
+  const lean = flameState.lean.length();
+  A.flame.g.gain.setTargetAtTime(0.05 * flameState.size * (1 + lean * 60) + 0.04 * gust.env * flameState.size, t, k);
+  A.flame.f.frequency.setTargetAtTime(480 + lean * 30000 + gust.env * 500, t, k);
+  A.wind.g.gain.setTargetAtTime(0.38 * gust.env, t, 0.12);
+  A.wind.f.frequency.setTargetAtTime(420 + 700 * gust.env + 180 * Math.sin(t * 3.1), t, 0.1);
+  if (A.wind.p) A.wind.p.pan.setTargetAtTime(clamp(gust.pan, -1, 1), t, 0.1);
+  A.spill.g.gain.setTargetAtTime(Math.min(0.12, G.spillRate * 3), t, 0.08);
+  crickets();
+}
+$('sound').addEventListener('click', () => {
+  A.on = !A.on; $('sound').textContent = A.on ? '🔊' : '🔇';
+  if (A.master) A.master.gain.setTargetAtTime(A.on ? 1 : 0, A.ctx.currentTime, 0.05);
+});
+document.addEventListener('visibilitychange', () => { if (A.ctx) document.hidden ? A.ctx.suspend() : A.ctx.resume(); });
+
+/* =====================================================================
+   PART 9 — Feeling the phone move
+   =====================================================================
+   devicemotion gives the phone's acceleration in its OWN frame
+   (x = right, y = up the screen, z = out of the screen). We turn it into
+   the room's frame with the phone's orientation, then split it into
+   sideways (along the floor) and up-and-down.
+   If the sensor is silent (some Android AR sessions), we work it out from
+   how the tracked phone moves instead: speed change ÷ time.               */
+const S = { a: new THREE.Vector3(), ag: new THREE.Vector3(), hasA: false, hasAG: false, seen: 0, asked: false, granted: null };
+let stepCount = 0, stepArmed = true, lastStep = 0, stepMean = 9.81;
+function onMotion(e) {
+  const a = e.acceleration, ag = e.accelerationIncludingGravity;
+  if (a && a.x != null) { S.a.set(a.x, a.y, a.z); S.hasA = true; }
+  if (ag && ag.x != null) { S.ag.set(ag.x, ag.y, ag.z); S.hasAG = true; }
+  S.seen = performance.now();
+  // steps (camera view): each step makes a bump in total acceleration
+  if (ag && ag.x != null && mode === 'camera' && (G.state === 'carry' || G.state === 'out')) {
+    // compare with the recent average, so slow, gentle steps count too
+    const m = Math.hypot(ag.x, ag.y, ag.z), now = performance.now() / 1000;
+    stepMean += (m - stepMean) * 0.02;
+    const dev = m - stepMean;
+    if (stepArmed && dev > 0.75 && now - lastStep > 0.35) { stepCount++; lastStep = now; stepArmed = false; }
+    else if (dev < 0) stepArmed = true;
+  }
+}
+// iPhone asks the person first; this MUST be called straight from a tap
+function askMotion() {
+  if (S.asked) return; S.asked = true;
+  const listen = () => window.addEventListener('devicemotion', onMotion);
+  const set = (ok) => { S.granted = ok; $('c-motion').textContent = ok ? 'Yes' : 'No'; $('c-motion').className = ok ? 'yes' : 'noo'; };
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then((r) => { listen(); set(r === 'granted'); }).catch(() => { listen(); });
+  } else { listen(); set(true); }
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    S.orientAsk = DeviceOrientationEvent.requestPermission().catch(() => {});
+  }
+}
+const aWorld = new THREE.Vector3(), aF = new THREE.Vector3(), velF = new THREE.Vector3(), lastPos = new THREE.Vector3(), lastVel = new THREE.Vector3(),
+  aPose = new THREE.Vector3(), _t1 = new THREE.Vector3(), _q1 = new THREE.Quaternion(), zAxis = new THREE.Vector3(0, 0, 1);
+let poseReady = false, aSrc = '—', kick = 0;
+function senseMotion(dt) {
+  // movement worked out from the tracked position (AR, 3D view)
+  if (poseReady && dt > 0) {
+    _t1.subVectors(camPos, lastPos).divideScalar(dt);
+    const kv = 1 - Math.exp(-dt / 0.07); velF.lerp(_t1, kv);
+    _t1.subVectors(velF, lastVel).divideScalar(dt);
+    aPose.lerp(_t1, 1 - Math.exp(-dt / 0.07)); lastVel.copy(velF);
+  }
+  lastPos.copy(camPos); poseReady = true;
+  const fresh = performance.now() - S.seen < 600 && mode !== '3d';
+  if (fresh && (S.hasA || S.hasAG)) {
+    const so = THREE.MathUtils.degToRad((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+    _q1.copy(camQ).multiply(new THREE.Quaternion().setFromAxisAngle(zAxis, so));
+    if (S.hasA) { aWorld.copy(S.a).applyQuaternion(_q1); aSrc = 'sensor'; }
+    else { aWorld.copy(S.ag).applyQuaternion(_q1); aWorld.y -= 9.81; aSrc = 'sensor+g'; }
+  } else if (mode === 'ar' || mode === '3d') { aWorld.copy(aPose); aSrc = mode === 'ar' ? 'tracking' : 'keys'; }
+  else { aWorld.set(0, 0, 0); aSrc = 'none'; }
+  if (kick > 0) { aWorld.x += kick * 12 * (Math.random() < 0.5 ? -1 : 1); kick = Math.max(0, kick - dt * 8); }
+  aF.lerp(aWorld, 1 - Math.exp(-dt / 0.06));   // smooth out single noisy samples
+  G.aH = Math.hypot(aF.x, aF.z); G.aV = aF.y; G.a = Math.hypot(G.aH, 0.5 * G.aV);
+}
+
+/* =====================================================================
+   PART 10 — Where is the phone? (same for all three modes)
+   ===================================================================== */
+let mode = 'home', hitSource = null, stream = null, xrLight = null;
+const camM = new THREE.Matrix4(), camPos = new THREE.Vector3(), camQ = new THREE.Quaternion(), _sc = new THREE.Vector3();
+const fwdH = new THREE.Vector3(), rightH = new THREE.Vector3();
+// Holding pose: the thali sits 42 cm in front of the phone's camera, just below the middle of the view
+const HOLD = new THREE.Vector3(0, -0.035, -0.42);
+const calibQ = new THREE.Quaternion();          // turns "phone" into "level thali" (set when you hold still at the start)
+const handQ = new THREE.Quaternion();           // 3D view only: the tilt your mouse gives the thali
+const bodyQ = new THREE.Quaternion();           // 3D view only: where your hands point (your head may look down)
+const holdQ = new THREE.Quaternion(), thaliQ = new THREE.Quaternion(), thaliUp = new THREE.Vector3();
+function levelYawQ(q, out) {
+  const f = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+  if (Math.abs(f.y) > 0.92) f.set(0, 1, 0).applyQuaternion(q).negate();   // looking straight down: use the top of the phone
+  return out.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.atan2(-f.x, -f.z));
+}
+function calibrate() { levelYawQ(holdQ, _q1); calibQ.copy(holdQ).invert().multiply(_q1); }
+const _hm = new THREE.Matrix4(), _hp = new THREE.Vector3();
+function placeHolder() {
+  holdQ.copy(mode === '3d' ? bodyQ : camQ).multiply(handQ);
+  thaliQ.copy(holdQ).multiply(calibQ);
+  _hp.copy(HOLD); _hp.y -= G.drop; _hp.applyQuaternion(mode === '3d' ? bodyQ : camQ).add(camPos);
+  holder.matrix.compose(_hp, thaliQ, _sc.set(1, 1, 1)); holder.matrixWorldNeedsUpdate = true; holder.updateMatrixWorld(true);
+  thaliUp.set(0, 1, 0).applyQuaternion(thaliQ);
+  G.tilt = THREE.MathUtils.radToDeg(Math.acos(clamp(thaliUp.y, -1, 1)));
+}
+
+/* =====================================================================
+   PART 11 — The game
+   ===================================================================== */
+const G = { drop: 0, dropping: false, state: 'idle', a: 0, aH: 0, aV: 0, tilt: 0, health: 1, oil: 1, spillRate: 0, relights: 0, t0: 0, tEnd: 0, stateT: 0,
+  sumH: 0, sumS: 0, nT: 0, maxTilt: 0, gusts: 0, gustsSafe: 0, still: 0, outBy: '', tOut: 0, lightOn: 0, placed: false, setT: 0, failed: false };
+const flameState = { lean: new THREE.Vector3(), leanV: new THREE.Vector3(), size: 0 };
+const gust = { next: 0, phase: 'none', t: 0, dur: 0, env: 0, from: new THREE.Vector3(), flow: new THREE.Vector3(), safe: false, pan: 0, hitSafe: true };
+const D = () => DIFF[diff];
+const spillAt = () => D().spill + (1 - G.oil) * 18;   // less oil → tilt more before it spills
+
+function setState(s) {
+  G.state = s; G.stateT = 0;
+  const act = $('act');
+  act.hidden = true; act.onclick = null;
+  if (s === 'place') {
+    hint('Point at the floor where the mandir should go, at least 3 big steps away from you, and tap.');
+    holder.visible = false;
+  } else if (s === 'hold') {
+    holder.visible = true; diya.visible = true; G.still = 0; bigMsg('थाली सीधी रखें', 'Hold the thali level');
+    hint('Hold your phone in front of you as if carrying the thali, and keep still for a moment.');
+  } else if (s === 'light') {
+    bigMsg('', ''); startMatch();
+    hint(G.relights ? 'Lighting it again…' : 'Lighting the diya…');
+  } else if (s === 'carry') {
+    if (!G.t0) { G.t0 = simT; bigMsg('चलो!', 'Go!', 1.2); }
+    hint(mode === 'camera' ? `Walk slowly, about ${D().steps} steps. Keep it level and steady.` : 'Walk slowly to the mandir. Keep the thali level and your steps smooth.');
+    scheduleGust(true);
+  } else if (s === 'out') {
+    G.tOut = 0; endGust();
+    const by = { jerk: ['झटका!', 'Too jerky! It went out'], wind: ['हवा ने बुझा दिया', 'The wind blew it out'], weak: ['बुझ गया', 'The flame went out'] }[G.outBy] || ['बुझ गया', 'It went out'];
+    bigMsg(by[0], by[1], 1.8);
+    hint('Strike a match to light it again. Each re-light costs you a few points.');
+    act.innerHTML = '<span class="dv">माचिस</span>Strike a match'; act.hidden = false;
+    act.onclick = () => { G.relights++; setState('light'); };
+  } else if (s === 'arrived') {
+    hint('You made it! Set the diya down in the middle of the chowki.');
+    act.innerHTML = '<span class="dv">रखो</span>Set it down'; act.hidden = false; act.onclick = () => setState('set');
+  } else if (s === 'set') {
+    G.tEnd = simT; endGust(); hint(''); startSet();
+  } else if (s === 'done') {
+    act.innerHTML = '<span class="dv">स्कोर</span>See your score'; act.hidden = false; act.onclick = () => finish(true);
+    hint('शुभ! All the diyas are lit.');
+  } else if (s === 'fail') {
+    G.tEnd = simT; G.failed = true; endGust();
+    bigMsg('तेल ख़त्म', 'Out of oil', 2.5);
+    hint('Too much oil spilled. Keep the thali level: watch the green bubble.');
+    act.innerHTML = '<span class="dv">स्कोर</span>See your score'; act.hidden = false; act.onclick = () => finish(false);
+  }
+}
+
+/* ---------- Wind: a gust warns you (petals + rising sound), then blows ---------- */
+function scheduleGust(first) {
+  const r = D().gust; if (!r) { gust.next = Infinity; return; }
+  gust.next = simT + (first ? rand(5, 8) : rand(r[0], r[1]));
+}
+function startGust() {
+  gust.phase = 'warn'; gust.t = 0; gust.dur = rand(2.4, 3.6); gust.hitSafe = true; G.gusts++;
+  // comes from your front or a side, never from behind (you'd already be shielded)
+  const rel = [-1.6, -0.8, 0, 0.8, 1.6][Math.random() * 5 | 0] + rand(-0.25, 0.25);
+  gust.from.copy(fwdH).applyAxisAngle(new THREE.Vector3(0, 1, 0), rel).normalize();
+  gust.flow.copy(gust.from).negate();
+  PET.forEach((p) => { p.live = false; });
+  petalMesh.visible = true;
+}
+function endGust() { gust.phase = 'none'; gust.env = 0; $('wind').classList.remove('on'); petalMesh.visible = false; }
+function updateGust(dt) {
+  if (gust.phase === 'none') { if (simT > gust.next && (G.state === 'carry' || G.state === 'arrived')) startGust(); return; }
+  gust.t += dt;
+  const warn = 1.3;
+  if (gust.phase === 'warn') { gust.env = 0.25 * (gust.t / warn); if (gust.t > warn) { gust.phase = 'blow'; gust.t = 0; } }
+  else if (gust.phase === 'blow') {
+    const k = gust.t / gust.dur; gust.env = Math.min(1, gust.t / 0.4) * (k > 0.75 ? (1 - k) / 0.25 : 1) * (0.85 + 0.15 * Math.sin(gust.t * 9));
+    if (!gust.safe) gust.hitSafe = false;
+    if (k >= 1) { if (gust.hitSafe) G.gustsSafe++; endGust(); scheduleGust(false); return; }
+  }
+  gust.safe = fwdH.dot(gust.flow) > 0.34;   // your back is to the wind
+  gust.pan = rightH.dot(gust.from);
+  // HUD: arrow shows which way the wind blows, seen from above (up = where you face)
+  const rel = Math.atan2(gust.flow.dot(rightH), gust.flow.dot(fwdH));
+  const w = $('wind'); w.classList.add('on'); w.classList.toggle('safe', gust.safe);
+  w.querySelector('svg').style.transform = `rotate(${THREE.MathUtils.radToDeg(rel).toFixed(0)}deg)`;
+  $('wind-dv').textContent = gust.safe ? 'ढका है' : 'हवा! पीठ करें';
+  $('wind-en').textContent = gust.safe ? 'Shielded: your back is to the wind' : 'Wind! Turn your back to it';
+  // petals blow past you
+  for (const p of PET) {
+    if (!p.live || p.p.distanceTo(camPos) > 2.6) {
+      if (gust.phase === 'none' || Math.random() > 0.3) continue;
+      const side = new THREE.Vector3(-gust.flow.z, 0, gust.flow.x);
+      p.p.copy(camPos).addScaledVector(gust.from, rand(1.4, 2.2)).addScaledVector(side, rand(-1.2, 1.2)); p.p.y += rand(-0.7, 0.4);
+      p.v.copy(gust.flow).multiplyScalar(rand(2.2, 3.6)); p.live = true;
+    }
+    p.v.y += (Math.sin(simT * 3 + p.s * 900) * 0.6 - 0.25) * dt;
+    p.p.addScaledVector(p.v, dt * (0.4 + gust.env));
+    p.r.x += p.spin * dt; p.r.y += p.spin * 0.6 * dt;
+  }
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion();
+  PET.forEach((p, i) => { m.compose(p.p, q.setFromEuler(p.r), _sc.set(p.live ? p.s : 0, p.live ? p.s * 0.7 : 0, 1)); petalMesh.setMatrixAt(i, m); });
+  petalMesh.instanceMatrix.needsUpdate = true;
+}
+
+/* ---------- The physics of the flame and the oil, every frame ---------- */
+const _lt = new THREE.Vector3(), _w = new THREE.Vector3(), _qd = new THREE.Quaternion();
+function updateFlame(dt, t) {
+  const d = D(), carrying = G.state === 'carry' || G.state === 'arrived';
+  // 1) damage and recovery
+  if (carrying && G.lightOn >= 1) {
+    if (G.a > d.blow) { G.outBy = 'jerk'; blowOut(); }
+    else {
+      if (G.a > d.dmg) G.health -= (G.a - d.dmg) * 0.16 * dt;
+      else if (G.a < d.dmg * 0.6 && !(gust.phase === 'blow' && !gust.safe)) G.health += 0.1 * dt;
+      if (gust.phase === 'blow') G.health -= (gust.safe ? 0.04 : d.gustHit) * gust.env * dt;
+      G.health = clamp(G.health, 0, 1);
+      if (G.health <= 0) { G.outBy = gust.phase === 'blow' && !gust.safe ? 'wind' : 'weak'; blowOut(); }
+    }
+    // 2) oil: burns slowly; spills over the low side when tilted past the limit
+    const over = G.tilt - spillAt();
+    G.spillRate = over > 0 ? over * 0.006 : 0;
+    if (G.aV > d.dmg * 1.6) G.spillRate += (G.aV - d.dmg * 1.6) * 0.004;   // a bump up or down sloshes some out
+    G.oil = Math.max(0, G.oil - (0.0025 + G.spillRate) * dt);
+    if (G.spillRate > 0 && Math.random() < G.spillRate * 40 * dt * 10) {
+      _w.set(thaliUp.x, 0, thaliUp.z); if (_w.lengthSq() < 1e-6) _w.set(1, 0, 0); _w.normalize();
+      _t1.copy(diya.getWorldPosition(new THREE.Vector3())).addScaledVector(_w, 0.05); _t1.y += 0.03;
+      drip(_t1, velF);
+    }
+    if (G.oil <= 0) { G.outBy = 'oil'; blowOut(); }
+    // score: how steady were you?
+    G.sumH += G.health * dt; G.sumS += (1 - clamp(G.a / d.dmg, 0, 1)) * dt; G.nT += dt; G.maxTilt = Math.max(G.maxTilt, G.tilt);
+  } else G.spillRate = 0;
+  // 3) the flame leans opposite to your acceleration, back from your speed, and away from the wind (a springy bend)
+  _lt.set(-aF.x, -Math.max(0, aF.y) * 0.3, -aF.z).multiplyScalar(0.0045);
+  _lt.addScaledVector(velF, -0.012); _lt.y = Math.min(0, _lt.y);
+  if (gust.env > 0) _lt.addScaledVector(gust.flow, gust.env * (gust.safe ? 0.004 : 0.022));
+  if (_lt.length() > 0.03) _lt.setLength(0.03);
+  const nSub = Math.ceil(dt / 0.008), h = dt / nSub;   // small steps keep the spring stable even on a slow frame
+  for (let k = 0; k < nSub; k++) {
+    _t1.subVectors(_lt, flameState.lean).multiplyScalar(170).addScaledVector(flameState.leanV, -14);
+    flameState.leanV.addScaledVector(_t1, h); flameState.lean.addScaledVector(flameState.leanV, h);
+  }
+  // 4) how big and bright is it?
+  const lit = G.state !== 'out' && G.state !== 'fail' && G.state !== 'hold' && G.state !== 'place' && G.lightOn > 0;
+  const oilK = Math.min(1, G.oil / 0.12);
+  let size = lit ? G.lightOn * oilK * (0.55 + 0.45 * G.health) : 0;
+  if (lit && G.health < 0.3) size *= 0.82 + 0.18 * Math.sin(t * 31) * Math.sin(t * 17);   // sputtering
+  flameState.size = size;
+  const fl = flick(t, 7) * (1 + 0.15 * gust.env);
+  const u = flame.material.uniforms;
+  u.uTime.value = t; u.uBright.value = size * fl; u.uH.value = 0.042 * (0.6 + 0.4 * size); u.uW.value = 0.017 * (0.75 + 0.25 * size);
+  u.uLean.value.copy(flameState.lean); u.uFlick.value = 1 + Math.min(2.5, flameState.leanV.length() * 25 + gust.env * 1.5);
+  // glow: strong and steady when calm; it flickers harder and dims when the flame bends or the wind hits it
+  const shake = Math.min(1, flameState.leanV.length() * 18 + flameState.lean.length() * 25);
+  const windDim = gust.env * (gust.safe ? 0.12 : 0.45);
+  const wobble = 1 + (shake * 0.35 + gust.env * 0.3) * Math.sin(t * 27 + Math.sin(t * 11) * 2) * Math.sin(t * 13.3);
+  const glow = size * fl * (1 - 0.25 * shake - windDim) * wobble;
+  halo.material.opacity = Math.min(1, 0.95 * glow); halo.scale.setScalar(0.18 + 0.1 * glow);
+  core.material.opacity = Math.min(1, 1.1 * glow); core.scale.setScalar(0.035 + 0.025 * glow);
+  thaliPool.material.opacity = 0.65 * glow;
+  flameLight.position.set(DIYA_HOME.x + 0.03, 0.06, DIYA_HOME.z);
+  flameLight.intensity = 0.4 * glow + G.matchGlow;
+  // 5) after it goes out: a glowing ember, then a curl of smoke
+  if (G.state === 'out' || G.state === 'fail') {
+    G.tOut += dt;
+    emberMat.emissiveIntensity = Math.max(0, 1 - G.tOut / 3.5) * (0.6 + 0.4 * Math.sin(t * 12));
+    if (G.tOut < 3.2 && Math.random() < 0.7) wisp(ember.getWorldPosition(_t1));
+  } else emberMat.emissiveIntensity = lit ? 0.9 : 0;
+  // 6) the oil surface stays flat with the ground while the diya tilts (and sinks as oil runs out)
+  diya.getWorldQuaternion(_qd); oil.quaternion.copy(_qd).invert();
+  const y = 0.011 + 0.0145 * Math.min(1, G.oil), r = 0.018 + (y - 0.011) / 0.0185 * 0.023;
+  oil.position.set(0, y, 0); oil.scale.setScalar(r * (1 - Math.min(0.35, G.tilt / 70)));
+  oil.visible = G.oil > 0.01;
+}
+function blowOut() {
+  if (G.outBy === 'oil') { flameState.size = 0; sndBlowOut(); setState('fail'); return; }
+  sndBlowOut(); setState('out');
+}
+
+/* ---------- The matchstick animation (lights the diya) ---------- */
+G.matchGlow = 0;
+let matchT = -1;
+function startMatch() { matchT = 0; match.visible = true; matchFlame.material.uniforms.uBright.value = 0; G.lightOn = 0; }
+function updateMatch(dt, t) {
+  if (matchT < 0) { G.matchGlow = 0; return; }
+  const tipLocal = WICK_TIP.clone().applyMatrix4(diya.matrix);   // the wick, in thali space
+  const start = new THREE.Vector3(0.13, 0.04, 0.09), strikeEnd = new THREE.Vector3(0.1, 0.05, 0.075);
+  const prevT = matchT; matchT += dt;
+  if (prevT < 0.05 && matchT >= 0.05) sndStrike();
+  let p, lit = 0;
+  if (matchT < 0.25) p = start.clone();
+  else if (matchT < 0.4) { p = start.clone().lerp(strikeEnd, (matchT - 0.25) / 0.15); }
+  else if (matchT < 1.2) { const k = (matchT - 0.4) / 0.8, e = k * k * (3 - 2 * k); p = strikeEnd.clone().lerp(tipLocal.clone().add(new THREE.Vector3(0.006, 0.006, 0.01)), e); }
+  else if (matchT < 1.6) p = tipLocal.clone().add(new THREE.Vector3(0.006, 0.006, 0.01));
+  else { const k = Math.min(1, (matchT - 1.6) / 0.6); p = tipLocal.clone().add(new THREE.Vector3(0.006, 0.006, 0.01)).lerp(start, k * k); }
+  if (matchT > 0.36) lit = Math.min(1, (matchT - 0.36) / 0.12) * (matchT > 2.0 ? Math.max(0, 1 - (matchT - 2.0) / 0.2) : 1);
+  match.position.copy(p); match.rotation.set(0, -0.6, 0.35);
+  matchFlame.material.uniforms.uTime.value = t; matchFlame.material.uniforms.uBright.value = lit * flick(t, 3) * (matchT < 0.5 ? 1.6 : 1);
+  matchGlow.material.opacity = 0.5 * lit; G.matchGlow = 0.22 * lit + (matchT > 0.36 && matchT < 0.5 ? 0.3 : 0);
+  if (matchT >= 1.3 && G.lightOn === 0) { G.lightOn = 0.001; sndCatch(); G.health = G.relights ? Math.max(G.health, 0.7) : 1; }
+  if (G.lightOn > 0) G.lightOn = Math.min(1, G.lightOn + dt * 1.6);
+  if (matchT > 2.2) { matchT = -1; match.visible = false; G.matchGlow = 0; if (G.state === 'light') setState('carry'); }
+}
+
+/* ---------- Arriving: the diya floats onto the chowki and lights the others ---------- */
+let setFrom = null;
+function startSet() {
+  scene.attach(diya);   // keep where it is in the room, but stop following the phone
+  setFrom = { p: diya.position.clone(), q: diya.quaternion.clone() };
+  G.setT = 0; flameState.lean.set(0, 0, 0); flameState.leanV.set(0, 0, 0);
+}
+function updateSet(dt, t) {
+  if (G.dropping) { G.drop = Math.min(0.4, G.drop + dt * 0.5); if (G.drop >= 0.4) holder.visible = false; }   // lower the empty thali out of the way
+  if (G.state !== 'set' && G.state !== 'done') return;
+  G.setT += dt;
+  if (G.state === 'set' && setFrom) {
+    const k = Math.min(1, G.setT / 1.4), e = k * k * (3 - 2 * k);
+    const to = slotWorld(); const mid = setFrom.p.clone().lerp(to, 0.5); mid.y = Math.max(setFrom.p.y, to.y) + 0.12;
+    const a = setFrom.p.clone().lerp(mid, e), b = mid.clone().lerp(to, e); diya.position.copy(a.lerp(b, e));
+    const toQ = mandir.quaternion.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2));
+    diya.quaternion.copy(setFrom.q).slerp(toQ, e);
+    if (k >= 1) {
+      setFrom = null; bell(0, 0.3); G.dropping = true;
+      rowLamps.forEach((L, i) => { const order = [1, 2, 0, 3].indexOf(i); setTimeout(() => { L.lit = true; sndCatch(); }, 600 + order * 420); });
+      setTimeout(() => { bell(0, 0.34, 640); bell(0.5, 0.28, 610); bigMsg('जगमग!', 'All lit up', 2.4); setState('done'); }, 600 + 4 * 420 + 300);
+      G.state = 'setting';
+    }
+  }
+}
+function updateMandir(dt, t) {
+  if (!mandir.visible) return;
+  let lit = 0;
+  rowLamps.forEach((L) => {
+    if (L.lit) L.on = Math.min(1, L.on + dt * 1.5);
+    const f = flick(t, L.seed) * L.on; lit += L.on;
+    L.fl.material.uniforms.uTime.value = t; L.fl.material.uniforms.uBright.value = f;
+    L.hl.material.opacity = 0.8 * f; L.pl.material.opacity = 0.5 * f;
+  });
+  const inSlot = G.state === 'set' || G.state === 'setting' || G.state === 'done';
+  mandirLight.intensity = 0.25 * lit * flick(t, 1) + (inSlot ? 0.25 : 0);
+  const dist = Math.hypot(camPos.x - mandir.position.x, camPos.z - mandir.position.z);
+  const far = clamp((dist - 1.0) / 1.5, 0, 1) * (inSlot ? 0 : 1);
+  guideBeam.material.uniforms.uA.value = far * (0.75 + 0.25 * Math.sin(t * 2.4));
+  guideRing.material.opacity = 0.5 * far * (0.6 + 0.4 * Math.sin(t * 2.4));
+  slotRing.visible = !inSlot; slotRing.material.opacity = 0.5 + 0.4 * Math.sin(t * 4);
+}
+function placeMandir(p) {
+  mandir.position.copy(p);
+  mandir.rotation.set(0, Math.atan2(camPos.x - p.x, camPos.z - p.z), 0);   // front faces you
+  mandir.visible = true; G.placed = true;
+  rowLamps.forEach((L) => { L.lit = false; L.on = 0; });
+}
+
+/* ---------- Score ---------- */
+function finish(ok) {
+  const d = D(), T = Math.max(0.01, G.nT);
+  const avgH = G.sumH / T, smooth = G.sumS / T, oilLeft = G.oil / d.oil;
+  let score = ok ? Math.round(100 * (0.35 * avgH + 0.25 * Math.min(1, oilLeft) + 0.4 * smooth) - 12 * G.relights) : 0;
+  score = clamp(score, 0, 100);
+  const stars = !ok ? 0 : score >= 80 ? 3 : score >= 55 ? 2 : 1;
+  $('fin-dv').textContent = ok ? 'दीया पहुँचा!' : 'तेल ख़त्म'; $('fin-en').textContent = ok ? 'Diya delivered' : 'Out of oil';
+  $('fin-stars').innerHTML = '★'.repeat(stars) + '<i>' + '★'.repeat(3 - stars) + '</i>';
+  $('fin-score').textContent = `Score ${score} / 100 · ${({ easy: 'Easy', medium: 'Medium', hard: 'Hard' })[diff]}`;
+  const secs = Math.max(0, (G.tEnd || simT) - G.t0);
+  const rows = [['Time', 'समय', `${Math.floor(secs / 60)}:${String(Math.round(secs % 60)).padStart(2, '0')}`],
+    ['Flame kept bright', 'लौ', `${Math.round(avgH * 100)}%`], ['Oil left', 'तेल', `${Math.round(G.oil * 100)}%`],
+    ['Smoothness', 'स्थिरता', `${Math.round(smooth * 100)}%`], ['Re-lights', 'माचिस', `${G.relights}`],
+    ['Steepest tilt', 'झुकाव', `${Math.round(G.maxTilt)}°`]];
+  if (d.gust) rows.splice(5, 0, ['Gusts shielded', 'हवा', `${G.gustsSafe} / ${G.gusts}`]);
+  $('fin-table').innerHTML = rows.map(([en, dv, v]) => `<tr><td>${en}<span class="dv">${dv}</span></td><td>${v}</td></tr>`).join('');
+  const weakest = !ok ? 'oil' : G.relights > 1 ? 'jerk' : smooth < 0.6 ? 'smooth' : d.gust && G.gustsSafe < G.gusts ? 'wind' : oilLeft < 0.5 ? 'oil' : 'great';
+  $('fin-tip').textContent = { oil: 'Tip: watch the bubble. Keep it inside the green ring and the oil stays in the diya.',
+    jerk: 'Tip: start and stop slowly, and turn your whole body gently. Sudden moves blow the flame out.',
+    smooth: 'Tip: take smaller steps and let your elbows soften each step, like carrying a full glass.',
+    wind: 'Tip: when the petals fly, turn so the wind hits your back. Your body shields the flame.',
+    great: diff === 'hard' ? 'Steady hands! Try it in a longer room.' : 'Steady hands! Try the next level.' }[weakest];
+  backHome(true);
+}
+
+/* =====================================================================
+   PART 12 — HUD
+   ===================================================================== */
+let bigTimer = null;
+function bigMsg(dv, en, secs) {
+  $('big-dv').textContent = dv; $('big-en').textContent = en; $('big').classList.toggle('show', !!(dv || en));
+  clearTimeout(bigTimer); if (secs) bigTimer = setTimeout(() => $('big').classList.remove('show'), secs * 1000);
+}
+function hint(t) { $('hint').textContent = t; }
+const _pv = new THREE.Vector3();
+function updateHUD() {
+  $('f-flame').style.transform = `scaleX(${(G.state === 'out' || G.state === 'fail' ? 0 : G.health * Math.min(1, G.lightOn)).toFixed(3)})`;
+  $('f-oil').style.transform = `scaleX(${G.oil.toFixed(3)})`;
+  $('b-flame').classList.toggle('low', G.health < 0.3); $('b-oil').classList.toggle('low', G.oil < 0.25);
+  // spirit level: the bubble floats to the HIGH side; the ring is where oil starts to spill
+  const lim = spillAt(), R = 15;
+  let bx = -thaliUp.dot(rightH), by = thaliUp.dot(fwdH);
+  const mag = Math.hypot(bx, by), deg = G.tilt;
+  if (mag > 1e-5) { const px = Math.min(26, deg / lim * R); bx = bx / mag * px; by = by / mag * px; } else { bx = by = 0; }
+  $('bubble').style.transform = `translate(${bx.toFixed(1)}px,${by.toFixed(1)}px)`;
+  $('levelbox').classList.toggle('spill', G.spillRate > 0);
+  // distance to the mandir / steps
+  const playing = ['carry', 'out', 'arrived', 'light'].includes(G.state);
+  if (mode === 'camera' && playing && !G.placed) $('dist').innerHTML = `<span class="dv">कदम</span> Steps ${Math.min(stepCount, D().steps)} / ${D().steps}`;
+  else if (G.placed && playing) {
+    const dist = Math.hypot(camPos.x - mandir.position.x, camPos.z - mandir.position.z);
+    $('dist').innerHTML = `<span class="dv">मंदिर</span> Mandir ${dist.toFixed(1)} m`;
+  } else $('dist').innerHTML = '';
+  // arrow at the edge of the screen when the mandir is out of view
+  const arrow = $('arrow');
+  if (G.placed && playing) {
+    const cam = renderer.xr.isPresenting ? renderer.xr.getCamera() : camera;
+    _pv.copy(mandir.position); _pv.y += 0.25; _pv.project(cam);
+    const behind = _pv.z > 1;
+    let x = _pv.x, y = _pv.y; if (behind) { x = -x; y = -y; }
+    if (behind || Math.abs(x) > 0.92 || Math.abs(y) > 0.92) {
+      const s = 0.85 / Math.max(Math.abs(x), Math.abs(y), 1e-3); x *= s; y *= s;
+      arrow.style.display = 'block'; y = Math.max(y, -0.45);   // stay clear of the buttons at the bottom
+      arrow.style.left = ((x * 0.5 + 0.5) * innerWidth) + 'px'; arrow.style.top = ((-y * 0.5 + 0.5) * innerHeight) + 'px';
+      arrow.style.transform = `rotate(${Math.atan2(x, y)}rad)`;
+    } else arrow.style.display = 'none';
+  } else arrow.style.display = 'none';
+  if (showReadout) $('readout').textContent =
+    `move  ${G.a.toFixed(1)} m/s² (hurts > ${D().dmg}, out > ${D().blow})\nside  ${G.aH.toFixed(1)}  up ${G.aV.toFixed(1)}  src ${aSrc}\n` +
+    `tilt  ${G.tilt.toFixed(1)}° (spills > ${spillAt().toFixed(0)}°)\nlau ${(G.health * 100).toFixed(0)}%  oil ${(G.oil * 100).toFixed(0)}%  ${fpsTxt}`;
+}
+let showReadout = false, fpsTxt = '';
+$('stamp').addEventListener('click', () => { showReadout = !showReadout; $('readout').style.display = showReadout ? 'block' : 'none'; });
+$('level').addEventListener('click', () => { if (G.state !== 'place' && G.state !== 'idle') { calibrate(); hint('Levelled. Hold it like this.'); tick(); } });
+
+/* =====================================================================
+   PART 13 — Starting each mode
+   ===================================================================== */
+function resetGame() {
+  holder.attach(diya); diya.position.copy(DIYA_HOME); diya.quaternion.copy(DIYA_HOME_Q); diya.scale.setScalar(1.15); diya.visible = true;
+  Object.assign(G, { health: 1, oil: D().oil, relights: 0, t0: 0, tEnd: 0, sumH: 0, sumS: 0, nT: 0, maxTilt: 0, gusts: 0, gustsSafe: 0,
+    lightOn: 0, placed: false, failed: false, spillRate: 0, outBy: '', tOut: 0, drop: 0, dropping: false });
+  flameState.lean.set(0, 0, 0); flameState.leanV.set(0, 0, 0); matchT = -1; match.visible = false;
+  stepCount = 0; mandir.visible = false; endGust(); gust.next = Infinity; calibQ.identity(); handQ.identity();
+  for (let i = 0; i < SM.max; i++) SM.life[i] = 0; for (let i = 0; i < DR.max; i++) DR.life[i] = 0;
+  bigMsg('', '');
+}
+function enterViewing() {
+  setTimeout(drawTorans, 0);
+  $('home').style.display = 'none'; $('hud').style.display = 'block';
+  document.querySelector('.card').classList.remove('after');
+}
+let placingTimer = null, switchToCamera = false;
+async function startAR() {
+  try {
+    $('hud').style.display = 'block';
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay', 'light-estimation'], domOverlay: { root: $('hud') } });
+    renderer.xr.setReferenceSpaceType('local');
+    await renderer.xr.setSession(session);
+    mode = 'ar'; resetGame(); enterViewing();
+    // real room lighting, if the phone can estimate it
+    try {
+      xrLight = new XREstimatedLight(renderer);
+      xrLight.addEventListener('estimationstart', () => { scene.add(xrLight); hemi.visible = key.visible = false; if (xrLight.environment) scene.environment = xrLight.environment; });
+      xrLight.addEventListener('estimationend', () => { scene.remove(xrLight); hemi.visible = key.visible = true; scene.environment = roomEnv; });
+    } catch (e) { xrLight = null; }
+    const viewerSpace = await session.requestReferenceSpace('viewer');
+    hitSource = await session.requestHitTestSource({ space: viewerSpace });
+    setState('place');
+    placingTimer = setTimeout(() => { if (!reticle.visible) { hint("Can't find the floor yet. Turn on a light, point at a rug or a textured floor and move slowly."); $('fallback').hidden = false; } }, 9000);
+    session.addEventListener('select', () => {
+      if (G.state !== 'place' || !reticle.visible) return;
+      const p = new THREE.Vector3().setFromMatrixPosition(reticle.matrix);
+      const d = Math.hypot(p.x - camPos.x, p.z - camPos.z);
+      if (d < 1.6) { hint(`That's only ${d.toFixed(1)} m away. Point further across the room (at least 2 m) and tap.`); return; }
+      placeMandir(p); reticle.visible = false; ensureAudio(); tick(); setState('hold');
+    });
+    session.addEventListener('end', () => {
+      hitSource = null; reticle.visible = false; clearTimeout(placingTimer);
+      if (xrLight) { scene.remove(xrLight); hemi.visible = key.visible = true; scene.environment = roomEnv; xrLight = null; }
+      if (G.state !== 'idle' && !G.finishing) backHome(false);
+      if (switchToCamera) { switchToCamera = false; setTimeout(startCamera, 300); }
+    });
+  } catch (e) { $('hud').style.display = 'none'; $('err').textContent = 'Could not start AR: ' + e.message; }
+}
+['topbar', 'act', 'fallback', 'stamp', 'hint'].forEach((id) => $(id).addEventListener('beforexrselect', (e) => e.preventDefault()));
+$('fallback').addEventListener('click', () => { switchToCamera = true; const s = renderer.xr.getSession(); if (s) s.end(); });
+
+/* Camera view (iPhone and others): the phone's gyroscope turns the 3D camera.
+   No position tracking, so we count your steps instead of measuring metres. */
+const EYE = 1.35;
+let orient = null, alpha0 = null;
+const q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)), qTmp = new THREE.Quaternion(), eTmp = new THREE.Euler();
+function onOrient(e) { if (e.alpha == null) return; if (alpha0 === null) alpha0 = e.alpha; orient = e; }
+function applyOrientation() {
+  if (!orient) return;
+  const a = THREE.MathUtils.degToRad(orient.alpha - alpha0), b = THREE.MathUtils.degToRad(orient.beta), g = THREE.MathUtils.degToRad(orient.gamma);
+  const so = THREE.MathUtils.degToRad((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+  eTmp.set(b, a, -g, 'YXZ'); camera.quaternion.setFromEuler(eTmp); camera.quaternion.multiply(q1);
+  camera.quaternion.multiply(qTmp.setFromAxisAngle(zAxis, -so));
+}
+async function startCamera() {
+  try {
+    if (S.orientAsk) await S.orientAsk;
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    const v = $('cam'); v.srcObject = stream; v.style.display = 'block'; await v.play();
+    mode = 'camera'; resetGame(); enterViewing(); floorY = 0;
+    camera.position.set(0, EYE, 0); camera.quaternion.set(0, 0, 0, 1);
+    alpha0 = null; orient = null;
+    window.addEventListener('deviceorientation', onOrient);
+    setState('hold');
+  } catch (e) { $('err').textContent = 'Camera not available: ' + e.message; stopCamera(); }
+}
+function stopCamera() {
+  window.removeEventListener('deviceorientation', onOrient);
+  if (stream) stream.getTracks().forEach((t) => t.stop()); stream = null; $('cam').style.display = 'none';
+}
+
+/* 3D view (laptop): walk with W/S or arrows, turn with A/D, tilt the thali with the mouse */
+const keys = {}; let yaw3d = 0, pitch3d = -0.12; const _m3 = new THREE.Matrix4(), _q3 = new THREE.Quaternion(); const vel3d = new THREE.Vector3(); const mouse = new THREE.Vector2(), mouse0 = new THREE.Vector2();
+addEventListener('keydown', (e) => { keys[e.code] = true; if (e.code === 'Space' && mode === '3d') { kick = 1; e.preventDefault(); } });
+addEventListener('keyup', (e) => { keys[e.code] = false; });
+addEventListener('pointermove', (e) => { mouse.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); });
+function start3D() {
+  scene.fog = new THREE.FogExp2(HORIZON, 0.05);
+  mode = '3d'; resetGame(); enterViewing(); floorY = 0; terrace.visible = true; skyDome.visible = true;
+  renderer.setClearColor(HORIZON, 1);
+  yaw3d = 0; pitch3d = -0.12; vel3d.set(0, 0, 0); bodyQ.setFromEuler(new THREE.Euler(-0.12, 0, 0, 'YXZ')); camera.position.set(0, 1.5, 0); camera.rotation.set(-0.12, 0, 0);
+  camPos.copy(camera.position);
+  placeMandir(new THREE.Vector3(0, 0, -7));
+  setState('hold');
+}
+function update3D(dt) {
+  const turn = (keys.KeyA || keys.ArrowLeft ? 1 : 0) - (keys.KeyD || keys.ArrowRight ? 1 : 0);
+  const go = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
+  if (['set', 'setting', 'done'].includes(G.state)) {   // step back a little and look at the lit chowki
+    vel3d.set(0, 0, 0);
+    const eye = mandir.localToWorld(new THREE.Vector3(0, 1.05, 1.3)), look = mandir.localToWorld(new THREE.Vector3(0, 0.22, 0));
+    camera.position.lerp(eye, Math.min(1, dt * 1.5));
+    _m3.lookAt(camera.position, look, camera.up); _q3.setFromRotationMatrix(_m3); camera.quaternion.slerp(_q3, Math.min(1, dt * 2));
+    return;
+  }
+  yaw3d += turn * 1.2 * dt;
+  const playing = G.state === 'carry' || G.state === 'arrived' || G.state === 'out';
+  const want = new THREE.Vector3(-Math.sin(yaw3d), 0, -Math.cos(yaw3d)).multiplyScalar(playing ? go * (keys.ShiftLeft ? 1.6 : 0.85) : 0);
+  const maxA = keys.ShiftLeft ? 6 : 1.8;   // how quickly you can change speed (m/s²)
+  const dv = want.sub(vel3d); if (dv.length() > maxA * dt) dv.setLength(maxA * dt); vel3d.add(dv);
+  camera.position.addScaledVector(vel3d, dt);
+  camera.position.y = 1.5 + Math.abs(Math.sin(camera.position.length() * 4.2)) * 0.012 * Math.min(1, vel3d.length());   // a little step bob
+  bodyQ.setFromEuler(new THREE.Euler(-0.12, yaw3d, 0, 'YXZ'));
+  // look down at the chowki as you get close to it
+  const md = mandir.visible ? Math.hypot(camera.position.x - mandir.position.x, camera.position.z - mandir.position.z) : 9;
+  pitch3d += ((md < 2.6 ? -0.12 - 0.2 * (1 - md / 2.6) : -0.12) - pitch3d) * Math.min(1, dt * 3);
+  camera.rotation.set(pitch3d, yaw3d, 0);
+  // the mouse tilts your hands (not your head)
+  if (G.state === 'hold') { mouse0.copy(mouse); handQ.identity(); return; }
+  handQ.setFromEuler(new THREE.Euler(clamp(-(mouse.y - mouse0.y), -1, 1) * 0.35, 0, clamp(-(mouse.x - mouse0.x), -1, 1) * 0.4, 'XYZ'));
+}
+
+function backHome(showFinale) {
+  G.finishing = true;
+  const s = renderer.xr.getSession(); if (s) s.end();
+  G.finishing = false;
+  stopCamera(); endGust(); holder.visible = false; mandir.visible = false; reticle.visible = false;
+  terrace.visible = false; skyDome.visible = false; scene.fog = null; renderer.setClearColor(0x000000, 0);
+  mode = 'home'; G.state = 'idle'; $('hud').style.display = 'none'; $('home').style.display = 'flex'; $('fallback').hidden = true;
+  $('act').hidden = true; bigMsg('', '');
+  document.querySelector('.card').classList.toggle('after', !!showFinale);
+  setTimeout(drawTorans, 0);
+  $('home').scrollTop = 0;
+}
+$('exit').addEventListener('click', () => backHome(false));
+$('again').addEventListener('click', () => document.querySelector('.card').classList.remove('after'));
+$('b-ar').addEventListener('click', () => { askMotion(); ensureAudio(); $('err').textContent = ''; startAR(); });
+$('b-cam').addEventListener('click', () => { askMotion(); ensureAudio(); $('err').textContent = ''; startCamera(); });
+$('b-3d').addEventListener('click', () => { ensureAudio(); $('err').textContent = ''; start3D();
+  hint('W / ↑ walk · A / D turn · move the mouse gently to tilt the thali · Shift = hurry · Space = stumble'); });
+
+/* ---------- QR code for computers ---------- */
+function makeQR() {
+  if (typeof qrcode === 'undefined') return;
+  const qr = qrcode(0, 'M'); qr.addData(location.href.split('?')[0]); qr.make();
+  const n = qr.getModuleCount(), cell = 6, quiet = 4, c = $('qr'); c.width = c.height = (n + quiet * 2) * cell;
+  const g = c.getContext('2d'); g.fillStyle = '#ecebff'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#05060A';
+  for (let r = 0; r < n; r++) for (let q = 0; q < n; q++) if (qr.isDark(r, q)) g.fillRect((q + quiet) * cell, (r + quiet) * cell, cell, cell);
+  $('qrbox').hidden = false;
+}
+if (matchMedia('(pointer: fine)').matches && !('ontouchstart' in window)) makeQR();
+
+/* =====================================================================
+   PART 14 — Every frame
+   ===================================================================== */
+function step(dt, t) {
+  senseMotion(dt);
+  G.stateT += dt;
+  fwdH.set(0, 0, -1).applyQuaternion(camQ); fwdH.y = 0; if (fwdH.lengthSq() < 1e-6) fwdH.set(0, 0, -1); fwdH.normalize();
+  rightH.set(-fwdH.z, 0, fwdH.x);
+  if (G.state === 'hold') {   // keep it level until you've held still for a moment
+    holdQ.copy(mode === '3d' ? bodyQ : camQ).multiply(handQ); calibrate();
+    const ready = mode !== 'camera' || orient;
+    G.still = ready && G.a < 0.9 ? G.still + dt : 0;
+    if (G.still > 1.1) { tick(); setState('light'); }
+  }
+  placeHolder();
+  if (G.state === 'carry' || G.state === 'arrived') {
+    if (mode === 'camera' && !G.placed && G.state === 'carry' && G.stateT > 25 && stepCount < 3 && $('act').hidden) {   // steps not counting on this phone?
+      hint("Steps not counting on this phone? When you've walked across the room, tap below.");
+      const act = $('act'); act.innerHTML = '<span class="dv">पहुँच गए</span>I\'m there'; act.hidden = false;
+      act.onclick = () => { stepCount = D().steps; act.hidden = true; };
+    }
+    if (mode === 'camera' && !G.placed && stepCount >= D().steps) {   // camera view: the mandir appears just ahead
+      const p = camPos.clone().addScaledVector(fwdH, 1.25); p.y = floorY; placeMandir(p); bell(0, 0.2);
+    }
+    if (G.placed && G.state === 'carry') {
+      const dist = Math.hypot(camPos.x - mandir.position.x, camPos.z - mandir.position.z);
+      if (dist < (mode === 'camera' ? 3 : 1.05)) setState('arrived');
+    } else if (G.state === 'arrived' && mode !== 'camera') {
+      const dist = Math.hypot(camPos.x - mandir.position.x, camPos.z - mandir.position.z);
+      if (dist > 1.45) { setState('carry'); }
+    }
+  }
+  updateGust(dt);
+  updateMatch(dt, t);
+  if (!['set', 'setting', 'done'].includes(G.state)) updateFlame(dt, t);
+  else {   // the diya now sits in the mandir: calm flame
+    const u = flame.material.uniforms; u.uTime.value = t; u.uLean.value.set(0, 0, 0); u.uFlick.value = 1;
+    u.uBright.value = flick(t, 7) * Math.min(1, G.oil / 0.12 + 0.3); halo.material.opacity = 0.8 * u.uBright.value; core.material.opacity = u.uBright.value; thaliPool.material.opacity = 0;
+    flameLight.intensity = 0; emberMat.emissiveIntensity = 0.9;
+  }
+  updateSet(dt, t);
+  updateMandir(dt, t);
+  updateSmoke(dt, t); updateDrips(dt);
+}
+
+const clock = new THREE.Clock();
+const DTMAX = +new URLSearchParams(location.search).get('dtmax') || 0.05;   // (testing only)
+const _size = new THREE.Vector2(), _rh = new THREE.Vector3();
+let simT = 0, fpsAcc = 0, fpsN = 0;
+renderer.setAnimationLoop((time, frame) => {
+  const dt = Math.min(clock.getDelta(), DTMAX);
+  if (mode === 'home') return;
+  simT += dt; const t = simT;
+  if (frame && mode === 'ar') {
+    const ref = renderer.xr.getReferenceSpace(), pose = frame.getViewerPose(ref);
+    if (pose) camM.fromArray(pose.transform.matrix);
+    if (hitSource && G.state === 'place') {
+      const res = frame.getHitTestResults(hitSource);
+      if (res.length) {
+        const hp = res[0].getPose(ref);
+        reticle.visible = true; reticle.matrix.fromArray(hp.transform.matrix);
+        _rh.setFromMatrixPosition(reticle.matrix); floorY = _rh.y;
+        if (placingTimer) { clearTimeout(placingTimer); placingTimer = null; $('fallback').hidden = true; hint('Point at the floor where the mandir should go, at least 3 big steps away from you, and tap.'); }
+      } else reticle.visible = false;
+    } else reticle.visible = false;
+    const base = renderer.xr.getBaseLayer && renderer.xr.getBaseLayer();
+    uH.value = base ? base.framebufferHeight : innerHeight * devicePixelRatio;
+  } else {
+    if (mode === 'camera') applyOrientation();
+    if (mode === '3d') update3D(dt);
+    camera.updateMatrixWorld(); camM.copy(camera.matrixWorld);
+    renderer.getDrawingBufferSize(_size); uH.value = _size.y;
+  }
+  camM.decompose(camPos, camQ, _sc);
+  step(dt, t);
+  updateHUD();
+  audioUpdate();
+  fpsAcc += dt; fpsN++;
+  if (fpsAcc > 0.5) { fpsTxt = `${(fpsN / fpsAcc).toFixed(0)} fps`; fpsAcc = 0; fpsN = 0; }
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('resize', () => {
+  if (renderer.xr.isPresenting) return;
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+});
+
+// For testing on a computer: DC.start3D(), DC.jerk(), DC.state …
+window.DC = { get steps() { return stepCount; }, G, flameState, aF, aPose, velF, start3D, setState, get state() { return G.state; }, jerk: () => { kick = 1; }, handQ, keys, mouse, camera, mandir, holder, gust, startGust,
+  finish, setDiff: (d) => { diff = d; } };
+</script>
+</body>
+</html>
