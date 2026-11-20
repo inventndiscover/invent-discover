@@ -381,6 +381,35 @@
   "desc": "A LegalTech gathering for founders, IP professionals, corporate leaders and lawyers.",
   "firstSeen": "2026-09-28"
  },
+ "deeptech-builders-bombay": {
+  "id": "deeptech-builders-bombay",
+  "title": "DeepTech Builders of Bombay",
+  "cat": "Tech",
+  "tags": [
+   "DeepTech",
+   "Builders",
+   "Meetup"
+  ],
+  "area": "Versova, Mumbai",
+  "venue": "Love & Latte, Versova",
+  "start": "2026-11-29",
+  "end": null,
+  "timeNote": "AllEvents lists 2:00-5:00 pm but labels it UTC; local time unconfirmed",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Price not shown",
+  "aud": [
+   "Founder",
+   "Developer"
+  ],
+  "src": "AllEvents",
+  "also": "Luma",
+  "url": "https://allevents.in/mumbai/deeptech-builders-of-bombay/4700031086697943",
+  "org": "DeepTech Builders of Bombay",
+  "access": "open",
+  "desc": "A casual afternoon meetup for people building deep-tech products and companies in Mumbai.",
+  "firstSeen": "2026-11-21"
+ },
  "devcon-8": {
   "id": "devcon-8",
   "title": "Devcon 8 India",
@@ -1363,6 +1392,36 @@
   "desc": "A relaxed Saturday evening co-working session where AI builders and beginners work on their laptops and swap ideas.",
   "firstSeen": "2026-11-05"
  },
+ "mumbai-community-year-end-meetup": {
+  "id": "mumbai-community-year-end-meetup",
+  "title": "Mumbai Community Year End Meet-Up",
+  "cat": "Tech",
+  "tags": [
+   "Community",
+   "Meetup",
+   "Networking"
+  ],
+  "area": "Nariman Point, Mumbai",
+  "venue": "Yashwantrao Chavan Centre",
+  "start": "2026-12-05",
+  "end": null,
+  "timeNote": "AllEvents lists 10:00 am-3:30 pm but labels it UTC; local time unconfirmed",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Price not shown",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Creator"
+  ],
+  "src": "AllEvents",
+  "also": "Luma",
+  "url": "https://allevents.in/mumbai/mumbai-community-year-end-meet-up-in-person/4700031086699150",
+  "org": "Mumbai Community",
+  "access": "open",
+  "desc": "A year-end in-person gathering of Mumbai's tech and builder communities.",
+  "firstSeen": "2026-11-21"
+ },
  "mumbai-meets-ai-06": {
   "id": "mumbai-meets-ai-06",
   "title": "Mumbai Meets AI 06: AI × Tech Builders Meetup",
@@ -1854,6 +1913,33 @@
   "access": "open",
   "desc": "A two-day Web3 conference covering institutional crypto adoption, tokenised assets, DeFi and the role of AI in Web3.",
   "firstSeen": "2026-10-16"
+ },
+ "ux-investigation-lab-paytm": {
+  "id": "ux-investigation-lab-paytm",
+  "title": "UX Investigation Lab (Paytm office)",
+  "cat": "UX",
+  "tags": [
+   "UX",
+   "Research",
+   "Workshop"
+  ],
+  "area": "Mumbai",
+  "venue": "Paytm office, Mumbai",
+  "start": "2026-12-05T11:00",
+  "end": "16:00",
+  "fmt": "Offline",
+  "price": 415,
+  "priceNote": "Tickets ₹415–₹599 via AllEvents",
+  "aud": [
+   "Designer",
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/ux-investigation-lab-tickets/80002851941492",
+  "org": "UX Investigation Lab",
+  "access": "open",
+  "desc": "A paid, hands-on afternoon session on investigating and researching user experience problems, hosted at the Paytm office.",
+  "firstSeen": "2026-11-21"
  },
  "we-founders-collab-oct10": {
   "id": "we-founders-collab-oct10",

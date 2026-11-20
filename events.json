@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-19T22:29:06+05:30",
+ "REFRESHED": "2026-11-20T22:29:26+05:30",
  "EVENTS_RAW": [
   {
    "id": "swift-bharat-2026",
@@ -250,6 +250,34 @@
    "desc": "An informal roundtable meetup for early-stage founders and builders, with no pitches or investors, ahead of DevFest Mumbai."
   },
   {
+   "id": "deeptech-builders-bombay",
+   "title": "DeepTech Builders of Bombay",
+   "cat": "Tech",
+   "tags": [
+    "DeepTech",
+    "Builders",
+    "Meetup"
+   ],
+   "area": "Versova, Mumbai",
+   "venue": "Love & Latte, Versova",
+   "start": "2026-11-29",
+   "end": null,
+   "timeNote": "AllEvents lists 2:00-5:00 pm but labels it UTC; local time unconfirmed",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown",
+   "aud": [
+    "Founder",
+    "Developer"
+   ],
+   "src": "AllEvents",
+   "also": "Luma",
+   "url": "https://allevents.in/mumbai/deeptech-builders-of-bombay/4700031086697943",
+   "org": "DeepTech Builders of Bombay",
+   "access": "open",
+   "desc": "A casual afternoon meetup for people building deep-tech products and companies in Mumbai."
+  },
+  {
    "id": "stackconnect-mumbai-2026",
    "title": "StackConnect World Tour: Mumbai",
    "cat": "Tech",
@@ -305,6 +333,61 @@
    "access": "open",
    "desc": "A one-day community developer conference with talks and workshops on Android, Flutter, Firebase, Google Cloud, AI/ML and web technologies.",
    "also": "dev.events"
+  },
+  {
+   "id": "mumbai-community-year-end-meetup",
+   "title": "Mumbai Community Year End Meet-Up",
+   "cat": "Tech",
+   "tags": [
+    "Community",
+    "Meetup",
+    "Networking"
+   ],
+   "area": "Nariman Point, Mumbai",
+   "venue": "Yashwantrao Chavan Centre",
+   "start": "2026-12-05",
+   "end": null,
+   "timeNote": "AllEvents lists 10:00 am-3:30 pm but labels it UTC; local time unconfirmed",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Price not shown",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Creator"
+   ],
+   "src": "AllEvents",
+   "also": "Luma",
+   "url": "https://allevents.in/mumbai/mumbai-community-year-end-meet-up-in-person/4700031086699150",
+   "org": "Mumbai Community",
+   "access": "open",
+   "desc": "A year-end in-person gathering of Mumbai's tech and builder communities."
+  },
+  {
+   "id": "ux-investigation-lab-paytm",
+   "title": "UX Investigation Lab (Paytm office)",
+   "cat": "UX",
+   "tags": [
+    "UX",
+    "Research",
+    "Workshop"
+   ],
+   "area": "Mumbai",
+   "venue": "Paytm office, Mumbai",
+   "start": "2026-12-05T11:00",
+   "end": "16:00",
+   "fmt": "Offline",
+   "price": 415,
+   "priceNote": "Tickets ₹415–₹599 via AllEvents",
+   "aud": [
+    "Designer",
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ux-investigation-lab-tickets/80002851941492",
+   "org": "UX Investigation Lab",
+   "access": "open",
+   "desc": "A paid, hands-on afternoon session on investigating and researching user experience problems, hosted at the Paytm office."
   },
   {
    "tags": [
@@ -1002,21 +1085,6 @@
    "hint": "2026-11-28"
   },
   {
-   "qid": "q-deeptech-builders",
-   "title": "DeepTech Builders of Bombay",
-   "cat": "Startup",
-   "area": "Versova, Andheri West",
-   "src": "Luma",
-   "url": "https://luma.com/46u5sb9w",
-   "access": "approval",
-   "why": "Event page shows no date or time.",
-   "conf": {
-    "date": 0,
-    "place": 95,
-    "category": 80
-   }
-  },
-  {
    "qid": "q-product-growth-devx",
    "title": "Product Growth Meetup in Mumbai (eChai Ventures)",
    "cat": "Startup",
@@ -1031,53 +1099,38 @@
     "category": 75
    },
    "hint": "2026-11-21"
-  },
-  {
-   "qid": "q-year-end-agent-builders",
-   "title": "Mumbai Community Year End Meet-Up (Agent Builders Community)",
-   "cat": "Tech",
-   "area": "Nariman Point (YCC)",
-   "src": "Luma",
-   "url": "https://luma.com/8acb6kin",
-   "access": "open",
-   "why": "Event page shows no date or time.",
-   "conf": {
-    "date": 0,
-    "place": 95,
-    "category": 75
-   }
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing plus 4 event pages",
-   "found": 21,
+   "what": "luma.com/mumbai listing",
+   "found": 17,
    "pub": 0,
-   "review": 4,
-   "dup": 0,
-   "skip": 15,
-   "note": "Pages loaded, but listing and event pages show no dates; 4 new candidates queued. Sold-out Pre-DevFest events and non-tech items skipped."
+   "review": 0,
+   "dup": 2,
+   "skip": 10,
+   "note": "Page loaded but shows no dates; two items matched AllEvents entries. Others stay in the queue or were skipped."
   },
   {
    "src": "AllEvents",
-   "what": "/artificial-intelligence category page",
-   "found": 16,
-   "pub": 0,
+   "what": "/artificial-intelligence and /data-science category pages",
+   "found": 26,
+   "pub": 3,
    "review": 0,
-   "dup": 3,
-   "skip": 13,
-   "note": "Page loaded with dates. Most items were paid trainings, finance summits or out-of-city events, so they were skipped; AICD Mumbai was already published."
+   "dup": 5,
+   "skip": 16,
+   "note": "Both pages loaded with dates. Added UX Investigation Lab, DeepTech Builders and the Year End Meet-Up; skipped paid trainings, expos and unrelated items."
   },
   {
    "src": "dev.events",
-   "what": "/AS/IN/Mumbai and /meetups pages",
-   "found": 12,
+   "what": "/AS/IN/Mumbai and /tech pages",
+   "found": 7,
    "pub": 0,
    "review": 0,
-   "dup": 4,
-   "skip": 8,
-   "note": "Pages loaded. Conferences were already published; meetups were online-only or outside Mumbai and were skipped."
+   "dup": 2,
+   "skip": 2,
+   "note": "Pages loaded. Masterclasses stay queued (no venue); 2027 events are outside the 45-day window."
   },
   {
    "src": "hiddenevents",
@@ -1091,13 +1144,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup Nov 2026 and similar",
+   "what": "Mumbai AI meetup December 2026",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Searches ran, but they only returned Meetup pages (not opened) and pages already covered. swiftbharat.org could not be re-checked because it was not surfaced by search, so it stays as published."
+   "note": "Returned only Meetup and older Luma pages (not opened); no new confirmed dates. Individual event pages of already published events were not re-fetched this run."
   }
  ],
  "COMMUNITIES": [
