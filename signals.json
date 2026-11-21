@@ -1,6 +1,26 @@
 {
- "REFRESHED": "2026-11-19T21:51:31+05:30",
+ "REFRESHED": "2026-11-21T21:51:49+05:30",
  "SIGNALS": [
+  {
+   "id": "2123905267330859173",
+   "handle": "NewsFromGoogle",
+   "name": "News from Google",
+   "url": "https://x.com/NewsFromGoogle/status/2123905267330859173",
+   "posted": "2026-11-21T03:54:10+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google says Gemini 4 Neon is its third Gemini model released in eight days, and that Tasks is expanding in the Gemini app."
+  },
+  {
+   "id": "2123466364341944509",
+   "handle": "nytimes",
+   "name": "The New York Times",
+   "url": "https://x.com/nytimes/status/2123466364341944509",
+   "posted": "2026-11-19T22:50:08+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "The New York Times reports Anthropic shares rose sharply in early Nasdaq trading, lifting its market value above $2 trillion."
+  },
   {
    "id": "2123196808675405860",
    "handle": "AnthropicAI",
@@ -42,14 +62,14 @@
    "summary": "Google DeepMind begins rolling out Gemini 4 Neon, positioned between Carbon and Hydrogen, for software engineering, knowledge work and science tasks."
   },
   {
-   "id": "2123164437288751353",
-   "handle": "Reuters",
-   "name": "Reuters",
-   "url": "https://x.com/Reuters/status/2123164437288751353",
-   "posted": "2026-11-19T02:50:22+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "Reuters reports that Anthropic's IPO is expected to make thousands of its employees and holders millionaires."
+   "id": "2123144524746924455",
+   "handle": "NVIDIAAI",
+   "name": "NVIDIA AI",
+   "url": "https://x.com/NVIDIAAI/status/2123144524746924455",
+   "posted": "2026-11-19T01:31:15+05:30",
+   "topic": "Research",
+   "kind": "Official",
+   "summary": "NVIDIA describes Nemotron-Labs-Sigma, open models that generate blocks of tokens in parallel instead of one at a time, aiming for faster generation on math and coding."
   },
   {
    "id": "2123117819948638448",
@@ -62,24 +82,14 @@
    "summary": "Google makes Genie 4, a world model from DeepMind, available in Project Genie. It lets users edit environments mid-session with text prompts, with real-time audio and dialogue."
   },
   {
-   "id": "2122585169064570883",
-   "handle": "TencentGlobal",
-   "name": "Tencent 腾讯",
-   "url": "https://x.com/TencentGlobal/status/2122585169064570883",
-   "posted": "2026-11-17T12:28:34.687000+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Tencent says Hy4 flash is live on its TokenHub, WorkBuddy and Yuanbao. It is natively multimodal, has a 1M-token context window and decodes at over 150 tokens per second."
-  },
-  {
-   "id": "2122390144904773988",
-   "handle": "NVIDIAAIInfra",
-   "name": "NVIDIA AI Infrastructure",
-   "url": "https://x.com/NVIDIAAIInfra/status/2122390144904773988",
-   "posted": "2026-11-16T23:33:37.304000+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "NVIDIA introduced Rubin HPC, a GPU in the Vera Rubin platform aimed at simulation and data processing for science, engineering and analytics work."
+   "id": "2122353555852210257",
+   "handle": "LightspeedIndia",
+   "name": "Lightspeed India",
+   "url": "https://x.com/LightspeedIndia/status/2122353555852210257",
+   "posted": "2026-11-16T21:08:13+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Lightspeed India congratulates Sarvam on Token Factory, which hosts Sarvam and open-weight models on GPUs in India to address data residency needs."
   }
  ]
 }

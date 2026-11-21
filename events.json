@@ -1,61 +1,6 @@
 {
- "REFRESHED": "2026-11-20T22:29:26+05:30",
+ "REFRESHED": "2026-11-21T22:28:28+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "swift-bharat-2026",
-   "title": "Swift Bharat 2026",
-   "cat": "Tech",
-   "tags": [
-    "Swift",
-    "iOS",
-    "Developers"
-   ],
-   "area": "Nariman Point",
-   "venue": "Yashwantrao Chavan Centre",
-   "start": "2026-11-19",
-   "end": null,
-   "endDate": "2026-11-20",
-   "timeNote": "Times not stated on the organiser page",
-   "fmt": "Offline",
-   "price": 4999,
-   "priceNote": "Passes start at ₹4,999",
-   "aud": [
-    "Developer",
-    "Professional"
-   ],
-   "src": "Swift Bharat",
-   "also": "dev.events",
-   "url": "https://swiftbharat.org",
-   "org": "Swift Bharat",
-   "access": "open",
-   "desc": "A two-day conference for Swift and Apple-platform developers at the Yashwantrao Chavan Centre in Mumbai."
-  },
-  {
-   "tags": [
-    "Hackathon",
-    "Students"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Student",
-    "Developer"
-   ],
-   "access": "open",
-   "id": "singularity-2-thane",
-   "title": "Singularity 2.0 Hackathon",
-   "cat": "Tech",
-   "area": "Thane",
-   "venue": "KC College of Engineering and Management Studies and Research, Thane",
-   "start": "2026-11-20",
-   "end": null,
-   "timeNote": "Time not shown",
-   "price": 0,
-   "priceNote": "Free entry; register on Unstop",
-   "src": "foundercal (listing)",
-   "url": "https://foundercal.com/events/singularity-2-0-2026-11-19",
-   "org": "KC College of Engineering and Management Studies and Research",
-   "desc": "An in-person college hackathon in Thane with registration handled through Unstop."
-  },
   {
    "id": "startuplive-mumbai-26",
    "title": "StartupLive Mumbai'26",
@@ -1083,54 +1028,38 @@
     "category": 85
    },
    "hint": "2026-11-28"
-  },
-  {
-   "qid": "q-product-growth-devx",
-   "title": "Product Growth Meetup in Mumbai (eChai Ventures)",
-   "cat": "Startup",
-   "area": "Andheri East (DevX)",
-   "src": "Luma",
-   "url": "https://luma.com/zd1x4yyw",
-   "access": "open",
-   "why": "Only the link slug hints at 21 Nov 2026; the page text shows no date.",
-   "conf": {
-    "date": 50,
-    "place": 95,
-    "category": 75
-   },
-   "hint": "2026-11-21"
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
    "what": "luma.com/mumbai listing",
-   "found": 17,
+   "found": 20,
    "pub": 0,
    "review": 0,
-   "dup": 2,
-   "skip": 10,
-   "note": "Page loaded but shows no dates; two items matched AllEvents entries. Others stay in the queue or were skipped."
+   "dup": 3,
+   "skip": 5,
+   "note": "Page loaded but shows no dates; most items match queued entries (Devcon side events, Cloud Community Days, Pre-DevFest). Nothing new could be dated."
   },
   {
    "src": "AllEvents",
    "what": "/artificial-intelligence and /data-science category pages",
    "found": 26,
-   "pub": 3,
+   "pub": 0,
    "review": 0,
-   "dup": 5,
-   "skip": 16,
-   "note": "Both pages loaded with dates. Added UX Investigation Lab, DeepTech Builders and the Year End Meet-Up; skipped paid trainings, expos and unrelated items."
+   "dup": 9,
+   "skip": 14,
+   "note": "Both pages loaded with dates. All relevant items were already published; skipped expos, finance, music and general trainings."
   },
   {
    "src": "dev.events",
-   "what": "/AS/IN/Mumbai and /tech pages",
+   "what": "/AS/IN/Mumbai listing",
    "found": 7,
    "pub": 0,
    "review": 0,
    "dup": 2,
    "skip": 2,
-   "note": "Pages loaded. Masterclasses stay queued (no venue); 2027 events are outside the 45-day window."
+   "note": "Page loaded (with a partial server error message). Masterclasses stay queued (no venue); 2027 events are outside the 45-day window."
   },
   {
    "src": "hiddenevents",
@@ -1150,7 +1079,7 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Returned only Meetup and older Luma pages (not opened); no new confirmed dates. Individual event pages of already published events were not re-fetched this run."
+   "note": "Returned only Meetup and older Luma pages (not opened); no new confirmed dates. Individual event pages were not re-fetched this run."
   }
  ],
  "COMMUNITIES": [
