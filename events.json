@@ -1,92 +1,6 @@
 {
- "REFRESHED": "2026-11-21T22:28:28+05:30",
+ "REFRESHED": "2026-11-22T22:28:39+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "startuplive-mumbai-26",
-   "title": "StartupLive Mumbai'26",
-   "cat": "Startup",
-   "tags": [
-    "Pitch",
-    "Mentoring",
-    "Investors"
-   ],
-   "area": "Powai",
-   "venue": "Indian Institute of Technology Bombay",
-   "start": "2026-11-20T08:30",
-   "endDate": "2026-11-21",
-   "end": "18:00",
-   "fmt": "Offline",
-   "price": null,
-   "priceNote": "Ticket price not shown · some tickets need approval",
-   "aud": [
-    "Founder",
-    "Student",
-    "Professional"
-   ],
-   "src": "Luma",
-   "url": "https://luma.com/h5ca7fjs",
-   "org": "Startup Live Global",
-   "access": "approval",
-   "desc": "A two-day startup event at IIT Bombay with a 90-second pitch round, workshops and mentoring on day one, and final pitches before investors on day two."
-  },
-  {
-   "tags": [
-    "AI",
-    "Enterprise",
-    "Policy"
-   ],
-   "fmt": "Offline",
-   "aud": [
-    "Founder",
-    "Student",
-    "Professional"
-   ],
-   "access": "open",
-   "id": "bharat-ai-innovation-2026",
-   "title": "Bharat AI Innovation 2026",
-   "cat": "AI",
-   "area": "Cuffe Parade",
-   "venue": "World Trade Center Mumbai",
-   "start": "2026-11-20T09:00",
-   "end": null,
-   "endDate": "2026-11-21",
-   "timeNote": "Daily hours not shown",
-   "price": 0,
-   "priceNote": "Free visitor pass by time slot (entry not guaranteed); paid delegate and academic passes from ₹999 + GST",
-   "src": "Organiser site",
-   "also": "foundercal (listing)",
-   "url": "https://bharataiinnovation.com/",
-   "org": "Bharat AI Innovation",
-   "desc": "A two-day AI conference and expo at World Trade Center Mumbai bringing together AI companies, startups, researchers, students and government bodies."
-  },
-  {
-   "id": "aicd-mumbai-2026",
-   "title": "AICD Mumbai (AI Community Days)",
-   "cat": "AI",
-   "tags": [
-    "AI",
-    "Microsoft 365",
-    "Azure"
-   ],
-   "area": "Mumbai",
-   "venue": "Microsoft India office, Central Salsette Tramway Road",
-   "start": "2026-11-21T08:00",
-   "end": "17:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free; tickets via the listing",
-   "aud": [
-    "Developer",
-    "Student",
-    "Professional"
-   ],
-   "src": "AllEvents",
-   "also": "HappeningNext",
-   "url": "https://allevents.in/mumbai/aicd-mumbai/100001993446475069",
-   "org": "AI Community Days Mumbai",
-   "access": "open",
-   "desc": "A free full-day community event with talks, workshops and panels on AI, Microsoft 365, Power Platform and Azure, held at Microsoft's Mumbai office."
-  },
   {
    "id": "founders-x-investors-pitch-22nov",
    "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
@@ -113,6 +27,34 @@
    "org": "Founders X Investors",
    "access": "open",
    "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
+  },
+  {
+   "id": "google-nasscom-mixer-25nov",
+   "title": "Google x Nasscom Mixer: Mumbai",
+   "cat": "Startup",
+   "tags": [
+    "AI",
+    "Startups",
+    "Networking",
+    "Buildathon"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated (Mumbai)",
+   "start": "2026-11-25",
+   "end": null,
+   "timeNote": "Listing shows 18:00-21:00 tagged UTC; local time unclear, confirm on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free, by application",
+   "aud": [
+    "Founder",
+    "Developer"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/google-x-nasscom-mixer-·-mumbai/4700031093436455",
+   "org": "Google DeepMind, Google Cloud, Nasscom (Startup Buildathon India 2026)",
+   "access": "approval",
+   "desc": "A no-agenda networking evening after the Startup Buildathon regional showcase, bringing together AI builders, early AI startups, investors and enterprise leaders."
   },
   {
    "cat": "Tech",
@@ -168,6 +110,34 @@
    "org": "YourStory",
    "access": "open",
    "desc": "A developer-ecosystem event in Mumbai focused on coding agents, agentic AI and generative-AI productivity tools."
+  },
+  {
+   "id": "elastic-ai-connect-mumbai",
+   "title": "AI Connect: Mumbai (Elastic)",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Search",
+    "Observability",
+    "Meetup"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue not stated (Mumbai)",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Listing shows 10:00-14:00 tagged UTC; local time unclear, confirm on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free (reservation required)",
+   "aud": [
+    "Developer",
+    "Professional"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/ai-connect-mumbai/4700031093436251",
+   "org": "Elastic Mumbai",
+   "access": "open",
+   "desc": "A community meetup on AI agents, retrieval and search relevance, and how observability and security fit into AI apps. Speakers are yet to be announced."
   },
   {
    "cat": "Startup",
@@ -1028,38 +998,69 @@
     "category": 85
    },
    "hint": "2026-11-28"
+  },
+  {
+   "qid": "q-flutterflow-mumbai",
+   "title": "Build With FlutterFlow: Mumbai",
+   "cat": "Tech",
+   "area": "Mumbai",
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/build-with-flutterflow-mumbai/4700031093433924",
+   "access": "open",
+   "why": "Page lists 28 Nov in its data but 21 Nov in its text (Paytm office); date conflicts.",
+   "conf": {
+    "date": 30,
+    "place": 70,
+    "category": 85
+   },
+   "hint": "2026-11-28"
+  },
+  {
+   "qid": "q-predevfest-buildathon",
+   "title": "[Pre-DevFest] The \"Touch Grass\" Buildathon",
+   "cat": "Tech",
+   "area": "Matunga",
+   "src": "Luma",
+   "url": "https://luma.com/rofymmm3",
+   "access": "approval",
+   "why": "No date on the page; 2-hour outdoor MVP sprint, sign-ups currently closed.",
+   "conf": {
+    "date": 0,
+    "place": 70,
+    "category": 88
+   }
   }
  ],
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing",
+   "what": "luma.com/mumbai listing; Cloud Community Days and Touch Grass Buildathon pages",
    "found": 20,
    "pub": 0,
-   "review": 0,
+   "review": 1,
    "dup": 3,
-   "skip": 5,
-   "note": "Page loaded but shows no dates; most items match queued entries (Devcon side events, Cloud Community Days, Pre-DevFest). Nothing new could be dated."
+   "skip": 6,
+   "note": "Pages loaded but show no dates; most items match queued entries (Devcon side events). Buildathon page has no date, so it was queued."
   },
   {
    "src": "AllEvents",
-   "what": "/artificial-intelligence and /data-science category pages",
+   "what": "/artificial-intelligence and /data-science category pages; AI Connect, Google x Nasscom, FlutterFlow, E-Summit workshop pages",
    "found": 26,
-   "pub": 0,
-   "review": 0,
-   "dup": 9,
+   "pub": 2,
+   "review": 1,
+   "dup": 3,
    "skip": 14,
-   "note": "Both pages loaded with dates. All relevant items were already published; skipped expos, finance, music and general trainings."
+   "note": "All pages loaded with dates. Added 2 new events; FlutterFlow has conflicting dates so it was queued; the E-Summit workshop page (12 Dec) is treated as a duplicate of the Generative AI Unleashed entry. Skipped expos, finance and general trainings."
   },
   {
    "src": "dev.events",
-   "what": "/AS/IN/Mumbai listing",
-   "found": 7,
+   "what": "/AS/IN/Mumbai and /meetups/AS/IN/Mumbai listings",
+   "found": 18,
    "pub": 0,
    "review": 0,
    "dup": 2,
-   "skip": 2,
-   "note": "Page loaded (with a partial server error message). Masterclasses stay queued (no venue); 2027 events are outside the 45-day window."
+   "skip": 16,
+   "note": "Both pages loaded. Masterclasses stay queued; the meetups page held only online events from elsewhere; 2027 events are outside the 45-day window."
   },
   {
    "src": "hiddenevents",
@@ -1073,13 +1074,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup December 2026",
+   "what": "Mumbai AI meetup December 2026; site searches for Luma design and AllEvents startup",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Returned only Meetup and older Luma pages (not opened); no new confirmed dates. Individual event pages were not re-fetched this run."
+   "note": "Returned mostly Meetup, older Luma and unrelated pages; no new confirmed dates. Meetup pages were not opened."
   }
  ],
  "COMMUNITIES": [

@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-21T21:51:49+05:30",
+ "REFRESHED": "2026-11-22T21:50:59+05:30",
  "SIGNALS": [
   {
    "id": "2123905267330859173",
@@ -10,6 +10,16 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Google says Gemini 4 Neon is its third Gemini model released in eight days, and that Tasks is expanding in the Gemini app."
+  },
+  {
+   "id": "2123828467124851025",
+   "handle": "GoogleAI",
+   "name": "Google AI",
+   "url": "https://x.com/GoogleAI/status/2123828467124851025",
+   "posted": "2026-11-20T22:49:00+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Google AI recaps two weeks of shipping, led by Gemini 4 Neon for software engineering and science, plus Gemini 4 Hydrogen."
   },
   {
    "id": "2123466364341944509",
@@ -42,16 +52,6 @@
    "summary": "OpenAI shares new data on AI's role in its own research: researchers' AI use keeps rising and agents finish longer tasks, while humans stay central and spend more time on safety work."
   },
   {
-   "id": "2123170648772288540",
-   "handle": "ArtificialAnlys",
-   "name": "Artificial Analysis",
-   "url": "https://x.com/ArtificialAnlys/status/2123170648772288540",
-   "posted": "2026-11-19T03:15:03+05:30",
-   "topic": "Models",
-   "kind": "Report",
-   "summary": "With Antigravity CLI, Gemini 4 Neon (xhigh) scores 59 on the Coding Agent Index, ahead of Carbon (55) and in line with Claude Code on Fable 5.2 and Opus 5.5 (58), at lower cost."
-  },
-  {
    "id": "2123167884411077030",
    "handle": "GoogleDeepMind",
    "name": "Google DeepMind",
@@ -62,24 +62,24 @@
    "summary": "Google DeepMind begins rolling out Gemini 4 Neon, positioned between Carbon and Hydrogen, for software engineering, knowledge work and science tasks."
   },
   {
-   "id": "2123144524746924455",
-   "handle": "NVIDIAAI",
-   "name": "NVIDIA AI",
-   "url": "https://x.com/NVIDIAAI/status/2123144524746924455",
-   "posted": "2026-11-19T01:31:15+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "NVIDIA describes Nemotron-Labs-Sigma, open models that generate blocks of tokens in parallel instead of one at a time, aiming for faster generation on math and coding."
-  },
-  {
-   "id": "2123117819948638448",
-   "handle": "Google",
-   "name": "Google",
-   "url": "https://x.com/Google/status/2123117819948638448",
-   "posted": "2026-11-18T23:45:08+05:30",
+   "id": "2122798039899263456",
+   "handle": "sama",
+   "name": "Sam Altman",
+   "url": "https://x.com/sama/status/2122798039899263456",
+   "posted": "2026-11-18T02:34:27+05:30",
    "topic": "Models",
    "kind": "Official",
-   "summary": "Google makes Genie 4, a world model from DeepMind, available in Project Genie. It lets users edit environments mid-session with text prompts, with real-time audio and dialogue."
+   "summary": "Sam Altman says OpenAI's 6.2 Sol and Astra models are out, calls them token-efficient, and highlights the ultrafast mode of 6.2 Sol."
+  },
+  {
+   "id": "2122778863235178806",
+   "handle": "MicrosoftAI",
+   "name": "Microsoft AI",
+   "url": "https://x.com/MicrosoftAI/status/2122778863235178806",
+   "posted": "2026-11-18T01:18:14+05:30",
+   "topic": "Models",
+   "kind": "Official",
+   "summary": "Microsoft AI announces seven new models at Ignite, pitched as secure, aligned frontier intelligence at a fraction of current prices."
   },
   {
    "id": "2122353555852210257",

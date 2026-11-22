@@ -612,6 +612,35 @@
   "desc": "A panel of founders and operators on early wins, go-to-market, hiring and fundraising, followed by informal networking. Open to anyone curious about startups.",
   "firstSeen": "2026-09-29"
  },
+ "elastic-ai-connect-mumbai": {
+  "id": "elastic-ai-connect-mumbai",
+  "title": "AI Connect: Mumbai (Elastic)",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Search",
+   "Observability",
+   "Meetup"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated (Mumbai)",
+  "start": "2026-11-28",
+  "end": null,
+  "timeNote": "Listing shows 10:00-14:00 tagged UTC; local time unclear, confirm on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free (reservation required)",
+  "aud": [
+   "Developer",
+   "Professional"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/ai-connect-mumbai/4700031093436251",
+  "org": "Elastic Mumbai",
+  "access": "open",
+  "desc": "A community meetup on AI agents, retrieval and search relevance, and how observability and security fit into AI apps. Speakers are yet to be announced.",
+  "firstSeen": "2026-11-23"
+ },
  "elasticon-mumbai": {
   "id": "elasticon-mumbai",
   "title": "Elastic{ON} Mumbai",
@@ -1003,6 +1032,35 @@
   "access": "open",
   "desc": "A morning networking meetup for founders and aspiring entrepreneurs with speed-networking rounds and short elevator pitches.",
   "firstSeen": "2026-10-17"
+ },
+ "google-nasscom-mixer-25nov": {
+  "id": "google-nasscom-mixer-25nov",
+  "title": "Google x Nasscom Mixer: Mumbai",
+  "cat": "Startup",
+  "tags": [
+   "AI",
+   "Startups",
+   "Networking",
+   "Buildathon"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue not stated (Mumbai)",
+  "start": "2026-11-25",
+  "end": null,
+  "timeNote": "Listing shows 18:00-21:00 tagged UTC; local time unclear, confirm on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free, by application",
+  "aud": [
+   "Founder",
+   "Developer"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/google-x-nasscom-mixer-·-mumbai/4700031093436455",
+  "org": "Google DeepMind, Google Cloud, Nasscom (Startup Buildathon India 2026)",
+  "access": "approval",
+  "desc": "A no-agenda networking evening after the Startup Buildathon regional showcase, bringing together AI builders, early AI startups, investors and enterprise leaders.",
+  "firstSeen": "2026-11-23"
  },
  "growsphere-mcp-security": {
   "id": "growsphere-mcp-security",
