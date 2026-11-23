@@ -659,6 +659,11 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
    and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
+{id:"the-doorstep-algorithm",added:"2026-11-24T12:30:00+05:30",title:"The Doorstep Algorithm",board:"KOLAM ALGORITHM",
+  line:"Every morning a kolam goes down at the doorstep: dots, then a line that follows strict rules. Rules that strict can be written as a grammar a computer runs, and the same idea now grows plants in computer graphics.",
+  url:"discover/the-doorstep-algorithm/", img:"media/stories/the-doorstep-algorithm.jpg",
+  alt:"Line drawing of a kolam of five by five dots drawn as one unbroken line, beside the same kolam written as a grid of symbols",
+  read:"5 min read"},
 {id:"the-hand-you-cant-see",added:"2026-11-16T12:30:00+05:30",title:"The Hand You Can't See",board:"THE UNSEEN HAND",
   line:"How zardozi karigars stitch gold onto silk with one hand hidden under the fabric, and how circuit boards are still bonded the same way today, from below, by a wave of molten solder.",
   url:"discover/the-hand-you-cant-see/", img:"media/stories/the-hand-you-cant-see.jpg",
