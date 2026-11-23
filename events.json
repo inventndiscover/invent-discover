@@ -1,33 +1,6 @@
 {
- "REFRESHED": "2026-11-22T22:28:39+05:30",
+ "REFRESHED": "2026-11-23T22:28:45+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "founders-x-investors-pitch-22nov",
-   "title": "The Founders X Investors Pitch (22 Nov, NMIMS)",
-   "cat": "Startup",
-   "tags": [
-    "Pitch",
-    "Investors",
-    "Founders"
-   ],
-   "area": "Mumbai",
-   "venue": "NMIMS, Mumbai",
-   "start": "2026-11-22T16:00",
-   "end": "20:00",
-   "fmt": "Offline",
-   "price": 699,
-   "priceNote": "Tickets from ₹699; sold via AllEvents",
-   "aud": [
-    "Founder",
-    "Student"
-   ],
-   "src": "StartupGrantsIndia",
-   "also": "AllEvents",
-   "url": "https://www.startupgrantsindia.com/events/the-founders-x-investors-pitch-22nd-november-mumbai",
-   "org": "Founders X Investors",
-   "access": "open",
-   "desc": "A recurring pitch evening where early-stage founders present to active investors, followed by feedback, Q&A and networking."
-  },
   {
    "id": "google-nasscom-mixer-25nov",
    "title": "Google x Nasscom Mixer: Mumbai",
@@ -1034,53 +1007,53 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing; Cloud Community Days and Touch Grass Buildathon pages",
+   "what": "luma.com/mumbai listing",
    "found": 20,
    "pub": 0,
-   "review": 1,
+   "review": 0,
    "dup": 3,
-   "skip": 6,
-   "note": "Pages loaded but show no dates; most items match queued entries (Devcon side events). Buildathon page has no date, so it was queued."
+   "skip": 0,
+   "note": "Listing page loaded but shows no dates for any event; all stay in the curator queue or are already published from other sources."
   },
   {
    "src": "AllEvents",
-   "what": "/artificial-intelligence and /data-science category pages; AI Connect, Google x Nasscom, FlutterFlow, E-Summit workshop pages",
-   "found": 26,
-   "pub": 2,
-   "review": 1,
-   "dup": 3,
-   "skip": 14,
-   "note": "All pages loaded with dates. Added 2 new events; FlutterFlow has conflicting dates so it was queued; the E-Summit workshop page (12 Dec) is treated as a duplicate of the Generative AI Unleashed entry. Skipped expos, finance and general trainings."
-  },
-  {
-   "src": "dev.events",
-   "what": "/AS/IN/Mumbai and /meetups/AS/IN/Mumbai listings",
-   "found": 18,
+   "what": "/artificial-intelligence and /data-science category pages",
+   "found": 27,
    "pub": 0,
    "review": 0,
    "dup": 2,
-   "skip": 16,
-   "note": "Both pages loaded. Masterclasses stay queued; the meetups page held only online events from elsewhere; 2027 events are outside the 45-day window."
+   "skip": 25,
+   "note": "Both pages loaded. Nearly all are past, paid expos or long-running paid trainings (NP Venue) outside the audience, so skipped; no new confirmed event."
+  },
+  {
+   "src": "dev.events",
+   "what": "/AS/IN/Mumbai and /meetups/AS/IN/Mumbai",
+   "found": 14,
+   "pub": 0,
+   "review": 0,
+   "dup": 4,
+   "skip": 10,
+   "note": "Both pages loaded. In-person conferences already published or queued; the meetup list is online-only and not Mumbai-based, so skipped."
   },
   {
    "src": "hiddenevents",
-   "what": "site search only",
+   "what": "site search",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search did not return the site, so it could not be opened."
+   "note": "Search did not surface the site, so it was not fetched."
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup December 2026; site searches for Luma design and AllEvents startup",
+   "what": "Mumbai AI meetup December 2026",
    "found": 0,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Returned mostly Meetup, older Luma and unrelated pages; no new confirmed dates. Meetup pages were not opened."
+   "note": "Search returned only Luma and Meetup group pages with no dated new events; Meetup pages not opened."
   }
  ],
  "COMMUNITIES": [

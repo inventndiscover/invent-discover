@@ -1,5 +1,5 @@
 {
- "UPDATED": "2026-11-16",
+ "UPDATED": "2026-11-23",
  "SOURCE": {
   "name": "arXiv",
   "url": "https://arxiv.org/"
@@ -34,61 +34,49 @@
  ],
  "WEEKS": [
   {
-   "start": "2026-08-24",
-   "end": "2026-08-30",
-   "total": 2813,
-   "themes": {
-    "agents": 496,
-    "reasoning": 439,
-    "multimodal": 365,
-    "robotics": 212,
-    "safety": 147
-   }
-  },
-  {
    "start": "2026-08-31",
    "end": "2026-09-06",
-   "total": 2992,
+   "total": 3014,
    "themes": {
-    "agents": 545,
-    "reasoning": 471,
-    "multimodal": 356,
+    "agents": 546,
+    "reasoning": 475,
+    "multimodal": 358,
     "robotics": 221,
-    "safety": 178
+    "safety": 180
    }
   },
   {
    "start": "2026-09-07",
    "end": "2026-09-13",
-   "total": 2634,
+   "total": 2642,
    "themes": {
-    "agents": 453,
-    "reasoning": 361,
+    "agents": 457,
+    "reasoning": 363,
     "multimodal": 286,
-    "robotics": 260,
-    "safety": 152
+    "robotics": 259,
+    "safety": 155
    }
   },
   {
    "start": "2026-09-14",
    "end": "2026-09-20",
-   "total": 2978,
+   "total": 2990,
    "themes": {
-    "agents": 513,
-    "reasoning": 373,
+    "agents": 517,
+    "reasoning": 375,
     "multimodal": 398,
     "robotics": 464,
-    "safety": 175
+    "safety": 176
    }
   },
   {
    "start": "2026-09-21",
    "end": "2026-09-27",
-   "total": 3816,
+   "total": 3827,
    "themes": {
-    "agents": 689,
-    "reasoning": 531,
-    "multimodal": 454,
+    "agents": 690,
+    "reasoning": 530,
+    "multimodal": 456,
     "robotics": 486,
     "safety": 171
    }
@@ -96,11 +84,11 @@
   {
    "start": "2026-09-28",
    "end": "2026-10-04",
-   "total": 5456,
+   "total": 5459,
    "themes": {
-    "agents": 1081,
+    "agents": 1084,
     "reasoning": 887,
-    "multimodal": 670,
+    "multimodal": 671,
     "robotics": 576,
     "safety": 270
    }
@@ -108,47 +96,47 @@
   {
    "start": "2026-10-05",
    "end": "2026-10-11",
-   "total": 4268,
+   "total": 4270,
    "themes": {
-    "agents": 817,
-    "reasoning": 574,
-    "multimodal": 495,
-    "robotics": 515,
+    "agents": 818,
+    "reasoning": 575,
+    "multimodal": 497,
+    "robotics": 516,
     "safety": 213
    }
   },
   {
    "start": "2026-10-12",
    "end": "2026-10-18",
-   "total": 4067,
+   "total": 4101,
    "themes": {
-    "agents": 856,
-    "reasoning": 588,
-    "multimodal": 462,
-    "robotics": 430,
-    "safety": 210
+    "agents": 866,
+    "reasoning": 592,
+    "multimodal": 466,
+    "robotics": 431,
+    "safety": 211
    }
   },
   {
    "start": "2026-10-19",
    "end": "2026-10-25",
-   "total": 3449,
+   "total": 3460,
    "themes": {
-    "agents": 693,
-    "reasoning": 495,
-    "multimodal": 407,
-    "robotics": 376,
+    "agents": 696,
+    "reasoning": 496,
+    "multimodal": 408,
+    "robotics": 375,
     "safety": 171
    }
   },
   {
    "start": "2026-10-26",
    "end": "2026-11-01",
-   "total": 3357,
+   "total": 3369,
    "themes": {
-    "agents": 653,
-    "reasoning": 414,
-    "multimodal": 339,
+    "agents": 654,
+    "reasoning": 413,
+    "multimodal": 341,
     "robotics": 341,
     "safety": 166
    }
@@ -156,25 +144,37 @@
   {
    "start": "2026-11-02",
    "end": "2026-11-08",
-   "total": 3419,
+   "total": 3442,
    "themes": {
-    "agents": 624,
-    "reasoning": 394,
-    "multimodal": 374,
-    "robotics": 370,
-    "safety": 162
+    "agents": 630,
+    "reasoning": 397,
+    "multimodal": 382,
+    "robotics": 371,
+    "safety": 165
    }
   },
   {
    "start": "2026-11-09",
    "end": "2026-11-15",
-   "total": 2125,
+   "total": 2734,
    "themes": {
-    "agents": 405,
-    "reasoning": 248,
-    "multimodal": 227,
-    "robotics": 230,
-    "safety": 78
+    "agents": 504,
+    "reasoning": 318,
+    "multimodal": 303,
+    "robotics": 286,
+    "safety": 121
+   }
+  },
+  {
+   "start": "2026-11-16",
+   "end": "2026-11-22",
+   "total": 2816,
+   "themes": {
+    "agents": 529,
+    "reasoning": 347,
+    "multimodal": 425,
+    "robotics": 337,
+    "safety": 139
    }
   }
  ]

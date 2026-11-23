@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-22T21:50:59+05:30",
+ "REFRESHED": "2026-11-23T21:51:43+05:30",
  "SIGNALS": [
   {
    "id": "2123905267330859173",
@@ -12,6 +12,16 @@
    "summary": "Google says Gemini 4 Neon is its third Gemini model released in eight days, and that Tasks is expanding in the Gemini app."
   },
   {
+   "id": "2123861461877588180",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2123861461877588180",
+   "posted": "2026-11-21T01:00:06+05:30",
+   "topic": "AI",
+   "kind": "Official",
+   "summary": "OpenAI says ecommerce and online service businesses based outside the U.S. can now claim their business and publish agents in ChatGPT."
+  },
+  {
    "id": "2123828467124851025",
    "handle": "GoogleAI",
    "name": "Google AI",
@@ -20,16 +30,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Google AI recaps two weeks of shipping, led by Gemini 4 Neon for software engineering and science, plus Gemini 4 Hydrogen."
-  },
-  {
-   "id": "2123466364341944509",
-   "handle": "nytimes",
-   "name": "The New York Times",
-   "url": "https://x.com/nytimes/status/2123466364341944509",
-   "posted": "2026-11-19T22:50:08+05:30",
-   "topic": "Tech",
-   "kind": "Report",
-   "summary": "The New York Times reports Anthropic shares rose sharply in early Nasdaq trading, lifting its market value above $2 trillion."
   },
   {
    "id": "2123196808675405860",
