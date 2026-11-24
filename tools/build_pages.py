@@ -166,7 +166,7 @@ def head(title, desc, url, image, extra=""):
 <meta name="theme-color" content="#05060A">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
-<style>{STYLE}</style>{extra}{analytics_snippet()}
+<style>{STYLE}</style>{extra}{analytics_snippet()}<script src="/favicon-pulse.js" defer></script>
 </head><body>
 <header class="top"><div class="wrap"><a href="/">INVENT<span class="plus">+</span>DISCOVER</a></div></header>
 """
