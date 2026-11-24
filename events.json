@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-23T22:28:45+05:30",
+ "REFRESHED": "2026-11-24T22:28:45+05:30",
  "EVENTS_RAW": [
   {
    "id": "google-nasscom-mixer-25nov",
@@ -872,7 +872,7 @@
    "src": "dev.events",
    "url": "https://principal.dev",
    "access": "open",
-   "why": "dev.events lists 3-4 Dec 2026 in Mumbai but gives no venue or format.",
+   "why": "dev.events lists Dec 3-4, 2026 for Mumbai but no venue or format, so it stays for review.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -888,7 +888,7 @@
    "src": "dev.events",
    "url": "https://clean.re",
    "access": "open",
-   "why": "dev.events lists 10-11 Dec 2026 in Mumbai but gives no venue or format.",
+   "why": "dev.events lists Dec 10-11, 2026 for Mumbai but no venue or format, so it stays for review.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -1007,33 +1007,33 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing",
+   "what": "luma.com/mumbai listing (surfaced by search)",
    "found": 20,
    "pub": 0,
    "review": 0,
    "dup": 3,
-   "skip": 0,
-   "note": "Listing page loaded but shows no dates for any event; all stay in the curator queue or are already published from other sources."
+   "skip": 17,
+   "note": "Listing page loaded but shows no dates; mostly Devcon/web3 side events. No new date confirmed, so existing queue items stay."
   },
   {
    "src": "AllEvents",
-   "what": "/artificial-intelligence and /data-science category pages",
-   "found": 27,
+   "what": "AI and data-science category pages",
+   "found": 25,
    "pub": 0,
    "review": 0,
-   "dup": 2,
+   "dup": 0,
    "skip": 25,
-   "note": "Both pages loaded. Nearly all are past, paid expos or long-running paid trainings (NP Venue) outside the audience, so skipped; no new confirmed event."
+   "note": "Pages loaded but show older cached listings; items are past, paid NP Venue trainings, finance/trade summits or the STEM expo, so none added."
   },
   {
    "src": "dev.events",
-   "what": "/AS/IN/Mumbai and /meetups/AS/IN/Mumbai",
-   "found": 14,
+   "what": "Mumbai listing and meetups page",
+   "found": 8,
    "pub": 0,
    "review": 0,
-   "dup": 4,
-   "skip": 10,
-   "note": "Both pages loaded. In-person conferences already published or queued; the meetup list is online-only and not Mumbai-based, so skipped."
+   "dup": 3,
+   "skip": 5,
+   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay in the queue (no venue shown); the rest are 2027 or online."
   },
   {
    "src": "hiddenevents",
@@ -1043,17 +1043,17 @@
    "review": 0,
    "dup": 0,
    "skip": 0,
-   "note": "Search did not surface the site, so it was not fetched."
+   "note": "Search did not surface hiddenevents.online, so it was not opened."
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup December 2026",
-   "found": 0,
+   "what": "AI meetup, hackathon, startup searches; startupgrantsindia and eChai pages",
+   "found": 40,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 0,
-   "note": "Search returned only Luma and Meetup group pages with no dated new events; Meetup pages not opened."
+   "skip": 40,
+   "note": "Pages loaded; Meetup links not opened. eChai page is old 2025 data; startup mixers and trade expos skipped. Existing events could not be individually re-checked this run."
   }
  ],
  "COMMUNITIES": [

@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-23T21:51:43+05:30",
+ "REFRESHED": "2026-11-24T21:55:00+05:30",
  "SIGNALS": [
   {
    "id": "2123905267330859173",
@@ -30,6 +30,16 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Google AI recaps two weeks of shipping, led by Gemini 4 Neon for software engineering and science, plus Gemini 4 Hydrogen."
+  },
+  {
+   "id": "2123508592192245761",
+   "handle": "kimmonismus",
+   "name": "Chubby",
+   "url": "https://x.com/kimmonismus/status/2123508592192245761",
+   "posted": "2026-11-20T01:37:55+05:30",
+   "topic": "Tech",
+   "kind": "Report",
+   "summary": "Commentary on Anthropic's IPO day: the post says the fully diluted valuation reached about $2 trillion at the open, with shares opening at $111.50."
   },
   {
    "id": "2123196808675405860",
@@ -70,16 +80,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Sam Altman says OpenAI's 6.2 Sol and Astra models are out, calls them token-efficient, and highlights the ultrafast mode of 6.2 Sol."
-  },
-  {
-   "id": "2122778863235178806",
-   "handle": "MicrosoftAI",
-   "name": "Microsoft AI",
-   "url": "https://x.com/MicrosoftAI/status/2122778863235178806",
-   "posted": "2026-11-18T01:18:14+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Microsoft AI announces seven new models at Ignite, pitched as secure, aligned frontier intelligence at a fraction of current prices."
   },
   {
    "id": "2122353555852210257",
