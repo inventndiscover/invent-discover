@@ -300,6 +300,36 @@
   "desc": "A small café meetup for early builders and founders, hosted with ATLAS Online and a startup-partnerships lead from Google India. Seats are confirmed from a waitlist.",
   "firstSeen": "2026-10-16"
  },
+ "claude-coffee-mumbai-28nov": {
+  "id": "claude-coffee-mumbai-28nov",
+  "title": "Claude & Coffee Mumbai",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Claude",
+   "Community",
+   "Meetup"
+  ],
+  "area": "BKC",
+  "venue": "Cafe in BKC (exact venue shared on approval)",
+  "start": "2026-11-28",
+  "end": null,
+  "timeNote": "Listing shows 10:00-12:00 tagged UTC; local time unclear, confirm on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free, coffee provided",
+  "aud": [
+   "Developer",
+   "Professional",
+   "Creator"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/mumbai-claude-and-coffee/4700031093437201",
+  "org": "Claude Community Mumbai",
+  "access": "approval",
+  "desc": "A two-hour laptop-free Saturday meetup for the Claude community, with intros, workflow sharing and a live Q&A on Claude and Claude Code. Seats are very limited and need approval.",
+  "firstSeen": "2026-11-25"
+ },
  "climate-panchayat": {
   "id": "climate-panchayat",
   "title": "Climate Panchayat: solutions for marginalised Mumbaikars",
@@ -668,6 +698,34 @@
   "access": "open",
   "desc": "Elastic's one-day community conference for developers, SREs and security analysts, with technical tracks, hands-on breakouts and demos on search, observability and agentic AI.",
   "firstSeen": "2026-09-29"
+ },
+ "emojis-ai-words-nmacc": {
+  "id": "emojis-ai-words-nmacc",
+  "title": "Are Emojis & AI Killing Words? (Kommune lecture)",
+  "cat": "Culture",
+  "tags": [
+   "AI",
+   "Language",
+   "Talk"
+  ],
+  "area": "BKC",
+  "venue": "The Library at NMACC, Jio World Centre, BKC",
+  "start": "2026-12-09T18:00",
+  "end": "19:00",
+  "fmt": "Offline",
+  "price": null,
+  "priceNote": "Ticketed; amount not shown on the page",
+  "aud": [
+   "Creator",
+   "Designer",
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/are-emojis-and-ai-killing-words/3900031116926340",
+  "org": "Kommune",
+  "access": "open",
+  "desc": "A talk on how emojis, stickers, GIFs and AI are moving communication from words to images and reactions. Ages 16+, photo ID needed.",
+  "firstSeen": "2026-11-25"
  },
  "enterprise-ai-summit": {
   "id": "enterprise-ai-summit",
@@ -1506,6 +1564,35 @@
   "access": "approval",
   "desc": "The sixth Mumbai Meets AI: a keynote, a fireside chat with practitioners, and networking. Seats count only if you register on Luma, even though it is also listed on Meetup.",
   "firstSeen": "2026-09-28"
+ },
+ "open-source-ai-builders-mumbai": {
+  "id": "open-source-ai-builders-mumbai",
+  "title": "Open-Source AI for Builders - Mumbai Edition",
+  "cat": "AI",
+  "tags": [
+   "AI",
+   "Open Source",
+   "Workshop"
+  ],
+  "area": "Mumbai",
+  "venue": "Venue shared with confirmed participants (Mumbai)",
+  "start": "2026-11-28",
+  "end": null,
+  "timeNote": "Listing shows 16:00-18:00 tagged UTC; local time unclear, confirm on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Ticket range starts at 0; RSVP required",
+  "aud": [
+   "Developer",
+   "Founder",
+   "Student"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/open-source-ai-for-builders-mumbai-edition/4700031097377735",
+  "org": "Airtribe (organiser not clearly stated)",
+  "access": "open",
+  "desc": "A hands-on in-person workshop on how open-source AI models work and how to build applications and workflows with them. Spots are limited.",
+  "firstSeen": "2026-11-25"
  },
  "opentechsummit-india-2026": {
   "id": "opentechsummit-india-2026",

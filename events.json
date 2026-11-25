@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-24T22:28:45+05:30",
+ "REFRESHED": "2026-11-25T22:28:45+05:30",
  "EVENTS_RAW": [
   {
    "id": "google-nasscom-mixer-25nov",
@@ -111,6 +111,63 @@
    "org": "Elastic Mumbai",
    "access": "open",
    "desc": "A community meetup on AI agents, retrieval and search relevance, and how observability and security fit into AI apps. Speakers are yet to be announced."
+  },
+  {
+   "id": "claude-coffee-mumbai-28nov",
+   "title": "Claude & Coffee Mumbai",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Claude",
+    "Community",
+    "Meetup"
+   ],
+   "area": "BKC",
+   "venue": "Cafe in BKC (exact venue shared on approval)",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Listing shows 10:00-12:00 tagged UTC; local time unclear, confirm on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free, coffee provided",
+   "aud": [
+    "Developer",
+    "Professional",
+    "Creator"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/mumbai-claude-and-coffee/4700031093437201",
+   "org": "Claude Community Mumbai",
+   "access": "approval",
+   "desc": "A two-hour laptop-free Saturday meetup for the Claude community, with intros, workflow sharing and a live Q&A on Claude and Claude Code. Seats are very limited and need approval."
+  },
+  {
+   "id": "open-source-ai-builders-mumbai",
+   "title": "Open-Source AI for Builders - Mumbai Edition",
+   "cat": "AI",
+   "tags": [
+    "AI",
+    "Open Source",
+    "Workshop"
+   ],
+   "area": "Mumbai",
+   "venue": "Venue shared with confirmed participants (Mumbai)",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Listing shows 16:00-18:00 tagged UTC; local time unclear, confirm on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Ticket range starts at 0; RSVP required",
+   "aud": [
+    "Developer",
+    "Founder",
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/open-source-ai-for-builders-mumbai-edition/4700031097377735",
+   "org": "Airtribe (organiser not clearly stated)",
+   "access": "open",
+   "desc": "A hands-on in-person workshop on how open-source AI models work and how to build applications and workflows with them. Spots are limited."
   },
   {
    "cat": "Startup",
@@ -276,6 +333,33 @@
    "org": "UX Investigation Lab",
    "access": "open",
    "desc": "A paid, hands-on afternoon session on investigating and researching user experience problems, hosted at the Paytm office."
+  },
+  {
+   "id": "emojis-ai-words-nmacc",
+   "title": "Are Emojis & AI Killing Words? (Kommune lecture)",
+   "cat": "Culture",
+   "tags": [
+    "AI",
+    "Language",
+    "Talk"
+   ],
+   "area": "BKC",
+   "venue": "The Library at NMACC, Jio World Centre, BKC",
+   "start": "2026-12-09T18:00",
+   "end": "19:00",
+   "fmt": "Offline",
+   "price": null,
+   "priceNote": "Ticketed; amount not shown on the page",
+   "aud": [
+    "Creator",
+    "Designer",
+    "Student"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/are-emojis-and-ai-killing-words/3900031116926340",
+   "org": "Kommune",
+   "access": "open",
+   "desc": "A talk on how emojis, stickers, GIFs and AI are moving communication from words to images and reactions. Ages 16+, photo ID needed."
   },
   {
    "tags": [
@@ -980,7 +1064,7 @@
    "src": "AllEvents",
    "url": "https://allevents.in/mumbai/build-with-flutterflow-mumbai/4700031093433924",
    "access": "open",
-   "why": "Page lists 28 Nov in its data but 21 Nov in its text (Paytm office); date conflicts.",
+   "why": "Page conflicts with itself: listing says 28 Nov, text says 21 Nov at Paytm office; date unconfirmed.",
    "conf": {
     "date": 30,
     "place": 70,
@@ -1011,29 +1095,29 @@
    "found": 20,
    "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 17,
-   "note": "Listing page loaded but shows no dates; mostly Devcon/web3 side events. No new date confirmed, so existing queue items stay."
+   "dup": 2,
+   "skip": 18,
+   "note": "Listing page loaded but shows no dates; mostly Devcon/web3 side events. No new date confirmed, so queue unchanged."
   },
   {
    "src": "AllEvents",
-   "what": "AI and data-science category pages",
-   "found": 25,
-   "pub": 0,
+   "what": "AI, data-science and entrepreneurship category pages plus 5 event pages",
+   "found": 18,
+   "pub": 3,
    "review": 0,
-   "dup": 0,
-   "skip": 25,
-   "note": "Pages loaded but show older cached listings; items are past, paid NP Venue trainings, finance/trade summits or the STEM expo, so none added."
+   "dup": 5,
+   "skip": 10,
+   "note": "All pages loaded. Added Claude & Coffee, Open-Source AI for Builders and the NMACC emoji/AI talk. AllEvents tags many times as UTC so local times are flagged. FlutterFlow page contradicts its own date, so it stays queued. Skipped finance summits, trade expos and the school-oriented STEM expo."
   },
   {
    "src": "dev.events",
    "what": "Mumbai listing and meetups page",
-   "found": 8,
+   "found": 14,
    "pub": 0,
    "review": 0,
    "dup": 3,
-   "skip": 5,
-   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay in the queue (no venue shown); the rest are 2027 or online."
+   "skip": 11,
+   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay queued; meetups listed are online or 2027."
   },
   {
    "src": "hiddenevents",
@@ -1047,13 +1131,13 @@
   },
   {
    "src": "web search",
-   "what": "AI meetup, hackathon, startup searches; startupgrantsindia and eChai pages",
-   "found": 40,
+   "what": "Mumbai AI meetup December 2026, startup, design searches",
+   "found": 30,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 40,
-   "note": "Pages loaded; Meetup links not opened. eChai page is old 2025 data; startup mixers and trade expos skipped. Existing events could not be individually re-checked this run."
+   "skip": 30,
+   "note": "Searches ran; results were mostly Meetup links (not opened) and older pages. Existing events were not individually re-checked this run; nothing ended or cancelled was seen."
   }
  ],
  "COMMUNITIES": [

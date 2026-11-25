@@ -1,15 +1,45 @@
 {
- "REFRESHED": "2026-11-24T21:55:00+05:30",
+ "REFRESHED": "2026-11-25T21:51:38+05:30",
  "SIGNALS": [
   {
-   "id": "2123905267330859173",
-   "handle": "NewsFromGoogle",
-   "name": "News from Google",
-   "url": "https://x.com/NewsFromGoogle/status/2123905267330859173",
-   "posted": "2026-11-21T03:54:10+05:30",
+   "id": "2125589468786909510",
+   "handle": "AndrewCurran_",
+   "name": "Andrew Curran",
+   "url": "https://x.com/AndrewCurran_/status/2125589468786909510",
+   "posted": "2026-11-25T19:26:35+05:30",
+   "topic": "Research",
+   "kind": "Leak",
+   "summary": "Relays a rumor, also mentioned on Scott Aaronson's blog, that Anthropic and OpenAI may have math results that could crack RSA. Unconfirmed."
+  },
+  {
+   "id": "2125493140245090326",
+   "handle": "AGTPinsights",
+   "name": "AGTP",
+   "url": "https://x.com/AGTPinsights/status/2125493140245090326",
+   "posted": "2026-11-25T13:03:49+05:30",
    "topic": "Models",
+   "kind": "Report",
+   "summary": "Reports that Cognition released SWE-2.1, its new coding model, free for two weeks. It succeeds SWE-2 and is trained with reinforcement learning on Kimi K3."
+  },
+  {
+   "id": "2125334383490105601",
+   "handle": "OpenAI",
+   "name": "OpenAI",
+   "url": "https://x.com/OpenAI/status/2125334383490105601",
+   "posted": "2026-11-25T02:32:58+05:30",
+   "topic": "Research",
    "kind": "Official",
-   "summary": "Google says Gemini 4 Neon is its third Gemini model released in eight days, and that Tasks is expanding in the Gemini app."
+   "summary": "OpenAI shares a preprint with lab validation of protein design by its GPT-6 family. Of 322 proteins tested with a partner, 35 showed binding evidence, with binders for all five targets."
+  },
+  {
+   "id": "2125223223847772472",
+   "handle": "Polymarket",
+   "name": "Polymarket",
+   "url": "https://x.com/Polymarket/status/2125223223847772472",
+   "posted": "2026-11-24T19:11:15+05:30",
+   "topic": "AI",
+   "kind": "Report",
+   "summary": "Citing Axios, Polymarket reports that OpenAI and Anthropic employees fear their most advanced internal models may be too powerful to release safely."
   },
   {
    "id": "2123861461877588180",
@@ -22,24 +52,14 @@
    "summary": "OpenAI says ecommerce and online service businesses based outside the U.S. can now claim their business and publish agents in ChatGPT."
   },
   {
-   "id": "2123828467124851025",
-   "handle": "GoogleAI",
-   "name": "Google AI",
-   "url": "https://x.com/GoogleAI/status/2123828467124851025",
-   "posted": "2026-11-20T22:49:00+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google AI recaps two weeks of shipping, led by Gemini 4 Neon for software engineering and science, plus Gemini 4 Hydrogen."
-  },
-  {
-   "id": "2123508592192245761",
-   "handle": "kimmonismus",
-   "name": "Chubby",
-   "url": "https://x.com/kimmonismus/status/2123508592192245761",
-   "posted": "2026-11-20T01:37:55+05:30",
-   "topic": "Tech",
+   "id": "2123333676998226113",
+   "handle": "cmani",
+   "name": "Mani",
+   "url": "https://x.com/cmani/status/2123333676998226113",
+   "posted": "2026-11-19T14:02:52+05:30",
+   "topic": "India",
    "kind": "Report",
-   "summary": "Commentary on Anthropic's IPO day: the post says the fully diluted valuation reached about $2 trillion at the open, with shares opening at $111.50."
+   "summary": "Reports Sarvam AI says its Token Factory inference platform runs on privately procured GPUs, not government-subsidised compute, after criticism over hosting Chinese open-weight models."
   },
   {
    "id": "2123196808675405860",
@@ -70,26 +90,6 @@
    "topic": "Models",
    "kind": "Official",
    "summary": "Google DeepMind begins rolling out Gemini 4 Neon, positioned between Carbon and Hydrogen, for software engineering, knowledge work and science tasks."
-  },
-  {
-   "id": "2122798039899263456",
-   "handle": "sama",
-   "name": "Sam Altman",
-   "url": "https://x.com/sama/status/2122798039899263456",
-   "posted": "2026-11-18T02:34:27+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Sam Altman says OpenAI's 6.2 Sol and Astra models are out, calls them token-efficient, and highlights the ultrafast mode of 6.2 Sol."
-  },
-  {
-   "id": "2122353555852210257",
-   "handle": "LightspeedIndia",
-   "name": "Lightspeed India",
-   "url": "https://x.com/LightspeedIndia/status/2122353555852210257",
-   "posted": "2026-11-16T21:08:13+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Lightspeed India congratulates Sarvam on Token Factory, which hosts Sarvam and open-weight models on GPUs in India to address data residency needs."
   }
  ]
 }
