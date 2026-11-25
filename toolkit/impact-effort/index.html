@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impact–Effort Matrix · Invent + Discover</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="description" content="Score ideas by impact and effort, drag them on a 2x2 grid and find your quick wins. Solo or with a team. Free, in your browser, with a printable A4 sheet.">
+<link rel="canonical" href="https://inventndiscover.com/toolkit/impact-effort/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Impact–Effort Matrix · Invent + Discover">
+<meta property="og:description" content="Quick wins, major projects, fill-ins and thankless tasks: sort your ideas in minutes. Free, in your browser.">
+<meta property="og:url" content="https://inventndiscover.com/toolkit/impact-effort/"><meta property="og:image" content="https://inventndiscover.com/images/share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#05060A">
+<style>
+:root{
+  --bg:#07070f; --panel:#0e0e1f; --ink:#ecebff; --muted:#8c8ab8;
+  --cyan:#00f0ff; --magenta:#ff2bd6; --lime:#b6ff3b; --amber:#ffb300;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--ink); background:var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background-image:
+    linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 40px}
+h1{margin:8px 0 4px;font-size:clamp(1.6rem,4vw,2.3rem);color:var(--cyan);text-shadow:0 0 12px rgba(0,240,255,.6)}
+.sub{margin:0 0 18px;color:var(--muted)}
+.muted{color:var(--muted);font-size:.9rem}
+.panel{background:var(--panel);border:1px solid rgba(0,240,255,.35);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 0 18px rgba(0,240,255,.08)}
+label{display:block;margin-bottom:4px;font-size:.85rem;color:var(--muted)}
+input,select{
+  width:100%;padding:10px;font-size:1rem;color:var(--ink);
+  background:#050510;border:1px solid rgba(255,43,214,.5);border-radius:8px;
+}
+input:focus,select:focus{outline:none;box-shadow:0 0 0 2px rgba(255,43,214,.4)}
+input:disabled{opacity:.5}
+.row{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:640px){.row.cols-4{grid-template-columns:2fr 1fr 1fr auto;align-items:end}}
+button{
+  padding:10px 14px;font-size:.95rem;cursor:pointer;
+  color:var(--cyan);background:transparent;border:1px solid var(--cyan);border-radius:8px;
+  box-shadow:0 0 10px rgba(0,240,255,.35);
+}
+button:hover{background:rgba(0,240,255,.12)}
+button.alt{color:var(--magenta);border-color:var(--magenta);box-shadow:0 0 10px rgba(255,43,214,.35)}
+button.alt:hover{background:rgba(255,43,214,.12)}
+button.on{background:var(--cyan);color:#001015}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hidden{display:none !important}
+.status{min-height:1.2em;color:var(--lime);font-size:.9rem}
+
+/* Board */
+.axis-y{margin:0 0 6px;color:var(--muted);font-size:.85rem}
+.axis-x{margin:6px 0 0;text-align:right;color:var(--muted);font-size:.85rem}
+.board{
+  position:relative;width:min(100%,520px);aspect-ratio:1/1;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  border:2px solid var(--cyan);box-shadow:0 0 24px rgba(0,240,255,.3);background:#060612;
+}
+.q{position:relative;border:1px dashed rgba(255,255,255,.08)}
+.q span{position:absolute;top:8px;left:10px;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+.q.qw span{color:var(--lime);text-shadow:0 0 8px rgba(182,255,59,.6)}
+.q.mp span{color:var(--cyan);text-shadow:0 0 8px rgba(0,240,255,.6)}
+.q.fi span{color:var(--magenta);text-shadow:0 0 8px rgba(255,43,214,.6)}
+.q.tt span{color:var(--amber);text-shadow:0 0 8px rgba(255,179,0,.6)}
+.plot{position:absolute;inset:0;pointer-events:none}
+.dot{
+  position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
+  background:var(--ink);box-shadow:0 0 10px currentColor;
+}
+.dot.qw{color:var(--lime);background:var(--lime)}
+.dot.mp{color:var(--cyan);background:var(--cyan)}
+.dot.fi{color:var(--magenta);background:var(--magenta)}
+.dot.tt{color:var(--amber);background:var(--amber)}
+.dot{pointer-events:auto;cursor:grab;touch-action:none}
+.dot.dragging{cursor:grabbing;z-index:2;transform:scale(1.4)}
+.tag{
+  position:absolute;left:10px;top:-8px;max-width:150px;padding:1px 5px;border-radius:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.72rem;
+  color:var(--ink);background:rgba(0,0,0,.7);
+}
+
+/* Lists */
+.qhead{margin:18px 0 6px;font-size:1rem;text-transform:uppercase;letter-spacing:.06em}
+.item{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.score{font-size:.85rem;color:var(--muted)}
+.rate{display:flex;gap:6px;align-items:center}
+.rate select{width:auto;padding:6px}
+.rate button,.item button{padding:6px 10px;font-size:.85rem}
+.credits{margin-top:32px;padding-top:16px;border-top:1px solid rgba(0,240,255,.25);color:var(--muted);font-size:.85rem}
+.credits a{color:var(--cyan)}
+/* Screen: the A4 sheet stays hidden until it is printed */
+/* The A4 sheet is built off-screen, then saved as a PNG */
+.paper{position:absolute;left:-10000px;top:0;width:794px;min-height:1123px;padding:40px;background:#fff;color:#111}
+.paper h1{color:#111;text-shadow:none;font-size:26px;margin:0 0 6px}
+.paper .meta{color:#444;margin:0 0 6px;font-size:14px}
+.paper .board{border:2px solid #111;box-shadow:none;background:#fff;width:100%;max-width:560px;margin:14px auto}
+.paper .q{border:1px dashed #bbb}
+.paper .q span{text-shadow:none;font-size:12px}
+.paper .q.qw span{color:#3d6b00}
+.paper .q.mp span{color:#00606a}
+.paper .q.fi span{color:#8a0a6e}
+.paper .q.tt span{color:#8a5a00}
+.paper .dot{box-shadow:none;cursor:default}
+.paper .dot.qw{background:#3d6b00;color:#3d6b00}
+.paper .dot.mp{background:#00606a;color:#00606a}
+.paper .dot.fi{background:#8a0a6e;color:#8a0a6e}
+.paper .dot.tt{background:#8a5a00;color:#8a5a00}
+.paper .tag{background:#fff;color:#111;border:1px solid #ccc;font-size:11px}
+.paper .qhead{color:#111 !important}
+.paper .item{border-bottom:1px solid #ddd;color:#111}
+.paper .score,.paper .muted{color:#444}
+.paper .credits{color:#444;border-top:1px solid #999;margin-top:20px}
+.paper .credits a{color:#111}
+@media print{ .paper{position:static !important;left:auto !important;padding:0;min-height:0} }
+
+/* Print: white A4 sheet, the same look as the other tools' exports */
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff !important;background-image:none !important;color:#111 !important}
+  .wrap{display:none !important}
+  #sheet{display:block !important;color:#111}
+  #sheet h1{color:#111;text-shadow:none;font-size:20pt;margin:0 0 4pt}
+  #sheet .meta{color:#444;margin:0 0 4pt}
+  #sheet .board{border:1.5pt solid #111;box-shadow:none;background:#fff;width:100%;max-width:150mm;margin:10pt auto}
+  #sheet .q{border:1px dashed #bbb}
+  #sheet .q span{text-shadow:none}
+  #sheet .q.qw span{color:#3d6b00 !important}
+  #sheet .q.mp span{color:#00606a !important}
+  #sheet .q.fi span{color:#8a0a6e !important}
+  #sheet .q.tt span{color:#8a5a00 !important}
+  #sheet .dot{box-shadow:none}
+  #sheet .dot.qw{background:#3d6b00 !important;color:#3d6b00}
+  #sheet .dot.mp{background:#00606a !important;color:#00606a}
+  #sheet .dot.fi{background:#8a0a6e !important;color:#8a0a6e}
+  #sheet .dot.tt{background:#8a5a00 !important;color:#8a5a00}
+  #sheet .tag{background:#fff;color:#111;border:0.5pt solid #ccc}
+  #sheet .qhead{color:#111 !important}
+  #sheet .item{border-bottom:0.5pt solid #ccc;color:#111}
+  #sheet .score,#sheet .muted{color:#444}
+  #sheet .credits{color:#444;border-top:0.5pt solid #999}
+  #sheet .credits a{color:#111}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="/favicon-pulse.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <h1>Impact–Effort Matrix</h1>
+  <p class="sub">Sort ideas by how much they matter and how hard they are to do.</p>
+
+  <div class="toolbar" style="margin-top:0">
+    <button id="modeSolo" class="on">Solo</button>
+    <button id="modeTeam">Team</button>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <label for="question">Research question</label>
+    <input id="question" maxlength="140" placeholder="e.g. What should our lab build next?">
+    <div class="row cols-4" style="margin-top:10px">
+      <div>
+        <label for="sheetName">On the sheet: your name</label>
+        <input id="sheetName" maxlength="60" placeholder="Your name">
+      </div>
+      <div>
+        <label for="sheetDate">Date</label>
+        <input id="sheetDate" type="date">
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLO -->
+  <section id="soloPanel" class="panel">
+    <div class="row cols-4">
+      <div>
+        <label for="soloName">Item</label>
+        <input id="soloName" maxlength="80" placeholder="e.g. Add captions to demo videos">
+      </div>
+      <div>
+        <label for="soloImpact">Impact (1–5)</label>
+        <select id="soloImpact"></select>
+      </div>
+      <div>
+        <label for="soloEffort">Effort (1–5)</label>
+        <select id="soloEffort"></select>
+      </div>
+      <button id="soloAddBtn">Add item</button>
+    </div>
+    <div class="toolbar">
+      <button id="exampleBtn">Load example</button>
+      <button id="clearBtn" class="alt">Clear board</button>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="teamPanel" class="panel hidden">
+    <div id="teamJoin">
+      <div class="row cols-4">
+        <div>
+          <label for="teamCode">Team code</label>
+          <input id="teamCode" maxlength="8" placeholder="Type your own, or leave empty">
+        </div>
+        <button id="joinBtn">Join team</button>
+        <button id="createBtn" class="alt">Create team</button>
+      </div>
+      <p class="muted">Create team uses the code you type (or a random one if the box is empty). Join team needs an existing code. Anyone with the code can view and edit it, so please don't add names or private details.</p>
+    </div>
+    <div id="teamJoined" class="hidden">
+      <p>Team code: <strong id="codeShow"></strong>
+        <button id="leaveBtn" class="alt">Leave team</button></p>
+      <div class="row cols-4">
+        <div>
+          <label for="teamName">Item</label>
+          <input id="teamName" maxlength="80" placeholder="Add an idea and score it">
+        </div>
+        <div>
+          <label for="teamImpact">Impact (1–5)</label>
+          <select id="teamImpact"></select>
+        </div>
+        <div>
+          <label for="teamEffort">Effort (1–5)</label>
+          <select id="teamEffort"></select>
+        </div>
+        <button id="teamAddBtn">Add item</button>
+      </div>
+      <p class="muted">The board shows the team's average scores. Drag a dot to set your own score for it.</p>
+    </div>
+    <p id="teamStatus" class="status"></p>
+  </section>
+
+  <!-- BOARD -->
+  <p class="muted">Drag any dot to a new spot to change its scores. Works with a mouse or your finger.</p>
+  <p class="axis-y">Impact ↑</p>
+  <div class="board">
+    <div class="q qw"><span>Quick Wins</span></div>
+    <div class="q mp"><span>Major Projects</span></div>
+    <div class="q fi"><span>Fill-Ins</span></div>
+    <div class="q tt"><span>Thankless Tasks</span></div>
+    <div class="plot" id="plot"></div>
+  </div>
+  <p class="axis-x">Effort →</p>
+
+  <div class="toolbar">
+    <button id="sheetBtn">Save A4 sheet (PNG)</button>
+  </div>
+
+  <div id="lists"></div>
+
+  <footer class="credits" id="credits">
+    <p>© Invent + Discover, Mumbai · <a href="https://inventndiscover.com/#tools">Back to tools</a></p>
+    <p>The impact–effort matrix has no single inventor. It grew out of quality management and process improvement, and draws on decision analysis and 2x2 prioritisation tools.</p>
+    <p>Sources: <a href="https://www.toolshero.com/project-management/impact-effort-matrix/">ToolsHero</a>,
+      <a href="https://www.sessionlab.com/methods/impact-effort-matrix-for-software-requirements-prioritization">SessionLab</a>,
+      <a href="https://www.larksuite.com/en_us/topics/productivity-glossary/impact-effort-matrix">Lark</a>,
+      <a href="https://modelthinkers.com/mental-model/impact-effort-matrix">ModelThinkers</a>,
+      <a href="https://dotwork.com/post/understanding-the-impact-vs-effort-matrix-a-guide-to-prioritizing-tasks">Dotwork</a>.</p>
+    <p>Invent + Discover is an educational project. Demos are made for learning and research, not for commercial use. Names, brands and marks belong to their owners; no affiliation or endorsement is implied. Third-party assets are credited under their licences.</p>
+  </footer>
+</div>
+
+<div id="sheet" class="paper"></div>
+<script type="module">
+/* ============================================================
+   1. SETTINGS
+   Team mode uses the existing Firebase project "inventndiscover-tools".
+   Paste its web app config below (Firebase console → Project settings →
+   Your apps → the web app's config). The config is public, so this is safe.
+   Leave it as null and Team mode shows a message instead.
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAm_boRIJOnn-Pd8dN2IZAFhGCzZtDetrE",
+  authDomain: "inventndiscover-tools.firebaseapp.com",
+  projectId: "inventndiscover-tools",
+  storageBucket: "inventndiscover-tools.firebasestorage.app",
+  messagingSenderId: "254396865975",
+  appId: "1:254396865975:web:013e6c0e559424c620dc32"
+};
+
+const FIREBASE_VERSION = "10.12.0";
+const TOOL = "impact-effort";   // must match the tool name used in the shared rules
+
+/* ============================================================
+   2. SHARED HELPERS
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+};
+const fmt = n => Number.isInteger(n) ? String(n) : n.toFixed(1);
+
+// Quadrant names and colours. Keys are used as CSS classes too.
+const Q = {
+  qw: { name: "Quick Wins",       color: "var(--lime)" },
+  mp: { name: "Major Projects",   color: "var(--cyan)" },
+  fi: { name: "Fill-Ins",         color: "var(--magenta)" },
+  tt: { name: "Thankless Tasks",  color: "var(--amber)" }
+};
+const ORDER = ["qw", "mp", "fi", "tt"];
+
+// 3 is the middle of a 1–5 scale. Scores of 3 or more count as "high".
+function quadrantOf(impact, effort) {
+  const highImpact = impact >= 3;
+  const lowEffort = effort <= 3;
+  if (highImpact && lowEffort) return "qw";
+  if (highImpact) return "mp";
+  if (lowEffort) return "fi";
+  return "tt";
+}
+
+// Build a new <select> with options 1–5, default 3.
+function freshScoreSelect() {
+  const s = document.createElement("select");
+  for (let n = 1; n <= 5; n++) {
+    const o = document.createElement("option");
+    o.value = n; o.textContent = n;
+    if (n === 3) o.selected = true;
+    s.appendChild(o);
+  }
+  return s;
+}
+
+// Fill an existing <select> (found by id) with options 1–5, default 3.
+function fillScore(id) {
+  const s = $(id);
+  s.innerHTML = "";
+  for (let n = 1; n <= 5; n++) {
+    const o = document.createElement("option");
+    o.value = n; o.textContent = n;
+    if (n === 3) o.selected = true;
+    s.appendChild(o);
+  }
+}
+
+/* ============================================================
+   3. STATE
+   ============================================================ */
+let mode = "solo";
+const SOLO_KEY = "ie-solo-items";
+const QUESTION_KEY = "ie-question";
+let soloItems = loadSolo();
+
+// Team state (only used in team mode)
+let fb = null;          // Firestore functions, loaded on demand
+let db = null;          // Firestore database handle
+let authFns = null;     // Firebase Auth functions
+let auth = null;        // Firebase Auth handle
+let myUid = null;       // this browser's anonymous id, used as the key for votes
+let teamCode = null;    // code of the joined team
+let teamQuestion = "";
+let teamItems = [];     // raw docs: {id, text, by, at, votes}
+let unsubscribe = null; // stops the live listener
+let drag = null;        // the dot being dragged, if any
+
+/* ============================================================
+   4. DRAWING (shared by both modes)
+   ============================================================ */
+// Put one dot on the board for each item.
+// Effort runs left→right, impact runs bottom→top.
+// The 6% margin stops dots sitting on the edge.
+function plotItems(items) {
+  const plot = $("plot");
+  plot.textContent = "";
+  items.forEach(it => {
+    const dot = el("div", "dot " + quadrantOf(it.impact, it.effort));
+    dot.style.left = (6 + ((it.effort - 1) / 4) * 88) + "%";
+    dot.style.top = (6 + (1 - (it.impact - 1) / 4) * 88) + "%";
+    dot.dataset.id = it.id;
+    dot.appendChild(el("span", "tag", it.name));
+    attachDrag(dot);
+    plot.appendChild(dot);
+  });
+}
+
+/* ---------- Drag to move ----------
+   Pointer events work for both mouse and touch.
+   1. Press on a dot          -> we remember which dot it is
+   2. Move the pointer        -> the dot follows it
+   3. Let go                  -> we turn the dot's position back into scores (1–5)
+*/
+function clampScore(n) { return Math.min(5, Math.max(1, n)); }
+
+function attachDrag(dot) {
+  dot.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    drag = { id: dot.dataset.id, dot, moved: false, x: 0, y: 0 };
+    dot.setPointerCapture(e.pointerId);
+    dot.classList.add("dragging");
+  });
+  dot.addEventListener("pointermove", e => {
+    if (!drag || drag.dot !== dot) return;
+    const box = dot.closest(".board").getBoundingClientRect();
+    // Pointer position as a percentage of the board, kept inside the 6%–94% area
+    const x = Math.min(94, Math.max(6, (e.clientX - box.left) / box.width * 100));
+    const y = Math.min(94, Math.max(6, (e.clientY - box.top) / box.height * 100));
+    dot.style.left = x + "%";
+    dot.style.top = y + "%";
+    drag.moved = true;
+    drag.x = x;
+    drag.y = y;
+  });
+  dot.addEventListener("pointerup", finishDrag);
+  dot.addEventListener("pointercancel", () => { drag = null; refresh(); });
+}
+
+function finishDrag() {
+  if (!drag) return;
+  const { id, moved, x, y } = drag;
+  drag = null;
+  if (!moved) { refresh(); return; }   // a tap without moving changes nothing
+  // Reverse of plotItems: left → effort, top → impact
+  const effort = clampScore(Math.round(1 + ((x - 6) / 88) * 4));
+  const impact = clampScore(Math.round(1 + (1 - (y - 6) / 88) * 4));
+  if (mode === "solo") {
+    const it = soloItems.find(i => i.id === id);
+    if (it) { it.impact = impact; it.effort = effort; saveSolo(); }
+    refresh();
+  } else {
+    rateItem(id, impact, effort);   // team: this person's score for the item
+  }
+}
+
+// Split items into the four quadrants, highest impact first.
+function groupByQuadrant(items) {
+  const groups = { qw: [], mp: [], fi: [], tt: [] };
+  items.forEach(it => groups[quadrantOf(it.impact, it.effort)].push(it));
+  ORDER.forEach(k => groups[k].sort((a, b) => (b.impact - a.impact) || (a.effort - b.effort)));
+  return groups;
+}
+
+// Write the list under the board.
+function renderList(items) {
+  const box = $("lists");
+  box.textContent = "";
+  if (!items.length) {
+    box.appendChild(el("p", "muted", mode === "solo"
+      ? "No items yet. Add your first one above."
+      : "No items yet. Add the first idea above."));
+    return;
+  }
+  const groups = groupByQuadrant(items);
+  ORDER.forEach(key => {
+    const list = groups[key];
+    const head = el("h3", "qhead", `${Q[key].name} (${list.length})`);
+    head.style.color = Q[key].color;
+    box.appendChild(head);
+    if (!list.length) { box.appendChild(el("p", "muted", "Nothing here yet.")); return; }
+
+    list.forEach(it => {
+      const row = el("div", "item");
+      row.appendChild(el("span", "", it.name));
+      const meta = el("span", "score",
+        `impact ${fmt(it.impact)} · effort ${fmt(it.effort)}` +
+        (it.ratings ? ` · ${it.ratings} rating${it.ratings === 1 ? "" : "s"}` : ""));
+      row.appendChild(meta);
+      addRowControls(it, row);
+      box.appendChild(row);
+    });
+  });
+}
+
+// Solo: delete button. Team: rating controls if this browser hasn't rated the item.
+function addRowControls(it, row) {
+  if (mode === "solo") {
+    const del = el("button", "alt", "Delete");
+    del.onclick = () => {
+      soloItems = soloItems.filter(x => x.id !== it.id);
+      saveSolo();
+      refresh();
+    };
+    row.appendChild(del);
+  }
+}
+
+// Redraw the board and list from whichever mode is active.
+function refresh() {
+  const items = currentItems();
+  if (!drag) plotItems(items); // don't redraw dots while one is being dragged
+  renderList(items);
+}
+
+// Solo uses saved items as they are. Team shows the average of all votes.
+function currentItems() {
+  if (mode === "solo") return soloItems.map(i => ({ ...i }));
+  return teamAverages();
+}
+
+/* ============================================================
+   5. SOLO MODE
+   ============================================================ */
+function loadSolo() {
+  try { return JSON.parse(localStorage.getItem(SOLO_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveSolo() {
+  try { localStorage.setItem(SOLO_KEY, JSON.stringify(soloItems)); } catch (e) {}
+}
+function newId(prefix) {
+  return prefix + Date.now() + Math.random().toString(36).slice(2, 6);
+}
+
+function addSolo() {
+  const name = $("soloName").value.trim();
+  if (!name) { alert("Please type a name for the item first."); return; }
+  soloItems.push({
+    id: newId("s"),
+    name,
+    impact: +$("soloImpact").value,
+    effort: +$("soloEffort").value
+  });
+  saveSolo();
+  $("soloName").value = "";
+  refresh();
+}
+
+function loadExample() {
+  const examples = [
+    ["Set up a shared class Slack channel", 3, 1],
+    ["Rebuild the whole site from scratch", 4, 5],
+    ["Add captions to all demo videos", 3, 2],
+    ["Write a 50-page report", 2, 5],
+    ["Fix broken links in the footer", 2, 1],
+    ["Launch a paid online course", 5, 4]
+  ];
+  soloItems = examples.map(([name, impact, effort]) => ({ id: newId("e"), name, impact, effort }));
+  saveSolo();
+  refresh();
+}
+
+function clearSolo() {
+  if (!confirm("Clear all items on this board?")) return;
+  soloItems = [];
+  saveSolo();
+  refresh();
+}
+
+/* ============================================================
+   6. TEAM MODE (Firebase Firestore + anonymous sign-in)
+   Data layout, matching the shared rules for "teams/{tool}/boards/{code}":
+     teams/impact-effort/boards/{CODE}              -> { question, updatedAt }
+     teams/impact-effort/boards/{CODE}/items/{id}   -> { text, by, at, votes }
+   votes is a map keyed by each person's anonymous id:
+     votes: { "<uid>": { i: 4, e: 2 } }
+   Each person only writes their own key, so ratings never overwrite each other.
+   Average impact = sum of all i / number of votes (same for effort).
+   ============================================================ */
+function setTeamStatus(msg) { $("teamStatus").textContent = msg; }
+
+// Stops waiting after a set time, so a stuck step shows an error instead of hanging
+function withTimeout(promise, ms, label) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(
+      "Timed out while " + label + ". Check the phone's internet, or open the file in Chrome from Downloads.")), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+// Shortcuts to the Firestore paths above
+const boardRef = code => fb.doc(db, "teams", TOOL, "boards", code);
+const itemsRef = code => fb.collection(db, "teams", TOOL, "boards", code, "items");
+const itemRef = (code, id) => fb.doc(db, "teams", TOOL, "boards", code, "items", id);
+
+async function connectFirebase() {
+  if (fb) return true;
+  if (!FIREBASE_CONFIG) {
+    setTeamStatus("Team mode isn't connected yet. Paste the Firebase config at the top of the script.");
+    return false;
+  }
+  try {
+    const appMod = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-app.js`);
+    const fsMod = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-firestore.js`);
+    const authMod = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+    const app = appMod.initializeApp(FIREBASE_CONFIG);
+    db = fsMod.getFirestore(app);
+    auth = authMod.getAuth(app);
+    authFns = authMod;
+    // The shared rules only allow signed-in users, so sign in anonymously first.
+    setTeamStatus("Signing in…");
+    const cred = await withTimeout(authMod.signInAnonymously(auth), 15000, "signing in");
+    myUid = cred.user.uid;
+    fb = fsMod;
+    return true;
+  } catch (e) {
+    setTeamStatus("Couldn't connect to Firebase (" + (e.code || e.message) + "). Check your connection, then try again.");
+    return false;
+  }
+}
+
+function randomCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O or 1/I
+  let code = "";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+async function createTeam() {
+  setTeamStatus("Creating team…");
+  try {
+    await createTeamInner();
+  } catch (e) {
+    setTeamStatus("Couldn't create the team: " + (e.code || e.message));
+  }
+}
+
+async function createTeamInner() {
+  if (!(await connectFirebase())) return;
+  const question = $("question").value.trim() || "Impact–Effort Matrix";
+  // Use the code typed in the box if there is one, otherwise make a random code
+  const typed = $("teamCode").value.trim().toUpperCase();
+  if (typed && !/^[A-Z0-9]{3,8}$/.test(typed)) {
+    setTeamStatus("A team code uses 3 to 8 letters or numbers only.");
+    return;
+  }
+  const code = typed || randomCode();
+  if (typed) {
+    const existing = await fb.getDoc(boardRef(code));
+    if (existing.exists()) {
+      setTeamStatus("The code " + code + " is already in use. Tap Join team instead, or pick another code.");
+      return;
+    }
+  }
+  await fb.setDoc(boardRef(code), { question, updatedAt: fb.serverTimestamp() });
+  await joinTeam(code);
+}
+
+async function joinTeam(rawCode) {
+  setTeamStatus("Joining…");
+  try {
+    await joinTeamInner(rawCode);
+  } catch (e) {
+    setTeamStatus("Couldn't join the team: " + (e.code || e.message));
+  }
+}
+
+async function joinTeamInner(rawCode) {
+  if (!(await connectFirebase())) return;
+  const code = (rawCode || "").trim().toUpperCase();
+  if (!code) { setTeamStatus("Type a team code first."); return; }
+  setTeamStatus("Looking for the team…");
+  const snap = await withTimeout(fb.getDoc(boardRef(code)), 15000, "looking for the team");
+  if (!snap.exists()) { setTeamStatus("No team with that code. Check it and try again."); return; }
+
+  teamCode = code;
+  teamQuestion = snap.data().question || "";
+  listenToTeam();
+  showTeamUI();
+  setTeamStatus("");
+}
+
+// Live listener: the board updates whenever anyone adds or rates an item.
+function listenToTeam() {
+  if (unsubscribe) unsubscribe();
+  unsubscribe = fb.onSnapshot(itemsRef(teamCode), snap => {
+    teamItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (mode === "team") refresh();
+  }, () => setTeamStatus("Lost the connection to this team. Try leaving and rejoining."));
+}
+
+function leaveTeam() {
+  if (unsubscribe) unsubscribe();
+  unsubscribe = null;
+  teamCode = null;
+  teamItems = [];
+  showTeamUI();
+  setTeamStatus("");
+  refresh();
+}
+
+function showTeamUI() {
+  const joined = !!teamCode;
+  $("teamJoin").classList.toggle("hidden", joined);
+  $("teamJoined").classList.toggle("hidden", !joined);
+  $("codeShow").textContent = teamCode || "";
+  $("question").disabled = joined;
+  $("question").value = joined ? teamQuestion : (localStorage.getItem(QUESTION_KEY) || "");
+}
+
+// Turn each item's votes into averages. Items with no votes are skipped.
+function teamAverages() {
+  return teamItems
+    .map(it => {
+      const votes = Object.values(it.votes || {});
+      const n = votes.length;
+      if (!n) return null;
+      return {
+        id: it.id,
+        name: it.text || "",
+        impact: votes.reduce((sum, v) => sum + v.i, 0) / n,
+        effort: votes.reduce((sum, v) => sum + v.e, 0) / n,
+        ratings: n
+      };
+    })
+    .filter(Boolean);
+}
+
+// Has this browser already voted on the item?
+function isRated(id) {
+  const it = teamItems.find(x => x.id === id);
+  return !!(it && it.votes && it.votes[myUid]);
+}
+
+// A small form on each unrated item: pick impact and effort, then press Rate.
+function rateControls(id) {
+  const wrap = el("span", "rate");
+  const impact = freshScoreSelect();
+  const effort = freshScoreSelect();
+  impact.title = "Impact"; effort.title = "Effort";
+  const btn = el("button", "", "Rate");
+  btn.onclick = () => rateItem(id, +impact.value, +effort.value);
+  wrap.append(impact, effort, btn);
+  return wrap;
+}
+
+async function rateItem(id, impact, effort) {
+  try {
+    await rateItemInner(id, impact, effort);
+  } catch (e) {
+    setTeamStatus("Couldn't save your rating: " + (e.code || e.message));
+  }
+}
+
+async function rateItemInner(id, impact, effort) {
+  // Writes only this browser's key inside votes, so other people's votes are safe
+  await fb.updateDoc(itemRef(teamCode, id), {
+    [`votes.${myUid}`]: { i: impact, e: effort }
+  });
+}
+
+async function addTeamItem() {
+  try {
+    await addTeamItemInner();
+  } catch (e) {
+    setTeamStatus("Couldn't add the item: " + (e.code || e.message));
+  }
+}
+
+async function addTeamItemInner() {
+  const name = $("teamName").value.trim();
+  if (!name) { setTeamStatus("Type an item name first."); return; }
+  const impact = +$("teamImpact").value;
+  const effort = +$("teamEffort").value;
+  await fb.addDoc(itemsRef(teamCode), {
+    text: name,
+    by: myUid,
+    at: fb.serverTimestamp(),
+    votes: { [myUid]: { i: impact, e: effort } }   // the adder also scores the item
+  });
+  $("teamName").value = "";
+  setTeamStatus("Added.");
+}
+
+/* ============================================================
+   7. EXPORT AND COPY (both modes)
+   ============================================================ */
+function exportCSV() {
+  const rows = [["name", "impact", "effort", "quadrant"]];
+  currentItems().forEach(it => rows.push([
+    it.name, fmt(it.impact), fmt(it.effort), Q[quadrantOf(it.impact, it.effort)].name
+  ]));
+  const csv = rows
+    .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
+  const a = el("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  a.download = "impact-effort.csv";
+  a.click();
+}
+
+// Builds a white A4 sheet from the board and lists, then saves it as a PNG image.
+async function saveSheet() {
+  if (!window.html2canvas) {
+    alert("The image tool didn't load. Check your internet connection and try again.");
+    return;
+  }
+  const name = $("sheetName").value.trim();
+  const date = $("sheetDate").value;
+  const question = $("question").value.trim() || "Impact–Effort Matrix";
+  const sheet = $("sheet");
+  sheet.textContent = "";
+
+  sheet.appendChild(el("h1", "", question));
+  sheet.appendChild(el("p", "meta", [name, date].filter(Boolean).join(" · ") || " "));
+  sheet.appendChild(el("p", "meta", mode === "team"
+    ? `Team ${teamCode || ""} · average scores`
+    : "Solo board"));
+
+  // Copy of the board (ids removed so they don't clash with the screen version)
+  const board = $("plot").parentElement.cloneNode(true);
+  board.querySelectorAll("[id]").forEach(n => n.removeAttribute("id"));
+  sheet.appendChild(board);
+  sheet.appendChild(el("p", "meta", "Impact ↑ (top = higher) · Effort → (right = more effort)"));
+
+  // Copy of the lists, without the Delete buttons
+  const lists = $("lists").cloneNode(true);
+  lists.querySelectorAll("button").forEach(b => b.remove());
+  sheet.appendChild(lists);
+
+  sheet.appendChild($("credits").cloneNode(true));
+
+  try {
+    const canvas = await window.html2canvas(sheet, { backgroundColor: "#ffffff", scale: 2 });
+    const a = el("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "impact-effort-a4.png";
+    a.click();
+  } catch (e) {
+    alert("Couldn't create the image: " + (e.message || e));
+  }
+}
+
+function copyAsText() {
+  const items = currentItems();
+  const groups = groupByQuadrant(items);
+  const lines = [$("question").value.trim() || "Impact–Effort Matrix"];
+  ORDER.forEach(key => {
+    lines.push("", Q[key].name.toUpperCase());
+    if (!groups[key].length) lines.push("- (none)");
+    groups[key].forEach(it =>
+      lines.push(`- ${it.name} (impact ${fmt(it.impact)}, effort ${fmt(it.effort)})`));
+  });
+  const text = lines.join("\n");
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Copied to your clipboard."))
+    .catch(() => alert(text));
+}
+
+/* ============================================================
+   8. MODE SWITCH AND WIRING
+   ============================================================ */
+function setMode(m) {
+  mode = m;
+  $("modeSolo").classList.toggle("on", m === "solo");
+  $("modeTeam").classList.toggle("on", m === "team");
+  $("soloPanel").classList.toggle("hidden", m !== "solo");
+  $("teamPanel").classList.toggle("hidden", m !== "team");
+  refresh();
+}
+
+function init() {
+  ["soloImpact", "soloEffort", "teamImpact", "teamEffort"].forEach(fillScore);
+
+  $("question").value = localStorage.getItem(QUESTION_KEY) || "";
+  $("question").addEventListener("input", () => {
+    if (!teamCode) {
+      try { localStorage.setItem(QUESTION_KEY, $("question").value); } catch (e) {}
+    }
+  });
+
+  $("modeSolo").onclick = () => setMode("solo");
+  $("modeTeam").onclick = () => setMode("team");
+
+  $("soloAddBtn").onclick = addSolo;
+  $("exampleBtn").onclick = loadExample;
+  $("clearBtn").onclick = clearSolo;
+
+  $("createBtn").onclick = createTeam;
+  $("joinBtn").onclick = () => joinTeam($("teamCode").value);
+  $("leaveBtn").onclick = leaveTeam;
+  $("teamAddBtn").onclick = addTeamItem;
+
+  $("sheetBtn").onclick = saveSheet;
+
+  // "On the sheet" name is remembered in this browser, and the date defaults to today
+  $("sheetName").value = localStorage.getItem("ind-sheet-name") || "";
+  $("sheetName").addEventListener("input", () => {
+    try { localStorage.setItem("ind-sheet-name", $("sheetName").value); } catch (e) {}
+  });
+  $("sheetDate").value = new Date().toISOString().slice(0, 10);
+
+  setMode("solo");
+}
+
+init();
+</script>
+<script data-goatcounter="https://inventndiscover.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
