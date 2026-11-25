@@ -200,9 +200,14 @@ const ART_CAT = {Reflection:"#E3B77A",Education:"#E3B77A",AI:"#FFB23F",XR:"#9B7B
    ========================================================= */
 const istDay = d=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);
 const TODAY = istDay(new Date());                       // "YYYY-MM-DD"
-// Scheduled demos: a demo whose added date is still ahead stays off the site (cards, banner, board, search) until that day, Mumbai time.
-// Example: added:"2026-11-17" appears from midnight IST on 17 Nov. The demo page itself is reachable by its address before then.
-for(let i=DEMOS.length-1;i>=0;i--) if(DEMOS[i].added && DEMOS[i].added>TODAY) DEMOS.splice(i,1);
+// Go-live time (STANDARD RULE, 25 Nov 2026): every weekly post goes live at 12:30 pm IST.
+// liveAt turns an "added" value into the moment it goes live:
+//   "2026-11-26"                → 26 Nov 2026, 12:30 IST (date only = 12:30 that day)
+//   "2026-11-23T12:30:00+05:30" → used exactly as written (full date and time)
+const liveAt = s=>Date.parse(s && s.length===10 ? s+"T12:30:00+05:30" : s);
+// Scheduled demos: a demo whose go-live moment is still ahead stays off the site (cards, banner, board, search) until then.
+// Example: added:"2026-11-26" appears at 12:30 IST on 26 Nov. The demo page itself is reachable by its address before then.
+for(let i=DEMOS.length-1;i>=0;i--) if(DEMOS[i].added && liveAt(DEMOS[i].added)>Date.now()) DEMOS.splice(i,1);
 const toUTC = s=>{const [y,m,d]=s.split("-").map(Number);return Date.UTC(y,m-1,d)};
 const dayDiff = (a,b)=>Math.round((toUTC(a)-toUTC(b))/864e5);
 const plusDays = (s,n)=>new Date(toUTC(s)+n*864e5).toISOString().slice(0,10);
@@ -433,7 +438,7 @@ const INTERVIEWS=[
 ];
 const ARR_TYPES=[["ar","AR","#2EE6C8"],["tool","TOOL","#A58BFF"],["origami","ORIGAMI","#46D69A"],["vr","VR","#3D9BFF"],["story","DISCOVER","#FF7BB8"],["interview","INTERVIEW","#FFB547"]];
 function arrivals(){
-  const now=Date.now(), fresh=x=>x.added&&(now-Date.parse(x.added))/864e5<=NEW_DAYS;
+  const now=Date.now(), fresh=x=>x.added&&(now-liveAt(x.added))/864e5<=NEW_DAYS;
   const pool=[
     ...TOOLS.filter(t=>toolIsLive(t)&&fresh(t)).map(t=>({type:"tool",title:t.name,added:t.added,href:t.url})),
     ...DEMOS.filter(d=>d.kind==="tutorial"&&fresh(d)).map(d=>({type:"origami",title:d.name,added:d.added,open:d.id})),
@@ -446,8 +451,8 @@ function arrivals(){
     ...INTERVIEWS.filter(fresh).map(v=>({type:"interview",title:v.board||v.name,added:v.added,href:v.url,ext:1}))
   ];
   // newest of each type, then the rows newest first
-  const best={}; for(const it of pool){ if(!best[it.type]||Date.parse(it.added)>Date.parse(best[it.type].added)) best[it.type]=it; }
-  return Object.values(best).sort((a,b)=>Date.parse(b.added)-Date.parse(a.added));
+  const best={}; for(const it of pool){ if(!best[it.type]||liveAt(it.added)>liveAt(best[it.type].added)) best[it.type]=it; }
+  return Object.values(best).sort((a,b)=>liveAt(b.added)-liveAt(a.added));
 }
 const ARR_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 function arrivalsHTML(){
@@ -919,9 +924,9 @@ function viewLearn(){
 }
 
 /* Tools: hand-made framework tools, each a standalone page under /toolkit/. */
-// A tool shows up from the morning of its "added" date (India time), so a card can be
-// added early with a future date and appear on its own that day, e.g. added:"2026-11-13".
-const toolIsLive=t=>!t.added||Date.parse(t.added+"T00:00:00+05:30")<=Date.now();
+// A tool shows up at 12:30 IST on its "added" date (see liveAt), so a card can be
+// added early with a future date and appear on its own that day, e.g. added:"2026-11-27".
+const toolIsLive=t=>!t.added||liveAt(t.added)<=Date.now();
 const TOOLS=[
  {id:"crazy-8s",added:"2026-10-13",name:"Crazy 8s",line:"Sketch eight ideas in eight minutes, one per frame, then caption them and save the sheet.",url:"/toolkit/crazy-8s/",shape:"frames",
   credit:"The Design Sprint, created by Jake Knapp at Google",time:"8 minutes · nothing uploaded",letters:["1","2","3","4","5","6","7","8"],
