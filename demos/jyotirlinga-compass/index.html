@@ -69,10 +69,9 @@
     color:var(--text);font:400 15px Geist,system-ui,sans-serif;cursor:pointer}
   .shrines button:hover{border-color:rgba(155,107,255,.55)}
   .shrines button.on{border-color:var(--gold);background:rgba(255,200,97,.08);box-shadow:0 0 16px rgba(255,200,97,.22)}
-  .shrines .ico{width:40px;height:40px;flex:none}
-  .shrines .ico svg{display:block;width:100%;height:100%;
-    filter:drop-shadow(0 0 6px rgba(155,107,255,.55))}
-  .shrines button.on .ico svg{filter:drop-shadow(0 0 7px rgba(255,200,97,.7))}
+  .shrines .ico{width:54px;height:54px;flex:none}
+  .shrines .ico svg{display:block;width:100%;height:100%;filter:drop-shadow(0 0 3px currentColor)}
+  .shrines button.on .ico svg{filter:drop-shadow(0 0 7px currentColor)}
   .shrines .nm{flex:1;min-width:0}
   .shrines .en{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .shrines .dv{display:block;font-family:var(--deva);font-size:15px;color:var(--gold);line-height:1.5}
@@ -142,7 +141,7 @@
           <radialGradient id="g-face" cx="50%" cy="38%" r="68%">
             <stop offset="0%" stop-color="#121426"/><stop offset="100%" stop-color="#07080F"/>
           </radialGradient>
-          <linearGradient id="g-gold" gradientUnits="userSpaceOnUse" x1="124" y1="0" x2="177" y2="0">
+          <linearGradient id="g-gold" gradientUnits="userSpaceOnUse" x1="121" y1="0" x2="179" y2="0">
             <stop offset="0%"   stop-color="#6b4910"/>
             <stop offset="14%"  stop-color="#a87c1c"/>
             <stop offset="30%"  stop-color="#e8c25c"/>
@@ -181,20 +180,27 @@
         <!-- Needle: a trishul. Drawn pointing straight up; the rotate()
              below does the aiming, to (bearing - heading). -->
         <g id="needle">
-          <g style="filter:drop-shadow(0 0 11px rgba(255,200,97,.5))"
-             fill="url(#g-gold)" stroke="#432d07" stroke-width=".7" stroke-linejoin="round">
-            <path d="M150 12 L154.6 42 L150 49.5 L145.4 42 Z"/>
-            <path d="M141.5 57 C131 52.5 125.5 41 127.5 21 C131 33.5 135 42 143.5 47 Z"/>
-            <path d="M158.5 57 C169 52.5 174.5 41 172.5 21 C169 33.5 165 42 156.5 47 Z"/>
-            <rect x="135" y="52.5" width="30" height="6.5" rx="3"/>
-            <rect x="140" y="59.5" width="20" height="4.5" rx="2"/>
-            <rect x="147" y="64" width="6" height="81" rx="2.5" fill="url(#g-gold-s)"/>
+          <!-- Head: a leaf-shaped centre blade, two crescent prongs with small
+               outward barbs, a crossbar, a lotus knob and two rings, then the shaft. -->
+          <g style="filter:drop-shadow(0 0 10px rgba(255,200,97,.5))"
+             fill="url(#g-gold)" stroke="#3d2906" stroke-width=".7" stroke-linejoin="round">
+            <path d="M150 7C153.2 17 156.8 29 156.8 37.5C156.8 44 153.4 48.5 150 52.5C146.6 48.5 143.2 44 143.2 37.5C143.2 29 146.8 17 150 7Z"/>
+            <path d="M144.5 58C133 57 123.5 49 123 35.5C122.8 27.5 124.6 21.5 128 16C127.8 25.5 130 34.5 135.2 40.8C138.4 44.6 141.4 46.6 145.5 47.8Z"/>
+            <path d="M155.5 58C167 57 176.5 49 177 35.5C177.2 27.5 175.4 21.5 172 16C172.2 25.5 170 34.5 164.8 40.8C161.6 44.6 158.6 46.6 154.5 47.8Z"/>
+            <path d="M131.5 52.5L121.5 57.5L129 49Z"/>
+            <path d="M168.5 52.5L178.5 57.5L171 49Z"/>
+            <rect x="135" y="52.5" width="30" height="5.5" rx="2.6"/>
+            <path d="M140.5 63.5a9.5 5.8 0 1 0 19 0a9.5 5.8 0 1 0-19 0z"/>
+            <rect x="144" y="69" width="12" height="3.2" rx="1.6"/>
+            <rect x="145.6" y="73.2" width="8.8" height="2.6" rx="1.3"/>
+            <rect x="147.4" y="75.8" width="5.2" height="69" rx="2.4" fill="url(#g-gold-s)"/>
           </g>
           <g fill="none" stroke-linecap="round" style="pointer-events:none">
-            <path d="M150 16.5 L152.9 41" stroke="rgba(255,250,224,.9)" stroke-width="1"/>
-            <path d="M130.5 27 C130 36 132.5 43 138.5 47.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
-            <path d="M169.5 27 C170 36 167.5 43 161.5 47.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
-            <path d="M149.6 67 L149.6 141" stroke="rgba(255,243,200,.45)" stroke-width="1.1"/>
+            <path d="M150 11.5V48" stroke="rgba(255,250,224,.75)" stroke-width=".9"/>
+            <path d="M126.8 22C126 31 128.5 39.5 134 44.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
+            <path d="M173.2 22C174 31 171.5 39.5 166 44.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
+            <path d="M144.5 61.5c2-1.6 9-1.6 11 0" stroke="rgba(255,248,216,.7)" stroke-width=".9"/>
+            <path d="M149.4 78V142" stroke="rgba(255,243,200,.45)" stroke-width="1"/>
           </g>
           <path d="M150 268 L142 166 L150 158 L158 166 Z" fill="rgba(111,106,144,.7)"/>
         </g>
@@ -247,7 +253,7 @@
    Jyotirlinga Compass — Level A (web compass, no AR)
    One file, no build step, no libraries.
    ===================================================================== */
-const BUILD = 'Jyotirlinga Compass · Level A · 26 Nov 2026';
+const BUILD = 'Jyotirlinga Compass · Level A · 27 Nov 2026';
 const $ = id => document.getElementById(id);
 $('stamp').textContent = BUILD;
 
@@ -260,17 +266,17 @@ $('stamp').textContent = BUILD;
    --------------------------------------------------------------------- */
 const SHRINES = [
   {en:'Somnath',          dv:'सोमनाथ', st:'गुजरात',          pl:'Prabhas Patan, Gujarat',          lat:20.8880, lon:70.4014, ico:'somnath'},
-  {en:'Mallikarjuna',     dv:'मल्लिकार्जुन', st:'आंध्र प्रदेश',      pl:'Srisailam, Andhra Pradesh',       lat:16.0742, lon:78.8681, ico:'gopuram'},
-  {en:'Mahakaleshwar',    dv:'महाकालेश्वर', st:'मध्य प्रदेश',       pl:'Ujjain, Madhya Pradesh',          lat:23.1828, lon:75.7683, ico:'nagara'},
-  {en:'Omkareshwar',      dv:'ओंकारेश्वर', st:'मध्य प्रदेश',        pl:'Mandhata island, Madhya Pradesh', lat:22.2456, lon:76.1511, ico:'island'},
-  {en:'Kedarnath',        dv:'केदारनाथ', st:'उत्तराखंड',         pl:'Rudraprayag, Uttarakhand',        lat:30.7352, lon:79.0669, ico:'himalaya'},
-  {en:'Bhimashankar',     dv:'भीमाशंकर', st:'महाराष्ट्र',         pl:'Pune district, Maharashtra',      lat:19.0719, lon:73.5361, ico:'sahyadri'},
-  {en:'Kashi Vishwanath', dv:'काशी विश्वनाथ', st:'उत्तर प्रदेश',     pl:'Varanasi, Uttar Pradesh',         lat:25.3108, lon:83.0106, ico:'dome'},
-  {en:'Trimbakeshwar',    dv:'त्र्यंबकेश्वर', st:'महाराष्ट्र',       pl:'Trimbak, Nashik, Maharashtra',    lat:19.9322, lon:73.5308, ico:'stepped'},
-  {en:'Vaidyanath',       dv:'वैद्यनाथ', st:'झारखंड',          pl:'Deoghar, Jharkhand',              lat:24.4925, lon:86.7000, ico:'pyramid'},
-  {en:'Nageshwar',        dv:'नागेश्वर', st:'गुजरात',          pl:'Dwarka, Gujarat',                 lat:22.3359, lon:69.0869, ico:'murti'},
-  {en:'Rameshwaram',      dv:'रामेश्वरम', st:'तमिलनाडु',         pl:'Rameswaram, Tamil Nadu',          lat: 9.2881, lon:79.3173, ico:'corridor'},
-  {en:'Grishneshwar',     dv:'घृष्णेश्वर', st:'महाराष्ट्र',         pl:'Verul (Ellora), Maharashtra',     lat:20.0250, lon:75.1699, ico:'tiers'}
+  {en:'Mallikarjuna',     dv:'मल्लिकार्जुन', st:'आंध्र प्रदेश',      pl:'Srisailam, Andhra Pradesh',       lat:16.0742, lon:78.8681, ico:'mallikarjuna'},
+  {en:'Mahakaleshwar',    dv:'महाकालेश्वर', st:'मध्य प्रदेश',       pl:'Ujjain, Madhya Pradesh',          lat:23.1828, lon:75.7683, ico:'mahakaleshwar'},
+  {en:'Omkareshwar',      dv:'ओंकारेश्वर', st:'मध्य प्रदेश',        pl:'Mandhata island, Madhya Pradesh', lat:22.2456, lon:76.1511, ico:'omkareshwar'},
+  {en:'Kedarnath',        dv:'केदारनाथ', st:'उत्तराखंड',         pl:'Rudraprayag, Uttarakhand',        lat:30.7352, lon:79.0669, ico:'kedarnath'},
+  {en:'Bhimashankar',     dv:'भीमाशंकर', st:'महाराष्ट्र',         pl:'Pune district, Maharashtra',      lat:19.0719, lon:73.5361, ico:'bhimashankar'},
+  {en:'Kashi Vishwanath', dv:'काशी विश्वनाथ', st:'उत्तर प्रदेश',     pl:'Varanasi, Uttar Pradesh',         lat:25.3108, lon:83.0106, ico:'kashi'},
+  {en:'Trimbakeshwar',    dv:'त्र्यंबकेश्वर', st:'महाराष्ट्र',       pl:'Trimbak, Nashik, Maharashtra',    lat:19.9322, lon:73.5308, ico:'trimbakeshwar'},
+  {en:'Vaidyanath',       dv:'वैद्यनाथ', st:'झारखंड',          pl:'Deoghar, Jharkhand',              lat:24.4925, lon:86.7000, ico:'vaidyanath'},
+  {en:'Nageshwar',        dv:'नागेश्वर', st:'गुजरात',          pl:'Dwarka, Gujarat',                 lat:22.3359, lon:69.0869, ico:'nageshwar'},
+  {en:'Rameshwaram',      dv:'रामेश्वरम', st:'तमिलनाडु',         pl:'Rameswaram, Tamil Nadu',          lat: 9.2881, lon:79.3173, ico:'rameshwaram'},
+  {en:'Grishneshwar',     dv:'घृष्णेश्वर', st:'महाराष्ट्र',         pl:'Verul (Ellora), Maharashtra',     lat:20.0250, lon:75.1699, ico:'grishneshwar'}
 ];
 
 /* Where traditions place a shrine elsewhere. Shown quietly, traditional site first. */
@@ -281,37 +287,84 @@ const OTHER_TRADITIONS = {
 };
 
 /* ---------------------------------------------------------------------
-   PART 2 — Our own line icons, one per shrine, drawn from scratch.
-   48x48 box, ground line at y=43, stroke only. Stylised impressions of
-   each tower's shape, not elevations and not to scale.
+   PART 2 — Our own temple icons, drawn from scratch.
+   Style: solid silhouettes filled with horizontal neon lines, each temple in
+   its own colour. The silhouettes are our drawings of the real buildings;
+   no existing icon set was traced or copied.
+   How the stripes work: one SVG <pattern> per colour paints a 1.15-unit
+   line every 2.2 units. Filling a shape with url(#hffc861) fills it with
+   those stripes, so the same shape data gives the striped look.
    --------------------------------------------------------------------- */
-const S = 'fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"';
 const ICONS = {
-  /* Somnath: tall Chalukya shikhara with a flag, tiered mandapa roof beside it */
-  somnath:  `<g ${S}><path d="M30 4v5"/><path d="M30 4h5l-1.6 2L35 8h-5"/><path d="M30 9c-4.5 7-6 13.5-6 19.5h12C36 22.5 34.5 16 30 9z"/><path d="M9 28.5h12l-2.5-5h-7z"/><path d="M11.5 23.5h7l-2-3.5h-3z"/><path d="M15 20v-2.5"/><path d="M7 28.5h31v9H7z"/><path d="M22.5 32h5v5.5h-5z"/><path d="M4 43h40"/></g>`,
-  /* Mallikarjuna: Dravidian gopuram, stepped tiers, kalashas on the ridge */
-  gopuram:  `<g ${S}><path d="M18 8h12"/><path d="M20 8v-2"/><path d="M24 8v-2.5"/><path d="M28 8v-2"/><path d="M18.5 10h11l.5 6h-12z"/><path d="M17 16h14l.8 7H16.2z"/><path d="M15 23h18l1 8H14z"/><path d="M12 31h24v6.5H12z"/><path d="M21 33h6v4.5h-6z"/><path d="M8 43h32"/></g>`,
-  /* Mahakaleshwar: tall banded shikhara on a pillared base */
-  nagara:   `<g ${S}><path d="M24 4v4"/><path d="M24 8c-5 8-7 15-7 21h14c0-6-2-13-7-21z"/><path d="M19.5 22h9"/><path d="M18.2 26h11.6"/><path d="M12 29h24v8H12z"/><path d="M17 31v6"/><path d="M24 31v6"/><path d="M31 31v6"/><path d="M8 43h32"/></g>`,
-  /* Omkareshwar: ribbed shikhara over a terraced hall, steps down to the Narmada */
-  island:   `<g ${S}><path d="M28 5v3"/><path d="M28 8c-4 6.5-5.5 12-5.5 18h11C33.5 20 32 14.5 28 8z"/><path d="M25 18c-.7 3-1 5.5-1 8"/><path d="M31 18c.7 3 1 5.5 1 8"/><path d="M18 26h23v8H18z"/><path d="M26 29h5v5h-5z"/><path d="M18 34h-4v3h-4.5v3H5"/><path d="M4 44q5.5-2 10 0t10 0 10 0 10 0"/></g>`,
-  /* Kedarnath: squat stone shrine, stepped roof, peaks behind */
-  himalaya: `<g ${S}><path d="M3 24l8-11 6 8"/><path d="M31 21l7-9 7 11"/><path d="M24 11v3"/><path d="M20 19h8l-1.5-5h-5z"/><path d="M17 24h14l-1.5-5h-11z"/><path d="M16 24h16v14H16z"/><path d="M21.5 30h5v8h-5z"/><path d="M8 43h32"/><path d="M13 38h22v5H13z"/></g>`,
-  /* Bhimashankar: shikhara above a long arcaded mandapa in the ghats */
-  sahyadri: `<g ${S}><path d="M15 6v3"/><path d="M15 9c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M8 25h32v12H8z"/><path d="M12 37v-6a3 3 0 0 1 6 0v6"/><path d="M22 37v-6a3 3 0 0 1 6 0v6"/><path d="M32 37v-6a3 3 0 0 1 6 0v6"/><path d="M5 43h38"/><path d="M8 37h32"/></g>`,
-  /* Kashi Vishwanath: the gold dome beside the spire */
-  dome:     `<g ${S}><path d="M31 5v4"/><path d="M31 9c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M15 18.5v-4.5"/><path d="M8 25a7 6.5 0 0 1 7-6 7 6.5 0 0 1 7 6z"/><path d="M8 25h14"/><path d="M7 25h30v12H7z"/><path d="M19 30h6v7h-6z"/><path d="M4 43h40"/></g>`,
-  /* Trimbakeshwar: Hemadpanthi complex, shikhara between pitched roofs */
-  stepped:  `<g ${S}><path d="M24 5v3"/><path d="M24 8c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M19 24l-5-5-6 5"/><path d="M29 24l5-5 6 5"/><path d="M6 24h36v6H6z"/><path d="M8 30h32v7H8z"/><path d="M21 32h6v5h-6z"/><path d="M5 43h38"/></g>`,
-  /* Vaidyanath: the pyramidal shikhara on a colonnaded plinth */
-  pyramid:  `<g ${S}><path d="M24 3v4"/><path d="M21.5 7h5"/><path d="M24 8L14 30h20z"/><path d="M19 18h10"/><path d="M17 24h14"/><path d="M11 30h26v7H11z"/><path d="M16 32v5"/><path d="M24 32v5"/><path d="M32 32v5"/><path d="M7 43h34"/></g>`,
-  /* Nageshwar: shikhara and flag above a low mandapa, Saurashtra coast */
-  murti:    `<g ${S}><path d="M19 5v4"/><path d="M19 5h4.5l-1.4 1.8L23.5 8.6H19"/><path d="M19 9c-4 6.5-5.5 12-5.5 17h11c0-5-1.5-10.5-5.5-17z"/><path d="M10 26h28v10H10z"/><path d="M30 29h5v7h-5z"/><path d="M17 31h4v5h-4z"/><path d="M6 40h36"/><path d="M4 43h40"/></g>`,
-  /* Rameshwaram: the tall tiered gopuram and the long pillared corridor */
-  corridor: `<g ${S}><path d="M10 6h8"/><path d="M12 6V4"/><path d="M16 6V4"/><path d="M10.5 8h7v5h-8z"/><path d="M9 13h10l.6 6H8.4z"/><path d="M7.5 19h13l.7 6H6.8z"/><path d="M6 25h16v12H6z"/><path d="M11 29h6v8h-6z"/><path d="M26 24h18"/><path d="M28 24v13"/><path d="M34 24v13"/><path d="M40 24v13"/><path d="M26 37h18"/><path d="M4 43h40"/></g>`,
-  /* Grishneshwar: five receding tiers over a stepped base */
-  tiers:    `<g ${S}><path d="M24 4v3"/><path d="M22 7h4"/><path d="M21.5 9h5l1 4h-7z"/><path d="M19.5 13h9l1 5h-11z"/><path d="M17.5 18h13l1 5h-15z"/><path d="M15.5 23h17l1 6h-19z"/><path d="M13 29h22v8H13z"/><path d="M21 32h6v5h-6z"/><path d="M9 40h30"/><path d="M6 43h36"/></g>`
+somnath:{c:'#ffc861',
+ solid:['M4 53h56v5H4z','M8 41h48v12H8z','M8 41l9-9 9 9z','M38 41l9-9 9 9z',
+  'M23 41C23 28 27 18 32 10C37 18 41 28 41 41z','M15.5 32c0-4 3-6 3-6s3 2 3 6z','M42.5 32c0-4 3-6 3-6s3 2 3 6z',
+  'M28.5 10a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M31.3 9h1.4V3h-1.4z','M32.7 3l6.3 2.1-6.3 2.1z'],
+ dark:['M29 45h6v8h-6z','M12 46h3v7h-3z','M18 46h3v7h-3z','M43 46h3v7h-3z','M49 46h3v7h-3z']},
+mallikarjuna:{c:'#ff9a3c',
+ solid:['M12 45h40v13H12z','M14 45l2-8h32l2 8z','M17 37l2-7h26l2 7z','M20 30l2-7h20l2 7z','M23 23l2-6h14l2 6z',
+  'M23 17c0-5 18-5 18 0z','M22.5 17l-3-5 4.5 3z','M41.5 17l3-5-4.5 3z','M26 12.5h2V9h-2z','M31 12h2V7h-2z','M36 12.5h2V9h-2z'],
+ dark:['M28 49h8v9h-8z','M30.5 39h3v4h-3z','M30.5 32h3v3.5h-3z','M30.5 25h3v3.5h-3z']},
+mahakaleshwar:{c:'#ff4fd8',
+ solid:['M6 55h52v3H6z','M9 44h46v11H9z','M7 42h50v2H7z','M13 42l3-7h32l3 7z','M18 35l3-6h22l3 6z',
+  'M22 29l3-6h14l3 6z','M26 23l2-5h8l2 5z','M29 18l2-5h2l2 5z','M31.3 13h1.4V5h-1.4z','M32.7 5l6.3 2.1-6.3 2.1z'],
+ dark:['M12 46h5v9h-5z','M21 46h5v9h-5z','M29.5 46h5v9h-5z','M38 46h5v9h-5z','M47 46h5v9h-5z']},
+omkareshwar:{c:'#4cc9ff',
+ solid:['M3 54h15v4H3z','M7 50h11v4H7z','M11 46h7v4h-7z','M18 40h42v18H18z','M28 40C28 28 32 19 37 12C42 19 46 28 46 40z',
+  'M48 40c0-6 2-9 5-11c3 2 5 5 5 11z','M33.5 12a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M36.3 11h1.4V5h-1.4z','M37.7 5l6.3 2.1-6.3 2.1z'],
+ dark:['M34 48h6v10h-6z','M23 45h4v6h-4z','M47 45h4v6h-4z','M53 45h4v6h-4z'],
+ line:['M2 61.5q4-2 8 0t8 0 8 0 8 0 8 0 8 0 8 0 8 0']},
+kedarnath:{c:'#b8b2ff',
+ line:['M1 33l10-14 7 9','M46 26l7-9 10 15'],
+ solid:['M10 54h44v4H10z','M16 36h32v18H16z','M13 36l19-9 19 9z','M22 27l3-6h14l3 6z',
+  'M25 21l2-5h10l2 5z','M28 16l2-4h4l2 4z','M31.3 12h1.4V6h-1.4z','M32.7 6l5.6 1.9-5.6 1.9z'],
+ dark:['M28 42h8v12h-8z','M19.5 41h4v6h-4z','M40.5 41h4v6h-4z']},
+bhimashankar:{c:'#5dffb0',
+ solid:['M2 54h60v4H2z','M2 39h60v15H2z','M1 37h62v3H1z','M10 37C10 26 13 18 18 11C23 18 26 26 26 37z',
+  'M14.5 11a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M17.3 10h1.4V4h-1.4z','M18.7 4l6.3 2.1-6.3 2.1z'],
+ dark:['M5 54v-8a4 4 0 0 1 8 0v8z','M17 54v-8a4 4 0 0 1 8 0v8z','M29 54v-8a4 4 0 0 1 8 0v8z',
+  'M41 54v-8a4 4 0 0 1 8 0v8z','M53 54v-8a4 4 0 0 1 8 0v8z']},
+kashi:{c:'#ffd84a',
+ solid:['M3 54h58v4H3z','M4 41h56v13H4z','M7 41c0-11 17-11 17 0z','M14.8 32h1.4v-6h-1.4z',
+  'M29 41C29 29 33 20 38 13C43 20 47 29 47 41z','M34.5 13a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M37.3 12h1.4V6h-1.4z','M38.7 6l6.3 2.1-6.3 2.1z',
+  'M49 41c0-7 2-11 5-14c3 3 5 7 5 14z'],
+ dark:['M9 45h4v9H9z','M17 45h4v9h-4z','M35 45h6v9h-6z','M50 45h4v9h-4z']},
+trimbakeshwar:{c:'#7aa7ff',
+ solid:['M2 54h60v4H2z','M4 42h56v12H4z','M4 42l12-8 12 8z','M36 42l12-8 12 8z','M12.5 34c0-4 7-4 7 0z','M44.5 34c0-4 7-4 7 0z',
+  'M24 42C24 30 27 21 32 14C37 21 40 30 40 42z','M28.5 14a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M31.3 13h1.4V7h-1.4z','M32.7 7l6.3 2.1-6.3 2.1z'],
+ dark:['M8 54v-6a3 3 0 0 1 6 0v6z','M17 54v-6a3 3 0 0 1 6 0v6z','M29 54v-7a3 3 0 0 1 6 0v7z','M41 54v-6a3 3 0 0 1 6 0v6z','M50 54v-6a3 3 0 0 1 6 0v6z']},
+vaidyanath:{c:'#ff7ab8',
+ solid:['M8 55h48v3H8z','M10 44h44v11H10z','M8 42h48v2H8z','M16 42C16 28 22 16 32 8C42 16 48 28 48 42z',
+  'M31.3 8h1.4V2h-1.4z','M32.7 2l6.3 2.1-6.3 2.1z'],
+ dark:['M13 46h4v9h-4z','M21 46h4v9h-4z','M30 46h4v9h-4z','M39 46h4v9h-4z','M47 46h4v9h-4z']},
+nageshwar:{c:'#ffa94d',
+ solid:['M4 54h56v4H4z','M8 42h48v12H8z','M8 42l10-8 10 8z','M14 34c0-5 2-8 4-10c2 2 4 5 4 10z',
+  'M29 42C29 30 33 21 39 13C45 21 49 30 49 42z','M35.5 13a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M38.3 12h1.4V6h-1.4z','M39.7 6l6.3 2.1-6.3 2.1z'],
+ dark:['M36 46h6v8h-6z','M13 46h4v8h-4z','M21 46h4v8h-4z','M48 46h4v8h-4z']},
+rameshwaram:{c:'#ffc861',
+ solid:['M6 57h56v2H6z','M10 46h24v11H10z','M11 46l1-6h20l1 6z','M12 40l1-6h18l1 6z','M13 34l1-6h16l1 6z',
+  'M14 28l1-6h14l1 6z','M15 22l1-5h12l1 5z','M16 17c0-5 12-5 12 0z','M18 12.5h1.6V9H18z','M21.2 12h1.6V8h-1.6z','M24.4 12.5H26V9h-1.6z',
+  'M36 44h26v3H36z','M37 47h3v10h-3z','M44 47h3v10h-3z','M51 47h3v10h-3z','M58 47h3v10h-3z'],
+ dark:['M18 50h8v7h-8z','M20.5 41.5h3v3h-3z','M20.5 35.5h3v3h-3z','M20.5 29.5h3v3h-3z','M20.5 23.5h3v3h-3z']},
+grishneshwar:{c:'#ff6b5e',
+ solid:['M2 55h60v3H2z','M5 51h54v4H5z','M8 47h48v4H8z','M12 36h28v11H12z','M40 40h16v7H40z','M39 40l9-5 9 5z',
+  'M14 36C14 25 18 16 26 8C34 16 38 25 38 36z','M11 36c0-5 2-8 4.5-9.5C18 28 20 31 20 36z','M32 36c0-5 2-8 4.5-9.5C39 28 41 31 41 36z',
+  'M22.5 8a3.5 1.7 0 0 1 7 0a3.5 1.7 0 0 1-7 0z','M25.3 7h1.4V1.5h-1.4z','M26.7 1.5l6.3 2.1-6.3 2.1z'],
+ dark:['M23 40h6v7h-6z','M43.5 42h3v5h-3z','M49.5 42h3v5h-3z']}
 };
+/* One hatch pattern per colour, made once and shared by every icon on the page. */
+function hatchDefs(){
+  const cs=[...new Set(Object.values(ICONS).map(i=>i.c))];
+  return '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'+cs.map(c=>
+    `<pattern id="h${c.slice(1)}" width="4" height="2.2" patternUnits="userSpaceOnUse"><rect width="4" height="1.15" fill="${c}"/></pattern>`).join('')+'</defs></svg>';
+}
+function iconSVG(k){
+  const i=ICONS[k];
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">`
+   +(i.line?`<g fill="none" stroke="${i.c}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity=".7">${i.line.map(d=>`<path d="${d}"/>`).join('')}</g>`:'')
+   +`<g fill="url(#h${i.c.slice(1)})" stroke="${i.c}" stroke-width=".8" stroke-linejoin="round">${i.solid.map(d=>`<path d="${d}"/>`).join('')}</g>`
+   +`<g fill="#05060A" stroke="${i.c}" stroke-width=".6">${(i.dark||[]).map(d=>`<path d="${d}"/>`).join('')}</g></svg>`;
+}
 
 /* ---------------------------------------------------------------------
    PART 3 — The maths, with a worked example for each step
@@ -370,12 +423,13 @@ const St = {
 /* ---------------------------------------------------------------------
    PART 5 — Build the shrine list
    --------------------------------------------------------------------- */
+document.body.insertAdjacentHTML('afterbegin', hatchDefs());
 const list = $('list');
 SHRINES.forEach((s, i) => {
   const li = document.createElement('li');
   li.innerHTML =
     `<button type="button" data-i="${i}">
-       <span class="ico"><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[s.ico]}</svg></span>
+       <span class="ico" style="color:${ICONS[s.ico].c}">${iconSVG(s.ico)}</span>
        <span class="nm">
          <span class="en">${s.en}</span>
          <span class="dv">${s.dv} <em>— ${s.st}</em></span>
