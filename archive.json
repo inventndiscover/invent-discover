@@ -756,6 +756,34 @@
   "also": "StartupGrantsIndia",
   "firstSeen": "2026-09-28"
  },
+ "esummit-genai-workshop-iitb": {
+  "id": "esummit-genai-workshop-iitb",
+  "title": "E-Summit'26 Workshop: Generative AI Unleashed with Google Cloud",
+  "cat": "AI",
+  "tags": [
+   "GenAI",
+   "Workshop",
+   "Google Cloud"
+  ],
+  "area": "Powai",
+  "venue": "IIT Bombay, Powai",
+  "start": "2026-12-12T09:00",
+  "end": "11:00",
+  "fmt": "Offline",
+  "price": 1999,
+  "priceNote": "Workshop pass ₹1,999 via AllEvents",
+  "aud": [
+   "Student",
+   "Developer",
+   "Creator"
+  ],
+  "src": "AllEvents",
+  "url": "https://allevents.in/mumbai/e-summit26-workshop-generative-ai-unleashed-hands-on-with-google-cloud-e-cell-iit-bombay-tickets/80002934487451",
+  "org": "E-Cell IIT Bombay",
+  "access": "open",
+  "desc": "A hands-on workshop guided by Google Cloud on using generative AI to learn faster and build practical things. Aimed at students, creators and working professionals.",
+  "firstSeen": "2026-11-26"
+ },
  "ethglobal-mumbai-2026": {
   "tags": [
    "Hackathon",
@@ -1036,6 +1064,7 @@
   "org": "Google Cloud (presenter) at IIT Bombay",
   "access": "open",
   "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups.",
+  "also": "AllEvents (E-Summit workshop listing)",
   "firstSeen": "2026-11-11"
  },
  "global-startups-club-oct10": {
@@ -1703,6 +1732,36 @@
   "desc": "A relaxed team trivia evening for Mumbai developers with no phones or AI tools allowed, held as a warm-up to DevFest Mumbai.",
   "also": "Luma",
   "firstSeen": "2026-11-19"
+ },
+ "print-reality-iict": {
+  "id": "print-reality-iict",
+  "title": "PRINT//REALITY: 3D Printing meets AR",
+  "cat": "XR",
+  "tags": [
+   "AR",
+   "3D printing",
+   "Spatial computing"
+  ],
+  "area": "Cumballa Hill",
+  "venue": "Indian Institute of Creative Technologies (IICT), NFDC Campus",
+  "start": "2026-11-28",
+  "end": null,
+  "timeNote": "Time not listed on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free; request to join, host approval needed",
+  "aud": [
+   "Designer",
+   "Developer",
+   "Student",
+   "Creator"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/lohj3khp",
+  "org": "XDG मुंBAI",
+  "access": "approval",
+  "desc": "A meetup on turning digital designs into physical objects with 3D printing and making them interactive with AR. Open to beginners and experienced makers discussing XR and spatial computing.",
+  "firstSeen": "2026-11-26"
  },
  "servicenow-world-forum-mumbai": {
   "id": "servicenow-world-forum-mumbai",

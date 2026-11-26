@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-25T21:51:38+05:30",
+ "REFRESHED": "2026-11-26T21:51:15+05:30",
  "SIGNALS": [
   {
    "id": "2125589468786909510",
@@ -22,6 +22,16 @@
    "summary": "Reports that Cognition released SWE-2.1, its new coding model, free for two weeks. It succeeds SWE-2 and is trained with reinforcement learning on Kimi K3."
   },
   {
+   "id": "2125455438627889524",
+   "handle": "Polymarket",
+   "name": "Polymarket",
+   "url": "https://x.com/Polymarket/status/2125455438627889524",
+   "posted": "2026-11-25T10:34:00+05:30",
+   "topic": "Policy",
+   "kind": "Report",
+   "summary": "Polymarket reports South Africa is proposing a $5.7 million fund to support domestic AI startups, framed as a push to compete with the United States."
+  },
+  {
    "id": "2125334383490105601",
    "handle": "OpenAI",
    "name": "OpenAI",
@@ -40,56 +50,6 @@
    "topic": "AI",
    "kind": "Report",
    "summary": "Citing Axios, Polymarket reports that OpenAI and Anthropic employees fear their most advanced internal models may be too powerful to release safely."
-  },
-  {
-   "id": "2123861461877588180",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2123861461877588180",
-   "posted": "2026-11-21T01:00:06+05:30",
-   "topic": "AI",
-   "kind": "Official",
-   "summary": "OpenAI says ecommerce and online service businesses based outside the U.S. can now claim their business and publish agents in ChatGPT."
-  },
-  {
-   "id": "2123333676998226113",
-   "handle": "cmani",
-   "name": "Mani",
-   "url": "https://x.com/cmani/status/2123333676998226113",
-   "posted": "2026-11-19T14:02:52+05:30",
-   "topic": "India",
-   "kind": "Report",
-   "summary": "Reports Sarvam AI says its Token Factory inference platform runs on privately procured GPUs, not government-subsidised compute, after criticism over hosting Chinese open-weight models."
-  },
-  {
-   "id": "2123196808675405860",
-   "handle": "AnthropicAI",
-   "name": "Anthropic",
-   "url": "https://x.com/AnthropicAI/status/2123196808675405860",
-   "posted": "2026-11-19T04:59:00+05:30",
-   "topic": "Tech",
-   "kind": "Official",
-   "summary": "Anthropic says it priced its IPO at $83 per share, with trading on Nasdaq expected to begin on November 19. The SEC declared the registration effective on November 18."
-  },
-  {
-   "id": "2123191365983248653",
-   "handle": "OpenAI",
-   "name": "OpenAI",
-   "url": "https://x.com/OpenAI/status/2123191365983248653",
-   "posted": "2026-11-19T04:37:23+05:30",
-   "topic": "Research",
-   "kind": "Official",
-   "summary": "OpenAI shares new data on AI's role in its own research: researchers' AI use keeps rising and agents finish longer tasks, while humans stay central and spend more time on safety work."
-  },
-  {
-   "id": "2123167884411077030",
-   "handle": "GoogleDeepMind",
-   "name": "Google DeepMind",
-   "url": "https://x.com/GoogleDeepMind/status/2123167884411077030",
-   "posted": "2026-11-19T03:04:04+05:30",
-   "topic": "Models",
-   "kind": "Official",
-   "summary": "Google DeepMind begins rolling out Gemini 4 Neon, positioned between Carbon and Hydrogen, for software engineering, knowledge work and science tasks."
   }
  ]
 }

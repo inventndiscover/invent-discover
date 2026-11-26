@@ -1,61 +1,6 @@
 {
- "REFRESHED": "2026-11-25T22:28:45+05:30",
+ "REFRESHED": "2026-11-26T22:29:08+05:30",
  "EVENTS_RAW": [
-  {
-   "id": "google-nasscom-mixer-25nov",
-   "title": "Google x Nasscom Mixer: Mumbai",
-   "cat": "Startup",
-   "tags": [
-    "AI",
-    "Startups",
-    "Networking",
-    "Buildathon"
-   ],
-   "area": "Mumbai",
-   "venue": "Venue not stated (Mumbai)",
-   "start": "2026-11-25",
-   "end": null,
-   "timeNote": "Listing shows 18:00-21:00 tagged UTC; local time unclear, confirm on the page",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free, by application",
-   "aud": [
-    "Founder",
-    "Developer"
-   ],
-   "src": "AllEvents",
-   "url": "https://allevents.in/mumbai/google-x-nasscom-mixer-·-mumbai/4700031093436455",
-   "org": "Google DeepMind, Google Cloud, Nasscom (Startup Buildathon India 2026)",
-   "access": "approval",
-   "desc": "A no-agenda networking evening after the Startup Buildathon regional showcase, bringing together AI builders, early AI startups, investors and enterprise leaders."
-  },
-  {
-   "cat": "Tech",
-   "area": "Mumbai",
-   "venue": "Venue not stated (Mumbai)",
-   "end": "20:00",
-   "fmt": "Offline",
-   "price": 0,
-   "priceNote": "Free (registration required)",
-   "src": "startupgrantsindia (listing)",
-   "access": "open",
-   "org": "DevFest Mumbai",
-   "id": "predevfest-tech-trivia",
-   "title": "[Pre-DevFest] Tech Trivia Night",
-   "tags": [
-    "Developers",
-    "Trivia",
-    "DevFest"
-   ],
-   "start": "2026-11-25T15:30",
-   "aud": [
-    "Developer",
-    "Student"
-   ],
-   "url": "https://www.startupgrantsindia.com/events/pre-devfest-tech-trivia-night",
-   "desc": "A relaxed team trivia evening for Mumbai developers with no phones or AI tools allowed, held as a warm-up to DevFest Mumbai.",
-   "also": "Luma"
-  },
   {
    "id": "devsparks-mumbai-2026",
    "title": "DevSparks 2026: Mumbai Edition",
@@ -168,6 +113,35 @@
    "org": "Airtribe (organiser not clearly stated)",
    "access": "open",
    "desc": "A hands-on in-person workshop on how open-source AI models work and how to build applications and workflows with them. Spots are limited."
+  },
+  {
+   "id": "print-reality-iict",
+   "title": "PRINT//REALITY: 3D Printing meets AR",
+   "cat": "XR",
+   "tags": [
+    "AR",
+    "3D printing",
+    "Spatial computing"
+   ],
+   "area": "Cumballa Hill",
+   "venue": "Indian Institute of Creative Technologies (IICT), NFDC Campus",
+   "start": "2026-11-28",
+   "end": null,
+   "timeNote": "Time not listed on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free; request to join, host approval needed",
+   "aud": [
+    "Designer",
+    "Developer",
+    "Student",
+    "Creator"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/lohj3khp",
+   "org": "XDG मुंBAI",
+   "access": "approval",
+   "desc": "A meetup on turning digital designs into physical objects with 3D printing and making them interactive with AR. Open to beginners and experienced makers discussing XR and spatial computing."
   },
   {
    "cat": "Startup",
@@ -390,6 +364,33 @@
    "desc": "The 22nd edition of IIT Bombay's student-run entrepreneurship conference, with a pitch competition, a startup expo, the I-Hack hackathon and workshops."
   },
   {
+   "id": "esummit-genai-workshop-iitb",
+   "title": "E-Summit'26 Workshop: Generative AI Unleashed with Google Cloud",
+   "cat": "AI",
+   "tags": [
+    "GenAI",
+    "Workshop",
+    "Google Cloud"
+   ],
+   "area": "Powai",
+   "venue": "IIT Bombay, Powai",
+   "start": "2026-12-12T09:00",
+   "end": "11:00",
+   "fmt": "Offline",
+   "price": 1999,
+   "priceNote": "Workshop pass ₹1,999 via AllEvents",
+   "aud": [
+    "Student",
+    "Developer",
+    "Creator"
+   ],
+   "src": "AllEvents",
+   "url": "https://allevents.in/mumbai/e-summit26-workshop-generative-ai-unleashed-hands-on-with-google-cloud-e-cell-iit-bombay-tickets/80002934487451",
+   "org": "E-Cell IIT Bombay",
+   "access": "open",
+   "desc": "A hands-on workshop guided by Google Cloud on using generative AI to learn faster and build practical things. Aimed at students, creators and working professionals."
+  },
+  {
    "id": "genai-unleashed-iitb-26",
    "title": "Generative AI Unleashed by Google Cloud @IIT B",
    "cat": "AI",
@@ -414,7 +415,8 @@
    "url": "https://allevents.in/mumbai/generative-ai-unleashed-by-google-cloud-iit-b/3900031011921736",
    "org": "Google Cloud (presenter) at IIT Bombay",
    "access": "open",
-   "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups."
+   "desc": "A two-hour session on how generative AI tools work and how to get dependable results from them. Shows how to apply them in studies, jobs or startups.",
+   "also": "AllEvents (E-Summit workshop listing)"
   },
   {
    "id": "ai-for-performing-arts-ncpa",
@@ -956,7 +958,7 @@
    "src": "dev.events",
    "url": "https://principal.dev",
    "access": "open",
-   "why": "dev.events lists Dec 3-4, 2026 for Mumbai but no venue or format, so it stays for review.",
+   "why": "dev.events lists 3-4 Dec 2026 under Mumbai but gives no venue or format.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -972,7 +974,7 @@
    "src": "dev.events",
    "url": "https://clean.re",
    "access": "open",
-   "why": "dev.events lists Dec 10-11, 2026 for Mumbai but no venue or format, so it stays for review.",
+   "why": "dev.events lists 10-11 Dec 2026 under Mumbai but gives no venue or format.",
    "conf": {
     "date": 70,
     "place": 40,
@@ -1048,10 +1050,10 @@
    "src": "Luma",
    "url": "https://luma.com/qjs01ta3",
    "access": "approval",
-   "why": "Page shows \"28 November\" with no year or time; needs a second source to confirm.",
+   "why": "Page says 28 November at ATLAS SkillTech University (approval needed) but gives no year or time.",
    "conf": {
-    "date": 60,
-    "place": 95,
+    "date": 70,
+    "place": 98,
     "category": 85
    },
    "hint": "2026-11-28"
@@ -1091,33 +1093,33 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing (surfaced by search)",
-   "found": 20,
-   "pub": 0,
-   "review": 0,
+   "what": "luma.com/mumbai listing plus 3 event pages",
+   "found": 11,
+   "pub": 1,
+   "review": 1,
    "dup": 2,
-   "skip": 18,
-   "note": "Listing page loaded but shows no dates; mostly Devcon/web3 side events. No new date confirmed, so queue unchanged."
+   "skip": 7,
+   "note": "Pages loaded. Added PRINT//REALITY (date confirmed). HackerFab lecture page gives 28 November with no year, so it stays queued. UNBOXED STEM page has no date and targets school children, so skipped."
   },
   {
    "src": "AllEvents",
-   "what": "AI, data-science and entrepreneurship category pages plus 5 event pages",
-   "found": 18,
-   "pub": 3,
+   "what": "AI and data-science category pages plus 2 event pages",
+   "found": 16,
+   "pub": 1,
    "review": 0,
    "dup": 5,
    "skip": 10,
-   "note": "All pages loaded. Added Claude & Coffee, Open-Source AI for Builders and the NMACC emoji/AI talk. AllEvents tags many times as UTC so local times are flagged. FlutterFlow page contradicts its own date, so it stays queued. Skipped finance summits, trade expos and the school-oriented STEM expo."
+   "note": "All pages loaded. Added the E-Summit GenAI workshop. Skipped finance summits, STEM expo, NobleProg finance course and similar. Times shown as UTC by AllEvents were left as already published."
   },
   {
    "src": "dev.events",
    "what": "Mumbai listing and meetups page",
-   "found": 14,
+   "found": 8,
    "pub": 0,
    "review": 0,
-   "dup": 3,
-   "skip": 11,
-   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay queued; meetups listed are online or 2027."
+   "dup": 2,
+   "skip": 6,
+   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay queued; listed meetups are online-only."
   },
   {
    "src": "hiddenevents",
@@ -1131,13 +1133,13 @@
   },
   {
    "src": "web search",
-   "what": "Mumbai AI meetup December 2026, startup, design searches",
-   "found": 30,
+   "what": "dev.events, AllEvents, Luma, Mumbai AI meetup December searches",
+   "found": 60,
    "pub": 0,
    "review": 0,
    "dup": 0,
-   "skip": 30,
-   "note": "Searches ran; results were mostly Meetup links (not opened) and older pages. Existing events were not individually re-checked this run; nothing ended or cancelled was seen."
+   "skip": 60,
+   "note": "Searches ran; results were mostly Meetup links (not opened), older pages and generic listings. Removed two ended events (25 Nov). Other published events were not individually re-checked this run."
   }
  ],
  "COMMUNITIES": [
