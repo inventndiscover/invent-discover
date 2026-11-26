@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jyotirlinga Compass · Invent + Discover</title>
+<meta name="description" content="Pick one of the twelve Jyotirlinga shrines and an arrow points the way, with the distance in kilometres. A learning demo: not for navigation or worship guidance.">
+<link rel="canonical" href="https://inventndiscover.com/demos/jyotirlinga-compass/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Invent + Discover">
+<meta property="og:title" content="Jyotirlinga Compass"><meta property="og:description" content="Pick one of the twelve Jyotirlinga shrines and an arrow points the way, with the distance in kilometres.">
+<meta property="og:url" content="https://inventndiscover.com/demos/jyotirlinga-compass/">
+<meta property="og:image" content="https://inventndiscover.com/media/jyotirlinga-compass-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<script src="/favicon-pulse.js" defer></script>
+<style>
+  /* ---------- Site neon palette, calmer accents for this one ---------- */
+  :root{
+    --bg:#05060A; --violet:#9b6bff; --blue:#4cc9ff; --pink:#ff4fd8;
+    --text:#ecebff; --muted:#8d8aab; --ok:#5dffb0; --no:#ff6b8a;
+    --gold:#ffc861; --stone:#6f6a90;
+    --deva:'Tiro Devanagari Hindi', Geist, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+    font-family:Geist,system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+
+  /* Faint grid + soft glows, same as the other demo pages */
+  body{
+    background-image:
+      radial-gradient(circle at 20% 10%,rgba(155,107,255,.16),transparent 45%),
+      radial-gradient(circle at 85% 90%,rgba(76,201,255,.10),transparent 45%),
+      linear-gradient(rgba(155,107,255,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,107,255,.06) 1px,transparent 1px);
+    background-size:auto,auto,32px 32px,32px 32px;
+    background-attachment:fixed}
+
+  /* ---------- Vertical layout: one column, phone first, never rotate ---------- */
+  .wrap{max-width:460px;margin:0 auto;padding:16px 16px 40px}
+  .card{border:1px solid rgba(155,107,255,.35);border-radius:18px;padding:20px;
+    background:rgba(10,11,20,.88);box-shadow:0 0 40px rgba(155,107,255,.16);margin:0 0 14px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+  h1{margin:6px 0 0;font-size:29px;font-weight:700;text-shadow:0 0 18px rgba(155,107,255,.55)}
+  .deva-title{font-family:var(--deva);font-size:20px;color:var(--gold);margin:3px 0 10px;text-shadow:0 0 12px rgba(255,200,97,.35)}
+  .sub{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+  h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:500}
+  .note{margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.55}
+  .note b{color:var(--text)}
+  .notice{margin:0;padding:12px 14px;border-radius:12px;font-size:12.5px;line-height:1.55;
+    border:1px solid rgba(255,200,97,.45);background:rgba(255,200,97,.06);color:#ffe6bd}
+  .notice b{color:var(--gold)}
+
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:0 0 10px;padding:13px;
+    border-radius:12px;font:500 16px Geist,system-ui,sans-serif;color:var(--text);background:transparent;
+    border:1px solid rgba(155,107,255,.5);cursor:pointer}
+  .btn.main{background:linear-gradient(90deg,rgba(155,107,255,.32),rgba(76,201,255,.18));
+    border-color:var(--violet);box-shadow:0 0 22px rgba(155,107,255,.4)}
+  .btn:last-child{margin-bottom:0}
+  .btn[hidden]{display:none}
+
+  /* ---------- Shrine list: vertical, icon + English first, Devanagari under ---------- */
+  .shrines{list-style:none;margin:0;padding:0}
+  .shrines li{margin:0 0 7px}
+  .shrines button{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;text-align:left;
+    border-radius:12px;border:1px solid rgba(155,107,255,.28);background:rgba(255,255,255,.02);
+    color:var(--text);font:400 15px Geist,system-ui,sans-serif;cursor:pointer}
+  .shrines button:hover{border-color:rgba(155,107,255,.55)}
+  .shrines button.on{border-color:var(--gold);background:rgba(255,200,97,.08);box-shadow:0 0 16px rgba(255,200,97,.22)}
+  .shrines .ico{width:40px;height:40px;flex:none}
+  .shrines .ico svg{display:block;width:100%;height:100%;
+    filter:drop-shadow(0 0 6px rgba(155,107,255,.55))}
+  .shrines button.on .ico svg{filter:drop-shadow(0 0 7px rgba(255,200,97,.7))}
+  .shrines .nm{flex:1;min-width:0}
+  .shrines .en{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shrines .dv{display:block;font-family:var(--deva);font-size:15px;color:var(--gold);line-height:1.5}
+  .shrines .pl{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+  .shrines .km{flex:none;font-size:12.5px;color:var(--blue);text-align:right;white-space:nowrap}
+
+  /* ---------- The dial ---------- */
+  #dialcard{text-align:center}
+  #dialwrap{position:relative;width:100%;max-width:300px;margin:0 auto}
+  #dial{display:block;width:100%;height:auto}
+  .target-en{font-size:20px;font-weight:700;margin:2px 0 0}
+  .target-dv{font-family:var(--deva);font-size:18px;color:var(--gold);margin:1px 0 0}
+  .target-pl{font-size:12.5px;color:var(--muted);margin:3px 0 12px}
+  .dist{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:10px 0 0;text-shadow:0 0 20px rgba(76,201,255,.4)}
+  .dist span{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .readout{display:flex;gap:8px;justify-content:center;margin:12px 0 0;flex-wrap:wrap}
+  .chip{padding:6px 12px;border-radius:999px;font-size:12.5px;color:var(--text);
+    background:rgba(5,6,10,.7);border:1px solid rgba(155,107,255,.4)}
+  .chip b{color:var(--blue);font-weight:500}
+  .flat{margin:14px 0 0;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.5;
+    border:1px solid rgba(76,201,255,.4);background:rgba(76,201,255,.06);color:#cfeeff}
+
+  /* ---------- Rights & Credits ---------- */
+  table.rc{width:100%;border-collapse:collapse;font-size:12px;margin:0}
+  table.rc th,table.rc td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;vertical-align:top}
+  table.rc th{color:var(--muted);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  table.rc a{color:var(--blue)}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #stamp{font-size:10.5px;color:var(--muted);text-align:center;margin:0 0 14px}
+  #err{color:var(--no);font-size:13px;margin:8px 0 0;min-height:1em}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <p class="eyebrow">AR · Invent + Discover</p>
+    <h1>Jyotirlinga Compass</h1>
+    <p class="deva-title">ज्योतिर्लिंग दिशा-सूचक</p>
+    <p class="sub">Choose one of the twelve Jyotirlinga shrines. An arrow turns to point the way from wherever you are standing, with the distance in kilometres.</p>
+  </div>
+
+  <div class="card">
+    <p class="notice"><b>Notice before you begin.</b> This compass is for curiosity and learning. It is <b>not for navigation</b> and <b>not for worship guidance</b>. A phone compass is easily thrown off indoors and near metal, and the shrine positions here come from public encyclopaedia records, not from the temple trusts. Please do not use it to find your way or to orient yourself for prayer. Educational demo. Made for learning and research, not for commercial use.</p>
+  </div>
+
+  <div class="card">
+    <h2>Step 1 · Your location</h2>
+    <button class="btn main" id="b-loc">Use my location</button>
+    <button class="btn" id="b-compass" hidden>Tap to enable compass</button>
+    <p id="err"></p>
+    <p class="note" id="locnote"><b>Your location stays on your phone.</b> It is read by the browser, used in this page to work out a direction and a distance, and never stored, never sent anywhere and never logged. Close the tab and it is gone.</p>
+  </div>
+
+  <div class="card" id="dialcard" hidden>
+    <h2>Pointing to</h2>
+    <p class="target-en" id="t-en">—</p>
+    <p class="target-dv" id="t-dv"></p>
+    <p class="target-pl" id="t-pl"></p>
+    <div id="dialwrap">
+      <!-- The dial is drawn from scratch: a rose that turns so N sits at true north,
+           and a gold needle that turns to the shrine. -->
+      <svg id="dial" viewBox="0 0 300 300" aria-label="Compass dial">
+        <defs>
+          <radialGradient id="g-face" cx="50%" cy="38%" r="68%">
+            <stop offset="0%" stop-color="#121426"/><stop offset="100%" stop-color="#07080F"/>
+          </radialGradient>
+        </defs>
+        <circle cx="150" cy="150" r="140" fill="url(#g-face)" stroke="rgba(155,107,255,.45)" stroke-width="1.5"/>
+        <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(155,107,255,.18)" stroke-width="1"/>
+
+        <!-- Rose: rotates by minus the heading, so N always shows true north -->
+        <g id="rose">
+          <g stroke="rgba(236,235,255,.30)" stroke-width="1">
+            <!-- 24 ticks, every 15 degrees; the four cardinals are drawn longer below -->
+            <g id="ticks"></g>
+          </g>
+        </g>
+        <!-- Cardinal letters sit on the turning rose but stay upright, so they
+             stay readable however the phone is held. -->
+        <g id="labels" font-family="Geist, system-ui, sans-serif" font-size="15" font-weight="700" text-anchor="middle">
+          <text id="lab-N" fill="#ff6b8a">N</text>
+          <text id="lab-E" fill="rgba(236,235,255,.65)">E</text>
+          <text id="lab-S" fill="rgba(236,235,255,.65)">S</text>
+          <text id="lab-W" fill="rgba(236,235,255,.65)">W</text>
+        </g>
+
+        <!-- Needle: rotates to (bearing - heading) -->
+        <g id="needle">
+          <path d="M150 28 L166 150 L150 136 L134 150 Z" fill="var(--gold)"
+                style="filter:drop-shadow(0 0 10px rgba(255,200,97,.85))"/>
+          <path d="M150 272 L138 160 L150 170 L162 160 Z" fill="rgba(111,106,144,.75)"/>
+        </g>
+        <circle cx="150" cy="150" r="7" fill="#07080F" stroke="var(--gold)" stroke-width="2"/>
+      </svg>
+    </div>
+    <p class="dist" id="dist">— <span>km</span></p>
+    <div class="readout">
+      <span class="chip">Bearing <b id="r-bear">—</b></span>
+      <span class="chip">Compass <b id="r-head">—</b></span>
+    </div>
+    <p class="flat" id="flatnote" hidden>No compass on this device, so the dial is held with north upwards and the arrow shows the bearing from true north. On a phone the arrow turns as you turn.</p>
+    <p class="note"><b>If the arrow wanders:</b> wave the phone in a figure 8 a few times to calibrate it. Indoors, in a lift, in a car, or near a fridge, speakers, a laptop or steel furniture, the magnetic reading drifts and can be wrong by a long way. Step outside, away from metal, for a steadier reading.</p>
+  </div>
+
+  <div class="card">
+    <h2>Step 2 · Choose a shrine</h2>
+    <ul class="shrines" id="list"></ul>
+    <p class="note">Listed in the traditional order of the Dwadasha Jyotirlinga Stotram, which begins at Somnath and ends at Grishneshwar.</p>
+  </div>
+
+  <div class="card">
+    <h2>Where traditions differ</h2>
+    <p class="sub" id="trad"></p>
+  </div>
+
+  <div class="card">
+    <h2>Rights &amp; Credits</h2>
+    <div class="scroll">
+    <table class="rc">
+      <tr><th>Asset</th><th>Licence</th><th>Link</th><th>Checked</th><th>Action needed</th></tr>
+      <tr><td>Shrine coordinates (all 12)</td><td>CC BY-SA 4.0, Wikipedia infoboxes</td><td><a href="https://en.wikipedia.org/wiki/Jyotirlinga">Jyotirlinga</a></td><td>26 Nov 2026</td><td>Encyclopaedia records, not temple trusts. Vaidyanath's longitude is rounded to the arcminute (±900 m). Fine for a learning demo; re-check before any other use.</td></tr>
+      <tr><td>Traditional order of the twelve</td><td>Editorial reference</td><td><a href="https://www.sotc.in/blog/indian-holidays/explore-the-sacred-12-jyotirlinga-temples-and-their-locations-across-india/">SOTC</a></td><td>26 Nov 2026</td><td>None</td></tr>
+      <tr><td>Contested placements (Vaidyanath, Nageshwar)</td><td>Editorial reference</td><td><a href="https://www.sotc.in/blog/indian-holidays/explore-the-sacred-12-jyotirlinga-temples-and-their-locations-across-india/">SOTC</a></td><td>26 Nov 2026</td><td>None</td></tr>
+      <tr><td>Mamleshwar as a second linga of the kshetra</td><td>Editorial reference</td><td><a href="https://www.gajananmaharajsanstan.in/blog/mamleshwar-vs-omkareshwar-jyotirlinga">Gajanan Maharaj Sansthan</a></td><td>26 Nov 2026</td><td>No coordinate used; no sourced point for Mamleshwar yet</td></tr>
+      <tr><td>Shrine tower icons, compass dial, all artwork</td><td>Original, drawn in code for this page</td><td>—</td><td>26 Nov 2026</td><td>None. No photographs, no deity images, no copied infographics.</td></tr>
+      <tr><td>Geist, Tiro Devanagari Hindi</td><td>SIL Open Font License 1.1</td><td><a href="https://fonts.google.com/">Google Fonts</a></td><td>26 Nov 2026</td><td>None</td></tr>
+    </table>
+    </div>
+    <p class="note">Shrine silhouettes are stylised from written architectural descriptions (for example Vaidyanath's pyramidal shikhara and Grishneshwar's five tiers). They are impressions, not elevations, and are not drawn to scale.</p>
+  </div>
+
+  <p id="stamp"></p>
+  <p class="note" style="text-align:center">Invent + Discover is an educational project. Demos are made for learning and research, not for commercial use. Names, brands and marks belong to their owners; no affiliation or endorsement is implied. Third-party assets are credited under their licences.</p>
+</div>
+
+<script>
+/* =====================================================================
+   Jyotirlinga Compass — Level A (web compass, no AR)
+   One file, no build step, no libraries.
+   ===================================================================== */
+const BUILD = 'Jyotirlinga Compass · Level A · 26 Nov 2026';
+const $ = id => document.getElementById(id);
+$('stamp').textContent = BUILD;
+
+/* ---------------------------------------------------------------------
+   PART 1 — The twelve shrines
+   Coordinates verified 26 Nov 2026 against Wikipedia infoboxes, with a
+   second source where one existed. Order follows the Dwadasha
+   Jyotirlinga Stotram. 4 decimal places is about 11 m, far finer than
+   a phone compass can show.
+   --------------------------------------------------------------------- */
+const SHRINES = [
+  {en:'Somnath',          dv:'सोमनाथ',          pl:'Prabhas Patan, Gujarat',          lat:20.8880, lon:70.4014, ico:'somnath'},
+  {en:'Mallikarjuna',     dv:'मल्लिकार्जुन',      pl:'Srisailam, Andhra Pradesh',       lat:16.0742, lon:78.8681, ico:'gopuram'},
+  {en:'Mahakaleshwar',    dv:'महाकालेश्वर',       pl:'Ujjain, Madhya Pradesh',          lat:23.1828, lon:75.7683, ico:'nagara'},
+  {en:'Omkareshwar',      dv:'ओंकारेश्वर',        pl:'Mandhata island, Madhya Pradesh', lat:22.2456, lon:76.1511, ico:'island'},
+  {en:'Kedarnath',        dv:'केदारनाथ',         pl:'Rudraprayag, Uttarakhand',        lat:30.7352, lon:79.0669, ico:'himalaya'},
+  {en:'Bhimashankar',     dv:'भीमाशंकर',         pl:'Pune district, Maharashtra',      lat:19.0719, lon:73.5361, ico:'sahyadri'},
+  {en:'Kashi Vishwanath', dv:'काशी विश्वनाथ',     pl:'Varanasi, Uttar Pradesh',         lat:25.3108, lon:83.0106, ico:'dome'},
+  {en:'Trimbakeshwar',    dv:'त्र्यंबकेश्वर',       pl:'Trimbak, Nashik, Maharashtra',    lat:19.9322, lon:73.5308, ico:'stepped'},
+  {en:'Vaidyanath',       dv:'वैद्यनाथ',          pl:'Deoghar, Jharkhand',              lat:24.4925, lon:86.7000, ico:'pyramid'},
+  {en:'Nageshwar',        dv:'नागेश्वर',          pl:'Dwarka, Gujarat',                 lat:22.3359, lon:69.0869, ico:'murti'},
+  {en:'Rameshwaram',      dv:'रामेश्वरम्',         pl:'Rameswaram, Tamil Nadu',          lat: 9.2881, lon:79.3173, ico:'corridor'},
+  {en:'Grishneshwar',     dv:'घृष्णेश्वर',         pl:'Verul (Ellora), Maharashtra',     lat:20.0250, lon:75.1699, ico:'tiers'}
+];
+
+/* Where traditions place a shrine elsewhere. Shown quietly, traditional site first. */
+const OTHER_TRADITIONS = {
+  'Vaidyanath':   'Deoghar is the traditional site. Other traditions place this shrine elsewhere: at Parli Vaijnath in Maharashtra, and at Baijnath in Himachal Pradesh.',
+  'Nageshwar':    'Dwarka is the traditional site. Other traditions place this shrine elsewhere: at Aundha Nagnath in Maharashtra, and some name Jageshwar in Almora.',
+  'Omkareshwar':  'Omkareshwar on the island is the principal shrine here. Other traditions also count Mamleshwar, across the Narmada on the mainland, as a second linga of this place.'
+};
+
+/* ---------------------------------------------------------------------
+   PART 2 — Our own line icons, one per shrine, drawn from scratch.
+   48x48 box, ground line at y=43, stroke only. Stylised impressions of
+   each tower's shape, not elevations and not to scale.
+   --------------------------------------------------------------------- */
+const S = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+const ICONS = {
+  /* Tall curved shikhara with amalaka and kalash, sea line at the foot */
+  somnath:  `<g ${S}><path d="M24 4v4"/><path d="M20 10h8"/><path d="M24 10c-5 7-7 16-7 24h14c0-8-2-17-7-24z"/><path d="M14 34h20v9H14z"/><path d="M4 46h40"/></g>`,
+  /* Dravidian gopuram: stacked trapezoid tiers */
+  gopuram:  `<g ${S}><path d="M24 5v3"/><path d="M19 11h10"/><path d="M18 13h12l-1 7H19z"/><path d="M16 20h16l-1 8H17z"/><path d="M14 28h20l-1 9H15z"/><path d="M11 43h26"/></g>`,
+  /* Nagara shikhara with two smaller side turrets (urushringa) */
+  nagara:   `<g ${S}><path d="M24 4v4"/><path d="M24 8c-4 8-5 16-5 22h10c0-6-1-14-5-22z"/><path d="M14 20c-2 6-3 10-3 16h6"/><path d="M34 20c2 6 3 10 3 16h-6"/><path d="M8 43h32"/></g>`,
+  /* Shikhara on an island, water below */
+  island:   `<path d="M24 5v3" ${S}/><path d="M24 8c-4 7-6 14-6 20h12c0-6-2-13-6-20z" ${S}/><path d="M12 34h24" ${S}/><path d="M6 40q4-2 7 0t7 0 7 0 7 0" ${S}/><path d="M6 45q4-2 7 0t7 0 7 0 7 0" ${S}/>`,
+  /* Squat Himalayan stone temple, peaks behind */
+  himalaya: `<g ${S}><path d="M3 25l9-13 7 10"/><path d="M29 22l7-10 9 13"/><path d="M24 10v4"/><path d="M24 14c-3 5-4 9-4 13h8c0-4-1-8-4-13z"/><path d="M16 27h16v12H16z"/><path d="M22 32h4v7h-4"/><path d="M7 43h34"/></g>`,
+  /* Shikhara with a low mandap roof beside it, ghat trees */
+  sahyadri: `<g ${S}><path d="M19 6v3"/><path d="M19 9c-3 7-4 13-4 19h8c0-6-1-12-4-19z"/><path d="M26 20l7 5v11h-7"/><path d="M11 43h26"/><path d="M40 43v-7"/><path d="M37 36h6l-3-5z"/></g>`,
+  /* Gold dome with a tall spire */
+  dome:     `<g ${S}><path d="M24 3v5"/><path d="M20 14a8 7 0 0 1 8-6 8 7 0 0 1 8 6"/><path d="M28 14v6"/><path d="M8 24a10 9 0 0 1 10-8 10 9 0 0 1 10 8z"/><path d="M10 24h16v15H10z"/><path d="M30 20h8v19h-8z"/><path d="M5 43h38"/></g>`,
+  /* Stepped Hemadpanthi shikhara with the hill behind */
+  stepped:  `<g ${S}><path d="M4 22l9-10 7 10"/><path d="M26 5v3"/><path d="M22 10h8"/><path d="M23 12h6l1 6h-8z"/><path d="M21 18h10l1 7H20z"/><path d="M19 25h14l1 8H18z"/><path d="M14 43h26"/></g>`,
+  /* Pyramidal shikhara: straight sloping sides */
+  pyramid:  `<g ${S}><path d="M24 4v4"/><path d="M20 10h8"/><path d="M24 11L13 36h22z"/><path d="M18 24h12"/><path d="M15 30h18"/><path d="M8 43h32"/></g>`,
+  /* Small temple with the tall standing murti beside it */
+  murti:    `<g ${S}><path d="M17 11v3"/><path d="M17 14c-3 6-4 11-4 16h8c0-5-1-10-4-16z"/><path d="M10 30h14v9H10z"/><path d="M34 39V13"/><path d="M34 13l6 3-6 3"/><path d="M30 39h8"/><path d="M4 43h40"/></g>`,
+  /* Wide gopuram and the long pillared corridor */
+  corridor: `<g ${S}><path d="M13 6v3"/><path d="M8 11h10"/><path d="M8 13h10l-1 9H9z"/><path d="M6 22h14l-1 10H7z"/><path d="M24 24h20"/><path d="M26 24v14"/><path d="M32 24v14"/><path d="M38 24v14"/><path d="M44 24v14"/><path d="M4 43h40"/></g>`,
+  /* Five stepped tiers */
+  tiers:    `<g ${S}><path d="M24 5v3"/><path d="M22 10h4"/><path d="M22 12h4l1 5h-6z"/><path d="M20 17h8l1 5H19z"/><path d="M18 22h12l1 6H17z"/><path d="M16 28h16l1 6H15z"/><path d="M14 34h20l1 7H13z"/><path d="M9 43h30"/></g>`
+};
+
+/* ---------------------------------------------------------------------
+   PART 3 — The maths, with a worked example for each step
+   --------------------------------------------------------------------- */
+const toRad = d => d * Math.PI / 180;
+const toDeg = r => r * 180 / Math.PI;
+
+/* Haversine: distance along the Earth's surface between two points.
+   "Haversine" is just the half-versed-sine; it keeps the arithmetic
+   stable for points that are close together.
+   Worked example — Mumbai (19.0760, 72.8777) to Somnath (20.8880, 70.4014):
+     dLat = 1.8120 deg, dLon = -2.4763 deg
+     a    = sin^2(dLat/2) + cos(lat1) cos(lat2) sin^2(dLon/2) = 0.0006623
+     d    = 2 * 6371 * asin(sqrt(a)) = 328 km
+   Checked against a known pair: Mumbai to Delhi comes out 1148 km.   */
+function haversineKm(lat1, lon1, lat2, lon2){
+  const R = 6371;                      // mean Earth radius, km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2
+          + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+/* Initial bearing on the great circle: which way to set off, measured
+   clockwise from true north. It is not the same as the angle you would
+   read off a flat map, because the shortest path on a sphere curves.
+   Worked example — Mumbai to Kedarnath (30.7352, 79.0669):
+     y = sin(dLon) cos(lat2)        =  0.09267
+     x = cos(lat1) sin(lat2) - sin(lat1) cos(lat2) cos(dLon) = 0.20373
+     atan2(y, x) = 24.5 deg  ->  set off roughly north-north-east,
+     and the haversine above gives 1438 km for the same pair.   */
+function bearingDeg(lat1, lon1, lat2, lon2){
+  const f1 = toRad(lat1), f2 = toRad(lat2), dl = toRad(lon2 - lon1);
+  const y = Math.sin(dl) * Math.cos(f2);
+  const x = Math.cos(f1) * Math.sin(f2) - Math.sin(f1) * Math.cos(f2) * Math.cos(dl);
+  return (toDeg(Math.atan2(y, x)) + 360) % 360;
+}
+
+/* Keep any angle in 0..360 */
+const norm = a => ((a % 360) + 360) % 360;
+
+/* Turn a bearing into words, e.g. 25 deg -> "NNE" */
+const POINTS = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const compassWord = b => POINTS[Math.round(norm(b) / 22.5) % 16];
+
+/* ---------------------------------------------------------------------
+   PART 4 — State
+   --------------------------------------------------------------------- */
+const St = {
+  here: null,      // {lat, lon} once the browser gives it to us
+  heading: null,   // degrees clockwise from true north, null if no compass
+  pick: 0          // which shrine, index into SHRINES
+};
+
+/* ---------------------------------------------------------------------
+   PART 5 — Build the shrine list
+   --------------------------------------------------------------------- */
+const list = $('list');
+SHRINES.forEach((s, i) => {
+  const li = document.createElement('li');
+  li.innerHTML =
+    `<button type="button" data-i="${i}">
+       <span class="ico"><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[s.ico]}</svg></span>
+       <span class="nm">
+         <span class="en">${s.en}</span>
+         <span class="dv">${s.dv}</span>
+         <span class="pl">${s.pl}</span>
+       </span>
+       <span class="km" data-km="${i}"></span>
+     </button>`;
+  list.appendChild(li);
+});
+list.addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]');
+  if (!b) return;
+  St.pick = +b.dataset.i;
+  draw();
+});
+
+/* Draw the 24 dial ticks once (every 15 degrees; cardinals longer) */
+(() => {
+  const g = $('ticks');
+  let d = '';
+  for (let i = 0; i < 24; i++){
+    const a = toRad(i * 15);
+    const long = i % 6 === 0;
+    const r1 = long ? 104 : 112, r2 = 122;
+    const sx = 150 + r1 * Math.sin(a), sy = 150 - r1 * Math.cos(a);
+    const ex = 150 + r2 * Math.sin(a), ey = 150 - r2 * Math.cos(a);
+    d += `M${sx.toFixed(1)} ${sy.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}`;
+  }
+  g.innerHTML = `<path d="${d}"/>`;
+})();
+
+/* Put N, E, S and W where the turning rose says they belong, but leave the
+   glyphs upright so they stay readable. Facing west (heading 270), N moves a
+   quarter turn clockwise to the right-hand side, still printed the right way up. */
+function placeLabels(h){
+  const R = 92;
+  [['lab-N',0],['lab-E',90],['lab-S',180],['lab-W',270]].forEach(([id, card]) => {
+    const a = toRad(card - h), el = $(id);
+    el.setAttribute('x', (150 + R * Math.sin(a)).toFixed(1));
+    el.setAttribute('y', (150 - R * Math.cos(a) + 5.5).toFixed(1));
+  });
+}
+
+/* ---------------------------------------------------------------------
+   PART 6 — Draw: distance, bearing, and the two rotations
+   The rose turns by minus the heading, so N keeps pointing at true north.
+   The needle turns to (bearing - heading), so it keeps pointing at the
+   shrine however you hold the phone.
+   Example — shrine bearing 25 deg, you are facing east (heading 90):
+     needle = 25 - 90 = -65  ->  65 deg to your left. Correct: the shrine
+     is north-north-east, and you are looking east.
+   --------------------------------------------------------------------- */
+function draw(){
+  const s = SHRINES[St.pick];
+
+  // Highlight the chosen row
+  list.querySelectorAll('button[data-i]').forEach(b =>
+    b.classList.toggle('on', +b.dataset.i === St.pick));
+
+  // Which traditions differ for this shrine
+  $('trad').textContent = OTHER_TRADITIONS[s.en] ||
+    'For this shrine the traditional site is the one shown, and the records agree on it.';
+
+  $('t-en').textContent = s.en;
+  $('t-dv').textContent = s.dv;
+  $('t-pl').textContent = s.pl;
+
+  if (!St.here){ $('dialcard').hidden = true; return; }
+  $('dialcard').hidden = false;
+
+  const km   = haversineKm(St.here.lat, St.here.lon, s.lat, s.lon);
+  const bear = bearingDeg(St.here.lat, St.here.lon, s.lat, s.lon);
+
+  $('dist').innerHTML = (km < 10 ? km.toFixed(1) : Math.round(km).toLocaleString('en-IN'))
+                      + ' <span>km away</span>';
+  $('r-bear').textContent = `${Math.round(bear)}° ${compassWord(bear)}`;
+
+  // Fill the per-shrine distances in the list
+  SHRINES.forEach((o, i) => {
+    const k = haversineKm(St.here.lat, St.here.lon, o.lat, o.lon);
+    const el = list.querySelector(`[data-km="${i}"]`);
+    if (el) el.textContent = (k < 10 ? k.toFixed(1) : Math.round(k).toLocaleString('en-IN')) + ' km';
+  });
+
+  if (St.heading == null){
+    // No compass: hold the dial north-up and point the needle at the bearing
+    $('rose').setAttribute('transform', 'rotate(0 150 150)');
+    $('needle').setAttribute('transform', `rotate(${bear.toFixed(1)} 150 150)`);
+    $('r-head').textContent = 'not available';
+    $('flatnote').hidden = false;
+    placeLabels(0);
+  } else {
+    $('rose').setAttribute('transform', `rotate(${(-St.heading).toFixed(1)} 150 150)`);
+    $('needle').setAttribute('transform', `rotate(${norm(bear - St.heading).toFixed(1)} 150 150)`);
+    $('r-head').textContent = `${Math.round(St.heading)}° ${compassWord(St.heading)}`;
+    $('flatnote').hidden = true;
+    placeLabels(St.heading);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   PART 7 — Location, from the browser only. Never stored, never sent.
+   --------------------------------------------------------------------- */
+$('b-loc').addEventListener('click', () => {
+  if (!navigator.geolocation){
+    $('err').textContent = 'This browser cannot give a location.';
+    return;
+  }
+  $('b-loc').textContent = 'Asking…';
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      St.here = { lat: p.coords.latitude, lon: p.coords.longitude };
+      $('b-loc').textContent = 'Update my location';
+      $('err').textContent = '';
+      startCompass();
+      draw();
+      $('dialcard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+    e => {
+      $('b-loc').textContent = 'Use my location';
+      $('err').textContent = e.code === 1
+        ? 'Location permission was declined, so there is nothing to point from. You can allow it in your browser settings and tap again.'
+        : 'Could not get a location just now. Try again, or step near a window.';
+    },
+    { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
+  );
+});
+
+/* ---------------------------------------------------------------------
+   PART 8 — Heading, from the phone's magnetometer
+   Android (Chrome): the "deviceorientationabsolute" event gives alpha,
+     measured anticlockwise from north, so heading = 360 - alpha.
+   iPhone (Safari): "deviceorientation" carries webkitCompassHeading,
+     which is already clockwise from true north. Safari also needs an
+     explicit tap: DeviceOrientationEvent.requestPermission() must be
+     called from inside a real user gesture, which is why there is a
+     "Tap to enable compass" button rather than asking on load.
+   --------------------------------------------------------------------- */
+let compassOn = false;
+
+function onOrient(e){
+  let h = null;
+  if (typeof e.webkitCompassHeading === 'number' && !isNaN(e.webkitCompassHeading)){
+    h = e.webkitCompassHeading;                 // iPhone: already true north
+  } else if (e.absolute === true && typeof e.alpha === 'number'){
+    h = 360 - e.alpha;                          // Android: flip the direction
+  }
+  if (h == null) return;
+
+  // Allow for the phone being held in landscape, so the needle stays honest
+  const so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  h = norm(h + so);
+
+  // Smooth it a little, the shortest way round the circle, so the needle
+  // settles instead of twitching on every reading
+  if (St.heading == null) St.heading = h;
+  else {
+    let d = ((h - St.heading + 540) % 360) - 180;
+    St.heading = norm(St.heading + d * 0.25);
+  }
+  draw();
+}
+
+function listen(){
+  if (compassOn) return;
+  compassOn = true;
+  if ('ondeviceorientationabsolute' in window){
+    window.addEventListener('deviceorientationabsolute', onOrient);
+  }
+  window.addEventListener('deviceorientation', onOrient);
+}
+
+/* Desktop Chrome now also defines requestPermission, so we cannot tell an
+   iPhone from a laptop by that alone. Instead: attach the listeners, then see
+   whether any reading actually turns up. Android answers within a moment and
+   never sees the button. An iPhone stays silent until permission is given, so
+   on a touch device we offer the tap. A laptop has no magnetometer, stays
+   silent too, and simply keeps the north-up dial. */
+function startCompass(){
+  const DOE = window.DeviceOrientationEvent;
+  if (!DOE) return;
+  listen();
+  const touch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  if (typeof DOE.requestPermission === 'function' && touch){
+    setTimeout(() => { if (St.heading == null) $('b-compass').hidden = false; }, 1200);
+  }
+}
+
+$('b-compass').addEventListener('click', () => {
+  window.DeviceOrientationEvent.requestPermission()
+    .then(r => {
+      if (r === 'granted'){
+        listen(); $('b-compass').hidden = true;
+        setTimeout(() => { if (St.heading == null)
+          $('err').textContent = 'No compass reading is coming through on this device, so the dial is held north-up and shows the bearing instead.'; }, 2000);
+      }
+      else $('err').textContent = 'Compass access was declined. The dial will stay north-up and show the bearing instead.';
+    })
+    .catch(() => { $('err').textContent = 'Could not turn the compass on. The dial will stay north-up and show the bearing instead.'; });
+});
+
+/* First paint: show the picker with Somnath chosen, dial waits for a location */
+draw();
+</script>
+<script data-goatcounter="https://inventndiscover.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
