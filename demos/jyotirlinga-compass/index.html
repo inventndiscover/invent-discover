@@ -76,6 +76,7 @@
   .shrines .nm{flex:1;min-width:0}
   .shrines .en{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .shrines .dv{display:block;font-family:var(--deva);font-size:15px;color:var(--gold);line-height:1.5}
+  .shrines .dv em{font-style:normal;color:var(--muted);font-size:13.5px}
   .shrines .pl{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
   .shrines .km{flex:none;font-size:12.5px;color:var(--blue);text-align:right;white-space:nowrap}
 
@@ -141,6 +142,22 @@
           <radialGradient id="g-face" cx="50%" cy="38%" r="68%">
             <stop offset="0%" stop-color="#121426"/><stop offset="100%" stop-color="#07080F"/>
           </radialGradient>
+          <linearGradient id="g-gold" gradientUnits="userSpaceOnUse" x1="124" y1="0" x2="177" y2="0">
+            <stop offset="0%"   stop-color="#6b4910"/>
+            <stop offset="14%"  stop-color="#a87c1c"/>
+            <stop offset="30%"  stop-color="#e8c25c"/>
+            <stop offset="44%"  stop-color="#fff0bd"/>
+            <stop offset="56%"  stop-color="#f7d070"/>
+            <stop offset="72%"  stop-color="#d4a02b"/>
+            <stop offset="88%"  stop-color="#966b16"/>
+            <stop offset="100%" stop-color="#5b3d0b"/>
+          </linearGradient>
+          <linearGradient id="g-gold-s" gradientUnits="userSpaceOnUse" x1="146" y1="0" x2="154" y2="0">
+            <stop offset="0%"   stop-color="#7a5612"/>
+            <stop offset="35%"  stop-color="#ffeeb6"/>
+            <stop offset="62%"  stop-color="#e2ab35"/>
+            <stop offset="100%" stop-color="#6b4910"/>
+          </linearGradient>
         </defs>
         <circle cx="150" cy="150" r="140" fill="url(#g-face)" stroke="rgba(155,107,255,.45)" stroke-width="1.5"/>
         <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(155,107,255,.18)" stroke-width="1"/>
@@ -161,13 +178,28 @@
           <text id="lab-W" fill="rgba(236,235,255,.65)">W</text>
         </g>
 
-        <!-- Needle: rotates to (bearing - heading) -->
+        <!-- Needle: a trishul. Drawn pointing straight up; the rotate()
+             below does the aiming, to (bearing - heading). -->
         <g id="needle">
-          <path d="M150 28 L166 150 L150 136 L134 150 Z" fill="var(--gold)"
-                style="filter:drop-shadow(0 0 10px rgba(255,200,97,.85))"/>
-          <path d="M150 272 L138 160 L150 170 L162 160 Z" fill="rgba(111,106,144,.75)"/>
+          <g style="filter:drop-shadow(0 0 11px rgba(255,200,97,.5))"
+             fill="url(#g-gold)" stroke="#432d07" stroke-width=".7" stroke-linejoin="round">
+            <path d="M150 12 L154.6 42 L150 49.5 L145.4 42 Z"/>
+            <path d="M141.5 57 C131 52.5 125.5 41 127.5 21 C131 33.5 135 42 143.5 47 Z"/>
+            <path d="M158.5 57 C169 52.5 174.5 41 172.5 21 C169 33.5 165 42 156.5 47 Z"/>
+            <rect x="135" y="52.5" width="30" height="6.5" rx="3"/>
+            <rect x="140" y="59.5" width="20" height="4.5" rx="2"/>
+            <rect x="147" y="64" width="6" height="81" rx="2.5" fill="url(#g-gold-s)"/>
+          </g>
+          <g fill="none" stroke-linecap="round" style="pointer-events:none">
+            <path d="M150 16.5 L152.9 41" stroke="rgba(255,250,224,.9)" stroke-width="1"/>
+            <path d="M130.5 27 C130 36 132.5 43 138.5 47.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
+            <path d="M169.5 27 C170 36 167.5 43 161.5 47.5" stroke="rgba(255,246,208,.55)" stroke-width=".9"/>
+            <path d="M149.6 67 L149.6 141" stroke="rgba(255,243,200,.45)" stroke-width="1.1"/>
+          </g>
+          <path d="M150 268 L142 166 L150 158 L158 166 Z" fill="rgba(111,106,144,.7)"/>
         </g>
-        <circle cx="150" cy="150" r="7" fill="#07080F" stroke="var(--gold)" stroke-width="2"/>
+        <circle cx="150" cy="150" r="8" fill="url(#g-gold)" stroke="#432d07" stroke-width=".8"/>
+        <circle cx="150" cy="150" r="3.2" fill="#07080F"/>
       </svg>
     </div>
     <p class="dist" id="dist">— <span>km</span></p>
@@ -199,7 +231,7 @@
       <tr><td>Traditional order of the twelve</td><td>Editorial reference</td><td><a href="https://www.sotc.in/blog/indian-holidays/explore-the-sacred-12-jyotirlinga-temples-and-their-locations-across-india/">SOTC</a></td><td>26 Nov 2026</td><td>None</td></tr>
       <tr><td>Contested placements (Vaidyanath, Nageshwar)</td><td>Editorial reference</td><td><a href="https://www.sotc.in/blog/indian-holidays/explore-the-sacred-12-jyotirlinga-temples-and-their-locations-across-india/">SOTC</a></td><td>26 Nov 2026</td><td>None</td></tr>
       <tr><td>Mamleshwar as a second linga of the kshetra</td><td>Editorial reference</td><td><a href="https://www.gajananmaharajsanstan.in/blog/mamleshwar-vs-omkareshwar-jyotirlinga">Gajanan Maharaj Sansthan</a></td><td>26 Nov 2026</td><td>No coordinate used; no sourced point for Mamleshwar yet</td></tr>
-      <tr><td>Shrine tower icons, compass dial, all artwork</td><td>Original, drawn in code for this page</td><td>—</td><td>26 Nov 2026</td><td>None. No photographs, no deity images, no copied infographics.</td></tr>
+      <tr><td>Shrine tower icons, trishul needle, compass dial</td><td>Original, drawn in code for this page</td><td>—</td><td>26 Nov 2026</td><td>None. Silhouettes are our own drawings of the real buildings, informed by published descriptions and photographs but not traced from, or derived from, any existing icon set. No photographs, no deity images, no copied infographics.</td></tr>
       <tr><td>Geist, Tiro Devanagari Hindi</td><td>SIL Open Font License 1.1</td><td><a href="https://fonts.google.com/">Google Fonts</a></td><td>26 Nov 2026</td><td>None</td></tr>
     </table>
     </div>
@@ -227,18 +259,18 @@ $('stamp').textContent = BUILD;
    a phone compass can show.
    --------------------------------------------------------------------- */
 const SHRINES = [
-  {en:'Somnath',          dv:'सोमनाथ',          pl:'Prabhas Patan, Gujarat',          lat:20.8880, lon:70.4014, ico:'somnath'},
-  {en:'Mallikarjuna',     dv:'मल्लिकार्जुन',      pl:'Srisailam, Andhra Pradesh',       lat:16.0742, lon:78.8681, ico:'gopuram'},
-  {en:'Mahakaleshwar',    dv:'महाकालेश्वर',       pl:'Ujjain, Madhya Pradesh',          lat:23.1828, lon:75.7683, ico:'nagara'},
-  {en:'Omkareshwar',      dv:'ओंकारेश्वर',        pl:'Mandhata island, Madhya Pradesh', lat:22.2456, lon:76.1511, ico:'island'},
-  {en:'Kedarnath',        dv:'केदारनाथ',         pl:'Rudraprayag, Uttarakhand',        lat:30.7352, lon:79.0669, ico:'himalaya'},
-  {en:'Bhimashankar',     dv:'भीमाशंकर',         pl:'Pune district, Maharashtra',      lat:19.0719, lon:73.5361, ico:'sahyadri'},
-  {en:'Kashi Vishwanath', dv:'काशी विश्वनाथ',     pl:'Varanasi, Uttar Pradesh',         lat:25.3108, lon:83.0106, ico:'dome'},
-  {en:'Trimbakeshwar',    dv:'त्र्यंबकेश्वर',       pl:'Trimbak, Nashik, Maharashtra',    lat:19.9322, lon:73.5308, ico:'stepped'},
-  {en:'Vaidyanath',       dv:'वैद्यनाथ',          pl:'Deoghar, Jharkhand',              lat:24.4925, lon:86.7000, ico:'pyramid'},
-  {en:'Nageshwar',        dv:'नागेश्वर',          pl:'Dwarka, Gujarat',                 lat:22.3359, lon:69.0869, ico:'murti'},
-  {en:'Rameshwaram',      dv:'रामेश्वरम्',         pl:'Rameswaram, Tamil Nadu',          lat: 9.2881, lon:79.3173, ico:'corridor'},
-  {en:'Grishneshwar',     dv:'घृष्णेश्वर',         pl:'Verul (Ellora), Maharashtra',     lat:20.0250, lon:75.1699, ico:'tiers'}
+  {en:'Somnath',          dv:'सोमनाथ', st:'गुजरात',          pl:'Prabhas Patan, Gujarat',          lat:20.8880, lon:70.4014, ico:'somnath'},
+  {en:'Mallikarjuna',     dv:'मल्लिकार्जुन', st:'आंध्र प्रदेश',      pl:'Srisailam, Andhra Pradesh',       lat:16.0742, lon:78.8681, ico:'gopuram'},
+  {en:'Mahakaleshwar',    dv:'महाकालेश्वर', st:'मध्य प्रदेश',       pl:'Ujjain, Madhya Pradesh',          lat:23.1828, lon:75.7683, ico:'nagara'},
+  {en:'Omkareshwar',      dv:'ओंकारेश्वर', st:'मध्य प्रदेश',        pl:'Mandhata island, Madhya Pradesh', lat:22.2456, lon:76.1511, ico:'island'},
+  {en:'Kedarnath',        dv:'केदारनाथ', st:'उत्तराखंड',         pl:'Rudraprayag, Uttarakhand',        lat:30.7352, lon:79.0669, ico:'himalaya'},
+  {en:'Bhimashankar',     dv:'भीमाशंकर', st:'महाराष्ट्र',         pl:'Pune district, Maharashtra',      lat:19.0719, lon:73.5361, ico:'sahyadri'},
+  {en:'Kashi Vishwanath', dv:'काशी विश्वनाथ', st:'उत्तर प्रदेश',     pl:'Varanasi, Uttar Pradesh',         lat:25.3108, lon:83.0106, ico:'dome'},
+  {en:'Trimbakeshwar',    dv:'त्र्यंबकेश्वर', st:'महाराष्ट्र',       pl:'Trimbak, Nashik, Maharashtra',    lat:19.9322, lon:73.5308, ico:'stepped'},
+  {en:'Vaidyanath',       dv:'वैद्यनाथ', st:'झारखंड',          pl:'Deoghar, Jharkhand',              lat:24.4925, lon:86.7000, ico:'pyramid'},
+  {en:'Nageshwar',        dv:'नागेश्वर', st:'गुजरात',          pl:'Dwarka, Gujarat',                 lat:22.3359, lon:69.0869, ico:'murti'},
+  {en:'Rameshwaram',      dv:'रामेश्वरम', st:'तमिलनाडु',         pl:'Rameswaram, Tamil Nadu',          lat: 9.2881, lon:79.3173, ico:'corridor'},
+  {en:'Grishneshwar',     dv:'घृष्णेश्वर', st:'महाराष्ट्र',         pl:'Verul (Ellora), Maharashtra',     lat:20.0250, lon:75.1699, ico:'tiers'}
 ];
 
 /* Where traditions place a shrine elsewhere. Shown quietly, traditional site first. */
@@ -253,32 +285,32 @@ const OTHER_TRADITIONS = {
    48x48 box, ground line at y=43, stroke only. Stylised impressions of
    each tower's shape, not elevations and not to scale.
    --------------------------------------------------------------------- */
-const S = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+const S = 'fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"';
 const ICONS = {
-  /* Tall curved shikhara with amalaka and kalash, sea line at the foot */
-  somnath:  `<g ${S}><path d="M24 4v4"/><path d="M20 10h8"/><path d="M24 10c-5 7-7 16-7 24h14c0-8-2-17-7-24z"/><path d="M14 34h20v9H14z"/><path d="M4 46h40"/></g>`,
-  /* Dravidian gopuram: stacked trapezoid tiers */
-  gopuram:  `<g ${S}><path d="M24 5v3"/><path d="M19 11h10"/><path d="M18 13h12l-1 7H19z"/><path d="M16 20h16l-1 8H17z"/><path d="M14 28h20l-1 9H15z"/><path d="M11 43h26"/></g>`,
-  /* Nagara shikhara with two smaller side turrets (urushringa) */
-  nagara:   `<g ${S}><path d="M24 4v4"/><path d="M24 8c-4 8-5 16-5 22h10c0-6-1-14-5-22z"/><path d="M14 20c-2 6-3 10-3 16h6"/><path d="M34 20c2 6 3 10 3 16h-6"/><path d="M8 43h32"/></g>`,
-  /* Shikhara on an island, water below */
-  island:   `<path d="M24 5v3" ${S}/><path d="M24 8c-4 7-6 14-6 20h12c0-6-2-13-6-20z" ${S}/><path d="M12 34h24" ${S}/><path d="M6 40q4-2 7 0t7 0 7 0 7 0" ${S}/><path d="M6 45q4-2 7 0t7 0 7 0 7 0" ${S}/>`,
-  /* Squat Himalayan stone temple, peaks behind */
-  himalaya: `<g ${S}><path d="M3 25l9-13 7 10"/><path d="M29 22l7-10 9 13"/><path d="M24 10v4"/><path d="M24 14c-3 5-4 9-4 13h8c0-4-1-8-4-13z"/><path d="M16 27h16v12H16z"/><path d="M22 32h4v7h-4"/><path d="M7 43h34"/></g>`,
-  /* Shikhara with a low mandap roof beside it, ghat trees */
-  sahyadri: `<g ${S}><path d="M19 6v3"/><path d="M19 9c-3 7-4 13-4 19h8c0-6-1-12-4-19z"/><path d="M26 20l7 5v11h-7"/><path d="M11 43h26"/><path d="M40 43v-7"/><path d="M37 36h6l-3-5z"/></g>`,
-  /* Gold dome with a tall spire */
-  dome:     `<g ${S}><path d="M24 3v5"/><path d="M20 14a8 7 0 0 1 8-6 8 7 0 0 1 8 6"/><path d="M28 14v6"/><path d="M8 24a10 9 0 0 1 10-8 10 9 0 0 1 10 8z"/><path d="M10 24h16v15H10z"/><path d="M30 20h8v19h-8z"/><path d="M5 43h38"/></g>`,
-  /* Stepped Hemadpanthi shikhara with the hill behind */
-  stepped:  `<g ${S}><path d="M4 22l9-10 7 10"/><path d="M26 5v3"/><path d="M22 10h8"/><path d="M23 12h6l1 6h-8z"/><path d="M21 18h10l1 7H20z"/><path d="M19 25h14l1 8H18z"/><path d="M14 43h26"/></g>`,
-  /* Pyramidal shikhara: straight sloping sides */
-  pyramid:  `<g ${S}><path d="M24 4v4"/><path d="M20 10h8"/><path d="M24 11L13 36h22z"/><path d="M18 24h12"/><path d="M15 30h18"/><path d="M8 43h32"/></g>`,
-  /* Small temple with the tall standing murti beside it */
-  murti:    `<g ${S}><path d="M17 11v3"/><path d="M17 14c-3 6-4 11-4 16h8c0-5-1-10-4-16z"/><path d="M10 30h14v9H10z"/><path d="M34 39V13"/><path d="M34 13l6 3-6 3"/><path d="M30 39h8"/><path d="M4 43h40"/></g>`,
-  /* Wide gopuram and the long pillared corridor */
-  corridor: `<g ${S}><path d="M13 6v3"/><path d="M8 11h10"/><path d="M8 13h10l-1 9H9z"/><path d="M6 22h14l-1 10H7z"/><path d="M24 24h20"/><path d="M26 24v14"/><path d="M32 24v14"/><path d="M38 24v14"/><path d="M44 24v14"/><path d="M4 43h40"/></g>`,
-  /* Five stepped tiers */
-  tiers:    `<g ${S}><path d="M24 5v3"/><path d="M22 10h4"/><path d="M22 12h4l1 5h-6z"/><path d="M20 17h8l1 5H19z"/><path d="M18 22h12l1 6H17z"/><path d="M16 28h16l1 6H15z"/><path d="M14 34h20l1 7H13z"/><path d="M9 43h30"/></g>`
+  /* Somnath: tall Chalukya shikhara with a flag, tiered mandapa roof beside it */
+  somnath:  `<g ${S}><path d="M30 4v5"/><path d="M30 4h5l-1.6 2L35 8h-5"/><path d="M30 9c-4.5 7-6 13.5-6 19.5h12C36 22.5 34.5 16 30 9z"/><path d="M9 28.5h12l-2.5-5h-7z"/><path d="M11.5 23.5h7l-2-3.5h-3z"/><path d="M15 20v-2.5"/><path d="M7 28.5h31v9H7z"/><path d="M22.5 32h5v5.5h-5z"/><path d="M4 43h40"/></g>`,
+  /* Mallikarjuna: Dravidian gopuram, stepped tiers, kalashas on the ridge */
+  gopuram:  `<g ${S}><path d="M18 8h12"/><path d="M20 8v-2"/><path d="M24 8v-2.5"/><path d="M28 8v-2"/><path d="M18.5 10h11l.5 6h-12z"/><path d="M17 16h14l.8 7H16.2z"/><path d="M15 23h18l1 8H14z"/><path d="M12 31h24v6.5H12z"/><path d="M21 33h6v4.5h-6z"/><path d="M8 43h32"/></g>`,
+  /* Mahakaleshwar: tall banded shikhara on a pillared base */
+  nagara:   `<g ${S}><path d="M24 4v4"/><path d="M24 8c-5 8-7 15-7 21h14c0-6-2-13-7-21z"/><path d="M19.5 22h9"/><path d="M18.2 26h11.6"/><path d="M12 29h24v8H12z"/><path d="M17 31v6"/><path d="M24 31v6"/><path d="M31 31v6"/><path d="M8 43h32"/></g>`,
+  /* Omkareshwar: ribbed shikhara over a terraced hall, steps down to the Narmada */
+  island:   `<g ${S}><path d="M28 5v3"/><path d="M28 8c-4 6.5-5.5 12-5.5 18h11C33.5 20 32 14.5 28 8z"/><path d="M25 18c-.7 3-1 5.5-1 8"/><path d="M31 18c.7 3 1 5.5 1 8"/><path d="M18 26h23v8H18z"/><path d="M26 29h5v5h-5z"/><path d="M18 34h-4v3h-4.5v3H5"/><path d="M4 44q5.5-2 10 0t10 0 10 0 10 0"/></g>`,
+  /* Kedarnath: squat stone shrine, stepped roof, peaks behind */
+  himalaya: `<g ${S}><path d="M3 24l8-11 6 8"/><path d="M31 21l7-9 7 11"/><path d="M24 11v3"/><path d="M20 19h8l-1.5-5h-5z"/><path d="M17 24h14l-1.5-5h-11z"/><path d="M16 24h16v14H16z"/><path d="M21.5 30h5v8h-5z"/><path d="M8 43h32"/><path d="M13 38h22v5H13z"/></g>`,
+  /* Bhimashankar: shikhara above a long arcaded mandapa in the ghats */
+  sahyadri: `<g ${S}><path d="M15 6v3"/><path d="M15 9c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M8 25h32v12H8z"/><path d="M12 37v-6a3 3 0 0 1 6 0v6"/><path d="M22 37v-6a3 3 0 0 1 6 0v6"/><path d="M32 37v-6a3 3 0 0 1 6 0v6"/><path d="M5 43h38"/><path d="M8 37h32"/></g>`,
+  /* Kashi Vishwanath: the gold dome beside the spire */
+  dome:     `<g ${S}><path d="M31 5v4"/><path d="M31 9c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M15 18.5v-4.5"/><path d="M8 25a7 6.5 0 0 1 7-6 7 6.5 0 0 1 7 6z"/><path d="M8 25h14"/><path d="M7 25h30v12H7z"/><path d="M19 30h6v7h-6z"/><path d="M4 43h40"/></g>`,
+  /* Trimbakeshwar: Hemadpanthi complex, shikhara between pitched roofs */
+  stepped:  `<g ${S}><path d="M24 5v3"/><path d="M24 8c-3.5 6-5 11-5 16h10c0-5-1.5-10-5-16z"/><path d="M19 24l-5-5-6 5"/><path d="M29 24l5-5 6 5"/><path d="M6 24h36v6H6z"/><path d="M8 30h32v7H8z"/><path d="M21 32h6v5h-6z"/><path d="M5 43h38"/></g>`,
+  /* Vaidyanath: the pyramidal shikhara on a colonnaded plinth */
+  pyramid:  `<g ${S}><path d="M24 3v4"/><path d="M21.5 7h5"/><path d="M24 8L14 30h20z"/><path d="M19 18h10"/><path d="M17 24h14"/><path d="M11 30h26v7H11z"/><path d="M16 32v5"/><path d="M24 32v5"/><path d="M32 32v5"/><path d="M7 43h34"/></g>`,
+  /* Nageshwar: shikhara and flag above a low mandapa, Saurashtra coast */
+  murti:    `<g ${S}><path d="M19 5v4"/><path d="M19 5h4.5l-1.4 1.8L23.5 8.6H19"/><path d="M19 9c-4 6.5-5.5 12-5.5 17h11c0-5-1.5-10.5-5.5-17z"/><path d="M10 26h28v10H10z"/><path d="M30 29h5v7h-5z"/><path d="M17 31h4v5h-4z"/><path d="M6 40h36"/><path d="M4 43h40"/></g>`,
+  /* Rameshwaram: the tall tiered gopuram and the long pillared corridor */
+  corridor: `<g ${S}><path d="M10 6h8"/><path d="M12 6V4"/><path d="M16 6V4"/><path d="M10.5 8h7v5h-8z"/><path d="M9 13h10l.6 6H8.4z"/><path d="M7.5 19h13l.7 6H6.8z"/><path d="M6 25h16v12H6z"/><path d="M11 29h6v8h-6z"/><path d="M26 24h18"/><path d="M28 24v13"/><path d="M34 24v13"/><path d="M40 24v13"/><path d="M26 37h18"/><path d="M4 43h40"/></g>`,
+  /* Grishneshwar: five receding tiers over a stepped base */
+  tiers:    `<g ${S}><path d="M24 4v3"/><path d="M22 7h4"/><path d="M21.5 9h5l1 4h-7z"/><path d="M19.5 13h9l1 5h-11z"/><path d="M17.5 18h13l1 5h-15z"/><path d="M15.5 23h17l1 6h-19z"/><path d="M13 29h22v8H13z"/><path d="M21 32h6v5h-6z"/><path d="M9 40h30"/><path d="M6 43h36"/></g>`
 };
 
 /* ---------------------------------------------------------------------
@@ -346,7 +378,7 @@ SHRINES.forEach((s, i) => {
        <span class="ico"><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[s.ico]}</svg></span>
        <span class="nm">
          <span class="en">${s.en}</span>
-         <span class="dv">${s.dv}</span>
+         <span class="dv">${s.dv} <em>— ${s.st}</em></span>
          <span class="pl">${s.pl}</span>
        </span>
        <span class="km" data-km="${i}"></span>
@@ -408,7 +440,7 @@ function draw(){
     'For this shrine the traditional site is the one shown, and the records agree on it.';
 
   $('t-en').textContent = s.en;
-  $('t-dv').textContent = s.dv;
+  $('t-dv').textContent = `${s.dv} — ${s.st}`;
   $('t-pl').textContent = s.pl;
 
   if (!St.here){ $('dialcard').hidden = true; return; }
