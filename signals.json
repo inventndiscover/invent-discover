@@ -1,6 +1,36 @@
 {
- "REFRESHED": "2026-11-26T21:51:15+05:30",
+ "REFRESHED": "2026-11-27T21:51:33+05:30",
  "SIGNALS": [
+  {
+   "id": "2126071506144747536",
+   "handle": "CodeByNZ",
+   "name": "NZ",
+   "url": "https://x.com/CodeByNZ/status/2126071506144747536",
+   "posted": "2026-11-27T03:22:02+05:30",
+   "topic": "Models",
+   "kind": "Report",
+   "summary": "A post says the name Helium has appeared in Gemini's model dropdown beside Argon, Carbon, Hydrogen and Neon, and guesses it may be a cheaper, faster Gemini 4 tier."
+  },
+  {
+   "id": "2125886383587803599",
+   "handle": "AnshMehraaa",
+   "name": "Ansh Mehra",
+   "url": "https://x.com/AnshMehraaa/status/2125886383587803599",
+   "posted": "2026-11-26T15:06:25+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Post reports MeitY Secretary S. Krishnan defended Sarvam AI after criticism that it offers Chinese models on its Token Factory while being a government-selected indigenous model builder."
+  },
+  {
+   "id": "2125700224119402855",
+   "handle": "chinmay",
+   "name": "Chinmay A. Singh",
+   "url": "https://x.com/chinmay/status/2125700224119402855",
+   "posted": "2026-11-26T02:46:41+05:30",
+   "topic": "India",
+   "kind": "Report",
+   "summary": "Commentary on the Sarvam debate: India needs sovereign AI and also needs data kept locally when non-sovereign AI is used, and one company is unlikely to deliver both."
+  },
   {
    "id": "2125589468786909510",
    "handle": "AndrewCurran_",
@@ -40,16 +70,6 @@
    "topic": "Research",
    "kind": "Official",
    "summary": "OpenAI shares a preprint with lab validation of protein design by its GPT-6 family. Of 322 proteins tested with a partner, 35 showed binding evidence, with binders for all five targets."
-  },
-  {
-   "id": "2125223223847772472",
-   "handle": "Polymarket",
-   "name": "Polymarket",
-   "url": "https://x.com/Polymarket/status/2125223223847772472",
-   "posted": "2026-11-24T19:11:15+05:30",
-   "topic": "AI",
-   "kind": "Report",
-   "summary": "Citing Axios, Polymarket reports that OpenAI and Anthropic employees fear their most advanced internal models may be too powerful to release safely."
   }
  ]
 }

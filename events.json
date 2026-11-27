@@ -1,5 +1,5 @@
 {
- "REFRESHED": "2026-11-26T22:29:08+05:30",
+ "REFRESHED": "2026-11-27T22:29:16+05:30",
  "EVENTS_RAW": [
   {
    "id": "devsparks-mumbai-2026",
@@ -496,6 +496,33 @@
    "org": "Business Viewpoint Magazine",
    "access": "open",
    "desc": "A one-day conclave on AI's role in Indian business, with transformation sessions, an innovation showcase, networking and an awards segment."
+  },
+  {
+   "id": "pop-culture-panchayat-ngma",
+   "title": "Pop Culture Panchayat, Episode 01: Who Wants to Run a Film Festival?",
+   "cat": "Culture",
+   "tags": [
+    "Film",
+    "Panel",
+    "Pop culture"
+   ],
+   "area": "Fort",
+   "venue": "NGMA, Jahangir Public Hall, Fort",
+   "start": "2026-12-10",
+   "end": null,
+   "timeNote": "Start time not stated on the page",
+   "fmt": "Offline",
+   "price": 0,
+   "priceNote": "Free entry; RSVP with host approval, limited seats",
+   "aud": [
+    "Creator",
+    "Student"
+   ],
+   "src": "Luma",
+   "url": "https://luma.com/iuoed0qm",
+   "org": "Alt Bollywood",
+   "access": "approval",
+   "desc": "A live panel conversation on what it takes to run a film festival, covering programming, funding and building audiences, with people from several Mumbai festivals."
   }
  ],
  "QUEUE_RAW": [
@@ -1050,13 +1077,13 @@
    "src": "Luma",
    "url": "https://luma.com/qjs01ta3",
    "access": "approval",
-   "why": "Page says 28 November at ATLAS SkillTech University (approval needed) but gives no year or time.",
+   "why": "Page now says 5th December at ATLAS SkillTech University (approval needed) but gives no year or time.",
    "conf": {
-    "date": 70,
+    "date": 80,
     "place": 98,
     "category": 85
    },
-   "hint": "2026-11-28"
+   "hint": "2026-12-05"
   },
   {
    "qid": "q-flutterflow-mumbai",
@@ -1093,33 +1120,33 @@
  "RUNS": [
   {
    "src": "Luma",
-   "what": "luma.com/mumbai listing plus 3 event pages",
+   "what": "luma.com/mumbai listing plus 6 event pages",
    "found": 11,
    "pub": 1,
    "review": 1,
    "dup": 2,
    "skip": 7,
-   "note": "Pages loaded. Added PRINT//REALITY (date confirmed). HackerFab lecture page gives 28 November with no year, so it stays queued. UNBOXED STEM page has no date and targets school children, so skipped."
+   "note": "Pages loaded. Added Pop Culture Panchayat (date 10 Dec confirmed on its page). HackerFab lecture now says 5 December with no year, so it stays queued with an updated hint. Mumbai Meets AI 06 was 10 Oct (past). UNBOXED STEM page has no date and targets school children, so skipped."
   },
   {
    "src": "AllEvents",
-   "what": "AI and data-science category pages plus 2 event pages",
-   "found": 16,
-   "pub": 1,
+   "what": "AI, data-science and entrepreneurship category pages",
+   "found": 40,
+   "pub": 0,
    "review": 0,
-   "dup": 5,
-   "skip": 10,
-   "note": "All pages loaded. Added the E-Summit GenAI workshop. Skipped finance summits, STEM expo, NobleProg finance course and similar. Times shown as UTC by AllEvents were left as already published."
+   "dup": 6,
+   "skip": 34,
+   "note": "All pages loaded; the listings were mostly older or already-published items. Skipped finance summits, paid NP Venue courses, STEM expo, furniture expo and out-of-city items."
   },
   {
    "src": "dev.events",
-   "what": "Mumbai listing and meetups page",
-   "found": 8,
+   "what": "Mumbai listing and meetups page, DevFest page",
+   "found": 12,
    "pub": 0,
    "review": 0,
    "dup": 2,
-   "skip": 6,
-   "note": "Pages loaded. StackConnect and DevFest already published; two masterclasses stay queued; listed meetups are online-only."
+   "skip": 7,
+   "note": "Pages loaded. StackConnect and DevFest (5 Dec) already published; two masterclasses stay queued; listed meetups are online-only; DrupalAsia Jan 2027 is outside the 45-day window."
   },
   {
    "src": "hiddenevents",
@@ -1133,13 +1160,13 @@
   },
   {
    "src": "web search",
-   "what": "dev.events, AllEvents, Luma, Mumbai AI meetup December searches",
+   "what": "dev.events, AllEvents, Luma and Mumbai AI meetup December searches",
    "found": 60,
    "pub": 0,
    "review": 0,
    "dup": 0,
    "skip": 60,
-   "note": "Searches ran; results were mostly Meetup links (not opened), older pages and generic listings. Removed two ended events (25 Nov). Other published events were not individually re-checked this run."
+   "note": "Searches ran; results were mostly Meetup links (not opened), older pages and generic listings. No published events had ended; most existing events were not individually re-checked this run."
   }
  ],
  "COMMUNITIES": [

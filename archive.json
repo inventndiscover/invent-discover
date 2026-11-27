@@ -1679,6 +1679,34 @@
   "desc": "A 12-hour in-person hackathon for Indian high-school students, with city winners going to the finale at IIT Bombay.",
   "firstSeen": "2026-11-08"
  },
+ "pop-culture-panchayat-ngma": {
+  "id": "pop-culture-panchayat-ngma",
+  "title": "Pop Culture Panchayat, Episode 01: Who Wants to Run a Film Festival?",
+  "cat": "Culture",
+  "tags": [
+   "Film",
+   "Panel",
+   "Pop culture"
+  ],
+  "area": "Fort",
+  "venue": "NGMA, Jahangir Public Hall, Fort",
+  "start": "2026-12-10",
+  "end": null,
+  "timeNote": "Start time not stated on the page",
+  "fmt": "Offline",
+  "price": 0,
+  "priceNote": "Free entry; RSVP with host approval, limited seats",
+  "aud": [
+   "Creator",
+   "Student"
+  ],
+  "src": "Luma",
+  "url": "https://luma.com/iuoed0qm",
+  "org": "Alt Bollywood",
+  "access": "approval",
+  "desc": "A live panel conversation on what it takes to run a film festival, covering programming, funding and building audiences, with people from several Mumbai festivals.",
+  "firstSeen": "2026-11-28"
+ },
  "predevfest-founders-mixer": {
   "cat": "Startup",
   "area": "Mumbai",
