@@ -457,8 +457,8 @@ list.addEventListener('click', e => {
 
   /* The 8-point star. Each point is two thin triangles meeting along its
      spine, one lit and one shaded, so it looks faceted like the artwork.
-     Example, the east point (90 deg, 50 long, 9 wide): tip at (200,150),
-     side corners at (150,141) and (150,159), both triangles share the centre. */
+     Example, the east point (90 deg, 46 long, 4 wide): tip at (196,150),
+     side corners at (150,146) and (150,154), both triangles share the centre. */
   const pt = (deg, len, w, lit, shade) => {
     const a = toRad(deg), tx = 150 + len * Math.sin(a), ty = 150 - len * Math.cos(a);
     const lx = 150 + w * Math.sin(a - Math.PI / 2), ly = 150 - w * Math.cos(a - Math.PI / 2);
@@ -466,10 +466,13 @@ list.addEventListener('click', e => {
     return `<path d="M150 150L${tx.toFixed(1)} ${ty.toFixed(1)}L${lx.toFixed(1)} ${ly.toFixed(1)}Z" fill="${lit}"/>`
          + `<path d="M150 150L${tx.toFixed(1)} ${ty.toFixed(1)}L${rx.toFixed(1)} ${ry.toFixed(1)}Z" fill="${shade}"/>`;
   };
+  // Thin points, so the trishul and damaru stay the focus. ?star=none leaves the star out.
   let star = '';
-  [45, 135, 225, 315].forEach(dg => star += pt(dg, 31, 6.5, '#9fe3ff', '#2f86d1'));   // the corners, blue
-  [0, 90, 180, 270].forEach(dg => star += pt(dg, 51, 9, '#ffd77a', '#e5832a'));       // the four main points, gold
-  $('star').innerHTML = star + '<circle cx="150" cy="150" r="5" fill="#ffd77a"/>';
+  if (new URLSearchParams(location.search).get('star') !== 'none'){
+    [45, 135, 225, 315].forEach(dg => star += pt(dg, 25, 2.6, '#9fe3ff', '#2f86d1'));  // the corners, blue
+    [0, 90, 180, 270].forEach(dg => star += pt(dg, 46, 4, '#ffd77a', '#e5832a'));      // the four main points, gold
+  }
+  $('star').innerHTML = star;
 })();
 
 /* Draw the eight names once: Hindi on top, the English letters small beneath.
