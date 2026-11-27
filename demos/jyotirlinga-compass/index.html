@@ -185,7 +185,7 @@
       <button type="button" class="chip snd" id="b-snd" aria-pressed="true">Damaru sound <b>On</b></button>
     </div>
     <p class="flat" id="flatnote" hidden>No compass on this device, so the dial is held with north upwards and the arrow shows the bearing from true north. On a phone the arrow turns as you turn.</p>
-    <p class="note"><b>The damaru (डमरू)</b> sounds while the trishul swings to a new direction, and you can tap it to hear it. The sound is made by the page itself, not a recording: two drum skins tuned a little apart, struck in turn by the beads on its cords, with the small bells jingling. Switch it off with the button above.</p>
+    <p class="note"><b>The damaru (डमरू)</b> sounds while the trishul swings to a new direction, and you can tap it to hear it. The sound is made by the page itself, not a recording: two drum skins tuned a little apart, struck in turn by the beads on its cords. Switch it off with the button above.</p>
     <p class="note"><b>दस दिशाएँ, the ten directions.</b> The dial shows eight: the four main ones and the four corners (कोण): ईशान, आग्नेय, नैऋत्य and वायव्य. Tradition counts two more, ऊर्ध्व (upward) and अधो (downward), which a flat compass cannot show.</p>
     <p class="note"><b>If the arrow wanders:</b> wave the phone in a figure 8 a few times to calibrate it. Indoors, in a lift, in a car, or near a fridge, speakers, a laptop or steel furniture, the magnetic reading drifts and can be wrong by a long way. Step outside, away from metal, for a steadier reading.</p>
   </div>
@@ -530,20 +530,9 @@ const Damaru = {
     gb.gain.setValueAtTime(g * 0.6, t); gb.gain.exponentialRampToValueAtTime(0.0001, t + 0.014);
     bead.connect(bp).connect(gb).connect(this.out); bead.start(t); bead.stop(t + 0.03);
   },
-  bell(t){
-    const c = this.ctx;
-    [1, 1.47].forEach(m => {
-      const o = c.createOscillator(), g = c.createGain();
-      o.frequency.value = (3800 + Math.random() * 1600) * m;
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.022, t + 0.002);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
-      o.connect(g).connect(this.out); o.start(t); o.stop(t + 0.28);
-    });
-  },
   /* One roll: speeds up, holds, slows down. dur in seconds.
      Example, a 1 s roll: gaps go from about 1/9 s to 1/15 s and back,
-     so about 13 hits, alternating heads, a few with a bell. */
+     so about 13 hits, alternating heads. */
   roll(dur){
     if (!this.on || !this.ctx) return;
     let t = this.ctx.currentTime + 0.02, end = t + dur, k = 0;
@@ -552,7 +541,6 @@ const Damaru = {
       const swell = Math.pow(Math.sin(Math.PI * Math.min(Math.max(p, 0.04), 0.96)), 0.6);
       const head = k % 2 === 0 ? 300 : 345;
       this.hit(t, head, 0.5 * swell * (k % 2 ? 0.85 : 1));
-      if (Math.random() < 0.45) this.bell(t + 0.01);
       t += 1 / (9 + 6 * Math.sin(Math.PI * p)) + (Math.random() - 0.5) * 0.012;
       k++;
     }
