@@ -76,10 +76,11 @@
 
   /* ---------- The dial ---------- */
   #dialcard{text-align:center}
-  #dialwrap{position:relative;width:100%;max-width:300px;margin:0 auto}
+  #dialwrap{position:relative;width:calc(100% + 28px);max-width:430px;margin:0 -14px}
+  @media (min-width:480px){ #dialwrap{margin:0 auto;width:100%} }
   #dial{display:block;width:100%;height:auto}
-  .target-en{font-size:20px;font-weight:700;margin:2px 0 0}
-  .target-dv{font-family:var(--deva);font-size:18px;color:var(--gold);margin:1px 0 0}
+  .target-dv{font-family:var(--deva);font-size:23px;font-weight:700;color:var(--gold);margin:2px 0 0;line-height:1.35}
+  .target-en{font-size:15px;color:var(--text);margin:1px 0 0}
   .target-pl{font-size:12.5px;color:var(--muted);margin:3px 0 12px}
   .dist{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:10px 0 0;text-shadow:0 0 20px rgba(76,201,255,.4)}
   .dist span{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0}
@@ -115,8 +116,8 @@
   .pill b{color:var(--blue);font-weight:500}
   #ar-title{pointer-events:auto;text-align:center;background:rgba(5,6,10,.72);border:1px solid rgba(255,200,97,.45);border-radius:14px;padding:6px 12px;
     -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);min-width:0}
-  #ar-en{display:block;font-weight:700;font-size:15px}
-  #ar-dv{display:block;font-family:var(--deva);color:var(--gold);font-size:15px;line-height:1.4}
+  #ar-dv{display:block;font-family:var(--deva);color:var(--gold);font-size:17px;font-weight:700;line-height:1.35}
+  #ar-en{display:block;font-size:13px}
   #ar-info{position:absolute;left:50%;transform:translateX(-50%);top:calc(84px + env(safe-area-inset-top));white-space:nowrap;
     background:rgba(5,6,10,.72);border-radius:999px;padding:6px 12px;font-size:13px}
   #ar-info b{color:var(--blue);font-weight:500}
@@ -133,7 +134,7 @@
 <div id="arhud" hidden>
   <div class="bar top">
     <button type="button" class="pill" id="ar-exit">✕ Exit</button>
-    <div id="ar-title"><span id="ar-en"></span><span id="ar-dv"></span></div>
+    <div id="ar-title"><span id="ar-dv"></span><span id="ar-en"></span></div>
     <button type="button" class="pill" id="ar-snd">Sound <b>On</b></button>
   </div>
   <div id="ar-info"></div>
@@ -175,30 +176,40 @@
 
   <div class="card" id="dialcard" hidden>
     <h2>Pointing to</h2>
-    <p class="target-en" id="t-en">—</p>
-    <p class="target-dv" id="t-dv"></p>
+    <p class="target-dv" id="t-dv">—</p>
+    <p class="target-en" id="t-en"></p>
     <p class="target-pl" id="t-pl"></p>
     <div id="dialwrap">
       <!-- The dial is drawn from scratch: a rose that turns so N sits at true north,
            and a gold needle that turns to the shrine. -->
-      <svg id="dial" viewBox="0 0 300 300" aria-label="Compass dial">
+      <svg id="dial" viewBox="-40 -40 380 380" aria-label="Compass dial">
         <defs>
-          <radialGradient id="g-face" cx="50%" cy="38%" r="68%">
-            <stop offset="0%" stop-color="#121426"/><stop offset="100%" stop-color="#07080F"/>
+          <radialGradient id="g-face" cx="50%" cy="42%" r="60%">
+            <stop offset="0%" stop-color="#0d1630"/><stop offset="100%" stop-color="#05060A"/>
           </radialGradient>
           <filter id="f-glow" x="-40%" y="-10%" width="180%" height="120%">
             <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ffc861" flood-opacity=".5"/>
           </filter>
+          <!-- neon: the shape plus two blurred copies of itself, so it glows -->
+          <filter id="f-neon" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2.2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
         </defs>
-        <circle cx="150" cy="150" r="140" fill="url(#g-face)" stroke="rgba(155,107,255,.45)" stroke-width="1.5"/>
-        <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(155,107,255,.18)" stroke-width="1"/>
-
-        <!-- Rose: rotates by minus the heading, so N always shows true north -->
-        <g id="rose">
-          <g stroke="rgba(236,235,255,.30)" stroke-width="1">
-            <!-- 24 ticks, every 15 degrees; the four cardinals are drawn longer below -->
-            <g id="ticks"></g>
-          </g>
+        <!-- The frame: wreath, rudraksha beads and the gold ring with eight Oms,
+             cut from Mohit's artwork. It stays still, like a compass's bezel.
+             The dial's centre is still (150,150); the frame reaches 190 units out. -->
+        <image href="img/compass-frame.webp" x="-40" y="-40" width="380" height="380"/>
+        <!-- the face inside the Om ring -->
+        <circle cx="150" cy="150" r="89" fill="url(#g-face)"/>
+        <!-- Rose: turns by minus the heading, so its north point shows true north.
+             Blue neon rings, 24 ticks (north in red) and the 8-point star. -->
+        <g id="rose" filter="url(#f-neon)">
+          <circle cx="150" cy="150" r="88" fill="none" stroke="#4cc9ff" stroke-width="1.8"/>
+          <circle cx="150" cy="150" r="78" fill="none" stroke="rgba(76,201,255,.55)" stroke-width="1"/>
+          <circle cx="150" cy="150" r="57" fill="none" stroke="#4cc9ff" stroke-width="1.5"/>
+          <g id="ticks"></g>
+          <g id="star"></g>
         </g>
         <!-- The eight direction names sit on the turning rose but stay upright, so
              they stay readable however the phone is held. Filled in by script. -->
@@ -272,7 +283,8 @@
       <tr><td>Damaru picture</td><td>Generated by Mohit with Google Gemini; carries Google's invisible SynthID mark</td><td>—</td><td>27 Nov 2026</td><td>Cut out of the trishul artwork as its own piece; cords and bells kept. Same terms check as above.</td></tr>
       <tr><td>Damaru sound</td><td>Original, synthesised in the browser (Web Audio API)</td><td>—</td><td>27 Nov 2026</td><td>None. No recording used.</td></tr>
       <tr><td>Pooja bell (ghanti) sound</td><td>Original, synthesised in the browser (Web Audio API)</td><td>—</td><td>27 Nov 2026</td><td>None. No recording used.</td></tr>
-      <tr><td>Compass dial</td><td>Original, drawn in code for this page</td><td>—</td><td>27 Nov 2026</td><td>None</td></tr>
+      <tr><td>Compass frame: flower wreath, rudraksha beads, gold ring with Oms</td><td>Generated by Mohit with an AI image tool; check its terms</td><td>—</td><td>27 Nov 2026</td><td>Cut from Mohit's artwork; stone wall removed. Source was 494 px: replace with the full-size original for a sharper frame.</td></tr>
+      <tr><td>Compass card: blue rings, ticks, 8-point star</td><td>Original, drawn in code for this page</td><td>—</td><td>27 Nov 2026</td><td>None</td></tr>
       <tr><td>Geist, Tiro Devanagari Hindi</td><td>SIL Open Font License 1.1</td><td><a href="https://fonts.google.com/">Google Fonts</a></td><td>26 Nov 2026</td><td>None</td></tr>
     </table>
     </div>
@@ -288,7 +300,7 @@
    Jyotirlinga Compass — Level A (web compass, no AR)
    One file, no build step, no libraries.
    ===================================================================== */
-const BUILD = 'Jyotirlinga Compass · Level A + B · 27 Nov 2026 · r5';
+const BUILD = 'Jyotirlinga Compass · Level A + B · 27 Nov 2026 · r6';
 const $ = id => document.getElementById(id);
 $('stamp').textContent = BUILD;
 
@@ -405,8 +417,8 @@ const list = $('list');
 SHRINES.forEach((s, i) => {
   const li = document.createElement('li');
   li.innerHTML =
-    `<button type="button" data-i="${i}" aria-label="${s.en}, ${s.dv}, ${s.pl}">
-       <img src="${templeImg(s, i)}" alt="${s.en} · ${s.dv}" width="260" height="400" loading="lazy" decoding="async">
+    `<button type="button" data-i="${i}" aria-label="${s.dv}, ${s.en}, ${s.pl}">
+       <img src="${templeImg(s, i)}" alt="${s.dv} · ${s.en}" width="260" height="400" loading="lazy" decoding="async">
        <span class="pl">${s.pl}</span>
        <span class="km" data-km="${i}"></span>
      </button>`;
@@ -422,27 +434,41 @@ list.addEventListener('click', e => {
 
 /* Draw the 24 dial ticks once (every 15 degrees; cardinals longer) */
 (() => {
-  const g = $('ticks');
-  let d = '';
+  // 24 ticks between the two outer blue rings, every 15 degrees; north in red
+  let d = '', n = '';
   for (let i = 0; i < 24; i++){
-    const a = toRad(i * 15);
-    const long = i % 6 === 0;
-    const r1 = long ? 121 : 127, r2 = 134;
-    const sx = 150 + r1 * Math.sin(a), sy = 150 - r1 * Math.cos(a);
-    const ex = 150 + r2 * Math.sin(a), ey = 150 - r2 * Math.cos(a);
-    d += `M${sx.toFixed(1)} ${sy.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}`;
+    const a = toRad(i * 15), long = i % 6 === 0;
+    const r1 = long ? 77 : 81, r2 = 87;
+    const seg = `M${(150 + r1 * Math.sin(a)).toFixed(1)} ${(150 - r1 * Math.cos(a)).toFixed(1)}L${(150 + r2 * Math.sin(a)).toFixed(1)} ${(150 - r2 * Math.cos(a)).toFixed(1)}`;
+    if (i === 0) n = seg; else d += seg;
   }
-  g.innerHTML = `<path d="${d}"/>`;
+  $('ticks').innerHTML = `<path d="${d}" stroke="rgba(236,235,255,.55)" stroke-width="1"/><path d="${n}" stroke="#ff6b8a" stroke-width="2.2"/>`;
+
+  /* The 8-point star. Each point is two thin triangles meeting along its
+     spine, one lit and one shaded, so it looks faceted like the artwork.
+     Example, the east point (90 deg, 50 long, 9 wide): tip at (200,150),
+     side corners at (150,141) and (150,159), both triangles share the centre. */
+  const pt = (deg, len, w, lit, shade) => {
+    const a = toRad(deg), tx = 150 + len * Math.sin(a), ty = 150 - len * Math.cos(a);
+    const lx = 150 + w * Math.sin(a - Math.PI / 2), ly = 150 - w * Math.cos(a - Math.PI / 2);
+    const rx = 150 + w * Math.sin(a + Math.PI / 2), ry = 150 - w * Math.cos(a + Math.PI / 2);
+    return `<path d="M150 150L${tx.toFixed(1)} ${ty.toFixed(1)}L${lx.toFixed(1)} ${ly.toFixed(1)}Z" fill="${lit}"/>`
+         + `<path d="M150 150L${tx.toFixed(1)} ${ty.toFixed(1)}L${rx.toFixed(1)} ${ry.toFixed(1)}Z" fill="${shade}"/>`;
+  };
+  let star = '';
+  [45, 135, 225, 315].forEach(dg => star += pt(dg, 31, 6.5, '#9fe3ff', '#2f86d1'));   // the corners, blue
+  [0, 90, 180, 270].forEach(dg => star += pt(dg, 51, 9, '#ffd77a', '#e5832a'));       // the four main points, gold
+  $('star').innerHTML = star + '<circle cx="150" cy="150" r="5" fill="#ffd77a"/>';
 })();
 
 /* Draw the eight names once: Hindi on top, the English letters small beneath.
    उत्तर keeps the red that marks north on most compasses. */
 $('labels').innerHTML = DIRS.map((d, i) => {
-  const hiSize = d.main ? 15 : 11, enSize = d.main ? 8.5 : 7.5;
+  const hiSize = d.main ? 12.5 : 9, enSize = d.main ? 6 : 5;
   const col = d.deg === 0 ? '#ff6b8a' : d.main ? 'rgba(236,235,255,.85)' : 'rgba(236,235,255,.55)';
   return `<g id="lab-${i}">
-    <text y="${d.main ? 1 : 0}" font-family="'Tiro Devanagari Hindi', Geist, sans-serif" font-size="${hiSize}" font-weight="700" fill="${col}">${d.hi}</text>
-    <text y="${d.main ? 14 : 10}" font-family="Geist, system-ui, sans-serif" font-size="${enSize}" fill="rgba(141,138,171,.9)">${d.en}</text>
+    <text y="0" font-family="'Tiro Devanagari Hindi', Geist, sans-serif" font-size="${hiSize}" font-weight="700" fill="${col}">${d.hi}</text>
+    <text y="${d.main ? 8.5 : 7}" font-family="Geist, system-ui, sans-serif" font-size="${enSize}" fill="rgba(141,138,171,.9)">${d.en}</text>
   </g>`;
 }).join('');
 
@@ -450,10 +476,10 @@ $('labels').innerHTML = DIRS.map((d, i) => {
    Facing west (heading 270), उत्तर moves a quarter turn clockwise to the
    right-hand side, still printed the right way up. */
 function placeLabels(h){
-  const R = 101;
+  const R = 67;                       // between the inner and middle blue rings
   DIRS.forEach((d, i) => {
     const a = toRad(d.deg - h);
-    const x = 150 + R * Math.sin(a), y = 150 - R * Math.cos(a) - 4;
+    const x = 150 + R * Math.sin(a), y = 150 - R * Math.cos(a) + 1;
     $('lab-' + i).setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
   });
 }
@@ -873,7 +899,7 @@ async function ready(){
 }
 function names(){
   const s = SHRINES[St.pick];
-  $('arcard-name').textContent = `${s.en} (${s.dv})`;
+  $('arcard-name').textContent = `${s.dv} (${s.en})`;
   $('ar-en').textContent = s.en; $('ar-dv').textContent = `${s.dv} — ${s.st}`;
 }
 window.levelB = { ready, names,
@@ -1086,7 +1112,7 @@ function hud(){
   else if (B.offset == null) h = 'Finding north… hold the phone steady for a moment.';
   else if (B.mode === 'xr' && !B.placed) h = 'Point at the floor a step or two ahead. When the gold ring appears, tap to place the trishul.';
   else if (B.mode === 'cam' && !St.raw.abs && St.iosC == null) h = 'Tip: hold the phone flat for a second, then tilt it back towards the floor. That helps it find true north.';
-  else h = `The trishul points the way to ${s.en}. ` + (B.mode === 'xr' ? 'Walk round it; it stays put.' : 'Turn and it stays put. Use ◀ ▶ for another shrine.');
+  else h = `The trishul points the way to ${s.dv} (${s.en}). ` + (B.mode === 'xr' ? 'Walk round it; it stays put.' : 'Turn and it stays put. Use ◀ ▶ for another shrine.');
   $('ar-hint').textContent = h;
   $('ar-snd').querySelector('b').textContent = Damaru.on ? 'On' : 'Off';
   if (DEBUG){
