@@ -101,9 +101,51 @@
   #stamp{font-size:10.5px;color:var(--muted);text-align:center;margin:0 0 14px}
   #err{color:var(--no);font-size:13px;margin:8px 0 0;min-height:1em}
   [hidden]{display:none !important}
+
+  /* ---------- Level B: the floor view ---------- */
+  #cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:40;display:none;background:#000}
+  #stage{position:fixed;inset:0;z-index:41;display:none}
+  #stage canvas{display:block;touch-action:none}
+  #arhud{position:fixed;inset:0;z-index:42;pointer-events:none;font-family:Geist,system-ui,sans-serif;color:var(--text)}
+  #arhud .bar{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px}
+  #arhud .top{top:calc(10px + env(safe-area-inset-top))}
+  #arhud .bottom{bottom:calc(14px + env(safe-area-inset-bottom));justify-content:center}
+  .pill{pointer-events:auto;border:1px solid rgba(155,107,255,.55);background:rgba(5,6,10,.72);color:var(--text);
+    border-radius:999px;padding:10px 14px;font:500 14px Geist,system-ui,sans-serif;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .pill b{color:var(--blue);font-weight:500}
+  #ar-title{pointer-events:auto;text-align:center;background:rgba(5,6,10,.72);border:1px solid rgba(255,200,97,.45);border-radius:14px;padding:6px 12px;
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);min-width:0}
+  #ar-en{display:block;font-weight:700;font-size:15px}
+  #ar-dv{display:block;font-family:var(--deva);color:var(--gold);font-size:15px;line-height:1.4}
+  #ar-info{position:absolute;left:50%;transform:translateX(-50%);top:calc(84px + env(safe-area-inset-top));white-space:nowrap;
+    background:rgba(5,6,10,.72);border-radius:999px;padding:6px 12px;font-size:13px}
+  #ar-info b{color:var(--blue);font-weight:500}
+  #ar-hint{position:absolute;left:14px;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));margin:0;text-align:center;font-size:14px;line-height:1.45;
+    background:rgba(5,6,10,.72);border-radius:12px;padding:9px 12px}
+  #ar-debug{position:absolute;left:10px;top:calc(124px + env(safe-area-inset-top));font:11px/1.4 ui-monospace,monospace;background:rgba(0,0,0,.6);padding:6px 8px;border-radius:8px;white-space:pre}
+  #qr{display:block;width:200px;height:200px;margin:12px auto 0;border-radius:10px;image-rendering:pixelated}
 </style>
 </head>
 <body>
+<!-- Level B layers: camera picture, 3D canvas, and the controls on top. Hidden until used. -->
+<video id="cam" playsinline muted></video>
+<div id="stage"></div>
+<div id="arhud" hidden>
+  <div class="bar top">
+    <button type="button" class="pill" id="ar-exit">✕ Exit</button>
+    <div id="ar-title"><span id="ar-en"></span><span id="ar-dv"></span></div>
+    <button type="button" class="pill" id="ar-snd">Sound <b>On</b></button>
+  </div>
+  <div id="ar-info"></div>
+  <div id="ar-debug" hidden></div>
+  <p id="ar-hint"></p>
+  <div class="bar bottom">
+    <button type="button" class="pill" id="ar-prev" aria-label="Previous shrine">◀</button>
+    <button type="button" class="pill" id="ar-move">Move</button>
+    <button type="button" class="pill" id="ar-size">Size</button>
+    <button type="button" class="pill" id="ar-next" aria-label="Next shrine">▶</button>
+  </div>
+</div>
 <div class="wrap">
 
   <div class="card">
@@ -115,6 +157,12 @@
 
   <div class="card">
     <p class="notice"><b>Notice before you begin.</b> This compass is for curiosity and learning. It is <b>not for navigation</b> and <b>not for worship guidance</b>. A phone compass is easily thrown off indoors and near metal, and the shrine positions here come from public encyclopaedia records, not from the temple trusts. Please do not use it to find your way or to orient yourself for prayer. Educational demo. Made for learning and research, not for commercial use.</p>
+  </div>
+
+  <div class="card" id="qrcard" hidden>
+    <h2>Open it on your phone</h2>
+    <p class="sub">The compass and the trishul on your floor need a phone's compass and camera. Scan this with your phone's camera to open this page there.</p>
+    <canvas id="qr" width="200" height="200" aria-label="QR code for this page"></canvas>
   </div>
 
   <div class="card">
@@ -190,6 +238,15 @@
     <p class="note"><b>If the arrow wanders:</b> wave the phone in a figure 8 a few times to calibrate it. Indoors, in a lift, in a car, or near a fridge, speakers, a laptop or steel furniture, the magnetic reading drifts and can be wrong by a long way. Step outside, away from metal, for a steadier reading.</p>
   </div>
 
+  <div class="card" id="arcard" hidden>
+    <h2>Step 3 · On your floor</h2>
+    <p class="sub">See the trishul lying on the floor in front of you, pointing the way to <b id="arcard-name"></b>.</p>
+    <button type="button" class="btn main" id="b-ar" hidden>Place it on my floor (AR)</button>
+    <button type="button" class="btn" id="b-camv" hidden>Open the camera view</button>
+    <p class="note" id="arcard-how"></p>
+    <p class="note"><b>The camera picture stays on your phone.</b> Nothing is recorded, stored or sent.</p>
+  </div>
+
   <div class="card">
     <h2>Step 2 · Choose a shrine</h2>
     <ul class="shrines" id="list"></ul>
@@ -231,7 +288,7 @@
    Jyotirlinga Compass — Level A (web compass, no AR)
    One file, no build step, no libraries.
    ===================================================================== */
-const BUILD = 'Jyotirlinga Compass · Level A · 27 Nov 2026 · r4';
+const BUILD = 'Jyotirlinga Compass · Level A + B · 27 Nov 2026 · r5';
 const $ = id => document.getElementById(id);
 $('stamp').textContent = BUILD;
 
@@ -335,7 +392,10 @@ const compassWord = b => { const d = dirOf(b); return `${d.en} · ${d.hi}`; };
 const St = {
   here: null,      // {lat, lon} once the browser gives it to us
   heading: null,   // degrees clockwise from true north, null if no compass
-  pick: 0          // which shrine, index into SHRINES
+  pick: 0,         // which shrine, index into SHRINES
+  raw: null,       // the phone's full tilt (alpha, beta, gamma), for the floor view
+  iosC: null,      // iPhone only: how its alpha lines up with north (learnt while the phone is flat)
+  ar: false        // true while the floor view is open, so the dial below stays quiet
 };
 
 /* ---------------------------------------------------------------------
@@ -357,6 +417,7 @@ list.addEventListener('click', e => {
   if (!b) return;
   St.pick = +b.dataset.i;
   draw();
+  if (window.levelB) window.levelB.names();
 });
 
 /* Draw the 24 dial ticks once (every 15 degrees; cardinals longer) */
@@ -475,11 +536,11 @@ function stepNeedle(){
   needleRaf = 0;
   // shortest way round: from 350 to 10 is +20, not -340
   const diff = ((Needle.target - Needle.shown + 540) % 360) - 180;
-  if (Math.abs(diff) > 12) Damaru.swing(Math.abs(diff));
+  if (Math.abs(diff) > 12 && !St.ar) Damaru.swing(Math.abs(diff));   // the floor view has its own sound
   Needle.shown = norm(Needle.shown + diff * 0.09);
   paintNeedle();
   if (Math.abs(diff) > 0.15) needleRaf = requestAnimationFrame(stepNeedle);
-  else if (Damaru.rolled){ Damaru.rolled = false; Ghanti.ring(); }   // at rest: the bell
+  else if (Damaru.rolled && !St.ar){ Damaru.rolled = false; Ghanti.ring(); }   // at rest: the bell
 }
 function paintNeedle(){
   $('needle').setAttribute('transform', `rotate(${Needle.shown.toFixed(2)} 150 150)`);
@@ -659,6 +720,7 @@ $('b-loc').addEventListener('click', () => {
       $('err').textContent = '';
       startCompass();
       draw();
+      if (window.levelB) window.levelB.ready();
       $('dialcard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
     e => {
@@ -684,6 +746,19 @@ $('b-loc').addEventListener('click', () => {
 let compassOn = false;
 
 function onOrient(e){
+  // Keep the full tilt for the floor view (Level B). Android: only the
+  // absolute events, whose alpha is measured from north. iPhone: alpha starts
+  // from wherever the phone was, so while the phone lies nearly flat we learn
+  // the gap to north from webkitCompassHeading. Example: heading 100, alpha 40
+  // -> north-based alpha would be 360 - 100 = 260, so the gap is 260 - 40 = 220.
+  const wch = (typeof e.webkitCompassHeading === 'number' && !isNaN(e.webkitCompassHeading)) ? e.webkitCompassHeading : null;
+  if (e.alpha != null && (wch != null || e.absolute === true)){
+    St.raw = { a: e.alpha, b: e.beta, g: e.gamma, abs: wch == null, wch, t: performance.now() };
+    if (wch != null && Math.abs(e.beta) < 30 && Math.abs(e.gamma) < 30){
+      const c = norm(360 - wch - e.alpha);
+      St.iosC = St.iosC == null ? c : norm(St.iosC + (((c - St.iosC + 540) % 360) - 180) * 0.1);
+    }
+  }
   let h = null;
   if (typeof e.webkitCompassHeading === 'number' && !isNaN(e.webkitCompassHeading)){
     h = e.webkitCompassHeading;                 // iPhone: already true north
@@ -747,6 +822,351 @@ $('b-compass').addEventListener('click', () => {
 /* First paint: show the picker with Somnath chosen, dial waits for a location */
 draw();
 </script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+/* =====================================================================
+   Level B — the trishul lying on your floor
+   Android Chrome: real AR (WebXR). Tap to place it on the real floor;
+     walk round it and it stays put.
+   iPhone (and any phone without WebXR): the camera picture with the
+     trishul drawn on the floor about 1.7 m ahead. The phone's tilt turns
+     the view, so it stays put as you turn; it cannot follow you walking.
+   Laptop: only a QR code, to open this page on a phone.
+   three.js loads only when someone opens the floor view.
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const toRad = d => d * Math.PI / 180, toDeg = r => r * 180 / Math.PI;
+const norm = a => ((a % 360) + 360) % 360;
+const shortest = d => ((d % 360) + 540) % 360 - 180;     // -180..180: the short way round
+const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+const DEBUG = new URLSearchParams(location.search).has('debug');
+
+/* ---------- Laptop: a QR code ---------- */
+if (!isTouch){
+  const sc = document.createElement('script');
+  sc.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+  sc.onload = () => {
+    const qr = qrcode(0, 'M'); qr.addData(location.href.split('?')[0].split('#')[0]); qr.make();
+    const n = qr.getModuleCount(), quiet = 4, cell = 6, c = $('qr');
+    c.width = c.height = (n + quiet * 2) * cell;
+    const g = c.getContext('2d'); g.fillStyle = '#ecebff'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#05060A';
+    for (let r = 0; r < n; r++) for (let q = 0; q < n; q++) if (qr.isDark(r, q)) g.fillRect((q + quiet) * cell, (r + quiet) * cell, cell, cell);
+    $('qrcard').hidden = false;
+  };
+  document.head.appendChild(sc);
+}
+
+/* ---------- Which floor view can this phone do? ---------- */
+let canXR = false, loading = null;
+async function ready(){
+  if (!isTouch) return;
+  try { canXR = !!(navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')); } catch (e) { canXR = false; }
+  const canCam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && window.isSecureContext;
+  $('b-ar').hidden = !canXR; $('b-camv').hidden = !canCam;
+  $('b-camv').classList.toggle('main', !canXR);
+  $('arcard-how').textContent = canXR
+    ? 'Real AR: the trishul sits on your actual floor and stays there as you walk round it.'
+    : 'Camera view: the trishul is drawn on the floor a step ahead. It stays put as you turn the phone; it cannot follow you walking.';
+  $('arcard').hidden = !(canXR || canCam);
+  names();
+  if (canXR || canCam) loading = load3D();          // start fetching three.js now, so the tap is instant
+}
+function names(){
+  const s = SHRINES[St.pick];
+  $('arcard-name').textContent = `${s.en} (${s.dv})`;
+  $('ar-en').textContent = s.en; $('ar-dv').textContent = `${s.dv} — ${s.st}`;
+}
+window.levelB = { ready, names,
+  // read-only numbers, for testing and the ?debug=1 readout
+  get state(){ return { mode: B.mode, placed: B.placed, offset: B.offset, shown: B.shown, samples: B.samples,
+                        pointsTo: B.offset == null ? null : norm(B.shown + B.offset) }; } };
+
+/* ---------- The 3D scene ---------- */
+let T, renderer, scene, camera, root, trishul, damG, disc, labels = [], reticle;
+const B = { mode: null, placed: false, shown: 0, size: 0.7, offset: null, samples: 0, quality: '', last: 0, hud: 0, session: null, hit: null, stream: null };
+const SIZES = [0.45, 0.7, 1.0];
+
+function canvasTex(w, h, paint){
+  const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h);
+  const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+function flat(w, h, map, order){
+  const m = new T.Mesh(new T.PlaneGeometry(w, h).rotateX(-Math.PI / 2),
+    new T.MeshBasicMaterial({ map, transparent: true, depthWrite: false, toneMapped: false }));
+  m.renderOrder = order; return m;
+}
+async function load3D(){
+  if (T) return;
+  T = await import('three');
+  renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.xr.enabled = true;
+  $('stage').appendChild(renderer.domElement);
+  scene = new T.Scene();
+  camera = new T.PerspectiveCamera(62, innerWidth / innerHeight, 0.01, 60);
+
+  // Everything is built at 1 m trishul length; root.scale sets the real size.
+  // On the floor, "up" in a picture points away along -z.
+  root = new T.Group(); root.visible = false; scene.add(root);
+  const tl = new T.TextureLoader();
+  const img = u => { const t = tl.load(u); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 8; return t; };
+
+  // the dial on the floor: faint disc, rings, 24 ticks, north tick in red
+  disc = flat(1.5, 1.5, canvasTex(1024, 1024, (g, w) => {
+    const c = w / 2, R = w / 2;
+    g.fillStyle = 'rgba(8,9,18,0.38)'; g.beginPath(); g.arc(c, c, R * 0.98, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(155,107,255,0.85)'; g.lineWidth = 6; g.beginPath(); g.arc(c, c, R * 0.96, 0, 7); g.stroke();
+    g.strokeStyle = 'rgba(155,107,255,0.35)'; g.lineWidth = 3; g.beginPath(); g.arc(c, c, R * 0.8, 0, 7); g.stroke();
+    for (let i = 0; i < 24; i++){
+      const a = toRad(i * 15), long = i % 6 === 0, r1 = R * (long ? 0.82 : 0.87), r2 = R * 0.95;
+      g.strokeStyle = i === 0 ? '#ff6b8a' : 'rgba(236,235,255,0.55)'; g.lineWidth = long ? 6 : 3;
+      g.beginPath(); g.moveTo(c + r1 * Math.sin(a), c - r1 * Math.cos(a)); g.lineTo(c + r2 * Math.sin(a), c - r2 * Math.cos(a)); g.stroke();
+    }
+  }), 1);
+  disc.position.y = 0.001; root.add(disc);
+
+  // eight direction names; each turns to face you so it always reads upright
+  try { await document.fonts.load('700 64px "Tiro Devanagari Hindi"'); } catch (e) {}
+  DIRS.forEach(d => {
+    const tex = canvasTex(320, 160, (g, w, h) => {
+      g.textAlign = 'center';
+      g.font = `700 ${d.main ? 74 : 58}px "Tiro Devanagari Hindi", sans-serif`;
+      g.fillStyle = d.deg === 0 ? '#ff6b8a' : d.main ? '#ecebff' : 'rgba(236,235,255,0.78)';
+      g.shadowColor = 'rgba(0,0,0,0.85)'; g.shadowBlur = 10;
+      g.fillText(d.hi, w / 2, 86);
+      g.font = '600 34px Geist, system-ui, sans-serif'; g.fillStyle = '#b9b6d6'; g.fillText(d.en, w / 2, 138);
+    });
+    const sz = d.main ? 0.29 : 0.23, m = flat(sz, sz / 2, tex, 2);
+    const holder = new T.Group(), r = 0.62;
+    holder.position.set(r * Math.sin(toRad(d.deg)), 0.002, -r * Math.cos(toRad(d.deg)));
+    holder.add(m); disc.add(holder); labels.push(holder);
+  });
+
+  // the trishul: 1 m long, turning on the middle of its length
+  trishul = flat(0.2956, 1, img('img/trishul.webp'), 3); trishul.position.y = 0.004; root.add(trishul);
+  // the damaru at the centre, same scale as the trishul; it turns to face you
+  damG = new T.Group(); damG.position.y = 0.007; root.add(damG);
+  const dam = flat(0.2085, 0.2345, img('img/damaru.webp'), 4);
+  dam.position.z = 0.1687 * 0.2345;      // puts the middle of the drum, not the picture, on the centre
+  damG.add(dam);
+
+  // AR floor finder
+  reticle = new T.Group(); reticle.matrixAutoUpdate = false; reticle.visible = false; scene.add(reticle);
+  reticle.add(new T.Mesh(new T.RingGeometry(0.11, 0.13, 48).rotateX(-Math.PI / 2), new T.MeshBasicMaterial({ color: 0xffc861, toneMapped: false })));
+  reticle.add(new T.Mesh(new T.CircleGeometry(0.015, 16).rotateX(-Math.PI / 2), new T.MeshBasicMaterial({ color: 0xff4fd8, toneMapped: false })));
+
+  renderer.setAnimationLoop(loop);
+  addEventListener('resize', () => {
+    if (renderer.xr.isPresenting) return;
+    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+  });
+}
+
+/* ---------------------------------------------------------------------
+   Lining the room up with north
+   AR knows where the phone is in the room but not which way north is.
+   So, each frame, we take one direction on the phone (its back camera, or
+   its top edge if the phone is nearly flat) and read it two ways:
+     - from the compass: its heading from north;
+     - from the AR room: its angle in the room's own frame.
+   The difference is the room's offset from north. We keep a smoothed
+   average of it. Example: camera at 40 by the compass and 10 in the room
+   -> offset 30. A shrine at bearing 308 then sits at 308 - 30 = 278 in
+   the room, so that is where the trishul points.
+   --------------------------------------------------------------------- */
+const _v = { back: null, top: null };
+function sampleOffset(q, allowOld){
+  const r = St.raw; if (!r) return;
+  const age = performance.now() - r.t;
+  if (age > (allowOld ? 2500 : 500)) return;
+  let a = r.abs ? r.a : (St.iosC != null ? r.a + St.iosC : null);
+  let he = null, which = null;
+  if (a != null){
+    const cA = Math.cos(toRad(a)), sA = Math.sin(toRad(a)), cB = Math.cos(toRad(r.b)), sB = Math.sin(toRad(r.b)),
+          cG = Math.cos(toRad(r.g)), sG = Math.sin(toRad(r.g));
+    const back = [-(cA * sG + sA * sB * cG), -(sA * sG - cA * sB * cG)], top = [-sA * cB, cA * cB];
+    const hb = Math.hypot(...back), ht = Math.hypot(...top);
+    if (Math.max(hb, ht) < 0.5) return;
+    which = hb >= ht ? 'back' : 'top';
+    const v = which === 'back' ? back : top;
+    he = norm(toDeg(Math.atan2(v[0], v[1])));
+    B.quality = r.abs ? 'compass' : 'compass (iPhone, calibrated flat)';
+  } else if (r.wch != null){
+    // iPhone not yet calibrated: use its heading as it stands
+    which = Math.abs(r.b) > 45 ? 'back' : 'top'; he = r.wch; B.quality = 'compass (iPhone, not yet calibrated)';
+  } else return;
+  const dv = which === 'back' ? new T.Vector3(0, 0, -1) : new T.Vector3(0, 1, 0);
+  dv.applyQuaternion(q);
+  if (Math.hypot(dv.x, dv.z) < 0.5) return;
+  const hx = norm(toDeg(Math.atan2(dv.x, -dv.z)));
+  const sample = norm(he - hx);
+  if (B.offset == null){ B.offset = sample; B.samples = 1; return; }
+  const k = B.samples < 40 ? 0.15 : 0.03;
+  B.offset = norm(B.offset + shortest(sample - B.offset) * k); B.samples++;
+}
+
+/* ---------- Every frame ---------- */
+const _p = { x: 0, y: 0, z: 0 };
+let qNow = null, last = 0;
+function loop(time, frame){
+  if (!B.mode) return;
+  const dt = Math.min((time - last) / 1000 || 0.016, 0.05); last = time;
+  let q;
+  if (frame && B.mode === 'xr'){
+    const ref = renderer.xr.getReferenceSpace(), pose = frame.getViewerPose(ref);
+    if (!pose) return;
+    const o = pose.transform.orientation, p = pose.transform.position;
+    q = new T.Quaternion(o.x, o.y, o.z, o.w); _p.x = p.x; _p.y = p.y; _p.z = p.z;
+    if (B.hit && !B.placed){
+      const res = frame.getHitTestResults(B.hit);
+      if (res.length){ reticle.visible = true; reticle.matrix.fromArray(res[0].getPose(ref).transform.matrix); }
+      else reticle.visible = false;
+    }
+  } else {
+    // camera view: the phone's tilt turns the 3D camera (same maths as Diya Carrier)
+    const r = St.raw;
+    if (r){
+      const e = new T.Euler(toRad(r.b), toRad(r.a), toRad(-r.g), 'YXZ');
+      camera.quaternion.setFromEuler(e).multiply(new T.Quaternion(-Math.SQRT1_2, 0, 0, Math.SQRT1_2));
+      const so = toRad((screen.orientation && screen.orientation.angle) || window.orientation || 0);
+      camera.quaternion.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 0, 1), -so));
+    }
+    q = camera.quaternion; _p.x = 0; _p.y = 1.35; _p.z = 0;
+    if (!B.placed && r && B.offset != null) placeAhead();
+  }
+  qNow = q;
+  sampleOffset(q, B.offset == null);
+
+  // where the camera is looking, flat on the floor (for the damaru and the labels)
+  const f = new T.Vector3(0, 0, -1).applyQuaternion(q);
+  const camYaw = norm(toDeg(Math.atan2(f.x, -f.z)));
+
+  if (B.placed){
+    // the trishul's aim: the shrine's bearing, shifted into the room's frame
+    if (B.offset != null){
+      const s = SHRINES[St.pick];
+      const target = norm(bearingDeg(St.here.lat, St.here.lon, s.lat, s.lon) - B.offset);
+      const diff = shortest(target - B.shown);
+      if (Math.abs(diff) > 12) Damaru.swing(Math.abs(diff));
+      B.shown = norm(B.shown + diff * (1 - Math.pow(0.91, dt * 60)));
+      if (Math.abs(diff) < 0.15 && Damaru.rolled){ Damaru.rolled = false; Ghanti.ring(); }
+      disc.rotation.y = toRad(B.offset);        // उत्तर on the floor points to true north
+    }
+    trishul.rotation.y = -toRad(B.shown);
+    // the damaru faces you, and twists while it plays
+    const now = performance.now();
+    let wob = 0;
+    if (now < Damaru.busyUntil){ const tt = now / 1000; wob = 11 * Math.sin(2 * Math.PI * 7 * tt) * Math.min(1, (Damaru.busyUntil - now) / 250); }
+    damG.rotation.y = -toRad(camYaw) + toRad(wob);
+    labels.forEach(l => { l.rotation.y = -toRad(camYaw) - disc.rotation.y; });
+  }
+  if (time - B.hud > 250){ B.hud = time; hud(); }
+  renderer.render(scene, camera);
+}
+
+/* the yaw the trishul starts from when placed: where you are facing, so it swings round to the shrine */
+function startYaw(){ const f = new T.Vector3(0, 0, -1).applyQuaternion(qNow || camera.quaternion); return norm(toDeg(Math.atan2(f.x, -f.z))); }
+function placeAhead(){
+  const f = new T.Vector3(0, 0, -1).applyQuaternion(camera.quaternion); f.y = 0;
+  if (f.length() < 0.2) f.set(0, 0, -1); f.normalize();
+  root.position.set(f.x * 1.7, 0, f.z * 1.7);
+  root.scale.setScalar(B.size); root.visible = true;
+  B.shown = startYaw(); B.placed = true; Damaru.rolled = false;
+}
+
+/* ---------- The controls on top ---------- */
+function hud(){
+  const s = SHRINES[St.pick];
+  const km = haversineKm(St.here.lat, St.here.lon, s.lat, s.lon);
+  const bear = bearingDeg(St.here.lat, St.here.lon, s.lat, s.lon);
+  $('ar-info').innerHTML = `<b>${Math.round(km).toLocaleString('en-IN')} km</b> · ${Math.round(bear)}° ${compassWord(bear)}`;
+  let h;
+  if (!St.raw) h = 'No compass reading yet. Wave the phone in a figure 8.';
+  else if (B.offset == null) h = 'Finding north… hold the phone steady for a moment.';
+  else if (B.mode === 'xr' && !B.placed) h = 'Point at the floor a step or two ahead. When the gold ring appears, tap to place the trishul.';
+  else if (B.mode === 'cam' && !St.raw.abs && St.iosC == null) h = 'Tip: hold the phone flat for a second, then tilt it back towards the floor. That helps it find true north.';
+  else h = `The trishul points the way to ${s.en}. ` + (B.mode === 'xr' ? 'Walk round it; it stays put.' : 'Turn and it stays put. Use ◀ ▶ for another shrine.');
+  $('ar-hint').textContent = h;
+  $('ar-snd').querySelector('b').textContent = Damaru.on ? 'On' : 'Off';
+  if (DEBUG){
+    $('ar-debug').hidden = false;
+    const r = St.raw;
+    $('ar-debug').textContent = `mode ${B.mode}  placed ${B.placed}\nraw ${r ? `a${r.a.toFixed(0)} b${r.b.toFixed(0)} g${r.g.toFixed(0)} age ${(performance.now() - r.t).toFixed(0)}ms abs ${r.abs}` : '—'}\n`
+      + `iosC ${St.iosC == null ? '—' : St.iosC.toFixed(1)}  offset ${B.offset == null ? '—' : B.offset.toFixed(1)}  n ${B.samples}\n${B.quality}`;
+  }
+}
+
+/* ---------- Opening and closing ---------- */
+function show(on){
+  $('arhud').hidden = !on; $('stage').style.display = on ? 'block' : 'none';
+  document.body.style.overflow = on ? 'hidden' : '';
+  St.ar = on;
+}
+function reset(){ B.placed = false; B.offset = null; B.samples = 0; root.visible = false; Damaru.rolled = false; names(); }
+
+async function startXR(){
+  try {
+    Damaru.unlock();
+    await (loading || load3D());
+    $('arhud').hidden = false;               // the overlay must be showing before the session starts
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay'], domOverlay: { root: $('arhud') } });
+    renderer.xr.setReferenceSpaceType('local');
+    await renderer.xr.setSession(session);
+    B.session = session; B.mode = 'xr'; reset(); show(true);
+    B.hit = await session.requestHitTestSource({ space: await session.requestReferenceSpace('viewer') });
+    session.addEventListener('select', () => {
+      if (B.placed || !reticle.visible || B.offset == null) return;
+      const p = new T.Vector3().setFromMatrixPosition(reticle.matrix);
+      root.position.copy(p); root.scale.setScalar(B.size); root.visible = true;
+      reticle.visible = false; B.shown = startYaw(); B.placed = true; Damaru.rolled = false;
+    });
+    session.addEventListener('end', () => { B.session = null; B.hit = null; B.mode = null; reticle.visible = false; show(false); draw(); });
+  } catch (e) { show(false); B.mode = null; $('err').textContent = 'Could not start AR: ' + e.message; }
+}
+
+async function startCam(){
+  // iPhone: compass access must be asked for inside the tap itself
+  const DOE = window.DeviceOrientationEvent;
+  const ask = (DOE && typeof DOE.requestPermission === 'function' && !St.raw) ? DOE.requestPermission().catch(() => 'denied') : null;
+  try {
+    Damaru.unlock();
+    if (ask && (await ask) === 'granted') listen();
+    await (loading || load3D());
+    B.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    const v = $('cam'); v.srcObject = B.stream; v.style.display = 'block'; await v.play();
+    camera.position.set(0, 1.35, 0);
+    B.mode = 'cam'; reset(); show(true);
+  } catch (e) { stopCam(); $('err').textContent = 'Camera not available: ' + e.message; }
+}
+function stopCam(){
+  if (B.stream) B.stream.getTracks().forEach(t => t.stop()); B.stream = null;
+  $('cam').style.display = 'none'; $('cam').srcObject = null;
+}
+function exit(){
+  if (B.mode === 'xr' && B.session){ B.session.end(); return; }
+  stopCam(); B.mode = null; show(false); draw();
+}
+
+$('b-ar').addEventListener('click', startXR);
+$('b-camv').addEventListener('click', startCam);
+$('ar-exit').addEventListener('click', exit);
+$('ar-snd').addEventListener('click', () => { $('b-snd').click(); hud(); });
+$('ar-size').addEventListener('click', () => {
+  B.size = SIZES[(SIZES.indexOf(B.size) + 1) % SIZES.length]; root.scale.setScalar(B.size);
+});
+$('ar-move').addEventListener('click', () => {
+  if (B.mode === 'xr'){ B.placed = false; root.visible = false; }
+  else { B.placed = false; placeAhead(); }
+});
+function stepShrine(d){ St.pick = (St.pick + d + SHRINES.length) % SHRINES.length; names(); draw(); Damaru.unlock(); }
+$('ar-prev').addEventListener('click', () => stepShrine(-1));
+$('ar-next').addEventListener('click', () => stepShrine(1));
+// taps on the controls must not also place the trishul in AR
+document.querySelectorAll('#arhud button').forEach(b => b.addEventListener('beforexrselect', e => e.preventDefault()));
+</script>
+
 <script data-goatcounter="https://inventndiscover.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
