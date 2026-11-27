@@ -150,22 +150,18 @@
             <g id="ticks"></g>
           </g>
         </g>
-        <!-- Cardinal letters sit on the turning rose but stay upright, so they
-             stay readable however the phone is held. -->
-        <g id="labels" font-family="Geist, system-ui, sans-serif" font-size="15" font-weight="700" text-anchor="middle">
-          <text id="lab-N" fill="#ff6b8a">N</text>
-          <text id="lab-E" fill="rgba(236,235,255,.65)">E</text>
-          <text id="lab-S" fill="rgba(236,235,255,.65)">S</text>
-          <text id="lab-W" fill="rgba(236,235,255,.65)">W</text>
-        </g>
+        <!-- The eight direction names sit on the turning rose but stay upright, so
+             they stay readable however the phone is held. Filled in by script. -->
+        <g id="labels" text-anchor="middle"></g>
 
-        <!-- Needle: the trishul. The picture is placed so the centre of the damaru
-             sits exactly on the dial's centre (150,150): that is the pivot.
-             Measured on the 635x2149 source: shaft axis x=317.5, damaru centre y=1352,
-             blade tip y=6. Scale 0.10253 puts the tip 138 units above the pivot.
+        <!-- Needle: the trishul, turning on the midpoint of its length, like an
+             ordinary compass needle, so it sits centred in the dial.
+             Measured on the 635x2149 source: shaft axis x=317.5, blade tip y=6,
+             knob end y=2143, so the midpoint is y=1074.5. Scale 0.08202 makes it
+             176 units long: tip 88 units above the centre, knob the same below.
              Drawn pointing straight up; rotate() does the aiming, to (bearing - heading). -->
         <g id="needle">
-          <image href="img/trishul.webp" x="117.45" y="11.38" width="65.10" height="220.33"
+          <image href="img/trishul.webp" x="123.96" y="61.87" width="52.08" height="176.26"
                  preserveAspectRatio="none" filter="url(#f-glow)" style="pointer-events:none"/>
         </g>
       </svg>
@@ -176,6 +172,7 @@
       <span class="chip">Compass <b id="r-head">—</b></span>
     </div>
     <p class="flat" id="flatnote" hidden>No compass on this device, so the dial is held with north upwards and the arrow shows the bearing from true north. On a phone the arrow turns as you turn.</p>
+    <p class="note"><b>दस दिशाएँ, the ten directions.</b> The dial shows eight: the four main ones and the four corners (कोण): ईशान, आग्नेय, नैऋत्य and वायव्य. Tradition counts two more, ऊर्ध्व (upward) and अधो (downward), which a flat compass cannot show.</p>
     <p class="note"><b>If the arrow wanders:</b> wave the phone in a figure 8 a few times to calibrate it. Indoors, in a lift, in a car, or near a fridge, speakers, a laptop or steel furniture, the magnetic reading drifts and can be wrong by a long way. Step outside, away from metal, for a steadier reading.</p>
   </div>
 
@@ -300,9 +297,20 @@ function bearingDeg(lat1, lon1, lat2, lon2){
 /* Keep any angle in 0..360 */
 const norm = a => ((a % 360) + 360) % 360;
 
-/* Turn a bearing into words, e.g. 25 deg -> "NNE" */
-const POINTS = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
-const compassWord = b => POINTS[Math.round(norm(b) / 22.5) % 16];
+/* The eight directions, English and Hindi.
+   The four main ones: उत्तर N, पूर्व E, दक्षिण S, पश्चिम W.
+   The four corners (कोण): ईशान NE (उत्तर-पूर्व), आग्नेय SE (दक्षिण-पूर्व),
+   नैऋत्य SW (दक्षिण-पश्चिम), वायव्य NW (उत्तर-पश्चिम).
+   Each covers 45 degrees, so a bearing picks its name by rounding to the
+   nearest 45. Example: 308 / 45 = 6.84, rounds to 7, so वायव्य (NW).   */
+const DIRS = [
+  {en:'N',  hi:'उत्तर',  deg:0,   main:true},  {en:'NE', hi:'ईशान',   deg:45,  main:false},
+  {en:'E',  hi:'पूर्व',   deg:90,  main:true},  {en:'SE', hi:'आग्नेय',  deg:135, main:false},
+  {en:'S',  hi:'दक्षिण', deg:180, main:true},  {en:'SW', hi:'नैऋत्य',  deg:225, main:false},
+  {en:'W',  hi:'पश्चिम', deg:270, main:true},  {en:'NW', hi:'वायव्य',  deg:315, main:false}
+];
+const dirOf = b => DIRS[Math.round(norm(b) / 45) % 8];
+const compassWord = b => { const d = dirOf(b); return `${d.en} · ${d.hi}`; };
 
 /* ---------------------------------------------------------------------
    PART 4 — State
@@ -341,7 +349,7 @@ list.addEventListener('click', e => {
   for (let i = 0; i < 24; i++){
     const a = toRad(i * 15);
     const long = i % 6 === 0;
-    const r1 = long ? 104 : 112, r2 = 122;
+    const r1 = long ? 121 : 127, r2 = 134;
     const sx = 150 + r1 * Math.sin(a), sy = 150 - r1 * Math.cos(a);
     const ex = 150 + r2 * Math.sin(a), ey = 150 - r2 * Math.cos(a);
     d += `M${sx.toFixed(1)} ${sy.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}`;
@@ -349,15 +357,26 @@ list.addEventListener('click', e => {
   g.innerHTML = `<path d="${d}"/>`;
 })();
 
-/* Put N, E, S and W where the turning rose says they belong, but leave the
-   glyphs upright so they stay readable. Facing west (heading 270), N moves a
-   quarter turn clockwise to the right-hand side, still printed the right way up. */
+/* Draw the eight names once: Hindi on top, the English letters small beneath.
+   उत्तर keeps the red that marks north on most compasses. */
+$('labels').innerHTML = DIRS.map((d, i) => {
+  const hiSize = d.main ? 15 : 11, enSize = d.main ? 8.5 : 7.5;
+  const col = d.deg === 0 ? '#ff6b8a' : d.main ? 'rgba(236,235,255,.85)' : 'rgba(236,235,255,.55)';
+  return `<g id="lab-${i}">
+    <text y="${d.main ? 1 : 0}" font-family="'Tiro Devanagari Hindi', Geist, sans-serif" font-size="${hiSize}" font-weight="700" fill="${col}">${d.hi}</text>
+    <text y="${d.main ? 14 : 10}" font-family="Geist, system-ui, sans-serif" font-size="${enSize}" fill="rgba(141,138,171,.9)">${d.en}</text>
+  </g>`;
+}).join('');
+
+/* Put each name where the turning rose says it belongs, but leave it upright.
+   Facing west (heading 270), उत्तर moves a quarter turn clockwise to the
+   right-hand side, still printed the right way up. */
 function placeLabels(h){
-  const R = 92;
-  [['lab-N',0],['lab-E',90],['lab-S',180],['lab-W',270]].forEach(([id, card]) => {
-    const a = toRad(card - h), el = $(id);
-    el.setAttribute('x', (150 + R * Math.sin(a)).toFixed(1));
-    el.setAttribute('y', (150 - R * Math.cos(a) + 5.5).toFixed(1));
+  const R = 101;
+  DIRS.forEach((d, i) => {
+    const a = toRad(d.deg - h);
+    const x = 150 + R * Math.sin(a), y = 150 - R * Math.cos(a) - 4;
+    $('lab-' + i).setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
   });
 }
 
