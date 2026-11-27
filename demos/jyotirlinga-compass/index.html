@@ -79,6 +79,7 @@
   #dialwrap{position:relative;width:calc(100% + 28px);max-width:430px;margin:0 -14px}
   @media (min-width:480px){ #dialwrap{margin:0 auto;width:100%} }
   #dial{display:block;width:100%;height:auto}
+  #dial.slim{width:86.3%;margin:0 auto}
   .target-dv{font-family:var(--deva);font-size:23px;font-weight:700;color:var(--gold);margin:2px 0 0;line-height:1.35}
   .target-en{font-size:15px;color:var(--text);margin:1px 0 0}
   .target-pl{font-size:12.5px;color:var(--muted);margin:3px 0 12px}
@@ -199,7 +200,7 @@
         <!-- The frame: wreath, rudraksha beads and the gold ring with eight Oms,
              cut from Mohit's artwork. It stays still, like a compass's bezel.
              The dial's centre is still (150,150); the frame reaches 190 units out. -->
-        <image href="img/compass-frame.webp" x="-40" y="-40" width="380" height="380"/>
+        <image id="frame" href="img/compass-frame.webp" x="-40" y="-40" width="380" height="380"/>
         <!-- the face inside the Om ring -->
         <circle cx="150" cy="150" r="89" fill="url(#g-face)"/>
         <!-- Rose: turns by minus the heading, so its north point shows true north.
@@ -300,6 +301,16 @@
    Jyotirlinga Compass — Level A (web compass, no AR)
    One file, no build step, no libraries.
    ===================================================================== */
+/* Frame choice, to compare on a phone: ?frame=slim gives the floral band at
+   60% of its width. The wreath is scaled to 0.856 and tucked behind the Om
+   ring, so the flowers are not squashed. The dial's box shrinks to match
+   (328 / 380 = 86.3%), so the Om ring, card and trishul keep their size. */
+if (new URLSearchParams(location.search).get('frame') === 'slim'){
+  const f = document.getElementById('frame'), d = document.getElementById('dial');
+  f.setAttribute('href', 'img/compass-frame-slim.webp');
+  f.setAttribute('x', '-13.5'); f.setAttribute('y', '-13.5'); f.setAttribute('width', '327'); f.setAttribute('height', '327');
+  d.setAttribute('viewBox', '-14 -14 328 328'); d.classList.add('slim');
+}
 const BUILD = 'Jyotirlinga Compass · Level A + B · 27 Nov 2026 · r6';
 const $ = id => document.getElementById(id);
 $('stamp').textContent = BUILD;
