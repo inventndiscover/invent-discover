@@ -677,6 +677,11 @@ function photoCredit(k){const c=PHOTO_CREDIT[k];if(!c)return"";
    Display: storiesBlock() shows live stories as a big card (newest) plus small cards on Home
    and Discover. Each also needs img (1280x720 jpg in media/stories/), alt and read. */
 const STORIES=[
+{id:"two-halves-of-a-secret",added:"2026-11-30T12:30:00+05:30",title:"Two Halves of a Secret",board:"PATOLA SECRET",
+  line:"A Patan patola is woven in double ikat: warp and weft are dyed with the design before weaving, and the picture appears only when they line up. Visual cryptography does the same with secrets.",
+  url:"discover/two-halves-of-a-secret/", img:"media/stories/two-halves-of-a-secret.jpg",
+  alt:"A woven patola square with a red lattice, white elephants and yellow flowers on green, beside two overlapping squares of random black and white dots",
+  read:"5 min read"},
 {id:"the-doorstep-algorithm",added:"2026-11-24T12:30:00+05:30",title:"The Doorstep Algorithm",board:"KOLAM ALGORITHM",
   line:"Every morning a kolam goes down at the doorstep: dots, then a line that follows strict rules. Rules that strict can be written as a grammar a computer runs, and the same idea now grows plants in computer graphics.",
   url:"discover/the-doorstep-algorithm/", img:"media/stories/the-doorstep-algorithm.jpg",
